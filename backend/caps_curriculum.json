@@ -1,0 +1,361 @@
+{
+  "meta": {
+    "country": "South Africa",
+    "authority": "Department of Basic Education (DBE)",
+    "source": "CAPS Mathematics Grades 10-12",
+    "extracted": "2026-08-04"
+  },
+  "syllabi": [
+    {
+      "code": "CAPS-11",
+      "name": "CAPS Mathematics Grade 11 (NSC)",
+      "grades": [11],
+      "topics": [
+        {
+          "topic": "Functions",
+          "subtopics": [
+            {
+              "name": null,
+              "objectives": [
+                "Extend Grade 10 work on the relationships between variables in terms of numerical, graphical, verbal and symbolic representations of functions and convert flexibly between these representations (tables, graphs, words and formulae). Include the linear and quadratic polynomial functions, the exponential function and the simple rational function.",
+                "Generate as many graphs as necessary, initially by means of point-by-point plotting, supported by available technology, to make and test conjectures and hence generalise the effects of the parameter which results in a horizontal shift and that which results in a horizontal stretch and/or reflection about the y-axis.",
+                "Problem solving and graph work involving the prescribed functions."
+              ]
+            },
+            {
+              "name": "Graphs and parameters",
+              "objectives": [
+                "Revise the effect of the parameters a and q and investigate the effects of k and p in the graphs of the functions y = a(kx + p)^2 + q, y = a/(kx + p) + q and y = a.b^(kx + p) + q where b > 0 and b is not equal to 1.",
+                "Once the effects of the parameters have been established, solve various problems: drawing sketch graphs, determining the defining equations of functions from sufficient data, making deductions from graphs.",
+                "Tackle real life applications of the prescribed functions."
+              ]
+            },
+            {
+              "name": "Average gradient",
+              "objectives": [
+                "Investigate numerically the average gradient between two points on a curve and develop an intuitive understanding of the concept of the gradient of a curve at a point."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Number Patterns, Sequences and Series",
+          "subtopics": [
+            {
+              "name": null,
+              "objectives": [
+                "Investigate number patterns including, but not limited to, those where there is a constant second difference between consecutive terms in a number pattern, and the general term is therefore quadratic.",
+                "Determine the general (quadratic) term of a number pattern with a constant second difference between consecutive terms and use it to solve problems."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Finance, Growth and Decay",
+          "subtopics": [
+            {
+              "name": null,
+              "objectives": [
+                "Use simple and compound decay formulae A = P(1 - in) and A = P(1 - i)^n to solve problems (including straight line depreciation and depreciation on a reducing balance). Link to work on functions.",
+                "The effect of different periods of compounding growth and decay, including nominal and effective interest rates.",
+                "Solve problems involving interest rate changes, additional deposits and withdrawals over an investment period, using the maximum accuracy afforded by the calculator and rounding only in the final answer."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Algebra",
+          "subtopics": [
+            {
+              "name": "Numbers, exponents and surds",
+              "objectives": [
+                "The extension of the number system to include non-real numbers: properties of real and non-real numbers.",
+                "Simplify expressions and solve equations using the laws of exponents for rational exponents where x^(p/q) = qth root of x^p; x > 0, q > 0.",
+                "Add, subtract, multiply and divide simple surds.",
+                "Error margins."
+              ]
+            },
+            {
+              "name": "Algebraic expressions",
+              "objectives": [
+                "Manipulate algebraic expressions by writing quadratic functions in the completed square form: completing the square to determine the maximum or minimum value of a quadratic expression.",
+                "The simplification of algebraic fractions with binomial denominators."
+              ]
+            },
+            {
+              "name": "Equations and inequalities",
+              "objectives": [
+                "Solve quadratic equations (by factorisation, by completing the square, and by using the quadratic formula).",
+                "Solve quadratic and rational inequalities in one unknown and interpret the solution graphically.",
+                "Solve equations in two unknowns, one of which is linear and the other quadratic, algebraically or graphically."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Probability",
+          "subtopics": [
+            {
+              "name": null,
+              "objectives": [
+                "Revision of techniques used in solving probability problems: tree diagrams, Venn diagrams, contingency tables, the addition rule for mutually exclusive events P(A or B) = P(A) + P(B), the complementary rule P(not A) = 1 - P(A) and the identity P(A or B) = P(A) + P(B) - P(A and B).",
+                "Dependent and independent events and the product rule for independent events: P(A and B) = P(A) x P(B).",
+                "The use of tree diagrams for the probability of consecutive or simultaneous events which are not necessarily independent.",
+                "Venn diagrams, contingency tables and tree diagrams as aids to solving probability problems where events are not necessarily independent."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Euclidean Geometry and Measurement",
+          "subtopics": [
+            {
+              "name": "Euclidean geometry (similarity and proportion)",
+              "objectives": [
+                "Revise Grade 9 and 10 work on the necessary and sufficient conditions for polygons to be similar.",
+                "Prove (accepting results established in earlier grades) that the line drawn parallel to one side of a triangle divides the other two sides proportionally (and the Mid-point Theorem as a special case of this theorem).",
+                "Prove that equiangular triangles are similar.",
+                "Prove that triangles with sides in proportion are similar.",
+                "Prove the Theorem of Pythagoras by similar triangles.",
+                "Solve problems on similarity."
+              ]
+            },
+            {
+              "name": "Measurement (mensuration)",
+              "objectives": [
+                "The surface area of right pyramids, cones, spheres and combinations of these geometric shapes."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Analytical Geometry",
+          "subtopics": [
+            {
+              "name": null,
+              "objectives": [
+                "Use a Cartesian co-ordinate system to derive and apply the equation of a line through two given points.",
+                "Derive and apply the equation of a line through one point and parallel or perpendicular to a given line.",
+                "Derive and apply the inclination of a line."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Trigonometry",
+          "subtopics": [
+            {
+              "name": "Graphs of trigonometric functions",
+              "objectives": [
+                "Investigate the effect of the parameter k in the graphs of the functions y = sin kx, y = cos kx and y = tan kx.",
+                "Investigate the effect of the parameter p in the graphs of the functions y = sin(x + p), y = cos(x + p) and y = tan(x + p).",
+                "Draw sketch graphs of y = a(sin/cos/tan)(kx + p) + q."
+              ]
+            },
+            {
+              "name": "Identities, reduction formulae and equations",
+              "objectives": [
+                "Derive and use the values of the trigonometric functions (in surd form where applicable) of 30, 45 and 60 degrees.",
+                "Derive and use the identities tan theta = sin theta / cos theta (theta not equal to k.90 degrees, k odd) and sin^2 theta + cos^2 theta = 1.",
+                "Derive and use the reduction formulae for sin/cos(90 degrees +/- theta), sin/cos/tan(180 degrees +/- theta), sin/cos/tan(360 degrees +/- theta) and sin/cos/tan(-theta).",
+                "Determine for which values of a variable an identity is not valid.",
+                "Determine the general solutions of trigonometric equations."
+              ]
+            },
+            {
+              "name": "Solution of triangles",
+              "objectives": [
+                "Establish, prove and apply the sine, cosine and area rules.",
+                "Solve problems in two dimensions by using the sine, cosine and area rules and by constructing and interpreting geometric and trigonometric models."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Statistics",
+          "subtopics": [
+            {
+              "name": null,
+              "objectives": [
+                "Represent measures of central tendency and dispersion in univariate numerical data by the five number summary (maximum, minimum and quartiles) and box and whisker diagrams.",
+                "Ogives (cumulative frequency curves).",
+                "Calculate the variance and standard deviation of both grouped and ungrouped sets of data manually (for small sets of data) and using available technology (for larger sets of data) and represent results graphically.",
+                "Symmetric and skewed data in box and whisker diagrams and frequency polygons.",
+                "Represent bivariate numerical data as a scatter plot and suggest intuitively and by simple investigation whether a linear, quadratic or exponential function would best fit the data.",
+                "Errors in measurement."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "CAPS-12",
+      "name": "CAPS Mathematics Grade 12 (NSC)",
+      "grades": [12],
+      "topics": [
+        {
+          "topic": "Functions",
+          "subtopics": [
+            {
+              "name": "Definition and inverses",
+              "objectives": [
+                "Introduce the formal definition of a function and extend Grade 11 work on the relationships between variables in terms of numerical, graphical, verbal and symbolic representations of functions and convert flexibly between these representations (tables, graphs, words and formulae). Include the linear and quadratic polynomial functions, the exponential function and the simple rational function.",
+                "Definition of the inverse function; the inverses of prescribed functions and the fact that in the case of many-to-one functions the domain has to be restricted if the inverse is to be a function.",
+                "Determine and sketch graphs of the inverses of the functions y = ax + q, y = ax^2 and y = b^x (b > 0, b not equal to 1).",
+                "Focus on the following characteristics: domain and range, intercepts with the axes, turning points, minima, maxima, asymptotes (horizontal and vertical), shape and symmetry, average slope (average rate of change), intervals on which the function increases/decreases.",
+                "Problem solving and graph work involving the prescribed functions (including the logarithmic function)."
+              ]
+            },
+            {
+              "name": "Exponential and logarithmic functions",
+              "objectives": [
+                "Revision of the exponential function and the exponential laws and the graph of the function y = b^x where b > 0 and b not equal to 1.",
+                "The graph of the function y = log_b x for both the cases 0 < b < 1 and b > 1."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Number Patterns, Sequences and Series",
+          "subtopics": [
+            {
+              "name": null,
+              "objectives": [
+                "Identify and solve problems involving number patterns, including but not limited to arithmetic and geometric sequences and series.",
+                "Sigma notation.",
+                "Proof and application of the formula for the sum of an arithmetic series: S_n = (n/2)[2a + (n - 1)d].",
+                "Proof and application of the formula for the sum of a geometric series: S_n = a(r^n - 1)/(r - 1), r not equal to 1.",
+                "Proof and application of the formula for the sum to infinity of a geometric series: S_infinity = a/(1 - r), -1 < r < 1."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Finance, Growth and Decay",
+          "subtopics": [
+            {
+              "name": null,
+              "objectives": [
+                "Calculate the value of n in the formulae A = P(1 + i)^n and A = P(1 - i)^n, using logarithms.",
+                "Apply knowledge of geometric series to solve annuity and bond repayment problems.",
+                "Critically analyse different loan options."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Algebra",
+          "subtopics": [
+            {
+              "name": "Logarithms",
+              "objectives": [
+                "Demonstrate an understanding of the definition of a logarithm and any laws needed to solve real life problems.",
+                "Definition of a logarithm to the base b (where b > 0 and b not equal to 1); conversion between logarithmic and exponential form: y = log_b x if and only if x = b^y.",
+                "Standard logarithm laws for A, B > 0; b > 0 and b not equal to 1: log_b(AB) = log_b A + log_b B; log_b(A/B) = log_b A - log_b B; log_b(A^n) = n log_b A; log_b A = log_a A / log_a b. Limited application of the rules as needed in solving real life problems."
+              ]
+            },
+            {
+              "name": "Polynomials",
+              "objectives": [
+                "Define the n-th degree polynomial with real coefficients. Using long division, find the quotient and remainder when a first degree polynomial is divided into another polynomial of degree one or higher.",
+                "Proof of the Remainder Theorem and the Factor Theorem (the Remainder Theorem is proved only as an introduction to the Factor Theorem and will not be examined).",
+                "Factorise third degree polynomials (including examples which require the factor theorem)."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Differential Calculus",
+          "subtopics": [
+            {
+              "name": null,
+              "objectives": [
+                "An intuitive understanding of the limit concept.",
+                "Use limits to define the derivative of a function f at a point a: f'(a) = lim (h -> 0) [f(a + h) - f(a)]/h. Generalise to the derivative of f at any point x in the domain of f, i.e. define the derivative function f'(x) of the function f(x). Understand intuitively that f'(a) is the slope of the tangent to the graph of f at the point with x-coordinate a.",
+                "Using the definition (first principles), find the derivative function f'(x) of each of the following functions, where c is a constant: f(x) = c; f(x) = x; f(x) = x^2; f(x) = x^3; f(x) = 1/x, to support the rule d(x^n)/dx = nx^(n-1).",
+                "Using the definition, find the derivative function of k.f(x) where k is a constant, and of the sum or difference of functions.",
+                "To differentiate more advanced functions, use the formula d(ax^n)/dx = anx^(n-1) (for any real number n) together with the rules d/dx[f(x) + g(x)] = d/dx[f(x)] + d/dx[g(x)] and d/dx[k f(x)] = k d/dx[f(x)] (k a constant).",
+                "Find equations of tangents to graphs of functions.",
+                "Sketch graphs of cubic polynomial functions using differentiation to determine stationary points and points of inflection. Also determine the x-intercepts of the graph using the factor theorem and other techniques.",
+                "Solve practical problems concerning optimisation and rates of change, including the calculus of motion."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Probability",
+          "subtopics": [
+            {
+              "name": null,
+              "objectives": [
+                "Revise dependent and independent events; the product rule for independent events P(A and B) = P(A) x P(B); the sum rule for mutually exclusive events A and B: P(A or B) = P(A) + P(B); the identity P(A or B) = P(A) + P(B) - P(A and B); and the complementary rule P(not A) = 1 - P(A).",
+                "Generalise and use the fundamental counting (multiplication) principle: derive the multiplication rule.",
+                "Probability problems using Venn diagrams, trees, two-way contingency tables and other techniques (like the fundamental counting principle) to solve probability problems (where events are not necessarily independent)."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Euclidean Geometry and Measurement",
+          "subtopics": [
+            {
+              "name": "Circle geometry (a mini axiomatic system)",
+              "objectives": [
+                "Investigate and prove the theorems of the geometry of circles as a mini-axiomatic system, accepting as axioms the results established in earlier grades and that the tangent to a circle is perpendicular to the radius drawn to the point of contact.",
+                "Prove that the line drawn from the centre of a circle perpendicular to a chord bisects the chord (and its converse), and that the perpendicular bisector of a chord passes through the centre of the circle.",
+                "Prove that the angle subtended by an arc at the centre of a circle is double the size of the angle subtended by the same arc at the circle (on the same side of the chord as the centre).",
+                "Prove that angles subtended by a chord at the circle on the same side of the chord are equal (and its converse).",
+                "Prove that the opposite angles of a cyclic quadrilateral are supplementary (and its converse).",
+                "Prove that two tangents drawn to a circle from the same point outside the circle are equal in length.",
+                "Prove the tangent-chord theorem (and its converse).",
+                "Use the above theorems to prove riders and solve circle geometry problems, providing reasons for statements when required."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Analytical Geometry",
+          "subtopics": [
+            {
+              "name": null,
+              "objectives": [
+                "Use a two-dimensional Cartesian co-ordinate system to derive and apply the equation of a circle (any centre): the equation (x - a)^2 + (y - b)^2 = r^2 defines a circle with radius r and midpoint (a; b).",
+                "Calculation of the equation of a tangent to a given circle, given a point on the circle."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Trigonometry",
+          "subtopics": [
+            {
+              "name": null,
+              "objectives": [
+                "Proof and use of the compound angle identities: sin(alpha +/- beta) = sin alpha cos beta +/- cos alpha sin beta and cos(alpha +/- beta) = cos alpha cos beta -/+ sin alpha sin beta.",
+                "Proof and use of the double angle identities: sin 2alpha = 2 sin alpha cos alpha and cos 2alpha = cos^2 alpha - sin^2 alpha = 2cos^2 alpha - 1 = 1 - 2sin^2 alpha.",
+                "Solve problems in two and three dimensions by constructing and interpreting geometric and trigonometric models."
+              ]
+            }
+          ]
+        },
+        {
+          "topic": "Statistics",
+          "subtopics": [
+            {
+              "name": null,
+              "objectives": [
+                "Symmetric and skewed data.",
+                "Identification of normal distribution of data: data which is normally distributed around the mean.",
+                "Sampling: suitable sampling from a population, understanding the importance of sample size in predicting the mean and standard deviation of a population.",
+                "Scatter plot of bivariate data and intuitive choice of function of best fit supported by available technology.",
+                "The least squares method for linear regression: use of available technology to calculate the linear regression line which best fits a given set of bivariate numerical data.",
+                "Regression functions and correlation in bivariate data using available technology: use of available technology to calculate the correlation co-efficient of a set of bivariate numerical data and make relevant deductions."
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

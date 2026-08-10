@@ -1,0 +1,14 @@
+{
+  "name": "K12Plus - AI tutor for Grade 11-12",
+  "short_name": "K12Plus",
+  "description": "AI tutoring for Grade 11-12 learners in Namibia and South Africa. Mathematics, Biology, Physical Science and Business Studies. Works offline.",
+  "theme_color": "#7C3AED",
+  "background_color": "#FCFBF8",
+  "display": "standalone",
+  "start_url": "/",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

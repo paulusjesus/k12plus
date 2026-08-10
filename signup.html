@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<script src="./k12plus-bridge.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#7C3AED">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Nunito:wght@700;800&family=Baloo+2:wght@700;800&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+<style>
+html, body { margin:0; padding:0; font-family:'Poppins',sans-serif; background:var(--bg); color:var(--ink); }
+body { --bg:#FCFBF8; --surface:#FFFFFF; --ink:#1F2033; --muted:#6B6E85; --line:#E9E6F2; --chip:#F5F3FB; --chip2:#FAF9FE; --primary:#7C3AED; --blue:#6673E8; --magenta:#B400D9; --gold:#FFC324; --goldbg:#FFF6DC; --shadow:0 10px 40px rgba(31,32,51,.08); }
+body[data-theme="dark"] { --bg:#12121D; --surface:#1B1B2B; --ink:#F2F1FA; --muted:#9DA0B8; --line:#2B2B44; --chip:#232336; --chip2:#1F1F31; --primary:#9D6BFF; --goldbg:#3A3110; --shadow:0 10px 40px rgba(0,0,0,.4); }
+a { color:var(--primary); text-decoration:none; }
+a:hover { color:var(--magenta); }
+* { box-sizing:border-box; }
+input, select { font-family:'Poppins',sans-serif; }
+input::placeholder { color:var(--muted); opacity:.75; }
+@keyframes k12pulse { 0%,100%{opacity:.35} 50%{opacity:1} }
+@keyframes k12float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes k12blob { 0%,100%{transform:translate(0,0) scale(1);} 33%{transform:translate(40px,-30px) scale(1.15);} 66%{transform:translate(-30px,25px) scale(.9);} }
+@keyframes k12blob2 { 0%,100%{transform:translate(0,0) scale(1);} 40%{transform:translate(-45px,35px) scale(1.2);} 75%{transform:translate(30px,-20px) scale(.85);} }
+@keyframes k12bird { 0%{left:-70px; top:70px;} 25%{top:40px;} 50%{top:90px;} 75%{top:50px;} 100%{left:104%; top:80px;} }
+@keyframes k12bird2 { 0%{right:-80px; top:190px;} 30%{top:230px;} 60%{top:170px;} 100%{right:104%; top:210px;} }
+@keyframes k12bird3 { 0%{left:-60px; top:330px;} 35%{top:300px;} 70%{top:360px;} 100%{left:104%; top:320px;} }
+@keyframes k12flap { 0%,100%{transform:scaleY(1);} 50%{transform:scaleY(-0.7);} }
+@keyframes k12drop { 0%{opacity:0; transform:translateY(0) rotate(0deg) scale(.35);} 3%{opacity:1;} 26%{opacity:1; transform:translateY(52vh) rotate(24deg) scale(1.5);} 30%{opacity:0; transform:translateY(60vh) rotate(30deg) scale(1.55);} 100%{opacity:0; transform:translateY(60vh) scale(1.55);} }
+@keyframes k12ripple { 0%,26%{opacity:0; transform:translateX(-50%) scale(.2);} 30%{opacity:.8; transform:translateX(-50%) scale(.5);} 44%{opacity:0; transform:translateX(-50%) scale(1.6);} 100%{opacity:0; transform:translateX(-50%) scale(1.6);} }
+@keyframes k12twinkle { 0%,100%{opacity:.15; transform:scale(.8);} 50%{opacity:.9; transform:scale(1.2);} }
+@keyframes k12pop { 0%{opacity:0; transform:translateY(-4px) scale(.98);} 100%{opacity:1; transform:translateY(0) scale(1);} }
+.k12dd{scrollbar-width:thin; scrollbar-color:#C9C2F5 transparent;}
+.k12dd::-webkit-scrollbar{width:6px;}
+.k12dd::-webkit-scrollbar-thumb{background:#C9C2F5; border-radius:99px;}
+.k12dd::-webkit-scrollbar-track{background:transparent;}
+
+@media (max-width:820px){
+  header{padding:10px 18px !important; gap:14px 18px !important; flex-wrap:wrap;}
+  header nav{gap:14px !important; font-size:13.5px !important;}
+  footer{padding:40px 22px 22px !important;}
+  footer > div:first-child{grid-template-columns:1fr 1fr !important; gap:30px 24px !important;}
+  footer > div:first-child > div:first-child{grid-column:1 / -1;}
+  main > section{padding-left:20px !important; padding-right:20px !important;}
+}
+@media (max-width:1250px){
+  .k12root{grid-template-columns:minmax(460px,540px) 1fr !important;}
+}
+@media (max-width:920px){
+  .k12root{grid-template-columns:1fr !important;}
+  .k12root > div:first-child{padding:22px 20px 36px !important; min-height:0 !important;}
+  .k12root > div:last-child{min-height:440px !important; padding:44px 22px !important; margin:0 16px 16px !important;}
+}
+</style>
+</helmet>
+<div class="k12root" style="min-height:100vh; display:grid; grid-template-columns:minmax(520px,700px) 1fr; background:var(--bg); color:var(--ink);">
+  <div style="padding:28px 56px 40px; display:flex; flex-direction:column; min-height:100vh;">
+    <div style="max-width:490px; width:100%; margin:0 auto 26px; display:flex; align-items:center; justify-content:space-between;">
+      <a href="index.html" style="display:flex; align-items:center; color:var(--ink);">
+        <img src="assets/k12plus-logo.png" alt="k12plus" style="height:30px; width:auto;">
+      </a>
+      <button onClick="{{ toggleTheme }}" title="Toggle dark mode" style="border:none; background:var(--chip); color:var(--ink); width:36px; height:36px; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center;">{{ themeIcon }}</button>
+    </div>
+    <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+      <div style="margin:auto; max-width:490px; width:100%; text-align:center; padding:40px 24px; background:var(--surface); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow);">
+        <div style="width:58px; height:58px; border-radius:50%; background:#E2F6EC; border:1px solid #C4E8D6; display:flex; align-items:center; justify-content:center; margin:0 auto 18px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1F7A4D" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+        </div>
+        <h2 style="font-size:24px; font-weight:600; margin:0 0 10px;">{{ doneTitle }}</h2>
+        <p style="font-size:14.5px; line-height:1.7; color:var(--muted); margin:0 0 18px;">{{ doneBody }}</p>
+        <sc-if value="{{ hasUid }}" hint-placeholder-val="{{ false }}">
+          <div style="display:inline-block; background:var(--chip2); border:1px dashed var(--primary); border-radius:10px; padding:14px 26px; margin-bottom:12px;">
+            <p style="font-size:11.5px; font-weight:600; letter-spacing:1.6px; text-transform:uppercase; color:var(--muted); margin:0 0 6px;">Your unique k12plus ID</p>
+            <p style="font-family:Georgia,serif; font-size:24px; font-weight:700; letter-spacing:2px; color:var(--primary); margin:0;">{{ uid }}</p>
+          </div>
+          <p style="font-size:12.5px; line-height:1.6; color:var(--muted); margin:0 0 24px;">{{ uidNote }}</p>
+        </sc-if>
+        <sc-if value="{{ showDashLink }}" hint-placeholder-val="{{ true }}">
+          <a href="app.html" style="display:inline-block; background:var(--primary); color:#fff; padding:13px 30px; border-radius:8px; font-weight:600; font-size:15px;" style-hover="background:var(--magenta); color:#fff;">Go to my dashboard</a>
+        </sc-if>
+        <sc-if value="{{ isReset }}" hint-placeholder-val="{{ false }}">
+          <a href="#" onClick="{{ backToLogin }}" style="display:inline-block; background:var(--primary); color:#fff; padding:13px 30px; border-radius:8px; font-weight:600; font-size:15px;" style-hover="background:var(--magenta); color:#fff;">Back to log in</a>
+        </sc-if>
+      </div>
+    </sc-if>
+    <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
+      <div style="max-width:490px; width:100%; margin:0 auto;">
+        <h1 style="font-size:30px; font-weight:600; letter-spacing:-0.8px; margin:0 0 8px;">{{ heading }}</h1>
+        <p style="font-size:14.5px; color:var(--muted); margin:0 0 22px;">{{ subheading }}</p>
+        <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:8px;">I am a</label>
+            <div style="display:flex; gap:4px; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:4px;">
+              <sc-for list="{{ roleTabs }}" as="r" hint-placeholder-count="3">
+                <button onClick="{{ r.pick }}" style="{{ r.style }}">{{ r.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <sc-if value="{{ showGrade }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-bottom:16px;">
+              <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:8px;">{{ gradeLabel }} <span style="color:#C0392B;">*</span></label>
+              <div style="display:flex; gap:8px; align-items:flex-start;">
+                <sc-for list="{{ gradeTabs }}" as="g" hint-placeholder-count="2">
+                  <div style="flex:1; position:relative;">
+                    <button onClick="{{ g.toggle }}" style="{{ g.style }}">
+                      <span>{{ g.display }}</span>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:.6;"><path d="M6 9l6 6 6-6"></path></svg>
+                    </button>
+                    <sc-if value="{{ g.open }}" hint-placeholder-val="{{ false }}">
+                      <div style="position:absolute; left:50%; transform:translateX(-50%); top:calc(100% + 7px); z-index:40; width:236px; background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:0 14px 34px rgba(31,32,51,.16); padding:12px; animation:k12pop .14s ease;">
+                        <p style="font-size:11px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:var(--muted); margin:0 0 9px;">{{ g.hint }}</p>
+                        <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:5px;">
+                          <sc-for list="{{ g.letters }}" as="l" hint-placeholder-count="26">
+                            <button onClick="{{ l.pick }}" style="{{ l.style }}" style-hover="background:#E4E1FB; color:#5348C7;">{{ l.label }}</button>
+                          </sc-for>
+                        </div>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+              <p style="font-size:12px; line-height:1.6; color:var(--muted); margin:8px 0 0;">{{ routeNote }}</p>
+            </div>
+          </sc-if>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+            <div>
+              <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:6px;">First name <span style="color:#C0392B;">*</span></label>
+              <input value="{{ first }}" onChange="{{ onFirst }}" placeholder="First name" style="width:100%; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; padding:11px 13px; font-size:14px; outline:none;">
+            </div>
+            <div>
+              <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:6px;">Last name <span style="color:#C0392B;">*</span></label>
+              <input value="{{ last }}" onChange="{{ onLast }}" placeholder="Last name" style="width:100%; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; padding:11px 13px; font-size:14px; outline:none;">
+            </div>
+          </div>
+        </sc-if>
+        <div style="{{ emailWrapStyle }}">
+        <div style="margin-bottom:14px;">
+          <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:6px; white-space:nowrap;">{{ emailLabel }}</label>
+          <input value="{{ email }}" onChange="{{ onEmail }}" placeholder="{{ emailPlaceholder }}" style="width:100%; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; padding:11px 13px; font-size:14px; outline:none;">
+        </div>
+        <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-bottom:14px;">
+          <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:6px; white-space:nowrap;">Mobile number <span style="font-weight:400; color:var(--muted);">(optional)</span></label>
+          <input value="{{ mobile }}" onChange="{{ onMobile }}" type="tel" placeholder="e.g. +264 81 234 5678" style="width:100%; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; padding:11px 13px; font-size:14px; outline:none;">
+        </div>
+        </sc-if>
+        </div>
+        <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ true }}">
+          <p style="font-size:12px; line-height:1.6; color:var(--muted); margin:-8px 0 14px;">Give us an email address or a mobile number (or both) so you can recover your account.</p>
+        </sc-if>
+        <sc-if value="{{ showPassword }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-bottom:14px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+            <label style="font-size:12.5px; font-weight:600;">Password <span style="color:#C0392B;">*</span></label>
+            <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ false }}">
+              <a href="#" onClick="{{ goReset }}" style="font-size:12.5px; font-weight:500;">Forgot password?</a>
+            </sc-if>
+          </div>
+          <div style="position:relative;">
+            <input value="{{ password }}" onChange="{{ onPassword }}" type="{{ pwType }}" placeholder="Password" style="width:100%; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; padding:11px 42px 11px 13px; font-size:14px; outline:none;">
+            <button onClick="{{ togglePw }}" title="Show password" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); border:none; background:none; color:var(--muted); cursor:pointer; padding:4px; display:flex;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5.5 4.8 12 4.8 22.5 12 22.5 12 18.5 19.2 12 19.2 1.5 12 1.5 12z"></path><circle cx="12" cy="12" r="3.2"></circle></svg>
+            </button>
+          </div>
+        </div>
+        </sc-if>
+        <sc-if value="{{ showSchool }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-bottom:6px;">
+            <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:6px;">Country</label>
+            <div style="display:flex; gap:8px; margin-bottom:12px;">
+              <sc-for list="{{ countryTabs }}" as="c" hint-placeholder-count="2">
+                <button onClick="{{ c.pick }}" style="{{ c.style }}">{{ c.label }}</button>
+              </sc-for>
+            </div>
+            <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:6px;">Your school</label>
+            <sc-if value="{{ hasSchool }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex; align-items:center; gap:10px; border:1px solid var(--primary); background:var(--chip2); border-radius:8px; padding:10px 13px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M22 10L12 5 2 10l10 5 10-5zM6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"></path></svg>
+                <span style="font-size:13.5px; font-weight:500; flex:1;">{{ school }}</span>
+                <button onClick="{{ clearSchool }}" title="Change school" style="border:none; background:none; color:var(--muted); cursor:pointer; padding:2px; display:flex;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ noSchool }}" hint-placeholder-val="{{ true }}">
+              <div style="position:relative;">
+                <input value="{{ schoolQuery }}" onChange="{{ onSchoolQuery }}" onFocus="{{ openSchool }}" placeholder="{{ schoolPlaceholder }}" style="width:100%; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; padding:11px 13px; font-size:14px; outline:none;">
+                <sc-if value="{{ schoolOpen }}" hint-placeholder-val="{{ false }}">
+                  <div class="k12dd" style="position:absolute; left:0; right:0; top:calc(100% + 7px); z-index:30; background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:0 14px 34px rgba(31,32,51,.16); max-height:264px; overflow-y:auto; padding:8px; animation:k12pop .14s ease;">
+                    <sc-for list="{{ schoolResults }}" as="s" hint-placeholder-count="5">
+                      <button onClick="{{ s.pick }}" style="{{ s.style }}" style-hover="background:var(--chip2);">
+                        <span style="width:32px; height:32px; border-radius:9px; background:var(--chip2); color:var(--primary); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5zM6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"></path></svg>
+                        </span>
+                        <span style="flex:1; min-width:0;">
+                          <span style="font-size:13.5px; font-weight:500; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ s.name }}</span>
+                          <span style="font-size:11.5px; color:var(--muted); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ s.region }}</span>
+                        </span>
+                      </button>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+            <p style="font-size:12px; line-height:1.6; color:var(--muted); margin:8px 0 0;">{{ schoolHelp }}</p>
+          </div>
+        </sc-if>
+        <sc-if value="{{ isParent }}" hint-placeholder-val="{{ false }}">
+          <div style="margin:14px 0 0;">
+            <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:8px;">Your learners</label>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <sc-for list="{{ children }}" as="ch" hint-placeholder-count="1">
+                <div style="border:1px solid var(--line); border-radius:10px; padding:12px; background:var(--surface);">
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                    <span style="font-size:11.5px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:var(--muted);">{{ ch.title }}</span>
+                    <sc-if value="{{ ch.removable }}" hint-placeholder-val="{{ false }}">
+                      <button onClick="{{ ch.remove }}" title="Remove this learner" style="border:none; background:none; color:var(--muted); cursor:pointer; padding:2px; display:flex;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+                    </sc-if>
+                  </div>
+                  <input value="{{ ch.id }}" onChange="{{ ch.onId }}" placeholder="k12plus ID, e.g. K12-NA-8F3K92" style="width:100%; border:1px solid var(--line); background:var(--chip2); color:var(--ink); border-radius:8px; padding:10px 13px; font-size:14px; outline:none; text-transform:uppercase;">
+                  <div style="display:flex; gap:8px; margin-top:8px; align-items:flex-start;">
+                    <sc-for list="{{ ch.grades }}" as="g" hint-placeholder-count="2">
+                      <div style="flex:1; position:relative;">
+                        <button onClick="{{ g.toggle }}" style="{{ g.style }}">
+                          <span>{{ g.display }}</span>
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:.6;"><path d="M6 9l6 6 6-6"></path></svg>
+                        </button>
+                        <sc-if value="{{ g.open }}" hint-placeholder-val="{{ false }}">
+                          <div style="position:absolute; left:50%; transform:translateX(-50%); top:calc(100% + 7px); z-index:40; width:236px; background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:0 14px 34px rgba(31,32,51,.16); padding:12px; animation:k12pop .14s ease;">
+                            <p style="font-size:11px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:var(--muted); margin:0 0 9px;">{{ g.hint }}</p>
+                            <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:5px;">
+                              <sc-for list="{{ g.letters }}" as="l" hint-placeholder-count="26">
+                                <button onClick="{{ l.pick }}" style="{{ l.style }}" style-hover="background:#E4E1FB; color:#5348C7;">{{ l.label }}</button>
+                              </sc-for>
+                            </div>
+                          </div>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <button onClick="{{ addChild }}" style="display:flex; align-items:center; gap:7px; border:1px dashed var(--primary); background:var(--chip2); color:var(--primary); border-radius:8px; padding:9px 16px; font-family:'Poppins',sans-serif; font-size:13px; font-weight:600; cursor:pointer; margin-top:10px;" style-hover="background:#E4E1FB;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+              Add another learner
+            </button>
+            <p style="font-size:12px; line-height:1.6; color:var(--muted); margin:8px 0 0;">Every learner gets a unique ID when they register. Ask each child for theirs; it links your account to their dashboards and progress.</p>
+          </div>
+        </sc-if>
+        <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ true }}">
+          <label style="display:flex; align-items:flex-start; gap:9px; font-size:12.5px; color:var(--muted); margin:14px 0 0; cursor:pointer;">
+            <input type="checkbox" checked="{{ updates }}" onChange="{{ onUpdates }}" style="margin-top:2px; accent-color:var(--primary);">
+            Send me study tips and k12plus updates
+          </label>
+          <label style="display:flex; align-items:flex-start; gap:9px; font-size:12.5px; color:var(--muted); margin:10px 0 0; cursor:pointer;">
+            <input type="checkbox" checked="{{ agree }}" onChange="{{ onAgree }}" style="margin-top:2px; accent-color:var(--primary);">
+            <span>I agree with the k12plus <a href="#" onClick="{{ openPolicy }}">Privacy Policy</a> and <a href="#" onClick="{{ openTerms }}">Terms of Use</a></span>
+          </label>
+        </sc-if>
+        <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
+          <p style="font-size:12.5px; color:#C0392B; background:#FDEDEB; border:1px solid #F5CBC4; border-radius:8px; padding:9px 12px; margin:14px 0 0;">{{ error }}</p>
+        </sc-if>
+        <button onClick="{{ submit }}" style="width:100%; border:none; background:var(--primary); color:#fff; border-radius:8px; padding:13px 0; font-family:'Poppins',sans-serif; font-size:15px; font-weight:600; cursor:pointer; margin-top:18px;" style-hover="background:var(--magenta);">{{ submitLabel }}</button>
+        <p style="font-size:13.5px; color:var(--muted); margin:16px 0 0;">{{ switchPrompt }} <a href="#" onClick="{{ switchMode }}" style="font-weight:600; text-decoration:underline;">{{ switchLabel }}</a></p>
+      </div>
+    </sc-if>
+  </div>
+  <div style="position:relative; overflow:hidden; margin:16px 16px 16px 0; border-radius:20px; background:linear-gradient(135deg, #1F2033 0%, #2A2350 45%, #3B2266 100%); color:#F2F1FA; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:56px 48px;">
+    <div style="position:absolute; left:-70px; top:70px; z-index:3; animation:k12bird 13s linear infinite; pointer-events:none;">
+      <svg width="52" height="34" viewBox="0 0 46 30" fill="none">
+        <path d="M6 17 Q16 13 24 16 L40 15 L30 19 Q20 22 10 19 Z" fill="#F2F1FA" opacity=".95"></path>
+        <circle cx="39" cy="15.5" r="2.4" fill="#F2F1FA"></circle>
+        <path d="M41 15.5l4 1-4 1z" fill="var(--gold)"></path>
+        <g style="transform-origin:20px 16px; animation:k12flap .5s ease-in-out infinite;">
+          <path d="M18 16 Q22 4 32 2 Q26 10 24 16 Z" fill="#D9D6EE"></path>
+        </g>
+      </svg>
+    </div>
+    <div style="position:absolute; right:-80px; top:190px; z-index:3; animation:k12bird2 16s linear infinite; pointer-events:none; transform:scaleX(-1);">
+      <svg width="40" height="26" viewBox="0 0 46 30" fill="none">
+        <path d="M6 17 Q16 13 24 16 L40 15 L30 19 Q20 22 10 19 Z" fill="#F2F1FA" opacity=".85"></path>
+        <circle cx="39" cy="15.5" r="2.4" fill="#F2F1FA"></circle>
+        <path d="M41 15.5l4 1-4 1z" fill="var(--gold)"></path>
+        <g style="transform-origin:20px 16px; animation:k12flap .42s ease-in-out infinite;">
+          <path d="M18 16 Q22 4 32 2 Q26 10 24 16 Z" fill="#D9D6EE"></path>
+        </g>
+      </svg>
+    </div>
+    <div style="position:absolute; left:-60px; top:330px; z-index:3; animation:k12bird3 19s linear infinite; pointer-events:none;">
+      <svg width="34" height="22" viewBox="0 0 46 30" fill="none">
+        <path d="M6 17 Q16 13 24 16 L40 15 L30 19 Q20 22 10 19 Z" fill="#F2F1FA" opacity=".7"></path>
+        <circle cx="39" cy="15.5" r="2.4" fill="#F2F1FA"></circle>
+        <path d="M41 15.5l4 1-4 1z" fill="var(--gold)"></path>
+        <g style="transform-origin:20px 16px; animation:k12flap .58s ease-in-out infinite;">
+          <path d="M18 16 Q22 4 32 2 Q26 10 24 16 Z" fill="#D9D6EE"></path>
+        </g>
+      </svg>
+    </div>
+    <span style="position:absolute; left:18%; top:100px; z-index:2; background:rgba(157,107,255,.92); color:#fff; font-family:Georgia,serif; font-size:14px; padding:5px 13px; border-radius:14px; opacity:0; animation:k12drop 13s 2.5s linear infinite; pointer-events:none; box-shadow:0 0 18px rgba(157,107,255,.55);">y = x&sup2; + 3x</span>
+    <span style="position:absolute; left:44%; top:100px; z-index:2; background:rgba(90,214,143,.92); color:#123B24; font-family:Georgia,serif; font-size:14px; padding:5px 13px; border-radius:14px; opacity:0; animation:k12drop 13s 5.7s linear infinite; pointer-events:none; box-shadow:0 0 18px rgba(90,214,143,.5);">C&#8326;H&#8321;&#8322;O&#8326; + 6O&#8322;</span>
+    <span style="position:absolute; left:66%; top:100px; z-index:2; background:rgba(255,195,36,.95); color:#4A3A00; font-family:Georgia,serif; font-size:14px; padding:5px 13px; border-radius:14px; opacity:0; animation:k12drop 13s 8.6s linear infinite; pointer-events:none; box-shadow:0 0 18px rgba(255,195,36,.5);">V = IR</span>
+    <span style="position:absolute; left:85%; top:100px; z-index:2; background:rgba(217,107,232,.92); color:#3D0A49; font-family:Georgia,serif; font-size:14px; padding:5px 13px; border-radius:14px; opacity:0; animation:k12drop 13s 11.4s linear infinite; pointer-events:none; box-shadow:0 0 18px rgba(217,107,232,.5);">N$ &times; 8%</span>
+    <span style="position:absolute; left:72%; top:225px; z-index:2; background:rgba(157,107,255,.92); color:#fff; font-family:Georgia,serif; font-size:14px; padding:5px 13px; border-radius:14px; opacity:0; animation:k12drop 16s 3.8s linear infinite; pointer-events:none; box-shadow:0 0 18px rgba(157,107,255,.55);">&pi;r&sup2;</span>
+    <span style="position:absolute; left:46%; top:225px; z-index:2; background:rgba(255,195,36,.95); color:#4A3A00; font-family:Georgia,serif; font-size:14px; padding:5px 13px; border-radius:14px; opacity:0; animation:k12drop 16s 8s linear infinite; pointer-events:none; box-shadow:0 0 18px rgba(255,195,36,.5);">F = ma</span>
+    <span style="position:absolute; left:18%; top:225px; z-index:2; background:rgba(90,214,143,.92); color:#123B24; font-family:Georgia,serif; font-size:14px; padding:5px 13px; border-radius:14px; opacity:0; animation:k12drop 16s 12.4s linear infinite; pointer-events:none; box-shadow:0 0 18px rgba(90,214,143,.5);">6CO&#8322; + 6H&#8322;O</span>
+    <span style="position:absolute; left:26%; top:360px; z-index:2; background:rgba(217,107,232,.92); color:#3D0A49; font-family:Georgia,serif; font-size:14px; padding:5px 13px; border-radius:14px; opacity:0; animation:k12drop 19s 4.6s linear infinite; pointer-events:none; box-shadow:0 0 18px rgba(217,107,232,.5);">Profit = R &minus; C</span>
+    <span style="position:absolute; left:56%; top:360px; z-index:2; background:rgba(157,107,255,.92); color:#fff; font-family:Georgia,serif; font-size:14px; padding:5px 13px; border-radius:14px; opacity:0; animation:k12drop 19s 10.6s linear infinite; pointer-events:none; box-shadow:0 0 18px rgba(157,107,255,.55);">&Sigma;</span>
+    <span style="position:absolute; left:80%; top:360px; z-index:2; background:rgba(90,214,143,.92); color:#123B24; font-family:Georgia,serif; font-size:14px; padding:5px 13px; border-radius:14px; opacity:0; animation:k12drop 19s 15.4s linear infinite; pointer-events:none; box-shadow:0 0 18px rgba(90,214,143,.5);">ATP</span>
+    <span style="position:absolute; left:18%; bottom:9vh; z-index:2; width:56px; height:16px; border:2px solid rgba(157,107,255,.8); border-radius:50%; opacity:0; animation:k12ripple 13s 2.5s linear infinite; pointer-events:none;"></span>
+    <span style="position:absolute; left:44%; bottom:9vh; z-index:2; width:56px; height:16px; border:2px solid rgba(90,214,143,.8); border-radius:50%; opacity:0; animation:k12ripple 13s 5.7s linear infinite; pointer-events:none;"></span>
+    <span style="position:absolute; left:66%; bottom:9vh; z-index:2; width:56px; height:16px; border:2px solid rgba(255,195,36,.8); border-radius:50%; opacity:0; animation:k12ripple 13s 8.6s linear infinite; pointer-events:none;"></span>
+    <span style="position:absolute; left:85%; bottom:9vh; z-index:2; width:56px; height:16px; border:2px solid rgba(217,107,232,.8); border-radius:50%; opacity:0; animation:k12ripple 13s 11.4s linear infinite; pointer-events:none;"></span>
+    <span style="position:absolute; left:12%; top:14%; width:4px; height:4px; border-radius:50%; background:#F2F1FA; animation:k12twinkle 3.2s ease-in-out infinite; pointer-events:none;"></span>
+    <span style="position:absolute; left:30%; top:8%; width:3px; height:3px; border-radius:50%; background:#F2F1FA; animation:k12twinkle 4.1s 1s ease-in-out infinite; pointer-events:none;"></span>
+    <span style="position:absolute; left:58%; top:12%; width:5px; height:5px; border-radius:50%; background:var(--gold); animation:k12twinkle 3.6s .5s ease-in-out infinite; pointer-events:none;"></span>
+    <span style="position:absolute; left:76%; top:6%; width:3px; height:3px; border-radius:50%; background:#F2F1FA; animation:k12twinkle 2.8s 1.6s ease-in-out infinite; pointer-events:none;"></span>
+    <span style="position:absolute; left:90%; top:18%; width:4px; height:4px; border-radius:50%; background:#F2F1FA; animation:k12twinkle 4.5s 2.2s ease-in-out infinite; pointer-events:none;"></span>
+    <span style="position:absolute; left:8%; top:46%; width:3px; height:3px; border-radius:50%; background:var(--gold); animation:k12twinkle 3.9s 1.2s ease-in-out infinite; pointer-events:none;"></span>
+    <span style="position:absolute; left:93%; top:52%; width:3px; height:3px; border-radius:50%; background:#F2F1FA; animation:k12twinkle 3.3s .8s ease-in-out infinite; pointer-events:none;"></span>
+    <div style="position:absolute; left:0; right:0; bottom:0; height:12vh; background:linear-gradient(to top, rgba(157,107,255,.22), transparent); pointer-events:none;"></div>
+    <div style="position:absolute; top:-80px; right:-60px; width:340px; height:340px; border-radius:50%; background:radial-gradient(circle, rgba(157,107,255,.4), transparent 70%); filter:blur(10px); animation:k12blob 14s ease-in-out infinite; pointer-events:none;"></div>
+    <div style="position:absolute; bottom:-100px; left:-70px; width:400px; height:400px; border-radius:50%; background:radial-gradient(circle, rgba(255,195,36,.22), transparent 70%); filter:blur(12px); animation:k12blob2 17s ease-in-out infinite; pointer-events:none;"></div>
+    <div style="position:absolute; top:40%; left:12%; width:180px; height:180px; border-radius:50%; background:radial-gradient(circle, rgba(180,0,217,.28), transparent 70%); filter:blur(8px); animation:k12blob 11s 2s ease-in-out infinite; pointer-events:none;"></div>
+  </div>
+</div>
+
+<sc-if value="{{ policyOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closePolicy }}" style="position:fixed; inset:0; z-index:100; background:rgba(31,32,51,.55); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; padding:24px; animation:k12pop .15s ease;">
+    <div onClick="{{ stopClick }}" style="width:100%; max-width:680px; max-height:86vh; background:var(--bg); border-radius:16px; box-shadow:0 30px 80px rgba(31,32,51,.35); display:flex; flex-direction:column; overflow:hidden;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:20px 26px; border-bottom:1px solid var(--line); flex-shrink:0;">
+        <div>
+          <h2 style="font-size:19px; font-weight:600; margin:0;">Privacy Policy</h2>
+          <p style="font-size:12px; color:var(--muted); margin:3px 0 0;">K-Twelve Educational Technologies CC &middot; Effective 5 August 2025</p>
+        </div>
+        <button onClick="{{ closePolicy }}" title="Close" style="border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:9px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;" style-hover="background:var(--chip);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+      </div>
+      <div class="k12dd" style="overflow-y:auto; padding:26px; font-size:13.5px; line-height:1.75; color:var(--ink);">
+        <div style="background:var(--chip2); border-radius:12px; padding:16px 18px; margin-bottom:22px;">
+          <p style="margin:0; font-size:13px; line-height:1.7;"><strong>The short version:</strong> your data exists to power your learning - nothing else. We never sell it, we never market to children, and parents stay in control. Every quiz you take and question you ask makes the tutor better at teaching <em>you</em>.</p>
+        </div>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">1. Introduction</h3>
+        <p style="margin:0 0 18px;">At K-Twelve Educational Technologies CC ("we", "our" or "us"), privacy is not a legal afterthought - it is the foundation of a platform trusted by learners, parents and schools across Namibia and South Africa. This policy explains, in plain language, how we collect, use, protect and share personal information across the k12plus platform: the AI tutor, USSD access, learner, parent and educator dashboards, and related services. By using k12plus, you agree to these terms.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">2. What information we collect</h3>
+        <p style="margin:0 0 6px;">We collect only what is needed to personalise learning and improve the platform:</p>
+        <ul style="margin:0 0 18px; padding-left:20px;">
+          <li style="margin-bottom:4px;"><strong>Personal information</strong> - name, age, grade and class, school, location (region only, never GPS), and contact details of parents, guardians or educators.</li>
+          <li style="margin-bottom:4px;"><strong>Educational data</strong> - quiz results, learning patterns, engagement history and performance, used to adapt the tutor to each learner.</li>
+          <li style="margin-bottom:4px;"><strong>Device and technical data</strong> - device type, browser, and access method (web, mobile or USSD), so k12plus works on any phone.</li>
+          <li><strong>Voice and handwriting input</strong> - collected only where applicable, to power tutoring and feedback.</li>
+        </ul>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">3. How we use your information</h3>
+        <ul style="margin:0 0 18px; padding-left:20px;">
+          <li style="margin-bottom:4px;">Personalise and adapt learning content to each learner's pace and curriculum</li>
+          <li style="margin-bottom:4px;">Track academic progress and celebrate growth</li>
+          <li style="margin-bottom:4px;">Provide real-time dashboards for teachers and parents</li>
+          <li style="margin-bottom:4px;">Support troubleshooting and respond to user feedback</li>
+          <li>Generate anonymous, aggregated analytics that make the platform better for everyone</li>
+        </ul>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">4. Consent</h3>
+        <p style="margin:0 0 18px;">We explicitly request consent before collecting or processing personal data - especially for minors. For users under 18, parental or institutional consent is required, in line with Namibian law and global data-protection standards. Consent can be withdrawn at any time.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">5. Do we sell your data?</h3>
+        <p style="margin:0 0 18px;"><strong>No. Never.</strong> We do not sell, rent or trade your personal or non-personal information - not to advertisers, not to data brokers, not to anyone. Your data is used strictly to support your educational experience.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">6. Data security</h3>
+        <p style="margin:0 0 6px;">Your data is protected by:</p>
+        <ul style="margin:0 0 18px; padding-left:20px;">
+          <li style="margin-bottom:4px;">Encrypted cloud storage, in transit and at rest</li>
+          <li style="margin-bottom:4px;">Strict, role-based access controls</li>
+          <li>Regular security updates and independent audits</li>
+        </ul>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">7. Children's data &amp; marketing</h3>
+        <p style="margin:0 0 18px;">Children's data is <strong>never</strong> used for marketing - not by k12plus, and not by any third party. Every data point we hold about a learner exists for one purpose only: their education.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">8. Third-party services</h3>
+        <p style="margin:0 0 18px;">We use a small number of carefully vetted third-party tools - cloud hosting (e.g. Microsoft Azure), analytics and support services. Each is assessed for child-data protection and GDPR compliance before it touches the platform.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">9. Access, correction &amp; deletion</h3>
+        <p style="margin:0 0 18px;">Students, parents and school administrators can request access to their personal data, correction of inaccuracies, or deletion of records at any time. Email <a href="mailto:paulus@k12edu.io">paulus@k12edu.io</a> and we will act on it promptly.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">10. Data retention</h3>
+        <p style="margin:0 0 18px;">We keep data only as long as necessary to deliver our services, meet legal obligations and support educational reporting. Once it is no longer needed, it is securely deleted or anonymised.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">11. Policy updates</h3>
+        <p style="margin:0 0 18px;">As our practices evolve, this policy will too. Updates are posted at www.k12plus.app/privacy-policy, and significant changes are announced by email or in-platform message.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">12. Contact us</h3>
+        <p style="margin:0;">K-Twelve Educational Technologies CC<br>Email: <a href="mailto:paulus@k12edu.io">paulus@k12edu.io</a><br>Website: www.k12edu.io<br>Address: ERF 6078, Judika Street, Wambo Location, Windhoek, Namibia<br>Phone: +264 81 287 0702</p>
+      </div>
+    </div>
+  </div>
+</sc-if>
+<sc-if value="{{ termsOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeTerms }}" style="position:fixed; inset:0; z-index:100; background:rgba(31,32,51,.55); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; padding:24px; animation:k12pop .15s ease;">
+    <div onClick="{{ stopClick }}" style="width:100%; max-width:680px; max-height:86vh; background:var(--bg); border-radius:16px; box-shadow:0 30px 80px rgba(31,32,51,.35); display:flex; flex-direction:column; overflow:hidden;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:20px 26px; border-bottom:1px solid var(--line); flex-shrink:0;">
+        <div>
+          <h2 style="font-size:19px; font-weight:600; margin:0;">Terms of Use</h2>
+          <p style="font-size:12px; color:var(--muted); margin:3px 0 0;">K-Twelve Educational Technologies CC &middot; Effective 5 August 2025</p>
+        </div>
+        <button onClick="{{ closeTerms }}" title="Close" style="border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:9px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;" style-hover="background:var(--chip);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+      </div>
+      <div class="k12dd" style="overflow-y:auto; padding:26px; font-size:13.5px; line-height:1.75; color:var(--ink);">
+        <div style="background:var(--chip2); border-radius:12px; padding:16px 18px; margin-bottom:22px;">
+          <p style="margin:0; font-size:13px; line-height:1.7;"><strong>The short version:</strong> use k12plus honestly, for learning. Keep your account safe, respect your classmates and teachers, and let the tutor help you understand - not cheat. We will do our part by keeping the platform available, affordable and safe.</p>
+        </div>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">1. Who we are and what these terms cover</h3>
+        <p style="margin:0 0 18px;">These Terms of Use are an agreement between you and K-Twelve Educational Technologies CC ("k12plus", "we", "our" or "us"). They govern your use of the k12plus platform: the AI tutor, USSD access, learner, parent and educator dashboards, class and school features, and related services. By creating an account or using k12plus, you accept these terms together with our Privacy Policy.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">2. Who may use k12plus</h3>
+        <ul style="margin:0 0 18px; padding-left:20px;">
+          <li style="margin-bottom:4px;"><strong>Learners</strong> in Grade 11 or 12 may register with parental or institutional consent where under 18.</li>
+          <li style="margin-bottom:4px;"><strong>Educators</strong> may register to manage their classes, set assignments and track performance.</li>
+          <li><strong>Parents and guardians</strong> may register and link to their children's accounts using each learner's unique k12plus ID.</li>
+        </ul>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">3. Your account</h3>
+        <p style="margin:0 0 18px;">You are responsible for the accuracy of the details you register with - your name, grade, class and school - because they route you to the right classroom, teachers and assignments. Keep your password private. You are responsible for activity on your account; tell us immediately at <a href="mailto:paulus@k12edu.io">paulus@k12edu.io</a> if you suspect it has been compromised. One account per person; do not impersonate anyone or register on someone else's behalf without authority.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">4. Acceptable use</h3>
+        <p style="margin:0 0 6px;">k12plus exists to help you learn. You agree not to:</p>
+        <ul style="margin:0 0 18px; padding-left:20px;">
+          <li style="margin-bottom:4px;">Use the platform to cheat in examinations or submit tutor-generated work as your own where prohibited by your school</li>
+          <li style="margin-bottom:4px;">Bully, harass or abuse other learners, educators or staff in class chats or anywhere on the platform</li>
+          <li style="margin-bottom:4px;">Upload unlawful, harmful or offensive content, or content that infringes another person's rights</li>
+          <li style="margin-bottom:4px;">Attempt to access other users' accounts or data, probe or disrupt our systems, or scrape the platform</li>
+          <li>Resell, sublicense or commercially exploit the platform or its content without our written permission</li>
+        </ul>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">5. The AI tutor</h3>
+        <p style="margin:0 0 18px;">The AI tutor is a study aid aligned to the Namibian and South African curricula. It explains, practises and gives feedback - it does not replace your teachers, and it can make mistakes. Always check important answers against your syllabus and your educators. Marks, grades and official assessments remain the responsibility of your school.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">6. Subscriptions and payment</h3>
+        <p style="margin:0 0 18px;">Core features are free to start. Paid plans are billed as described on our Pricing page in your local currency (N$ or R). Prices may change; we will give notice before changes take effect. Fees already paid are non-refundable except where required by law. If a subscription lapses, your data remains safe - you simply lose access to paid features until you renew.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">7. Content and intellectual property</h3>
+        <p style="margin:0 0 18px;">The k12plus platform, brand, tutor, lesson content and software are owned by K-Twelve Educational Technologies CC or its licensors and are protected by copyright and trademark law. We grant you a personal, non-transferable licence to use them for your education. Work you create - your answers, notes and questions - remains yours; you grant us a licence to process it to provide the service, as described in our Privacy Policy.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">8. Availability</h3>
+        <p style="margin:0 0 18px;">We build for low-bandwidth, offline-first use, and we work hard to keep k12plus available - but we cannot promise uninterrupted service. Maintenance, network conditions and events beyond our control may cause downtime. Offline features keep working without a connection and sync when you are back online.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">9. Suspension and termination</h3>
+        <p style="margin:0 0 18px;">You may close your account at any time. We may suspend or terminate accounts that break these terms - particularly where a user endangers other learners, compromises platform security or misuses children's data. Where reasonable, we will warn you first. On termination, our Privacy Policy governs deletion of your data.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">10. Liability</h3>
+        <p style="margin:0 0 18px;">To the fullest extent permitted by Namibian and South African law, k12plus is provided "as is". We are not liable for indirect or consequential losses, examination outcomes, or losses caused by events beyond our reasonable control. Nothing in these terms limits liability that cannot lawfully be limited.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">11. Changes to these terms</h3>
+        <p style="margin:0 0 18px;">We may update these terms as the platform evolves. Updates are posted at www.k12plus.app/terms, and significant changes are announced by email or in-platform message. Continuing to use k12plus after changes take effect means you accept the updated terms.</p>
+        <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">12. Governing law and contact</h3>
+        <p style="margin:0;">These terms are governed by the laws of the Republic of Namibia.<br><br>K-Twelve Educational Technologies CC<br>Email: <a href="mailto:paulus@k12edu.io">paulus@k12edu.io</a><br>Website: www.k12edu.io<br>Address: ERF 6078, Judika Street, Wambo Location, Windhoek, Namibia<br>Phone: +264 81 287 0702</p>
+      </div>
+    </div>
+  </div>
+</sc-if></x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { dark: false, mode: 'signup', role: 'Learner', country: 'Namibia', first: '', last: '', email: '', mobile: '', password: '', showPw: false, school: '', schoolQuery: '', schoolOpen: false, updates: false, agree: false, done: false, error: '', uid: '', grade: '', cls: '', children: [{ id: '', grade: '', cls: '' }] };
+
+  componentDidMount() {
+    try { if (window.location.hash === '#login') this.setState({ mode: 'login' }); } catch (e) {}
+    let saved = null;
+    try { saved = localStorage.getItem('k12plus-theme'); } catch (e) {}
+    const dark = saved === 'dark';
+    document.body.dataset.theme = dark ? 'dark' : '';
+    let country = 'Namibia';
+    try {
+      const savedCur = localStorage.getItem('k12plus-currency');
+      if (savedCur === 'R') country = 'South Africa';
+    } catch (e) {}
+    this.setState({ dark, country });
+    this._closer = (e) => {
+      if (this.state.schoolOpen && !e.target.closest('input')) this.setState({ schoolOpen: false });
+    };
+    document.addEventListener('click', this._closer);
+  }
+  componentWillUnmount() { document.removeEventListener('click', this._closer); }
+
+  schools() {
+    const NA = 'Namibia', ZA = 'South Africa';
+    return [
+      { n: 'A. Shipena Secondary School', r: 'Khomas (Katutura, Windhoek)', c: NA },
+      { n: 'A. A. Denk Memorial School', r: 'Hardap (Kalkrand)', c: NA },
+      { n: 'Acacia High School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Academia Secondary School', r: 'Khomas (Khomasdal, Windhoek)', c: NA },
+      { n: 'All Nations Christian Primary School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Amakali Combined School', r: 'Oshikoto (Amuteye)', c: NA },
+      { n: 'Amazing Kids Private School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Ambunda Primary School', r: 'Oshikoto (Oniiwe B)', c: NA },
+      { n: 'Amen Combined School', r: 'Oshikoto (Onihadhila)', c: NA },
+      { n: 'Andimba Toivo ya Toivo Senior Secondary School', r: 'Oshana (Ondangwa)', c: NA },
+      { n: 'Angra Pequena Senior Secondary School', r: 'ǁKaras (Lüderitz)', c: NA },
+      { n: 'Ankambo Primary School', r: 'Oshana (Okaku)', c: NA },
+      { n: 'Anna Maasdorp Primary School', r: 'Hardap (Duineveld)', c: NA },
+      { n: 'Arandis Primary School', r: 'Erongo (Arandis)', c: NA },
+      { n: 'Ashipala Junior Secondary School', r: 'Omusati (Onatshiku)', c: NA },
+      { n: 'Atlantic Junior Secondary School', r: 'Erongo (Swakopmund)', c: NA },
+      { n: 'Andreas Haingura Kandjimi Primary School', r: 'Kavango East (Rundu)', c: NA },
+      { n: 'Auas Primary School', r: 'Khomas (Katutura, Windhoek)', c: NA },
+      { n: 'Augustineum Secondary School', r: 'Khomas (Khomasdal, Windhoek)', c: NA },
+      { n: 'Bet-El Primary School', r: 'Khomas (Katutura, Windhoek)', c: NA },
+      { n: 'Blouberg Primary School', r: 'Omaheke (Kalahari)', c: NA },
+      { n: 'Bloukrans Primary School', r: 'Khomas (Dordabis)', c: NA },
+      { n: 'Bukalo Primary School', r: 'Zambezi (Katima Mulilo)', c: NA },
+      { n: 'Bunya Combined School', r: 'Kavango West (Bunya)', c: NA },
+      { n: 'Brandberg Primary School', r: 'Erongo (Uis)', c: NA },
+      { n: 'Braunfels Agricultural High School', r: 'Kunene (Outjo)', c: NA },
+      { n: 'Cabatana Private School', r: 'Oshana (Oshakati)', c: NA },
+      { n: 'Canisianum Roman Catholic High School', r: 'Omusati (Anamulenge)', c: NA },
+      { n: 'Caprivi Senior Secondary School', r: 'Zambezi (Katima Mulilo)', c: NA },
+      { n: 'Centaurus Secondary School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Charles Anderson Combined School', r: 'Oshana (Ongwediva)', c: NA },
+      { n: 'Chief Hosea Kutako Primary School', r: 'Omaheke (Aminuis)', c: NA },
+      { n: 'Chinchimane Combined School', r: 'Zambezi (Chinchimane)', c: NA },
+      { n: 'C. J. Brandt Secondary School', r: 'Khomas (Katutura, Windhoek)', c: NA },
+      { n: 'Combretum Trust School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Concordia College', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Constantia Private Combined School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Cornelius Goreseb Senior Secondary School', r: 'Kunene (Khorixas)', c: NA },
+      { n: 'Cosmos High School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Da-Palm Senior Secondary School', r: 'Erongo (Otjimbingwe)', c: NA },
+      { n: 'Dagbreek School for the Intellectually Impaired', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Danie Joubert Combined School', r: 'Hardap (Mariental)', c: NA },
+      { n: 'Daweb Junior Secondary School', r: 'Hardap (Maltahöhe)', c: NA },
+      { n: 'Daweb Primary School', r: 'Hardap (Maltahöhe)', c: NA },
+      { n: 'Dawid Bezuidenhout High School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'David Sheehama Senior Secondary School', r: 'Omusati (Outapi)', c: NA },
+      { n: 'De Duine Secondary School', r: 'Erongo (Walvis Bay)', c: NA },
+      { n: 'Delta Primary School Windhoek', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Delta Secondary School Windhoek', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Deutsche Höhere Privatschule Windhoek', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Diaz Primary School', r: 'ǁKaras (Lüderitz)', c: NA },
+      { n: 'Dibasen Junior Secondary School', r: 'Erongo (Okombahe)', c: NA },
+      { n: 'Divundu Combined School', r: 'Kavango East (Divundu)', c: NA },
+      { n: 'Don Bosco Primary School', r: 'ǁKaras (Keetmanshoop)', c: NA },
+      { n: 'Donatus Secondary School', r: 'Otjozondjupa (Otjiwarongo)', c: NA },
+      { n: 'Donkerbos Primary School', r: 'Omaheke (Donkerbos)', c: NA },
+      { n: 'Dordabis Primary School', r: 'Khomas (Dordabis)', c: NA },
+      { n: 'Dr Abraham Iyambo Senior Secondary School', r: 'Ohangwena (Oshikunde)', c: NA },
+      { n: 'Duinesig Combined School', r: 'Erongo (Walvis Bay)', c: NA },
+      { n: 'Duneside Private High School', r: 'Erongo (Walvis Bay)', c: NA },
+      { n: 'Edward ǀGaroëb Primary School', r: 'Kunene (Anker)', c: NA },
+      { n: 'Ebenhaeser Primary School', r: 'Erongo (Karibib)', c: NA },
+      { n: 'Eddie Bowe Primary School', r: 'Kunene (Khorixas)', c: NA },
+      { n: 'Eemboo Combined School', r: 'Ohangwena (Eemboo)', c: NA },
+      { n: 'Eendombe Combined School', r: 'Omusati (Eendombe)', c: NA },
+      { n: 'Eengendjo Senior Secondary School', r: 'Ohangwena (Omungwelume)', c: NA },
+      { n: 'Eengwena Primary School', r: 'Omusati (Eenagwena)', c: NA },
+      { n: 'Eenhana Secondary School', r: 'Ohangwena (Eenhana)', c: NA },
+      { n: 'Eexumba Combined School', r: 'Ohangwena (Eexumba)', c: NA },
+      { n: 'Benjamin Hauwanga Combined School', r: 'Omusati (Eenkalashe)', c: NA },
+      { n: 'Ehomba Combined School', r: 'Kunene (Ehomba)', c: NA },
+      { n: 'Ekulo Senior Secondary School', r: 'Oshikoto (Omuthiya)', c: NA },
+      { n: 'Elakalapwa Combined School', r: 'Ohangwena (Oikoto)', c: NA },
+      { n: 'Elamba Combined School', r: 'Omusati (Tsandi)', c: NA },
+      { n: 'Elao Primary School', r: 'Ohangwena (Okanghudi)', c: NA },
+      { n: 'ELCIN Nkurenkuru High School', r: 'Kavango West (Nkurenkuru)', c: NA },
+      { n: 'Ella du Plessis High School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Elondo East Primary School', r: 'Omusati (Tsandi)', c: NA },
+      { n: 'Eloolo Combined School', r: 'Oshana (Eloolo)', c: NA },
+      { n: 'Eluwa Special School', r: 'Oshana (Ongwediva)', c: NA },
+      { n: 'Emma Hoogenhout Primary School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Empelheim Junior Secondary School', r: 'Hardap (Mariental)', c: NA },
+      { n: 'Engombe Junior Primary School', r: 'Oshana (Engombe)', c: NA },
+      { n: 'Epako Junior Secondary School', r: 'Omaheke (Gobabis)', c: NA },
+      { n: 'Epandulo Combined School', r: 'Oshikoto (Onalunike)', c: NA },
+      { n: 'Epukiro Post 3 Junior Secondary School', r: 'Omaheke (Epukiro)', c: NA },
+      { n: 'Epukiro Roman Catholic Primary School', r: 'Omaheke (Epukiro)', c: NA },
+      { n: 'Erkki Tauya Junior Secondary School', r: 'Omusati (Nakayale)', c: NA },
+      { n: 'Eros Primary School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Eros School for Girls', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Erundu Combined School', r: 'Oshana (Oshakati)', c: NA },
+      { n: 'Esheshete Combined School', r: 'Oshikoto (Esheshete)', c: NA },
+      { n: 'Etalaleko Senior Secondary School', r: 'Omusati (Okahao)', c: NA },
+      { n: 'Etanga Primary School', r: 'Kunene (Etanga)', c: NA },
+      { n: 'Etosha Secondary School', r: 'Oshikoto (Tsumeb)', c: NA },
+      { n: 'Etsapa Combined School', r: 'Ohangwena (Etsapa)', c: NA },
+      { n: 'Dr Frans Aupa Indongo Primary School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Frans Frederick Combined School', r: 'Kunene (Fransfontein)', c: NA },
+      { n: 'Friedrich Awaseb Senior Secondary School', r: 'Otjozondjupa (Grootfontein)', c: NA },
+      { n: 'Gabriel Taapopi Senior Secondary School', r: 'Oshana (Ongwediva)', c: NA },
+      { n: 'Gam Primary School', r: 'Otjozondjupa (Grootfontein)', c: NA },
+      { n: 'Gam Secondary School', r: 'Otjozondjupa (Gam)', c: NA },
+      { n: 'Gammams Primary School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Gobabis Gymnasium Private School', r: 'Omaheke (Gobabis)', c: NA },
+      { n: 'G. K. Wahl Combined School', r: 'Otjozondjupa (Kalkfeld)', c: NA },
+      { n: 'Gobabis Primary School', r: 'Omaheke (Gobabis)', c: NA },
+      { n: 'Goreangab Junior Secondary School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Gqaina Primary School', r: 'Omaheke (Okarukambe)', c: NA },
+      { n: 'Groot Aub Junior Secondary School', r: 'Khomas (Groot Aub)', c: NA },
+      { n: 'Grootberg Primary School', r: 'Kunene (Erwee)', c: NA },
+      { n: 'Grootfontein Agricultural College', r: 'Otjozondjupa (Grootfontein)', c: NA },
+      { n: 'Grootfontein Secondary School', r: 'Otjozondjupa (Grootfontein)', c: NA },
+      { n: 'Gustav Kandjii Junior Secondary School', r: 'Omaheke (Otjinene)', c: NA },
+      { n: 'Hage G. Geingob High School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Haimbili Haufiku Senior Secondary School', r: 'Ohangwena (Eenhana)', c: NA },
+      { n: 'Haisisira Junior Primary School', r: 'Kavango West', c: NA },
+      { n: 'Hans Daniel Namuhuya Senior Secondary School', r: 'Oshikoto (Ondando)', c: NA },
+      { n: 'Himarwa Ithete Secondary School', r: 'Kavango West (Mpungu)', c: NA },
+      { n: 'Haudano Secondary School', r: 'Omusati (Okalongo)', c: NA },
+      { n: 'Havana High School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Hedimbi Primary School', r: 'Oshikoto (Eengodi)', c: NA },
+      { n: 'Helene Van Rhijn Primary School', r: 'ǁKaras (Lüderitz)', c: NA },
+      { n: 'Heroes Private School', r: 'Oshikoto (Oshigambo)', c: NA },
+      { n: 'Highlands Christian School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Highline Secondary School', r: 'Khomas (Greenwell Matongo, Windhoek)', c: NA },
+      { n: 'Hoachanas A.M.E. Community Private Primary School', r: 'Hardap (Hoachanas)', c: NA },
+      { n: 'Hochland High School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Holy Cross Convent School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Hoeksteen Primary School', r: 'ǁKaras (Rosh Pinah)', c: NA },
+      { n: 'Immanuel Shifidi Secondary School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Iihenda Secondary School', r: 'Oshana (Oshitayi)', c: NA },
+      { n: 'Iikelo Combined School', r: 'Ohangwena (Epembe)', c: NA },
+      { n: 'Iilyateko Combined School', r: 'Omusati (Oshihiindongo)', c: NA },
+      { n: 'Iindangungu Combined School', r: 'Oshana (Okaku)', c: NA },
+      { n: 'Iipumbu Senior Secondary School', r: 'Oshana (Oshakati)', c: NA },
+      { n: 'Isak Katali Combined School', r: 'Omusati (Okasheshete)', c: NA },
+      { n: 'Izak Buys Junior Secondary School', r: 'Omaheke (Leonardville)', c: NA },
+      { n: 'Isize Combined School', r: 'Zambezi (Katima Mulilo)', c: NA },
+      { n: 'J. G. van der Wath Secondary School', r: 'Otjozondjupa (Okahandja)', c: NA },
+      { n: 'Jacob Basson Combined School', r: 'Kunene (Bergsig)', c: NA },
+      { n: 'Jakob Marengo Secondary School', r: 'Khomas (Khomasdal, Windhoek)', c: NA },
+      { n: 'Jan Jonker Afrikaner High School', r: 'Khomas (Katutura, Windhoek)', c: NA },
+      { n: 'Jan Möhr Secondary School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'John Alphons Pandeni Combined School', r: 'Omusati (Outapi)', c: NA },
+      { n: 'P.J. Tsaitsaib Combined School', r: 'Hardap (Hoachanas)', c: NA },
+      { n: 'Reverend Juuso Shikongo Senior Secondary School', r: 'Oshikoto (Onankali)', c: NA },
+      { n: 'Kalkfeld Primary School', r: 'Otjozondjupa (Kalkfeld)', c: NA },
+      { n: 'Kamwandi Combined School', r: 'Erongo (Henties Bay)', c: NA },
+      { n: 'Karibib Junior Secondary School', r: 'Erongo (Karibib)', c: NA },
+      { n: 'Karibib Primary School', r: 'Erongo (Karibib)', c: NA },
+      { n: 'Karibib Private School', r: 'Erongo (Karibib)', c: NA },
+      { n: 'Kandjimi Murangi Secondary School', r: 'Kavango West (Nkurenkuru)', c: NA },
+      { n: 'Karasburg Primary School', r: 'ǁKaras (Karasburg)', c: NA },
+      { n: 'Karuci Primary School', r: 'Kavango East (Ndiyona)', c: NA },
+      { n: 'Karukuta Primary School', r: 'Kavango East (Karukuta)', c: NA },
+      { n: 'Karundu Primary School', r: 'Otjozondjupa (Otjiwarongo)', c: NA },
+      { n: 'Kasivi Combined School', r: 'Kavango West (Kasivi)', c: NA },
+      { n: 'Kauluma Combined School', r: 'Ohangwena (Ongula)', c: NA },
+      { n: 'Keendawala Junior Secondary School', r: 'Omusati (Tsandi)', c: NA },
+      { n: 'Kephas Muzuma Primary School', r: 'Kunene (Otjikavare)', c: NA },
+      { n: 'Khomas High School', r: 'Khomas (Windhoek West)', c: NA },
+      { n: 'Khomasdal Primary School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Klein Aub Special School', r: 'Hardap (Klein Aub)', c: NA },
+      { n: 'Klein Aub Primary School', r: 'Hardap (Klein Aub)', c: NA },
+      { n: 'Kolin Foundation Secondary School', r: 'Erongo (Arandis)', c: NA },
+      { n: 'Kongola Combined School', r: 'Zambezi (Kongola)', c: NA },
+      { n: 'Kuisebmond Secondary School', r: 'Erongo (Walvis Bay)', c: NA },
+      { n: 'Leevi Hakusembe Senior Secondary School', r: 'Kavango West (Sizongoro)', c: NA },
+      { n: 'Linus Shashipapo Secondary School', r: 'Kavango East (Shinyunwe)', c: NA },
+      { n: 'Linyanti Combined School', r: 'Zambezi (Linyanti)', c: NA },
+      { n: 'Liselo Combined School', r: 'Zambezi (Liselo)', c: NA },
+      { n: 'Mangetti Dune Primary School', r: 'Otjozondjupa (Tsumkwe)', c: NA },
+      { n: 'Mariental Primary School', r: 'Hardap (Mariental)', c: NA },
+      { n: 'Marmer Primary School', r: 'ǁKaras (Aus)', c: NA },
+      { n: 'Maria Mwengere Secondary School', r: 'Kavango East (Kayengona)', c: NA },
+      { n: 'Martin Luther High School', r: 'Erongo (Okombahe)', c: NA },
+      { n: 'Martin Ndumba Combined School', r: 'Kavango East (Divundu)', c: NA },
+      { n: 'Martti Ahtisaari Primary School', r: 'Khomas (Wanaheda, Windhoek)', c: NA },
+      { n: 'Maurits Devenish Private Primary School', r: 'Oshana (Ongwediva)', c: NA },
+      { n: 'Mbongolo Primary School', r: 'Omusati (Etapaela)', c: NA },
+      { n: 'Monica Geingos Secondary School', r: 'Otjozondjupa (Otjiwarongo)', c: NA },
+      { n: 'Môreson Special School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Moses ǁGaroëb Primary School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Motsomi Primary School', r: 'Omaheke (Aminuis)', c: NA },
+      { n: 'Mphe Thuto Primary School', r: 'Omaheke (Tsjaka)', c: NA },
+      { n: 'Mumbwenge Combined School', r: 'Oshikoto (Ombalamumbwenge)', c: NA },
+      { n: 'Mwaala High School', r: 'Omusati (Tsandi)', c: NA },
+      { n: 'Mwadikange Kaulinge Secondary School', r: 'Ohangwena (Ondobe)', c: NA },
+      { n: 'Mwadinomho Combined School', r: 'Ohangwena (Ondeihaluka)', c: NA },
+      { n: 'Mweshipandeka High School', r: 'Oshana (Ongwediva)', c: NA },
+      { n: 'Nailenge Primary School', r: 'Ohangwena (Oshali)', c: NA },
+      { n: 'Nambula Combined School', r: 'Omusati (Elondo East)', c: NA },
+      { n: 'Namib High School', r: 'Erongo (Swakopmund)', c: NA },
+      { n: 'Namibia Primary School', r: 'Khomas (Katutura, Windhoek)', c: NA },
+      { n: 'Nanghonda Combined School', r: 'Ohangwena (Ongha)', c: NA },
+      { n: 'Ndiyona Combined School', r: 'Kavango East (Ndiyona)', c: NA },
+      { n: 'Negumbo Senior Secondary School', r: 'Omusati (Onaanda)', c: NA },
+      { n: 'Nehale Senior Secondary School', r: 'Oshikoto (Onayena)', c: NA },
+      { n: 'Noordgrens Secondary School', r: 'Kavango East (Rundu)', c: NA },
+      { n: 'Nossob Primary School', r: 'Omaheke', c: NA },
+      { n: 'Northcote Private School', r: 'Oshikoto (Oniipa)', c: NA },
+      { n: 'Nuuyoma Senior Secondary School', r: 'Omusati (Oshikuku)', c: NA },
+      { n: 'Ntara Combined School', r: 'Kavango West (Ntara)', c: NA },
+      { n: 'Nyangana Combined School', r: 'Kavango East (Nyangana)', c: NA },
+      { n: 'Nyondo Combined School', r: 'Kavango East (Ndiyona)', c: NA },
+      { n: 'Odibo Combined School', r: 'Ohangwena (Odibo)', c: NA },
+      { n: 'Oikango Combined School', r: 'Oshana (Ohakweenyanga)', c: NA },
+      { n: 'Oipya Primary School', r: 'Ohangwena (Etameko)', c: NA },
+      { n: 'Ongenga Junior Secondary School', r: 'Ohangwena (Ongenga)', c: NA },
+      { n: 'Ongenga English Private Primary School', r: 'Ohangwena (Ongenga)', c: NA },
+      { n: 'Onghwiyu Combined School', r: 'Ohangwena (Onghwiyu)', c: NA },
+      { n: 'Okaepe Project School', r: 'Otjozondjupa (Okaepe)', c: NA },
+      { n: 'Okakarara Senior Secondary School', r: 'Otjozondjupa (Okakarara)', c: NA },
+      { n: 'Okashandja Combined School', r: 'Oshana (Uukwiyu)', c: NA },
+      { n: 'Okathitu Combined School', r: 'Omusati (Tsandi)', c: NA },
+      { n: 'Okomakwiya Junior Primary School', r: 'Omusati (Onesi)', c: NA },
+      { n: 'Okondjatu Combined School', r: 'Otjozondjupa (Okondjatu)', c: NA },
+      { n: 'Okaleke Combined School', r: 'Omusati (Elim)', c: NA },
+      { n: 'Olambo Junior Primary School', r: 'Oshikoto (Olambo)', c: NA },
+      { n: 'Olupaka Combined School', r: 'Omusati (Outapi)', c: NA },
+      { n: 'Olupale Combined School', r: 'Oshikoto (Omaakuku)', c: NA },
+      { n: 'Omakondo Combined School', r: 'Ohangwena (Omakondo)', c: NA },
+      { n: 'Omagongati Combined School', r: 'Oshana (Omagongati)', c: NA },
+      { n: 'Omaruru Primary School', r: 'Erongo (Omaruru)', c: NA },
+      { n: 'Omatjete Primary School', r: 'Erongo (Omaruru)', c: NA },
+      { n: 'Ombombo Combined School', r: 'Kunene (Epupa)', c: NA },
+      { n: 'Ombome Combined School', r: 'Omusati (Onesi)', c: NA },
+      { n: 'Ombuga Combined School', r: 'Oshana (Oshakati West)', c: NA },
+      { n: 'Ombahe Primary School', r: 'Omusati (Tsandi)', c: NA },
+      { n: 'Ombundu Combined School', r: 'Oshikoto (Ombundu)', c: NA },
+      { n: 'Omuhaturua Primary School', r: 'Omaheke (Otjimanangombe)', c: NA },
+      { n: 'Omutse Combined School', r: 'Oshikoto (Omutse)', c: NA },
+      { n: 'Omuthiya Iipundi Senior Secondary School', r: 'Oshikoto (Omuthiya)', c: NA },
+      { n: 'Omuulukila Primary School', r: 'Omusati (Outapi)', c: NA },
+      { n: 'Onaholongo Combined School', r: 'Omusati (Outapi)', c: NA },
+      { n: 'Onakalunga Combined School', r: 'Ohangwena (Omundaungilo)', c: NA },
+      { n: 'Onakasino Junior Primary School', r: 'Oshikoto (Onakasino)', c: NA },
+      { n: 'Onamukulo Combined School', r: 'Ohangwena (Onamukulo)', c: NA },
+      { n: 'Onamunhama Combined School', r: 'Ohangwena (Onamunhama)', c: NA },
+      { n: 'Onamutene Combined School', r: 'Oshikoto (Onamutene)', c: NA },
+      { n: 'Onangolo Secondary School', r: 'Ohangwena (Epembe)', c: NA },
+      { n: 'Onangholo Combined School', r: 'Omusati (Outapi)', c: NA },
+      { n: 'Onankali-North Combined School', r: 'Ohangwena (Omahenge)', c: NA },
+      { n: 'Onankali-South Combined School', r: 'Oshikoto (Onankali)', c: NA },
+      { n: 'Onangwe Combined School', r: 'Ohangwena (Onangwe)', c: NA },
+      { n: 'Onampadhi Primary School', r: 'Oshikoto (Onampadhi)', c: NA },
+      { n: 'Onathinge-North Combined School', r: 'Oshikoto (Onathinge)', c: NA },
+      { n: 'Onathinge-South Combined School', r: 'Oshikoto (Onathinge)', c: NA },
+      { n: 'Onashitendo Primary School', r: 'Omusati (Tsandi)', c: NA },
+      { n: 'Onesi Senior Secondary School', r: 'Omusati (Onesi)', c: NA },
+      { n: 'Ongha Senior Secondary School', r: 'Ohangwena (Ongha)', c: NA },
+      { n: 'Ongolo Combined School', r: 'Omusati (Eengolo)', c: NA },
+      { n: 'Onguti Senior Secondary School', r: 'Oshikoto (Okankolo)', c: NA },
+      { n: 'Oniihwa Combined School', r: 'Oshikoto (Onayena)', c: NA },
+      { n: 'Oniiwe Primary School', r: 'Oshikoto (Onayena)', c: NA },
+      { n: 'Ontoko Combined School', r: 'Omusati (Onesi)', c: NA },
+      { n: 'Onyika Junior Secondary School', r: 'Omusati (Oshikuku)', c: NA },
+      { n: 'Opuwo Primary School', r: 'Kunene (Opuwo)', c: NA },
+      { n: 'Orange Combined School', r: 'Omusati (Okalongo)', c: NA },
+      { n: 'Oranjemund Private School', r: 'ǁKaras (Oranjemund)', c: NA },
+      { n: 'Orban Primary School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Orwetoveni Primary School', r: 'Otjozondjupa (Otjiwarongo)', c: NA },
+      { n: 'Oshakati Senior Secondary School', r: 'Oshana (Oshakati)', c: NA },
+      { n: 'Oshali West Combined School', r: 'Ohangwena (Oshali West)', c: NA },
+      { n: 'Oshidute Combined School', r: 'Ohangwena (Epembe)', c: NA },
+      { n: 'Oshigambo High School', r: 'Oshikoto (Oshigambo)', c: NA },
+      { n: 'Oshikulufitu Combined School', r: 'Omusati (Outapi)', c: NA },
+      { n: 'Oshilemba Combined School', r: 'Omusati (Onesi)', c: NA },
+      { n: 'Otjikondo School Village', r: 'Kunene (Otjikondo)', c: NA },
+      { n: 'Otjikojo Primary School', r: 'Kunene (Opuwo Rural)', c: NA },
+      { n: 'Otjiwarongo Secondary School', r: 'Otjozondjupa (Otjiwarongo)', c: NA },
+      { n: 'Oupili Combined School', r: 'Ohangwena (Oupili)', c: NA },
+      { n: 'Outjo Secondary School', r: 'Kunene (Outjo)', c: NA },
+      { n: 'P.K. De Villiers Secondary School', r: 'ǁKaras (Keetmanshoop)', c: NA },
+      { n: 'Pahangwashime Combined School', r: 'Ohangwena (Oipanda)', c: NA },
+      { n: 'Petrus ǃGaneb Secondary School', r: 'Erongo (Uis)', c: NA },
+      { n: 'Petrus Vries Primary School', r: 'Hardap (Khauxas)', c: NA },
+      { n: 'Pionier Boys\' School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Pionierspark Primary School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Paresis Secondary School', r: 'Otjozondjupa (Otjiwarongo)', c: NA },
+      { n: 'Primary School Baumgartsbrunn', r: 'Khomas (Baumgartsbrunn)', c: NA },
+      { n: 'Putuavanga Senior Secondary School', r: 'Kunene (Opuwo)', c: NA },
+      { n: 'Rietquelle Junior Secondary School', r: 'Omaheke (Aminuis)', c: NA },
+      { n: 'Rocky Crest Senior Secondary School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Roman Catholic Mokaleng Combined School', r: 'Omaheke (Aminuis)', c: NA },
+      { n: 'Romanus Kamunoko Senior Secondary School', r: 'Kavango East (Rundu)', c: NA },
+      { n: 'Rosh Pinah Academy', r: 'ǁKaras (Rosh Pinah)', c: NA },
+      { n: 'Ruacana Vocational Secondary School', r: 'Omusati (Ruacana)', c: NA },
+      { n: 'Rucara Combined School', r: 'Kavango East (Rucara)', c: NA },
+      { n: 'Rukongo Vision School', r: 'Kavango East (Divundu)', c: NA },
+      { n: 'Rundu Secondary School', r: 'Kavango East (Rundu)', c: NA },
+      { n: 'Rupara Combined School', r: 'Kavango West (Rupara)', c: NA },
+      { n: 'Sanjo Senior Secondary School', r: 'Zambezi (Bukalo)', c: NA },
+      { n: 'Schmelenville Combined School', r: 'ǁKaras (Bethanie)', c: NA },
+      { n: 'Shaanika Nashilongo Secondary School', r: 'Omusati (Okahao)', c: NA },
+      { n: 'Shikeva Combined School', r: 'Ohangwena', c: NA },
+      { n: 'Shikongo Iipinge Senior Secondary School', r: 'Omusati (Tsandi)', c: NA },
+      { n: 'Sakaria Shikudule Combined School', r: 'Ohangwena (Oshali)', c: NA },
+      { n: 'Shitemo Combined School', r: 'Kavango East (Ndonga Linena)', c: NA },
+      { n: 'Simataa Secondary School', r: 'Zambezi (Chinchimane)', c: NA },
+      { n: 'Singalamwe Combined School', r: 'Zambezi (Singalamwe)', c: NA },
+      { n: 'St. Andrews Primary School', r: 'Khomas (Khomasdal, Windhoek)', c: NA },
+      { n: 'St Boniface College', r: 'Kavango East', c: NA },
+      { n: 'Saint Charles Lwanga High School', r: 'Omusati (Outapi)', c: NA },
+      { n: 'St. George\'s Diocesan School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'St. Joseph\'s Roman Catholic High School', r: 'Khomas (Döbra)', c: NA },
+      { n: 'St. Mary\'s Odibo High School', r: 'Ohangwena (Odibo)', c: NA },
+      { n: 'St. Paul\'s College', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Suiderhof Primary School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Swakopmund Christian Academy', r: 'Erongo (Swakopmund)', c: NA },
+      { n: 'Secondary School Swakopmund', r: 'Erongo (Swakopmund)', c: NA },
+      { n: 'Tanben College', r: 'Khomas (Windhoek West)', c: NA },
+      { n: 'The International School of Walvis Bay', r: 'Erongo (Walvis Bay)', c: NA },
+      { n: 'TUCSIN', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Tobias Hainyeko Project School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Tsau ǁKhaeb Secondary School', r: 'ǁKaras (Rosh Pinah)', c: NA },
+      { n: 'Tsandi Primary School', r: 'Omusati (Tsandi)', c: NA },
+      { n: 'Tsaraxa-Aibes Combined School', r: 'Otjozondjupa (Otjiwarongo)', c: NA },
+      { n: 'Tsintsabis Combined School', r: 'Oshikoto (Tsintsabis)', c: NA },
+      { n: 'Tsumkwe Primary School', r: 'Otjozondjupa (Tsumkwe)', c: NA },
+      { n: 'Tsumeb Gimnasium Private School', r: 'Oshikoto (Tsumeb)', c: NA },
+      { n: 'Tulihongeni Combined School', r: 'Ohangwena (Engela)', c: NA },
+      { n: 'UN Nghaamwa Secondary School', r: 'Ohangwena (Omungwelume)', c: NA },
+      { n: 'Uukule Senior Secondary School', r: 'Oshikoto (Onyaanya)', c: NA },
+      { n: 'Uutsathima Combined School', r: 'Omusati (Uutsathima)', c: NA },
+      { n: 'Uuyoka Combined School', r: 'Ohangwena (Uuyoka)', c: NA },
+      { n: 'Waapandula Primary School', r: 'Oshikoto (Omuthiya)', c: NA },
+      { n: 'Waldorf School Windhoek', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Walvis Bay Private School', r: 'Erongo (Walvis Bay)', c: NA },
+      { n: 'Wennie Du Plessis Secondary School', r: 'Omaheke (Gobabis)', c: NA },
+      { n: 'Willem Borchard Primary School', r: 'Erongo (Okombahe)', c: NA },
+      { n: 'Windhoek Afrikaanse Privaatskool', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Windhoek Gymnasium Private School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Windhoek High School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Windhoek International School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'Windhoek Technical High School', r: 'Khomas (Windhoek)', c: NA },
+      { n: 'St. Matthew\'s High School', r: 'Eastern Cape (Keiskammahoek)', c: ZA },
+      { n: 'Clarendon High School for Girls', r: 'Eastern Cape (East London)', c: ZA },
+      { n: 'Hudson Park High School', r: 'Eastern Cape (East London)', c: ZA },
+      { n: 'Port Rex Technical High School', r: 'Eastern Cape (East London)', c: ZA },
+      { n: 'Selborne College', r: 'Eastern Cape (East London)', c: ZA },
+      { n: 'Stirling High School', r: 'Eastern Cape (East London)', c: ZA },
+      { n: 'West Bank High School', r: 'Eastern Cape (East London)', c: ZA },
+      { n: 'Khulani Commercial High School', r: 'Eastern Cape (Mdantsane)', c: ZA },
+      { n: 'Dale College', r: 'Eastern Cape (Qonce)', c: ZA },
+      { n: 'Get Ahead College', r: 'Eastern Cape (Komani)', c: ZA },
+      { n: 'Ntsonkotha Senior Secondary School', r: 'Eastern Cape (Lady Frere)', c: ZA },
+      { n: 'Queen\'s College', r: 'Eastern Cape (Komani)', c: ZA },
+      { n: 'Collegiate Girls High School', r: 'Eastern Cape (Gqeberha)', c: ZA },
+      { n: 'Grey High School', r: 'Eastern Cape (Gqeberha)', c: ZA },
+      { n: 'Lawson Brown High School', r: 'Eastern Cape (Gqeberha)', c: ZA },
+      { n: 'Victoria Park High School', r: 'Eastern Cape (Gqeberha)', c: ZA },
+      { n: 'Westering High School', r: 'Eastern Cape (Gqeberha)', c: ZA },
+      { n: 'Westville Senior Secondary High School', r: 'Eastern Cape (Gqeberha)', c: ZA },
+      { n: 'Hoërskool Brandwag', r: 'Eastern Cape (Kariega)', c: ZA },
+      { n: 'Muir College', r: 'Eastern Cape (Kariega)', c: ZA },
+      { n: 'Molly Blackburn High School', r: 'Eastern Cape (KwaNobuhle)', c: ZA },
+      { n: 'Nomaka Mbeki Technical Senior Secondary School', r: 'Eastern Cape (Dutywa)', c: ZA },
+      { n: 'Diocesan School for Girls', r: 'Eastern Cape (Makhanda)', c: ZA },
+      { n: 'Gill College', r: 'Eastern Cape (Somerset East)', c: ZA },
+      { n: 'Graeme College', r: 'Eastern Cape (Makhanda)', c: ZA },
+      { n: 'Kingswood College', r: 'Eastern Cape (Makhanda)', c: ZA },
+      { n: 'Woodridge College', r: 'Eastern Cape (Thornhill)', c: ZA },
+      { n: 'Port Alfred High School', r: 'Eastern Cape (Port Alfred)', c: ZA },
+      { n: 'St. Andrew\'s College', r: 'Eastern Cape (Makhanda)', c: ZA },
+      { n: 'Victoria Girls\' High School', r: 'Eastern Cape (Makhanda)', c: ZA },
+      { n: 'Bethlehem Voortrekker High School', r: 'Free State (Bethlehem)', c: ZA },
+      { n: 'Bloemfontein High School', r: 'Free State (Bloemfontein)', c: ZA },
+      { n: 'Grey College', r: 'Free State (Bloemfontein)', c: ZA },
+      { n: 'Hoërskool Fichardtpark', r: 'Free State (Bloemfontein)', c: ZA },
+      { n: 'Hoërskool Jim Fouché', r: 'Free State (Bloemfontein)', c: ZA },
+      { n: 'Hoërskool Sentraal', r: 'Free State (Bloemfontein)', c: ZA },
+      { n: 'Phehello High School', r: 'Free State (Kutlwanong)', c: ZA },
+      { n: 'Sasolburg High School', r: 'Free State (Sasolburg)', c: ZA },
+      { n: 'St. Andrew\'s School', r: 'Free State (Bloemfontein)', c: ZA },
+      { n: 'St. Michael\'s School', r: 'Free State (Bloemfontein)', c: ZA },
+      { n: 'Welkom-Gimnasium', r: 'Free State (Welkom)', c: ZA },
+      { n: 'African Leadership Academy', r: 'Gauteng (Honeydew)', c: ZA },
+      { n: 'Allen Glen High School', r: 'Gauteng (Allens Nek)', c: ZA },
+      { n: 'Athlone Boys\' High School', r: 'Gauteng (Johannesburg)', c: ZA },
+      { n: 'Aurora Private School', r: 'Gauteng (Johannesburg)', c: ZA },
+      { n: 'Barnato Park High School', r: 'Gauteng (Johannesburg)', c: ZA },
+      { n: 'Bryanston High School', r: 'Gauteng (Bryanston)', c: ZA },
+      { n: 'Crawford College Lonehill', r: 'Gauteng (Lone Hill)', c: ZA },
+      { n: 'Fourways High School', r: 'Gauteng (Fourways)', c: ZA },
+      { n: 'Greenside High School', r: 'Gauteng (Greenside)', c: ZA },
+      { n: 'Helpmekaar Kollege', r: 'Gauteng (Braamfontein)', c: ZA },
+      { n: 'Hoërskool Florida', r: 'Gauteng (Florida)', c: ZA },
+      { n: 'Jeppe High School for Boys', r: 'Gauteng (Kensington)', c: ZA },
+      { n: 'Jeppe High School for Girls', r: 'Gauteng (Kensington)', c: ZA },
+      { n: 'King David Schools', r: 'Gauteng (Johannesburg)', c: ZA },
+      { n: 'King Edward VII School', r: 'Gauteng (Houghton)', c: ZA },
+      { n: 'Kingsmead College', r: 'Gauteng (Rosebank)', c: ZA },
+      { n: 'Michael Mount Waldorf School', r: 'Gauteng (Bryanston)', c: ZA },
+      { n: 'Parktown Boys\' High School', r: 'Gauteng (Parktown)', c: ZA },
+      { n: 'Redhill School', r: 'Gauteng (Johannesburg)', c: ZA },
+      { n: 'Roedean School', r: 'Gauteng (Houghton)', c: ZA },
+      { n: 'Sacred Heart College', r: 'Gauteng (Observatory)', c: ZA },
+      { n: 'SAHETI School', r: 'Gauteng (Johannesburg)', c: ZA },
+      { n: 'Sandown High School', r: 'Gauteng (Sandton)', c: ZA },
+      { n: 'Sandringham High School', r: 'Gauteng (Johannesburg)', c: ZA },
+      { n: 'Sir John Adamson Secondary School', r: 'Gauteng (Robertsham)', c: ZA },
+      { n: 'St Mary\'s School', r: 'Gauteng (Waverley)', c: ZA },
+      { n: 'St David\'s Marist', r: 'Gauteng (Inanda, Sandton)', c: ZA },
+      { n: 'St. John\'s College', r: 'Gauteng (Houghton Estate)', c: ZA },
+      { n: 'St. Martin\'s School', r: 'Gauteng (Rosettenville)', c: ZA },
+      { n: 'St Stithians College', r: 'Gauteng (Johannesburg)', c: ZA },
+      { n: 'St Peter\'s College', r: 'Gauteng (Sunninghill)', c: ZA },
+      { n: 'Torah Academy School', r: 'Gauteng (Orchards)', c: ZA },
+      { n: 'Waverley Girls\' High School', r: 'Gauteng (Waverley)', c: ZA },
+      { n: 'Westridge High School', r: 'Gauteng (Johannesburg)', c: ZA },
+      { n: 'Yeshiva College of South Africa', r: 'Gauteng (Glenhazel)', c: ZA },
+      { n: 'Alberton High School', r: 'Gauteng (Randhart)', c: ZA },
+      { n: 'Hoërskool Alberton', r: 'Gauteng (Alberton)', c: ZA },
+      { n: 'Hoërskool Dinamika', r: 'Gauteng (Brackenhurst)', c: ZA },
+      { n: 'Hoërskool Marais Viljoen', r: 'Gauteng (Alberante)', c: ZA },
+      { n: 'St Dunstan\'s College', r: 'Gauteng (Benoni)', c: ZA },
+      { n: 'Boksburg High School', r: 'Gauteng (Boksburg)', c: ZA },
+      { n: 'Hoërskool Voortrekker', r: 'Gauteng (Boksburg)', c: ZA },
+      { n: 'St Dominic\'s Catholic School for Girls', r: 'Gauteng (Boksburg)', c: ZA },
+      { n: 'Germiston High School', r: 'Gauteng (Germiston)', c: ZA },
+      { n: 'St Benedict\'s College', r: 'Gauteng (Bedfordview)', c: ZA },
+      { n: 'St Catherine\'s School', r: 'Gauteng (Germiston)', c: ZA },
+      { n: 'Cornwall Hill College', r: 'Gauteng (Irene)', c: ZA },
+      { n: 'Hoërskool Eldoraigne', r: 'Gauteng (Eldoraigne)', c: ZA },
+      { n: 'Lyttelton Manor High School', r: 'Gauteng (Lyttelton Manor)', c: ZA },
+      { n: 'Southdowns College', r: 'Gauteng (Irene)', c: ZA },
+      { n: 'Sutherland High School', r: 'Gauteng (Eldoraigne)', c: ZA },
+      { n: 'Tshwane Muslim School', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Mamelodi High School', r: 'Gauteng (Mamelodi)', c: ZA },
+      { n: 'Afrikaanse Hoër Meisieskool', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Afrikaanse Hoër Seunskool', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Christian Brothers\' College Mount Edmund', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Clapham High School', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Cornerstone College', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Crawford College Pretoria', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Hillview High School', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Hoërskool Menlopark', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Hoërskool Oos-Moot', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Hoërskool Overkruin', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Hoërskool Waterkloof', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Hoërskool Wonderboom', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Pretoria Boys High School', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Pretoria High School for Girls', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Pretoria Secondary School', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Pro Arte Alphen Park', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'St. Alban\'s College', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'St. Mary\'s Diocesan School for Girls', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'The Glen High School', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'TuksSport High School', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Willowridge High School', r: 'Gauteng (Pretoria)', c: ZA },
+      { n: 'Hoërskool Monument', r: 'Gauteng (Krugersdorp)', c: ZA },
+      { n: 'Hoërskool Noordheuwel', r: 'Gauteng (Krugersdorp)', c: ZA },
+      { n: 'Ferrum High School', r: 'KwaZulu-Natal (Newcastle)', c: ZA },
+      { n: 'Kearsney College', r: 'KwaZulu-Natal (Botha\'s Hill)', c: ZA },
+      { n: 'Brettonwood High School', r: 'KwaZulu-Natal (Durban)', c: ZA },
+      { n: 'Clifton School', r: 'KwaZulu-Natal (Durban)', c: ZA },
+      { n: 'Durban Girls\' College', r: 'KwaZulu-Natal (Durban)', c: ZA },
+      { n: 'Durban Girls\' High School', r: 'KwaZulu-Natal (Durban)', c: ZA },
+      { n: 'Durban High School', r: 'KwaZulu-Natal (Durban)', c: ZA },
+      { n: 'Durban North College', r: 'KwaZulu-Natal (Durban)', c: ZA },
+      { n: 'George Campbell School of Technology', r: 'KwaZulu-Natal (Durban)', c: ZA },
+      { n: 'Glenwood High School', r: 'KwaZulu-Natal (Durban)', c: ZA },
+      { n: 'Maris Stella School', r: 'KwaZulu-Natal (Durban)', c: ZA },
+      { n: 'Northlands Girls\' High School', r: 'KwaZulu-Natal (Durban)', c: ZA },
+      { n: 'Orient Islamic School', r: 'KwaZulu-Natal (Durban)', c: ZA },
+      { n: 'Port Natal High School', r: 'KwaZulu-Natal (Durban)', c: ZA },
+      { n: 'St. Henry\'s Marist Brothers\' College', r: 'KwaZulu-Natal (Durban)', c: ZA },
+      { n: 'Ohlange High School', r: 'KwaZulu-Natal (eNanda)', c: ZA },
+      { n: 'Folweni High School', r: 'KwaZulu-Natal (Folweni)', c: ZA },
+      { n: 'Ntwenhle High School', r: 'KwaZulu-Natal (Folweni)', c: ZA },
+      { n: 'Siphephele High School', r: 'KwaZulu-Natal (Folweni)', c: ZA },
+      { n: 'Hillcrest High School', r: 'KwaZulu-Natal (Hillcrest)', c: ZA },
+      { n: 'Kloof High School', r: 'KwaZulu-Natal (Kloof)', c: ZA },
+      { n: 'St. Mary\'s Diocesan School for Girls Kloof', r: 'KwaZulu-Natal (Kloof)', c: ZA },
+      { n: 'Thomas More College', r: 'KwaZulu-Natal (Kloof)', c: ZA },
+      { n: 'Crawford International North Coast', r: 'KwaZulu-Natal (Westbrook)', c: ZA },
+      { n: 'Pinetown Boys\' High School', r: 'KwaZulu-Natal (Pinetown)', c: ZA },
+      { n: 'Pinetown Girls\' High School', r: 'KwaZulu-Natal (Pinetown)', c: ZA },
+      { n: 'Savannah Park Secondary School', r: 'KwaZulu-Natal (Pinetown)', c: ZA },
+      { n: 'St Benedict School Pinetown', r: 'KwaZulu-Natal (Pinetown)', c: ZA },
+      { n: 'Queensburgh Girls\' High School', r: 'KwaZulu-Natal (Queensburgh)', c: ZA },
+      { n: 'Crawford International La Lucia', r: 'KwaZulu-Natal (uMhlanga)', c: ZA },
+      { n: 'Westville Boys\' High School', r: 'KwaZulu-Natal (Westville)', c: ZA },
+      { n: 'Westville Girls\' High School', r: 'KwaZulu-Natal (Westville)', c: ZA },
+      { n: 'Pholela High School', r: 'KwaZulu-Natal (Bulwer)', c: ZA },
+      { n: 'St. Patrick\'s College', r: 'KwaZulu-Natal (Kokstad)', c: ZA },
+      { n: 'Ashton International College', r: 'KwaZulu-Natal (Ballito)', c: ZA },
+      { n: 'Stanger Manor Secondary School', r: 'KwaZulu-Natal (KwaDukuza)', c: ZA },
+      { n: 'Stanger Secondary School', r: 'KwaZulu-Natal (KwaDukuza)', c: ZA },
+      { n: 'Eshowe High School', r: 'KwaZulu-Natal (Eshowe)', c: ZA },
+      { n: 'Sunnydale High School', r: 'KwaZulu-Natal (Eshowe)', c: ZA },
+      { n: 'Port Shepstone High School', r: 'KwaZulu-Natal (Port Shepstone)', c: ZA },
+      { n: 'Phindavele High School', r: 'KwaZulu-Natal (Dududu)', c: ZA },
+      { n: 'Treverton College', r: 'KwaZulu-Natal (Mooi River)', c: ZA },
+      { n: 'Alexandra High School', r: 'KwaZulu-Natal (Pietermaritzburg)', c: ZA },
+      { n: 'Carter High School', r: 'KwaZulu-Natal (Pietermaritzburg)', c: ZA },
+      { n: 'Edendale Technical High School', r: 'KwaZulu-Natal (Edendale)', c: ZA },
+      { n: 'Epworth High School', r: 'KwaZulu-Natal (Pietermaritzburg)', c: ZA },
+      { n: 'Heritage Academy', r: 'KwaZulu-Natal (Pietermaritzburg)', c: ZA },
+      { n: 'Linpark High School', r: 'KwaZulu-Natal (Pietermaritzburg)', c: ZA },
+      { n: 'Maritzburg College', r: 'KwaZulu-Natal (Pietermaritzburg)', c: ZA },
+      { n: 'Pietermaritzburg Girls\' High School', r: 'KwaZulu-Natal (Pietermaritzburg)', c: ZA },
+      { n: 'Russell High School', r: 'KwaZulu-Natal (Pietermaritzburg)', c: ZA },
+      { n: 'St. Charles College', r: 'KwaZulu-Natal (Pietermaritzburg)', c: ZA },
+      { n: 'St. John\'s Diocesan School for Girls', r: 'KwaZulu-Natal (Pietermaritzburg)', c: ZA },
+      { n: 'St. Nicholas Diocesan School', r: 'KwaZulu-Natal (Pietermaritzburg)', c: ZA },
+      { n: 'The Wykeham Collegiate', r: 'KwaZulu-Natal (Pietermaritzburg)', c: ZA },
+      { n: 'Voortrekker High School', r: 'KwaZulu-Natal (Pietermaritzburg)', c: ZA },
+      { n: 'Grace College', r: 'KwaZulu-Natal (Hilton)', c: ZA },
+      { n: 'Hilton College', r: 'KwaZulu-Natal (Hilton)', c: ZA },
+      { n: 'Howick High School', r: 'KwaZulu-Natal (Howick)', c: ZA },
+      { n: 'St. Anne\'s Diocesan College', r: 'KwaZulu-Natal (Hilton)', c: ZA },
+      { n: 'Michaelhouse', r: 'KwaZulu-Natal (Balgowan)', c: ZA },
+      { n: 'Deutsche Schule Hermannsburg', r: 'KwaZulu-Natal (Hermannsburg)', c: ZA },
+      { n: 'Estcourt High School', r: 'KwaZulu-Natal (Estcourt)', c: ZA },
+      { n: 'Drakensberg Boys\' Choir School', r: 'KwaZulu-Natal (Winterton)', c: ZA },
+      { n: 'Inkamana High School', r: 'KwaZulu-Natal (Vryheid)', c: ZA },
+      { n: 'Mathunjwa High School', r: 'KwaZulu-Natal (Vryheid)', c: ZA },
+      { n: 'Gojela High School', r: 'Limpopo (Mahwelereng)', c: ZA },
+      { n: 'Harry Oppenheimer Agricultural High School', r: 'Limpopo (Limburg)', c: ZA },
+      { n: 'Kabelo High School', r: 'Limpopo (Polokwane)', c: ZA },
+      { n: 'Lebowakgomo High School', r: 'Limpopo (Lebowakgomo)', c: ZA },
+      { n: 'Leolo High School', r: 'Limpopo (Burgersfort)', c: ZA },
+      { n: 'Phiri Kolobe High School', r: 'Limpopo (Mankweng)', c: ZA },
+      { n: 'St Mark\'s College', r: 'Limpopo (Jane Furse)', c: ZA },
+      { n: 'Stanford Lake College', r: 'Limpopo (Haenertsburg)', c: ZA },
+      { n: 'Vhulaudzi Secondary School', r: 'Limpopo (Vhulaudzi)', c: ZA },
+      { n: 'Segopotje Senior Secondary School', r: 'Limpopo (Ga Mphalele)', c: ZA },
+      { n: 'Barberton High School', r: 'Mpumalanga (Barberton)', c: ZA },
+      { n: 'Penryn College', r: 'Mpumalanga (Mbombela)', c: ZA },
+      { n: 'Hoërskool Rob Ferreira', r: 'Mpumalanga (White River)', c: ZA },
+      { n: 'Diamantveld High School', r: 'Northern Cape (Kimberley)', c: ZA },
+      { n: 'Homevale High School', r: 'Northern Cape (Kimberley)', c: ZA },
+      { n: 'HTS Kimberley', r: 'Northern Cape (Kimberley)', c: ZA },
+      { n: 'Kimberley Boys\' High School', r: 'Northern Cape (Kimberley)', c: ZA },
+      { n: 'Kimberley Girls\' High School', r: 'Northern Cape (Kimberley)', c: ZA },
+      { n: 'St. Patrick\'s CBC', r: 'Northern Cape (Kimberley)', c: ZA },
+      { n: 'St. Boniface High School', r: 'Northern Cape (Kimberley)', c: ZA },
+      { n: 'Holy Family Secondary School', r: 'North West (Rustenburg)', c: ZA },
+      { n: 'J M Ntsime High School', r: 'North West (Rustenburg)', c: ZA },
+      { n: 'Ntebogang Secondary School', r: 'North West (Zeerust)', c: ZA },
+      { n: 'Potchefstroom Gimnasium', r: 'North West (Potchefstroom)', c: ZA },
+      { n: 'Potchefstroom High School for Boys', r: 'North West (Potchefstroom)', c: ZA },
+      { n: 'Tsogo High School', r: 'North West (Mmakau)', c: ZA },
+      { n: 'Vryburg High School', r: 'North West (Vryburg)', c: ZA },
+      { n: 'DF Akademie', r: 'Western Cape (Bellville)', c: ZA },
+      { n: 'Stellenberg High School', r: 'Western Cape (Bellville)', c: ZA },
+      { n: 'The Settlers High School', r: 'Western Cape (Bellville)', c: ZA },
+      { n: 'Brackenfell High School', r: 'Western Cape (Brackenfell)', c: ZA },
+      { n: 'Rhodes High School', r: 'Western Cape (Mowbray)', c: ZA },
+      { n: 'Rondebosch Boys\' High School', r: 'Western Cape (Rondebosch)', c: ZA },
+      { n: 'Rustenburg Girls\' High School', r: 'Western Cape (Rosebank)', c: ZA },
+      { n: 'Wynberg Boys\' High School', r: 'Western Cape (Wynberg)', c: ZA },
+      { n: 'Wynberg Girls\' High School', r: 'Western Cape (Wynberg)', c: ZA },
+      { n: 'Westerford High School', r: 'Western Cape (Rondebosch)', c: ZA },
+      { n: 'Fairmont High School', r: 'Western Cape (Durbanville)', c: ZA },
+      { n: 'Hoërskool Durbanville', r: 'Western Cape (Durbanville)', c: ZA },
+      { n: 'Parel Vallei High School', r: 'Western Cape (Somerset West)', c: ZA },
+      { n: 'Somerset College', r: 'Western Cape (Somerset West)', c: ZA },
+      { n: 'False Bay High School', r: 'Western Cape (Strand)', c: ZA },
+      { n: 'Makupula Secondary School', r: 'Western Cape (Stellenbosch)', c: ZA }
+    ];
+  }
+
+  renderVals() {
+    const s = this.state;
+    const isSignup = s.mode === 'signup';
+    const showSchool = isSignup;
+    const isParent = isSignup && s.role === 'Parent';
+    const set = (k) => (e) => this.setState({ [k]: e.target.value });
+    const roleTabs = ['Learner', 'Educator', 'Parent'].map(r => ({
+      label: r,
+      pick: () => this.setState({ role: r, grade: '', cls: '', error: '' }),
+      style: 'flex:1;border:none;border-radius:7px;padding:9px 0;font-family:Poppins,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;' + (s.role === r ? 'background:#E4E1FB;color:#5348C7;' : 'background:transparent;color:var(--ink);')
+    }));
+    const countryTabs = ['Namibia', 'South Africa'].map(c => ({
+      label: c,
+      pick: () => {
+        try { localStorage.setItem('k12plus-currency', c === 'South Africa' ? 'R' : 'N$'); } catch (e) {}
+        this.setState({ country: c, school: '', schoolQuery: '', error: '' });
+      },
+      style: 'border-radius:7px;padding:8px 16px;font-family:Poppins,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;' + (s.country === c ? 'background:#E4E1FB;color:#5348C7;border:1px solid #C9C2F5;' : 'background:var(--surface);color:var(--ink);border:1px solid var(--line);')
+    }));
+    const gradeChip = (on) => 'width:100%;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:7px;padding:9px 6px;font-family:Poppins,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;' + (on ? 'background:#E4E1FB;color:#5348C7;border:1px solid #C9C2F5;' : 'background:var(--surface);color:var(--ink);border:1px solid var(--line);');
+    const letterChip = (on) => 'border-radius:8px;padding:8px 0;font-family:Poppins,sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .12s;text-align:center;border:none;' + (on ? 'background:var(--primary);color:#fff;' : 'background:var(--chip);color:var(--ink);');
+    const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const gradeOpts = s.role === 'Educator' ? ['Grade 11', 'Grade 12', 'Both grades'] : ['Grade 11', 'Grade 12'];
+    const gradeTabs = gradeOpts.map(g => ({
+      display: s.grade === g && s.cls ? g + ' ' + s.cls : g,
+      hint: s.role === 'Educator' ? 'Choose your class' : 'Choose your class letter',
+      open: s.openGrade === g,
+      toggle: () => this.setState({ openGrade: s.openGrade === g ? '' : g }),
+      style: gradeChip(s.grade === g),
+      letters: LETTERS.map(l => ({
+        label: l,
+        pick: () => this.setState({ grade: g, cls: l, openGrade: '', error: '' }),
+        style: letterChip(s.grade === g && s.cls === l)
+      }))
+    }));
+    const children = s.children.map((ch, i) => ({
+      title: 'Learner ' + (i + 1),
+      id: ch.id,
+      removable: s.children.length > 1,
+      remove: () => this.setState({ children: s.children.filter((_, j) => j !== i) }),
+      onId: (e) => {
+        const next = s.children.slice();
+        next[i] = { ...next[i], id: e.target.value };
+        this.setState({ children: next, error: '' });
+      },
+      grades: ['Grade 11', 'Grade 12'].map(g => ({
+        display: ch.grade === g && ch.cls ? g + ' ' + ch.cls : g,
+        hint: 'Choose their class letter',
+        open: s.openGrade === 'ch' + i + g,
+        toggle: () => this.setState({ openGrade: s.openGrade === 'ch' + i + g ? '' : 'ch' + i + g }),
+        style: gradeChip(ch.grade === g),
+        letters: LETTERS.map(l => ({
+          label: l,
+          pick: () => {
+            const next = s.children.slice();
+            next[i] = { ...next[i], grade: g, cls: l };
+            this.setState({ children: next, openGrade: '', error: '' });
+          },
+          style: letterChip(ch.grade === g && ch.cls === l)
+        }))
+      }))
+    }));
+    const q = s.schoolQuery.trim().toLowerCase();
+    const pool = this.schools().filter(x => x.c === s.country);
+    const matches = (q ? pool.filter(x => (x.n + ' ' + x.r).toLowerCase().includes(q)) : pool).slice(0, 8);
+    const itemStyle = 'display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:none;background:none;color:var(--ink);border-radius:10px;padding:8px 10px;cursor:pointer;transition:background .12s;';
+    const schoolResults = matches.map(x => ({
+      name: x.n, region: x.r, style: itemStyle,
+      pick: () => this.setState({ school: x.n, schoolOpen: false, schoolQuery: '', error: '' })
+    })).concat([{
+      name: 'My school is not listed', region: 'Type its name and we will add it', style: itemStyle,
+      pick: () => this.setState({ school: s.schoolQuery.trim() ? s.schoolQuery.trim() + ' (new school)' : 'School to be added', schoolOpen: false, schoolQuery: '' })
+    }]);
+    const isReset = s.mode === 'reset';
+    const submit = async () => {
+      if (isReset) {
+        if (!/^\S+@\S+\.\S+$/.test(s.email)) return this.setState({ error: 'Please enter the email you signed up with.' });
+        return this.setState({ done: true, error: '' });
+      }
+      if (isSignup) {
+        if (!s.first.trim() || !s.last.trim()) return this.setState({ error: 'Please fill in your first and last name.' });
+        if (!s.email.trim() && !s.mobile.trim()) return this.setState({ error: 'Give us an email address or a mobile number so you can recover your account.' });
+        if (s.email.trim() && !/^\S+@\S+\.\S+$/.test(s.email)) return this.setState({ error: 'That email address does not look right; check it or leave it empty and use your mobile number.' });
+        if (s.mobile.trim() && !/^\+?[0-9 ()-]{7,17}$/.test(s.mobile.trim())) return this.setState({ error: 'That mobile number does not look right; include your country code, e.g. +264 81 234 5678.' });
+        if (s.password.length < 6) return this.setState({ error: 'Your password needs at least 6 characters.' });
+        if (!isParent && !s.grade) return this.setState({ error: s.role === 'Educator' ? 'Choose the grade you teach.' : 'Choose your grade so the tutor matches your curriculum.' });
+        if (!isParent && !s.cls) return this.setState({ error: s.role === 'Educator' ? 'Choose your class letter so your learners are routed to you.' : 'Choose your class letter so you receive assignments from your class teachers.' });
+        if (!s.school) return this.setState({ error: s.role === 'Parent' ? 'Choose the school where your child is learning.' : 'Choose your school so we can connect you with your classmates and teachers.' });
+        if (isParent) {
+          for (let i = 0; i < s.children.length; i++) {
+            const ch = s.children[i];
+            if (!/^K12-(NA|ZA)-[A-Z0-9]{6}$/i.test(ch.id.trim())) return this.setState({ error: 'Learner ' + (i + 1) + ': enter their k12plus ID (looks like K12-NA-8F3K92) so we can link you to their dashboard.' });
+            if (!ch.grade) return this.setState({ error: 'Learner ' + (i + 1) + ': choose their grade.' });
+            if (!ch.cls) return this.setState({ error: 'Learner ' + (i + 1) + ': choose their class letter.' });
+          }
+          const ids = s.children.map(c => c.id.trim().toUpperCase());
+          if (new Set(ids).size !== ids.length) return this.setState({ error: 'Each learner needs a different k12plus ID.' });
+        }
+        if (!s.agree) return this.setState({ error: 'Please agree to the Privacy Policy and Terms of Use.' });
+        let serverUid = '';
+        if (window.k12auth) {
+          const r = await window.k12auth.signup({
+            username: (s.first.trim() + ' ' + s.last.trim()).trim(),
+            password: s.password,
+            role: s.role,
+            country: s.country,
+            schoolName: s.school,
+            grade: isParent ? '' : s.grade,
+            classLetter: isParent ? '' : s.cls,
+            email: s.email.trim(),
+            phone: s.mobile.trim(),
+            childUid: isParent ? s.children[0].id.trim().toUpperCase() : ''
+          });
+          if (!r || !r.ok) return this.setState({ error: (r && r.error) || 'Sign up failed. Please try again.' });
+          serverUid = r.learnerUid || '';
+        }
+        const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+        let code = '';
+        for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+        const uid = serverUid || ('K12-' + (s.country === 'South Africa' ? 'ZA' : 'NA') + '-' + code);
+        try { localStorage.setItem('k12plus-role', s.role); localStorage.setItem('k12plus-school', s.school || ''); localStorage.setItem('k12plus-loggedin', '1'); } catch (e) {}
+        this.setState({ done: true, error: '', uid });
+      } else {
+        if (!s.email.trim()) return this.setState({ error: 'Enter the email address or mobile number you signed up with.' });
+        if (!s.password) return this.setState({ error: 'Please enter your password.' });
+        if (window.k12auth) {
+          const r = await window.k12auth.login(s.email.trim(), s.password);
+          if (!r || !r.ok) return this.setState({ error: (r && r.error) || 'Login failed. Check your details and try again.' });
+        }
+        try { localStorage.setItem('k12plus-loggedin', '1'); } catch (e) {}
+        window.location.href = 'app.html';
+      }
+    };
+    return {
+      themeIcon: s.dark
+        ? React.createElement('svg', { width: 17, height: 17, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.5, strokeLinecap: 'round' }, React.createElement('circle', { cx: 12, cy: 12, r: 4.4 }), React.createElement('path', { d: 'M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.5 1.5M17.3 17.3l1.5 1.5M18.8 5.2l-1.5 1.5M6.7 17.3l-1.5 1.5' }))
+        : React.createElement('svg', { width: 17, height: 17, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2.5, strokeLinecap: 'round', strokeLinejoin: 'round' }, React.createElement('path', { d: 'M20.5 13.2A8.5 8.5 0 1 1 10.8 3.5a6.8 6.8 0 0 0 9.7 9.7z' })),
+      toggleTheme: () => {
+        const d = !s.dark;
+        document.body.dataset.theme = d ? 'dark' : '';
+        try { localStorage.setItem('k12plus-theme', d ? 'dark' : 'light'); } catch (e) {}
+        this.setState({ dark: d });
+      },
+      isSignup, showSchool, isReset, isParent,
+      showGrade: isSignup && !isParent,
+      gradeLabel: s.role === 'Educator' ? 'I teach' : 'My grade',
+
+      routeNote: s.grade && s.cls
+        ? (s.role === 'Educator'
+          ? 'You will be set up as the class teacher of ' + (s.grade === 'Both grades' ? 'class ' + s.cls + ' in both grades' : s.grade + ' ' + s.cls) + (s.school ? ' at ' + s.school : '') + '; assignments you set go straight to your learners.'
+          : 'You will be routed to ' + s.grade + ' ' + s.cls + (s.school ? ' at ' + s.school : '') + ', so you receive assignments from your class teachers.')
+        : (s.role === 'Educator' ? 'Your grade and class connect you to your classroom, so your assignments reach the right learners.' : 'Your grade and class route you to the right classroom at your school, so you receive assignments from your class teachers.'),
+      gradeTabs, children,
+      addChild: () => this.setState({ children: s.children.concat([{ id: '', grade: '', cls: '' }]) }),
+      schoolHelp: isParent
+        ? 'Choose the school where your children are learning. Together with their unique IDs this links you to their dashboards, tasks and progress.'
+        : 'Choosing your school connects you with your classmates and teachers: class chats, tasks from your teacher, and progress your teacher can see.',
+      uid: s.uid,
+      hasUid: s.done && !!s.uid,
+      uidNote: s.role === 'Learner'
+        ? 'Write it down and share it with your parent or guardian; they need it to follow your progress.'
+        : (s.role === 'Parent' ? 'Keep it safe; you will use it to sign in and manage your ' + (s.children.length > 1 ? s.children.length + ' linked learners.' : 'linked learner.') : 'Keep it safe; your school uses it to verify your educator account.'),
+      isLogin: s.mode === 'login',
+      showPassword: !isReset,
+      goReset: (e) => { e.preventDefault(); this.setState({ mode: 'reset', error: '' }); },
+      policyOpen: !!s.policyOpen,
+      openPolicy: (e) => { e.preventDefault(); this.setState({ policyOpen: true }); },
+      closePolicy: () => this.setState({ policyOpen: false }),
+      termsOpen: !!s.termsOpen,
+      openTerms: (e) => { e.preventDefault(); this.setState({ termsOpen: true }); },
+      closeTerms: () => this.setState({ termsOpen: false }),
+      stopClick: (e) => e.stopPropagation(),
+      notDone: !s.done, done: s.done,
+      heading: isSignup ? 'Create your account' : (isReset ? 'Reset your password' : 'Welcome back'),
+      subheading: isSignup ? 'Free to start. Works offline, on any phone.' : (isReset ? 'Enter your email and we will send you a reset link.' : 'Log in to pick up where you left off.'),
+      roleTabs, countryTabs, schoolResults,
+      first: s.first, last: s.last, email: s.email, mobile: s.mobile, password: s.password,
+      onFirst: set('first'), onLast: set('last'), onEmail: set('email'), onMobile: set('mobile'), onPassword: set('password'),
+      emailWrapStyle: isSignup ? 'display:grid; grid-template-columns:1fr 1fr; gap:12px;' : '',
+      emailLabel: isSignup ? 'Email address (optional)' : (isReset ? 'Email address' : 'Email or mobile number'),
+      emailPlaceholder: isSignup ? 'name@email.com' : (isReset ? 'name@email.com' : 'name@email.com or +264 81 234 5678'),
+      pwType: s.showPw ? 'text' : 'password',
+      togglePw: () => this.setState({ showPw: !s.showPw }),
+      school: s.school, hasSchool: !!s.school, noSchool: !s.school,
+      schoolQuery: s.schoolQuery,
+      schoolOpen: s.schoolOpen && !s.school,
+      schoolPlaceholder: 'Search schools in ' + s.country + '…',
+      onSchoolQuery: (e) => this.setState({ schoolQuery: e.target.value, schoolOpen: true }),
+      openSchool: () => this.setState({ schoolOpen: true }),
+      clearSchool: () => this.setState({ school: '', schoolOpen: false }),
+      updates: s.updates, agree: s.agree,
+      onUpdates: (e) => this.setState({ updates: e.target.checked }),
+      onAgree: (e) => this.setState({ agree: e.target.checked }),
+      hasError: !!s.error, error: s.error,
+      submit,
+      submitLabel: isSignup ? 'Create account' : (isReset ? 'Send reset link' : 'Log in'),
+      switchPrompt: isSignup ? 'Already have an account?' : (isReset ? 'Remembered it after all?' : 'New to k12plus?'),
+      switchLabel: isSignup ? 'Log in' : (isReset ? 'Back to log in' : 'Create an account'),
+      switchMode: (e) => { e.preventDefault(); this.setState({ mode: isSignup ? 'login' : (isReset ? 'login' : 'signup'), error: '' }); },
+      showDashLink: !isReset,
+      backToLogin: (e) => { e.preventDefault(); this.setState({ mode: 'login', done: false, error: '' }); },
+      doneTitle: isSignup ? 'Welcome to k12plus!' : (isReset ? 'Check your inbox' : 'Welcome back!'),
+      doneBody: isSignup
+        ? (s.school ? 'Your account is ready and you are connected to ' + s.school + '. Your classmates and teachers can find you there.' : 'Your account is ready. Ask your first question and the tutor takes it from there.')
+        : (isReset ? 'If ' + (s.email || 'your email') + ' has a k12plus account, a password reset link is on its way. It expires in 30 minutes.' : 'Good to see you again. Your chats, tasks and progress are right where you left them.')
+    };
+  }
+}
+</script>
+</body>
+</html>

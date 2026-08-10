@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<script src="./k12plus-bridge.js"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#7C3AED">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Nunito:wght@700;800&family=Baloo+2:wght@700;800&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+<style>
+html, body { margin:0; padding:0; font-family:'Poppins',sans-serif; background:var(--bg); color:var(--ink); }
+body { --bg:#FCFBF8; --surface:#FFFFFF; --ink:#1F2033; --muted:#6B6E85; --line:#E9E6F2; --chip:#F5F3FB; --chip2:#FAF9FE; --primary:#7C3AED; --blue:#6673E8; --magenta:#B400D9; --gold:#FFC324; --goldbg:#FFF6DC; --shadow:0 10px 40px rgba(31,32,51,.08); }
+body[data-theme="dark"] { --bg:#12121D; --surface:#1B1B2B; --ink:#F2F1FA; --muted:#9DA0B8; --line:#2B2B44; --chip:#232336; --chip2:#1F1F31; --primary:#9D6BFF; --goldbg:#3A3110; --shadow:0 10px 40px rgba(0,0,0,.4); }
+a { color:var(--primary); text-decoration:none; }
+a:hover { color:var(--magenta); }
+* { box-sizing:border-box; }
+
+@media (max-width:820px){
+  header{padding:10px 18px !important; gap:14px 18px !important; flex-wrap:wrap;}
+  header nav{gap:14px !important; font-size:13.5px !important;}
+  footer{padding:40px 22px 22px !important;}
+  footer > div:first-child{grid-template-columns:1fr 1fr !important; gap:30px 24px !important;}
+  footer > div:first-child > div:first-child{grid-column:1 / -1;}
+  main > section{padding-left:20px !important; padding-right:20px !important;}
+}
+@media (max-width:900px){
+  section[data-screen-label="Pricing tiers"]{grid-template-columns:1fr !important;}
+}
+@media (max-width:700px){
+  .k12cmprow{grid-template-columns:1.7fr 1fr 1fr 1fr !important; padding:12px 14px !important; font-size:12px !important;}
+}
+</style>
+</helmet>
+<div style="min-height:100vh; display:flex; flex-direction:column; background:var(--bg); color:var(--ink);">
+  <header style="display:flex; align-items:center; gap:72px; padding:10px 48px; border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--bg); z-index:10;">
+    <a href="index.html" style="display:flex; align-items:center; gap:10px; color:var(--ink);">
+      <img src="assets/k12plus-logo.png" alt="k12plus" style="height:42px; width:auto;">
+      <span style="font-family:'Comfortaa',sans-serif; font-size:25px; font-weight:700; letter-spacing:1.2px; -webkit-text-stroke:1.6px currentColor; line-height:1.5; display:inline-block; padding-bottom:2px; transform:translateY(2px); color:var(--ink);">k12plus</span>
+    </a>
+    <nav style="display:flex; gap:26px; font-size:15px;">
+      <a href="app.html" style="color:var(--muted);">Tutor</a>
+      <a href="about.html" style="color:var(--muted);">About Us</a>
+      <a href="pricing.html" style="color:var(--primary); font-weight:600;">Pricing</a>
+      <a href="contact.html" style="color:var(--muted);">Contact</a>
+    </nav>
+    <div style="margin-left:auto; display:flex; align-items:center; gap:18px;">
+      <button onClick="{{ toggleTheme }}" title="Toggle dark mode" style="border:none; background:var(--chip); color:var(--ink); width:38px; height:38px; border-radius:6px; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center;">{{ themeIcon }}</button>
+      <a href="signup.html" style="color:var(--ink); font-weight:500; font-size:15px;">Login</a>
+      <a href="signup.html" style="background:var(--primary); color:#fff; padding:11px 26px; border-radius:6px; font-weight:600; font-size:15px;" style-hover="background:var(--magenta); color:#fff;">Start for free</a>
+    </div>
+  </header>
+  <main style="flex:1;">
+    <section data-screen-label="Pricing hero" style="text-align:center; padding:130px 32px 72px; max-width:820px; margin:0 auto;">
+      <p style="font-size:12.5px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--primary); margin:0 0 18px;">Pricing</p>
+      <h1 style="font-size:clamp(40px,6vw,68px); line-height:1.05; font-weight:700; letter-spacing:-2.2px; margin:0 0 18px;">Fair prices, in <span style="color:var(--primary);">your</span> currency</h1>
+      <p style="font-size:17px; line-height:1.75; color:var(--muted); max-width:640px; margin:0 auto 30px;">Learning stays free. Pay only when you want the full experience, at prices set for Namibian and South African families, not Silicon Valley.</p>
+      <div style="display:inline-flex; gap:4px; background:var(--chip); border:1px solid var(--line); border-radius:8px; padding:4px;">
+        <button onClick="{{ pickNAD }}" style="{{ nadStyle }}">🇳🇦 Namibia · N$</button>
+        <button onClick="{{ pickZAR }}" style="{{ zarStyle }}">🇿🇦 South Africa · R</button>
+      </div>
+      <p style="font-size:12.5px; color:var(--muted); margin:10px 0 0;">{{ detectNote }}</p>
+    </section>
+    <section data-screen-label="Pricing tiers" style="max-width:1060px; margin:0 auto; padding:0 32px; display:grid; grid-template-columns:repeat(3,1fr); gap:18px; align-items:stretch;">
+      <div style="background:var(--surface); border:1px solid var(--line); border-radius:15px; padding:40px 36px; display:flex; flex-direction:column;">
+        <h3 style="font-size:17px; font-weight:600; margin:0 0 6px;">Free</h3>
+        <p style="font-size:13.5px; color:var(--muted); margin:0 0 20px;">For every learner, forever</p>
+        <div style="font-size:40px; font-weight:700; letter-spacing:-1.8px; margin-bottom:2px;">{{ cur }}0</div>
+        <p style="font-size:13px; color:var(--muted); margin:0 0 24px;">no card, no catch</p>
+        <div style="display:flex; flex-direction:column; gap:12px; font-size:14px; color:var(--muted); flex:1;">
+          <span>✓ Daily questions to the AI tutor</span>
+          <span>✓ USSD access on basic phones</span>
+          <span>✓ Past-exam practice questions</span>
+          <span>✓ All four subjects</span>
+          <span>✓ Equation keyboard and pen input</span>
+        </div>
+        <a href="signup.html" style="margin-top:26px; text-align:center; background:var(--chip); color:var(--ink); border:1px solid var(--line); padding:13px 0; border-radius:6px; font-weight:600; font-size:14.5px;">Start for free</a>
+      </div>
+      <div style="background:var(--surface); border:2px solid var(--primary); border-radius:15px; padding:40px 36px; display:flex; flex-direction:column; position:relative; box-shadow:var(--shadow);">
+        <span style="position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--primary); color:#fff; font-size:11.5px; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:4px 14px; border-radius:20px;">Most popular</span>
+        <h3 style="font-size:17px; font-weight:600; margin:0 0 6px;">Individual</h3>
+        <p style="font-size:13.5px; color:var(--muted); margin:0 0 20px;">For learners and parents</p>
+        <div style="font-size:40px; font-weight:700; letter-spacing:-1.8px; margin-bottom:2px;">{{ cur }}15<span style="font-size:16px; font-weight:500; color:var(--muted); letter-spacing:0;">/month</span></div>
+        <p style="font-size:13px; color:var(--muted); margin:0 0 24px;">less than a loaf of bread a week</p>
+        <div style="display:flex; flex-direction:column; gap:12px; font-size:14px; flex:1;">
+          <span>✓ Everything in Free</span>
+          <span>✓ Unlimited tutor conversations</span>
+          <span>✓ Real-life maths in AI images and videos</span>
+          <span>✓ Offline lessons with Edge AI</span>
+          <span>✓ Progress reports for parents</span>
+          <span>✓ Gamified practice, coins and badges</span>
+          <span>✓ Personalised revision plans</span>
+        </div>
+        <a href="signup.html" style="margin-top:26px; text-align:center; background:var(--primary); color:#fff; padding:13px 0; border-radius:6px; font-weight:600; font-size:14.5px;" style-hover="background:var(--magenta); color:#fff;">Start learning</a>
+      </div>
+      <div style="background:var(--surface); border:1px solid var(--line); border-radius:15px; padding:40px 36px; display:flex; flex-direction:column;">
+        <h3 style="font-size:17px; font-weight:600; margin:0 0 6px;">School</h3>
+        <p style="font-size:13.5px; color:var(--muted); margin:0 0 20px;">For whole classrooms</p>
+        <div style="font-size:40px; font-weight:700; letter-spacing:-1.8px; margin-bottom:2px;">{{ cur }}299<span style="font-size:16px; font-weight:500; color:var(--muted); letter-spacing:0;">/month</span></div>
+        <p style="font-size:13px; color:var(--muted); margin:0 0 24px;">learners join free once the school subscribes</p>
+        <div style="display:flex; flex-direction:column; gap:12px; font-size:14px; color:var(--muted); flex:1;">
+          <span>✓ Everything in Individual, for every learner</span>
+          <span>✓ Teacher dashboards and AI marking</span>
+          <span>✓ Automated quizzes and rubrics</span>
+          <span>✓ Data insights on struggling learners</span>
+          <span>✓ Ministry-ready progress reporting</span>
+          <span>✓ Training and onboarding support</span>
+        </div>
+        <a href="contact.html" style="margin-top:26px; text-align:center; background:var(--chip); color:var(--ink); border:1px solid var(--line); padding:13px 0; border-radius:6px; font-weight:600; font-size:14.5px;">Talk to us</a>
+      </div>
+    </section>
+    <section data-screen-label="Community topups" style="max-width:1060px; margin:40px auto 0; padding:0 32px;">
+      <div style="background:var(--goldbg); border:1px solid var(--line); border-radius:15px; padding:32px 38px; display:flex; align-items:center; gap:24px; flex-wrap:wrap;">
+        <span style="font-size:28px;">🪙</span>
+        <div style="flex:1; min-width:280px;">
+          <h3 style="font-size:16px; font-weight:600; margin:0 0 4px;">Community top-ups from {{ cur }}0.80</h3>
+          <p style="font-size:14px; line-height:1.65; color:var(--muted); margin:0;">No subscription? Unlock single features with micro-payments: one revision plan, one week of unlimited questions, one set of practice exams. Pay with airtime or mobile money.</p>
+        </div>
+        <a href="contact.html" style="font-size:14px; font-weight:600; white-space:nowrap;">Learn more →</a>
+      </div>
+    </section>
+    <section data-screen-label="Plan comparison" style="max-width:900px; margin:0 auto; padding:130px 32px 0;">
+      <p style="font-size:12.5px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--primary); text-align:center; margin:0 0 14px;">Compare plans</p>
+      <h2 style="font-size:clamp(30px,4vw,46px); line-height:1.1; font-weight:700; letter-spacing:-1.4px; text-align:center; margin:0 0 40px;">Everything, side by side</h2>
+      <div style="background:var(--surface); border:1px solid var(--line); border-radius:14px; overflow:hidden;">
+        <div class="k12cmprow" style="display:grid; grid-template-columns:2.4fr 1fr 1fr 1fr; background:var(--chip); border-bottom:1px solid var(--line); padding:14px 24px; font-size:13px; font-weight:600;">
+          <span></span><span style="text-align:center;">Free</span><span style="text-align:center; color:var(--primary);">Individual</span><span style="text-align:center;">School</span>
+        </div>
+        <sc-for list="{{ compareRows }}" as="row" hint-placeholder-count="8">
+          <div class="k12cmprow" style="display:grid; grid-template-columns:2.4fr 1fr 1fr 1fr; padding:13px 24px; border-bottom:1px solid var(--line); font-size:13.5px; align-items:center;">
+            <span style="color:var(--muted);">{{ row.label }}</span>
+            <span style="text-align:center;">{{ row.free }}</span>
+            <span style="text-align:center;">{{ row.ind }}</span>
+            <span style="text-align:center;">{{ row.school }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+    <section data-screen-label="Pricing FAQ" style="max-width:680px; margin:0 auto; padding:130px 32px 0;">
+      <p style="font-size:12.5px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--primary); text-align:center; margin:0 0 14px;">FAQ</p>
+      <h2 style="font-size:clamp(30px,4vw,46px); line-height:1.1; font-weight:700; letter-spacing:-1.4px; text-align:center; margin:0 0 32px;">Common questions</h2>
+      <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="6">
+        <div style="background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:20px 24px; margin-bottom:10px;">
+          <h3 style="font-size:15px; font-weight:600; margin:0 0 6px;">{{ f.q }}</h3>
+          <p style="font-size:14px; line-height:1.7; color:var(--muted); margin:0;">{{ f.a }}</p>
+        </div>
+      </sc-for>
+    </section>
+    <section data-screen-label="Pricing CTA" style="max-width:1060px; margin:130px auto 130px; padding:0 32px;">
+      <div style="background:linear-gradient(135deg, var(--primary), var(--magenta)); border-radius:15px; padding:88px 48px; text-align:center; color:#fff;">
+        <h2 style="font-size:clamp(32px,4.2vw,50px); line-height:1.08; font-weight:700; letter-spacing:-1.6px; margin:0 0 12px;">Start free. Stay for the results.</h2>
+        <p style="font-size:15.5px; opacity:.9; margin:0 0 28px;">No card. No contract. Your progress is never deleted.</p>
+        <a href="signup.html" style="display:inline-block; background:#fff; color:var(--primary); padding:14px 32px; border-radius:6px; font-weight:600; font-size:15.5px;" style-hover="background:var(--goldbg); color:var(--primary);">Create your free account</a>
+      </div>
+    </section>
+  </main>
+  <footer style="border-top:1px solid var(--line); background:var(--surface); padding:52px 48px 26px;">
+    <div style="max-width:1060px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:44px;">
+      <div>
+        <div style="display:flex; align-items:center; gap:9px; margin-bottom:14px;">
+          <img src="assets/k12plus-logo.png" alt="k12plus" style="height:34px; width:auto;">
+          <span style="font-family:'Comfortaa',sans-serif; font-size:20px; font-weight:700; letter-spacing:1px; -webkit-text-stroke:1.25px currentColor; line-height:1.5; display:inline-block; padding-bottom:2px; transform:translateY(2px); color:var(--ink);">k12plus</span>
+        </div>
+        <p style="font-size:13.5px; line-height:1.7; color:var(--muted); margin:0 0 14px; max-width:280px;">Free, equitable, AI-powered learning for Grades 11 and 12 in Namibia and South Africa. Online, offline and on any phone.</p>
+        <a href="mailto:info@k12plus.app" style="font-size:13.5px; font-weight:600;">info@k12plus.app</a>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <span style="font-size:13px; font-weight:600; margin-bottom:4px;">Product</span>
+        <a href="index.html" style="font-size:13.5px; color:var(--muted);">Try the tutor</a>
+        <a href="pricing.html" style="font-size:13.5px; color:var(--muted);">Pricing</a>
+        <a href="signup.html" style="font-size:13.5px; color:var(--muted);">Create an account</a>
+        <span style="font-size:13.5px; color:var(--muted);">USSD: dial *141*12#</span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <span style="font-size:13px; font-weight:600; margin-bottom:4px;">Company</span>
+        <a href="about.html" style="font-size:13.5px; color:var(--muted);">About Us</a>
+        <a href="contact.html" style="font-size:13.5px; color:var(--muted);">Contact</a>
+        <a href="mailto:info@k12plus.app?subject=Partnership" style="font-size:13.5px; color:var(--muted);">Partnerships</a>
+        <a href="mailto:info@k12plus.app?subject=Press" style="font-size:13.5px; color:var(--muted);">Press</a>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <span style="font-size:13px; font-weight:600; margin-bottom:4px;">For you</span>
+        <a href="index.html" style="font-size:13.5px; color:var(--muted);">For Learners</a>
+        <a href="index.html" style="font-size:13.5px; color:var(--muted);">For Educators</a>
+        <a href="index.html" style="font-size:13.5px; color:var(--muted);">For Communities</a>
+      </div>
+    </div>
+    <div style="max-width:1060px; margin:36px auto 0; padding-top:20px; border-top:1px solid var(--line); display:flex; align-items:center; gap:20px; font-size:12.5px; color:var(--muted);">
+      <span>© 2026 K-Twelve Educational Technologies. All rights reserved.</span>
+      <span style="margin-left:auto;">Made with care in Windhoek, Namibia</span>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { dark: false, currency: 'N$', detected: false };
+  componentDidMount() {
+    let savedTheme = null, savedCur = null;
+    try { savedTheme = localStorage.getItem('k12plus-theme'); savedCur = localStorage.getItem('k12plus-currency'); } catch (e) {}
+    const dark = savedTheme === 'dark';
+    document.body.dataset.theme = dark ? 'dark' : '';
+    let currency = 'N$', detected = false;
+    if (savedCur === 'N$' || savedCur === 'R') { currency = savedCur; }
+    else {
+      try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+        const lang = navigator.language || '';
+        if (tz === 'Africa/Johannesburg' || /-ZA$/i.test(lang)) { currency = 'R'; detected = true; }
+        else if (tz === 'Africa/Windhoek' || /-NA$/i.test(lang)) { currency = 'N$'; detected = true; }
+      } catch (e) {}
+    }
+    this.setState({ dark, currency, detected });
+  }
+  setCurrency(cur) {
+    try { localStorage.setItem('k12plus-currency', cur); } catch (e) {}
+    this.setState({ currency: cur, detected: false });
+  }
+  renderVals() {
+    const { dark, currency, detected } = this.state;
+    const seg = 'border:none; border-radius:6px; padding:8px 18px; font-family:Poppins,sans-serif; font-size:13.5px; font-weight:600; cursor:pointer;';
+    return {
+      themeIcon: dark ? React.createElement('svg',{width:17,height:17,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2.5,strokeLinecap:'round'},React.createElement('circle',{cx:12,cy:12,r:4.4}),React.createElement('path',{d:'M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.5 1.5M17.3 17.3l1.5 1.5M18.8 5.2l-1.5 1.5M6.7 17.3l-1.5 1.5'})) : React.createElement('svg',{width:17,height:17,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:2.5,strokeLinecap:'round',strokeLinejoin:'round'},React.createElement('path',{d:'M20.5 13.2A8.5 8.5 0 1 1 10.8 3.5a6.8 6.8 0 0 0 9.7 9.7z'})),
+      toggleTheme: () => {
+        const d = !this.state.dark;
+        document.body.dataset.theme = d ? 'dark' : '';
+        try { localStorage.setItem('k12plus-theme', d ? 'dark' : 'light'); } catch (e) {}
+        this.setState({ dark: d });
+      },
+      cur: currency,
+      pickNAD: () => this.setCurrency('N$'),
+      pickZAR: () => this.setCurrency('R'),
+      nadStyle: seg + (currency === 'N$' ? 'background:var(--primary);color:#fff;' : 'background:transparent;color:var(--muted);'),
+      zarStyle: seg + (currency === 'R' ? 'background:var(--primary);color:#fff;' : 'background:transparent;color:var(--muted);'),
+      detectNote: detected
+        ? (currency === 'R' ? 'We detected you are in South Africa. Prices are shown in Rand.' : 'We detected you are in Namibia. Prices are shown in Namibia Dollars.')
+        : 'Prices are identical in both currencies. N$ and R are pegged one to one.',
+      compareRows: [
+        { label: 'AI tutor questions', free: 'Daily limit', ind: 'Unlimited', school: 'Unlimited' },
+        { label: 'USSD on basic phones', free: '✓', ind: '✓', school: '✓' },
+        { label: 'Past-exam practice', free: '✓', ind: '✓', school: '✓' },
+        { label: 'Real-life AI images and videos', free: '·', ind: '✓', school: '✓' },
+        { label: 'Offline lessons (Edge AI)', free: '·', ind: '✓', school: '✓' },
+        { label: 'Gamified practice and badges', free: '·', ind: '✓', school: '✓' },
+        { label: 'Parent progress reports', free: '·', ind: '✓', school: '✓' },
+        { label: 'Teacher dashboards and AI marking', free: '·', ind: '·', school: '✓' },
+        { label: 'Data insights on struggling learners', free: '·', ind: '·', school: '✓' },
+        { label: 'Training and onboarding', free: '·', ind: '·', school: '✓' }
+      ],
+      faqs: [
+        { q: 'Why are the prices identical in N$ and R?', a: 'The Namibia Dollar is pegged one to one to the South African Rand, so N$15 and R15 are the same value. We simply show the currency you actually use.' },
+        { q: 'What stays free forever?', a: 'Asking the tutor questions, USSD access on basic phones and past-exam practice. No learner is ever turned away for money.' },
+        { q: 'How does the school plan work?', a: 'One subscription covers the whole school. Every learner then gets full Individual features at no cost to their family, and teachers get dashboards, AI marking and training.' },
+        { q: 'What are community top-ups?', a: 'Micro-payments from 80 cents that unlock single features without a subscription: a revision plan, a week of unlimited questions, or a set of practice exams. They can be paid with airtime or mobile money.' },
+        { q: 'Can I pay without a bank card?', a: 'Yes. We support mobile money and airtime billing, because most of our families do not use cards online.' },
+        { q: 'Can I cancel anytime?', a: 'Yes. Plans are month to month with no contracts. If you cancel, you simply move back to the free plan and your progress is never deleted.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

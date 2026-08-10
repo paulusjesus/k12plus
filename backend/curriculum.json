@@ -1,0 +1,747 @@
+{
+ "meta": {
+  "country": "Namibia",
+  "authority": "National Institute for Educational Development (NIED), Ministry of Education, Arts and Culture",
+  "extracted": "2026-08-04",
+  "note": "Objectives extracted verbatim from official syllabi. Mathematical notation may need repair where PDF extraction garbled formulas (marked for content agent review)."
+ },
+ "syllabi": [
+  {
+   "code": "6131",
+   "name": "NSSCO Mathematics (Ordinary Level)",
+   "grades": [
+    10,
+    11
+   ],
+   "topics": [
+    {
+     "topic": "Numbers And Operations",
+     "subtopics": [
+      {
+       "name": "Real number system",
+       "objectives": [
+        "classify different types of numbers as natural numbers, whole numbers, integers, rational numbers, irrational numbers and real numbers",
+        "identify and use natural numbers, integers, prime numbers, square numbers, cube numbers, common factors (including HCFs) and common multiples (including LCMs), rational and irrational numbers (e.g. π , 2etc.) and real numbers"
+       ]
+      },
+      {
+       "name": "Squares, cubes and roots",
+       "objectives": [
+        "calculate squares, square roots, cubes and cube roots of real numbers"
+       ]
+      },
+      {
+       "name": "Directed numbers",
+       "objectives": [
+        "apply the four basic operations on directed numbers",
+        "use directed numbers in practical situations (e.g. change in temperature, flood levels etc.)"
+       ]
+      },
+      {
+       "name": "Vulgar and decimal fractions and percentages",
+       "objectives": [
+        "use the language and notation of simple vulgar and decimal fractions and percentages in appropriate contexts",
+        "recognise equivalence and convert between these forms",
+        "calculate a given percentage of a quantity",
+        "express one quantity as a percentage of another",
+        "calculate percentage increase and decrease",
+        "perform calculations involving reverse percentages, e.g. finding the cost price given the selling price and the percentage profit."
+       ]
+      },
+      {
+       "name": "Ordering",
+       "objectives": [
+        "order quantities in ascending and descending order using relationship signs i.e. =, ≠, >, <, ≥, ≤"
+       ]
+      },
+      {
+       "name": "Standard form",
+       "objectives": [
+        "express numbers in standard form A × where n is an integer (including zero), and 1 ≤ A < 10",
+        "perform the four basic operations with expressions written in standard form"
+       ]
+      },
+      {
+       "name": "Four basic operations",
+       "objectives": [
+        "apply the four basic operations to perform calculations with integers , decimal fractions and vulgar (and mixed) fractions, including correct order of operations and use of brackets"
+       ]
+      },
+      {
+       "name": "Estimation",
+       "objectives": [
+        "make estimates of numbers and quantities",
+        "give approximations to specified numbers of significant figures and decimal places",
+        "round off answers to reasonable accuracy in the context of a given problem"
+       ]
+      },
+      {
+       "name": "Limits of accuracy",
+       "objectives": [
+        "give appropriate upper and lower bounds for data given to a specified accuracy (e.g. any measured quantities)",
+        "obtain appropriate upper and lower bounds to solutions involving all four basic operations (e.g. the calculation of the perimeter or area of a rectangle) given data to specified accuracy"
+       ]
+      },
+      {
+       "name": "Ratio, proportion and rate",
+       "objectives": [
+        "apply the ideas and notation of ratio, direct and inverse proportion and rate to practical situations",
+        "divide a quantity in a given ratio",
+        "increase and decrease a quantity by a given ratio",
+        "use scales in practical situations",
+        "calculate average speed",
+        "solve problems involving common measures of rate",
+        "express direct and inverse variation in algebraic terms and use this form of expression to find unknown quantities (contextually or algebraically)"
+       ]
+      },
+      {
+       "name": "Use of an electronic calculator",
+       "objectives": [
+        "use an electronic calculator efficiently",
+        "apply appropriate checks of accuracy"
+       ]
+      },
+      {
+       "name": "Money and household finance",
+       "objectives": [
+        "solve problems involving money and convert from one currency to another",
+        "use given data to solve problems on personal and household finance involving earnings, rate of charge, simple interest and compound interest, discount, profit and loss",
+        "extract data from tables and charts",
+        "calculate personal income through wages, salaries, piece-work and commission",
+        "interpret and perform calculations involving simple bills and payment receipts (e.g. telephone and cell phone bills, till receipt bills, municipal bills and clothing account statements)",
+        "interpret personal income tax tables and determine the tax payable on an amount earned"
+       ]
+      }
+     ]
+    },
+    {
+     "topic": "Set Language And Notations",
+     "subtopics": [
+      {
+       "name": null,
+       "objectives": [
+        "define sets by listing and describing and by using set builder notation e.g. A = {x : x is a natural number} B = {(x, y): y = mx + c} C = {x : a ≤ x ≤ b} D = {a, b, c}",
+        "use and interpret the following set notations AB union of A and B AB intersection of A and B n(A) number of elements in set A  “…is an element of …”  “…is not an element …” Aꞌ complement of set A Ø the empty set or U universal set AB A is a subset of B AB A is a proper subset of B A ⊈ B A is not a subset of B AB A is not a proper subset of B",
+        "use sets and Venn diagrams to solve problems involving not more than three subsets of the universal set"
+       ]
+      }
+     ]
+    },
+    {
+     "topic": "Measures",
+     "subtopics": [
+      {
+       "name": null,
+       "objectives": [
+        "express quantities in terms of larger or smaller units",
+        "use notations of time and calculate time in terms of the 24-hour and 12-hour clock",
+        "read clocks, dials and timetables"
+       ]
+      }
+     ]
+    },
+    {
+     "topic": "Mensuration",
+     "subtopics": [
+      {
+       "name": null,
+       "objectives": [
+        "perform calculations and solve problems involving - the perimeter and area of triangles and quadrilaterals - the circumference and area of circles - the surface area and volume of cubes, cuboids, cylinders and other prisms",
+        "solve problems involving the arc length and sector area as fractions of the circumference and area of circles",
+        "solve problems involving the surface area and volume of spheres, pyramids and cones (given formulae for the sphere, pyramid and cone)"
+       ]
+      }
+     ]
+    },
+    {
+     "topic": "Geometry",
+     "subtopics": [
+      {
+       "name": "Geometrical terms and relationships",
+       "objectives": [
+        "define, use and interpret the geometrical terms: point, line, angle, parallel, intersecting, bearing, right angle, acute, obtuse and reflex angles, perpendicular, similarity, congruence",
+        "use and interpret vocabulary of triangles, quadrilaterals, circles, polygons",
+        "use and interpret vocabulary of solid figures i.e. cube, cuboids, prism, cylinder, pyramid, cone, including their nets",
+        "solve problems and give simple explanations involving similarity and congruence",
+        "use the relationships between areas of similar triangles, with corresponding results for similar figures and extension to volumes and surface areas of similar solids"
+       ]
+      },
+      {
+       "name": "Geometrical constructions",
+       "objectives": [
+        "measure lines and angles",
+        "construct simple geometrical figures and nets from given data using protractors, set squares, straight edges and compasses as necessary",
+        "construct angle bisectors and perpendicular bisectors using straight edges and compasses only",
+        "read and make scale drawings"
+       ]
+      },
+      {
+       "name": "Symmetry",
+       "objectives": [
+        "recognise line and rotational symmetry (including order of rotational symmetry) in two dimensions",
+        "recognise and use properties of triangles, quadrilaterals and circles directly related to their symmetries",
+        "use the following symmetry properties of circles: - equal chords are equidistant from the centre - the perpendicular bisector of a chord passes through the centre of a circle - tangents from the same external point are equal in length"
+       ]
+      },
+      {
+       "name": "Angle properties",
+       "objectives": [
+        "calculate unknown angles using the following geometrical properties (reasons may be required but no formal proofs): - angles at a point - angles on a straight line and intersecting straight lines - angles formed within parallel lines - angle properties of triangles and quadrilaterals - angle properties of regular and irregular polygons - angle in a semi-circle - angle between tangent and radius of a circle - angle at the centre of a circle is twice the angle at the circumference - angles in the same segment are equal - angles in opposite segments are supplementary"
+       ]
+      },
+      {
+       "name": "Locus",
+       "objectives": [
+        "construct and use the following loci and the method of intersecting loci for sets of points in two dimensions: - which are at a given distance from a given point - which are at a given distance from a given straight line - which are equidistant from two given points - which are equidistant from two given intersecting straight lines"
+       ]
+      }
+     ]
+    },
+    {
+     "topic": "Algebra",
+     "subtopics": [
+      {
+       "name": "Algebraic representation and formulae",
+       "objectives": [
+        "use letters to express generalised numbers and express basic arithmetic processes algebraically",
+        "substitute numbers for words and letters in formulae",
+        "construct linear equations and inequalities and simple expressions from given situations",
+        "transform simple formulae (linear formulae) and complex formulae (those involving roots, powers, fractions and factorisation)"
+       ]
+      },
+      {
+       "name": "Algebraic manipulation",
+       "objectives": [
+        "multiply a monomial by a polynomial",
+        "use brackets and extract common factors",
+        "expand products of algebraic expressions",
+        "factorise where possible expressions of the form: - axay - axbxkaykby a2x2 b2y2 - a2 2abb2 - ax2 bxc -",
+        "manipulate algebraic fractions, e.g. x x4 -  , 3 2 2x 2 -  3 x3 3a 5ab -  4 3 1 2 -  x2 x3",
+        "factorise and simplify expressions such as: x2 2x x2 3x10 ; x2 5x6 x2 4x5",
+        "write quadratic expressions in the form a(x p)2 q"
+       ]
+      },
+      {
+       "name": "Polynomials",
+       "objectives": [
+        "carry out operations of addition, subtraction and multiplication of polynomials",
+        "carry out division of a polynomial by a binomial expression, and identify the quotient and the remainder"
+       ]
+      },
+      {
+       "name": "Equations and inequalities",
+       "objectives": [
+        "solve simple linear equations with one unknown",
+        "solve simultaneous linear equations with two unknowns",
+        "solve quadratic equations given in factorized form, e.g. (x2)(x3)  0",
+        "find solutions to quadratic equations by factorising, by formula and by completing the square x2 x8",
+        "solve equations with fractions, e.g. 1 x1 x14",
+        "solve simultaneous equations; one linear and one quadratic",
+        "solve linear inequalities in one unknown"
+       ]
+      },
+      {
+       "name": "Indices",
+       "objectives": [
+        "interpret and use the laws of indices including positive, negative, fractional and zero indices 3xy 3xy",
+        "simplify expressions involving indices e.g. 32x 2x",
+        "use indices to solve exponential equations e.g. "
+       ]
+      },
+      {
+       "name": "Sequences",
+       "objectives": [
+        "find the term of sequences",
+        "distinguish between arithmetic and geometric sequences",
+        "use the formulae for the nth term and the sum of the first n terms to solve problems involving arithmetic and geometric progressions"
+       ]
+      },
+      {
+       "name": "Logarithms",
+       "objectives": [
+        "identify the relationship between logarithms and indices (excluding ln x and",
+        "use the laws of logarithms of base 10 to simplify expressions ax",
+        "use logarithms to solve simple exponential equations e.g. b"
+       ]
+      }
+     ]
+    },
+    {
+     "topic": "Functions And Graphs",
+     "subtopics": [
+      {
+       "name": "Graphs in practical situations",
+       "objectives": [
+        "use Cartesian coordinates in two dimensions",
+        "interpret and use graphs in practical situations, including travel graphs and conversion graphs",
+        "draw graphs from given data",
+        "apply the idea of rate of change to easy kinematics involving distance-time graphs, speed-time graphs, acceleration and deceleration",
+        "calculate distance travelled as area under a linear speed-time graph"
+       ]
+      },
+      {
+       "name": "Linear programming",
+       "objectives": [
+        "represent inequalities graphically and use this representation in the solution of simple linear programming problems (the convention of using broken lines for strict inequalities and shading unwanted regions will be expected)"
+       ]
+      },
+      {
+       "name": "Functions",
+       "objectives": [
+        "describe the terms function, one-one function, inverse function and composite function -1",
+        "use the function notations f(x) = 2x + 3 and f :x2x3, with f for the inverse of f",
+        "find the inverse of one-one function and form composite of two given functions as defined by gf(x)  g (f(x) = gof(x)"
+       ]
+      },
+      {
+       "name": "Graphs of function",
+       "objectives": [
+        "construct tables of values for functions of the form y ax2 bxc,y  x 0 y axb, x where a, b and c are integers",
+        "draw and interpret such graphs",
+        "find the gradient of a straight line graph and determine the equation of a straight line in the form y mxc",
+        "solve linear and quadratic equations approximately by graphical methods axn",
+        "construct tables of values for functions of the form y where a is a rational constant and n = –2, –1, 0, 1, 2, 3 and simple sums of not more than three of these and for functions of the formy ax where a is a positive integer",
+        "draw and interpret such graphs and solve associated equations approximately by graphical methods",
+        "estimate the gradient of a curve by drawing tangents at a given point on the curve",
+        "find the maximum or minimum value of the quadratic function by any method, including ax2 +p)2 expressing + bx + c in the form a(x + q",
+        "sketch the graph of a quadratic function using the turning point and the intercepts"
+       ]
+      }
+     ]
+    },
+    {
+     "topic": "Coordinate Geometry",
+     "subtopics": [
+      {
+       "name": null,
+       "objectives": [
+        "calculate the distance between two points given in coordinate form, the gradient of the line- segment joining them, and the coordinates of their midpoint",
+        "find the equation of a straight line given sufficient information (e.g. the coordinates of two points on it or one point on it and its gradient)",
+        "interpret and use equations of the form axbyc  0, including knowledge of the relationships involving gradients of parallel and perpendicular lines",
+        "apply coordinate geometry to quadrilaterals"
+       ]
+      }
+     ]
+    },
+    {
+     "topic": "Vectors And Transformations",
+     "subtopics": [
+      {
+       "name": "Vectors in two dimension",
+       "objectives": [
+        "describe a translation of point by using a vector x  ,",
+        "use standard notations for vectors, i.e. AB, a, a   y",
+        "add and subtract vectors",
+        "multiply a vector by a scalar and interpret these relationships in geometrical terms x",
+        "calculate the magnitude of a vector   as x2  y2 (Vectors will be printed as AB or a and   y their magnitudes as AB or |a|)",
+        "represent vectors by directed line segment",
+        "use the sum and difference of two vectors to express given vectors in terms of two coplanar vectors",
+        "use position vectors"
+       ]
+      },
+      {
+       "name": "Transformations",
+       "objectives": [
+        "reflect simple plane figures in horizontal and vertical lines o",
+        "rotate simple plane figures about any point, through multiples of 90",
+        "construct given translations, and enlargements (including negative and fractional scale factors) of simple plane figures",
+        "recognise and describe fully, reflections, rotations, translations and enlargements",
+        "use the following transformations of the plane: reflection, rotation, translation and enlargement and their combinations",
+        "identify and give precise descriptions of transformations connecting given figures"
+       ]
+      }
+     ]
+    },
+    {
+     "topic": "Matrices",
+     "subtopics": [
+      {
+       "name": null,
+       "objectives": [
+        "represent information in the form of a matrix of any order and interpret the data in a given matrix",
+        "calculate the product of a scalar quantity and a matrix",
+        "solve problems involving the calculation of the - sum and difference of any matrices not exceeding 3 × 3 - product of matrices not exceeding 2 × 2  2 3 1 3 2 3 -10 3     e.g. 1 2   = 6 3 ;               4 0 0 2-4 0 8 0  4 4 28 42         1 2   = 14 ; 1 2   x y    where x  4 and y  6       5 5 12 18",
+        "use the zero and identity matrix",
+        "calculate the determinant and inverse of a non-singular 2 × 2 matrix",
+        "solve simultaneous linear equations by matrix method"
+       ]
+      }
+     ]
+    },
+    {
+     "topic": "Bearings And Trigonometry",
+     "subtopics": [
+      {
+       "name": null,
+       "objectives": [
+        "interpret and use three-figure bearings measured clockwise from the north (i.e. 000° – 360°)",
+        "apply Pythagoras’ theorem and the sine, cosine and tangent ratios for acute angles to the calculation of a side or of an angle of a right-angled triangle (angles will be quoted in, and answers required in degrees)",
+        "solve trigonometrical problems in two dimensions involving angles of elevation and depression",
+        "extend trigonometrical ratios to angles between 90° and 360°",
+        "solve problems using sine and cosine rules for any triangle and the formula: area of triangle  ab sinC",
+        "solve simple trigonometrical problems in three dimensions including angle between a line and a plane NOTE: When decimals are involved in bearings e.g. 142.5°, 42.3° decimal digits are not counted as figures even if they appear in the answer. Therefore the three-figure bearings will be written as 142.5° and 042.3° respectively."
+       ]
+      }
+     ]
+    },
+    {
+     "topic": "Statistics And Probability",
+     "subtopics": [
+      {
+       "name": "Statistics",
+       "objectives": [
+        "collect, classify and tabulate statistical data of  read, interpret and draw simple inferences (conclusions) from tables and statistical diagrams",
+        "construct and use bar charts, pie charts, pictograms and simple frequency distributions",
+        "calculate the range, mean, median and mode for discrete data and distinguish between the purposes for which they are used",
+        "construct and read histograms with equal and unequal intervals (areas proportional to frequencies and vertical axis labelled ‘frequency density’)",
+        "construct and use cumulative frequency diagrams",
+        "estimate and interpret the median, percentiles, quartiles and inter-quartile range",
+        "calculate an estimate of the mean for grouped and continuous data",
+        "identify the modal class from a grouped frequency distribution"
+       ]
+      },
+      {
+       "name": "Probability",
+       "objectives": [
+        "calculate the probability of a single event as either a fraction or a decimal (not ratio)",
+        "use the probability scale from 0 to 1",
+        "interpret the probability of an event occurring as [1 – (the probability of the event not occurring)]",
+        "use addition and multiplication of probabilities, as appropriate, in simple cases",
+        "apply probability in practice, e.g. relative frequency",
+        "calculate the probability of simple combined events, using possibility diagrams, tree diagrams and Venn diagrams where appropriate NOTE: In possibility diagrams outcomes will be represented by points on a grid and in tree diagrams outcomes will be written at the end of branches and probabilities by the side of the branches."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "code": "8227",
+   "name": "NSSCAS Mathematics (Advanced Subsidiary)",
+   "grades": [
+    12
+   ],
+   "themes": [
+    {
+     "name": "Mathematics 1",
+     "topics": [
+      {
+       "topic": "Equations, Expressions, Identities And Inequalities",
+       "subtopics": [
+        {
+         "name": null,
+         "objectives": [
+          " complete the square for a quadratic function and use the solution to determine the turning point",
+          "(vertex) of a graph of a quadratic function and sketch the graph",
+          "ax2",
+          " find the discriminant of a quadratic polynomial + bx + c and interpret the nature and the",
+          "ax2",
+          "number of real roots of the related equation f(x) = + bx + c",
+          " interpret the difference between identities and equations and use identities to determine unknown",
+          "coefficients in polynomials",
+          " recognise and solve equations in x which are quadratic in some function of x",
+          "x4 5x2 x2",
+          "e.g. – + 4 = 0 for k =",
+          " find the equation of a graph (quadratic and cubic) given sufficient information",
+          " solve quadratic inequalities in one unknown"
+         ]
+        }
+       ]
+      },
+      {
+       "topic": "Sequences And Series",
+       "subtopics": [
+        {
+         "name": null,
+         "objectives": [
+          "(ab)n,",
+          " use the expansion of where n is a positive integer (knowledge of the greatest term and",
+          "n",
+          "properties of the coefficients are not required, but the notations  and n! should be known)",
+          " ",
+          "r",
+          " recognise arithmetic and geometric progressions",
+          "nth",
+          " use the formulae for the term and for the sum of the first n terms to solve problems involving",
+          "arithmetic or geometric progressions",
+          " interpret and apply the Sigma notation",
+          " use the condition for the convergence of a geometric progression, and the formula for the sum to",
+          "infinity of a convergent geometric progression"
+         ]
+        }
+       ]
+      },
+      {
+       "topic": "Graphs And Functions",
+       "subtopics": [
+        {
+         "name": null,
+         "objectives": [
+          " interpret the terms function, domain, range (image set), one-one function, inverse function and",
+          "composition of functions",
+          " identify the domain and the range of a given function in simple cases",
+          " determine whether or not a given function is one-one, and find the inverse of a one-one function",
+          "in simple cases",
+          " form composite functions, and recognise when a given function can be expressed as a composite",
+          " sketch graphs of functions and their inverses for a specified domain"
+         ]
+        }
+       ]
+      },
+      {
+       "topic": "Coordinate Geometry",
+       "subtopics": [
+        {
+         "name": null,
+         "objectives": [
+          " interpret the relationship between a graph and its associated algebraic equation",
+          " use the relationship between points of intersection of graphs and solutions of equations including,",
+          "in simple cases, the correspondence between a line being tangent to a curve and a repeated root",
+          "of an equation"
+         ]
+        }
+       ]
+      },
+      {
+       "topic": "Circular Measure",
+       "subtopics": [
+        {
+         "name": null,
+         "objectives": [
+          " interpret the term radian and use the relationship between radians and degrees",
+          "A r2to",
+          " use the formulae s = r θ and solve problems concerning the arc length, sector area",
+          "of a circle and segment area"
+         ]
+        }
+       ]
+      },
+      {
+       "topic": "Trigonometry",
+       "subtopics": [
+        {
+         "name": null,
+         "objectives": [
+          " sketch and use graphs of the sine, cosine and tangent functions (for angles of any size, and using",
+          "either degrees or radians)",
+          " find the amplitude and period and sketch and interpret graphs of the form yasin(bx)c,",
+          "yacos(bx)c, and yatan(bx)c",
+          " use the exact values of the sine, cosine and tangent of 30°, 45°, 60°, and related angles, e.g. cos",
+          " 3",
+          "150° =",
+          "sin−1x, cos−1x, tan−1x",
+          " use the notations to denote the principal values of the inverse trigonometric",
+          "relations",
+          "sin",
+          "sin2 cos2",
+          " use the trigonometric identities  tan and θ + θ ≡ 1 to prove identities and solve",
+          "cos",
+          "trigonometric equations",
+          "sin(nx)  k,",
+          " find solutions, in degrees or radians and within a specified interval, of the equations",
+          "cos(nx) k, tan(nx) k, and of equations easily reducible to these forms, where n is a small",
+          "integer or a simple fraction (general forms of solution are not included)"
+         ]
+        }
+       ]
+      },
+      {
+       "topic": "Vectors In Three Dimensions",
+       "subtopics": [
+        {
+         "name": null,
+         "objectives": [
+          " use rectangular Cartesian coordinates to locate points in three dimensions, and use standard",
+          "x",
+          " ",
+          "notations for vectors, i.e. y, xi + yj + zk, AB, a",
+          " ",
+          "z",
+          " ",
+          " perform addition and subtraction of vectors and multiplication of a vector by a scalar, and",
+          "interpret these operations in geometrical terms",
+          " use unit vectors, displacement vectors and position vectors",
+          " calculate the magnitude of a vector and the scalar product of two vectors",
+          " use the scalar product to determine the angle between two directions and to solve problems",
+          "concerning perpendicularity of vectors"
+         ]
+        }
+       ]
+      },
+      {
+       "topic": "Differentiation",
+       "subtopics": [
+        {
+         "name": null,
+         "objectives": [
+          "a dy d2y",
+          " interpret the idea of the gradient of a curve, and use the notations f'(x), f''(x), (the",
+          "to",
+          "dx dx2",
+          "technique of differentiation from first principles is not required)",
+          " use the derivative of xn (for any rational n), together with constant multiples, sums, differences of",
+          "functions, and of composite functions using the chain rule (the knowledge of product and",
+          "quotient rules will not be required)",
+          " apply differentiation to gradients, tangents and normals, increasing and decreasing functions and",
+          "rates of change (including connected rates of change) to solve problems involving displacement,",
+          "velocity and acceleration",
+          " locate stationary points, and distinguish (by any method) between maximum and minimum",
+          "points and points of inflexion"
+         ]
+        }
+       ]
+      },
+      {
+       "topic": "Integration",
+       "subtopics": [
+        {
+         "name": null,
+         "objectives": [
+          " interpret integration as the reverse process of differentiation, and integrate (ax + b)n (for any",
+          "use rational n except –1), together with constant multiples, sums and differences",
+          " solve problems involving the evaluation of a constant of integration, e.g. to find the equation of",
+          "dy",
+          "the curve through (1, –2) for which = 2x + 1",
+          "to",
+          "dx",
+          "and",
+          "1 ",
+          " evaluate definite integrals (including simple cases of „improper‟ integrals, such as  x 2dx and",
+          "",
+          "x2dx)",
+          "",
+          " use definite integration to find:",
+          "- the area of a region bounded by a curve and a line, or between two curves",
+          "- a volume of revolution about one of the axes",
+          "- displacement, velocity and acceleration"
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Mathematics 2",
+     "topics": [
+      {
+       "topic": "Algebra",
+       "subtopics": [
+        {
+         "name": null,
+         "objectives": [
+          "for a2 b2",
+          " interpret and use the notation x , and use the relations such as a  b   and",
+          "xa b  ab xab in solving equations and inequalities",
+          " interpret and sketch the graphs of the functions y  ax , y  axb and y  x c where a, b",
+          "and c are integers",
+          " divide a polynomial of degree not exceeding 4, by a linear or quadratic polynomial, and identify",
+          "the quotient and remainder (which may be zero)",
+          " apply the remainder and the factor theorems to polynomials and use the factor theorem to solve",
+          "polynomial equations or evaluate unknown coefficients"
+         ]
+        }
+       ]
+      },
+      {
+       "topic": "Logarithmic And Exponential Functions",
+       "subtopics": [
+        {
+         "name": null,
+         "objectives": [
+          " interpret the relationship between logarithms and indices, and use the laws of logarithms",
+          "(excluding change of base)",
+          "ex",
+          "and  interpret the definition and properties of and lnx, including their relationship as inverse",
+          "functions and their graphs",
+          "ax",
+          " use logarithms to solve equations of the form = b, and similar inequalities",
+          " use logarithms to transform a given relationship to linear form, and hence determine unknown",
+          "constants by considering the gradient and/or intercept"
+         ]
+        }
+       ]
+      },
+      {
+       "topic": "Trigonometry",
+       "subtopics": [
+        {
+         "name": null,
+         "objectives": [
+          " recognise the relationship of the secant, cosecant and cotangent functions to cosine, sine and",
+          "tangent, and use properties and graphs of all six trigonometric functions for angles of any",
+          "magnitude",
+          " use trigonometrical identities for the simplification and exact evaluation of expressions and in the",
+          "course of solving equations, and select an identity or identities appropriate to the context,",
+          "showing familiarity in particular with the use of:",
+          "sec2θ tan2θ cosec2θ cot2θ",
+          "- ≡ 1 + and ≡ 1 + ,",
+          "- the expansions of sin(A ± B), cos(A ± B) and tan(A ± B),",
+          "- the formulae for sin2A, cos2A and tan2A,",
+          "- the expressions a sinθ + b cosθ, a sinθ – b cosθ and a cosθ – b sinθ in the forms Rsin(θ ± α)",
+          "and Rcos(θ ± α)"
+         ]
+        }
+       ]
+      },
+      {
+       "topic": "Differentiation",
+       "subtopics": [
+        {
+         "name": null,
+         "objectives": [
+          " use the derivatives of ex, lnx, sinx, cosx, tanx, together with constant multiples, sums, differences",
+          "and composites",
+          " differentiate products and quotients",
+          " find and use the first derivative of a function which is defined parametrically or implicitly"
+         ]
+        }
+       ]
+      },
+      {
+       "topic": "Integration",
+       "subtopics": [
+        {
+         "name": null,
+         "objectives": [
+          "eax + b,",
+          " apply further the idea of „reverse differentiation‟ to include the integration of ,",
+          "axb",
+          "sec2(ax",
+          "sin(ax + b), cos(ax + b) and + b) ( knowledge of the general method of integration by",
+          "substitution is not required)",
+          " use trigonometrical relationships (such as double-angle formulae) to facilitate the integration of",
+          "cos2x",
+          "functions such as",
+          " use the trapezium rule to estimate the value of a definite integral",
+          " use sketch graphs in simple cases to determine whether the trapezium rule gives an over-estimate",
+          "or under-estimate"
+         ]
+        }
+       ]
+      },
+      {
+       "topic": "Numerical Solutions Of Equations",
+       "subtopics": [
+        {
+         "name": null,
+         "objectives": [
+          " locate approximately a root of an equation, by means of graphical considerations and/or",
+          "searching for a sign change",
+          " interpret the idea of a sequence of approximations which converges to a root of an equation and",
+          "use its notation",
+          " interpret how a given simple iterative formula of the form x = F(x ) relates to the equation",
+          "n + 1 n",
+          "being solved",
+          " use a given iteration, or an iteration based on a given rearrangement of an equation, to determine",
+          "a root to a prescribed degree of accuracy (knowledge of the condition for convergence is not",
+          "included, but candidates should understand that an iteration may fail to converge)"
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
