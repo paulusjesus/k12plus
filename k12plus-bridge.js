@@ -79,13 +79,15 @@
     return data.msg || data.message || data.error_description ||
       (typeof data.error === 'string' ? data.error : (data.error && data.error.message)) || fallback;
   }
-  function saveSession(token, refresh, userId, name, role, school) {
+  function saveSession(token, refresh, userId, name, role, school, grade, classLetter) {
     try {
       localStorage.setItem('k12plus-session', JSON.stringify({ access_token: token, refresh_token: refresh || '', user_id: userId }));
       localStorage.setItem('k12plus-loggedin', '1');
       if (name) localStorage.setItem('k12plus-name', name);
       if (role) localStorage.setItem('k12plus-role', role);
       if (school) localStorage.setItem('k12plus-school', school);
+      if (grade) localStorage.setItem('k12plus-grade', String(grade)); else localStorage.removeItem('k12plus-grade');
+      if (classLetter) localStorage.setItem('k12plus-class', String(classLetter)); else localStorage.removeItem('k12plus-class');
     } catch (e) {}
   }
 
@@ -141,7 +143,7 @@
           try { pdata = await pres.json(); } catch (e) {}
           return { ok: false, error: supaErr(pdata, 'Could not save your profile (' + pres.status + ')') };
         }
-        saveSession(token, refresh, user.id, opts.username, opts.role, opts.schoolName);
+        saveSession(token, refresh, user.id, opts.username, opts.role, opts.schoolName, profile.grade, opts.classLetter);
         return { ok: true, learnerUid: learnerUid };
       } catch (e) {
         return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
@@ -173,7 +175,9 @@
         saveSession(token, data.refresh_token, userId,
           (profile && profile.username) || username,
           displayRole,
-          (profile && profile.school) || '');
+          (profile && profile.school) || '',
+          profile && profile.grade,
+          profile && profile.class_letter);
         return { ok: true, role: profile && profile.role };
       } catch (e) {
         return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };

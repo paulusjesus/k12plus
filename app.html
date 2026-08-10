@@ -38,10 +38,15 @@ button { font-family:'Poppins',sans-serif; }
   <aside style="width:264px; flex-shrink:0; background:#fff; border-right:1px solid var(--line); display:flex; flex-direction:column; padding:16px 12px; height:100vh; position:sticky; top:0;">
     <div style="display:flex; align-items:center; gap:4px; padding:4px 8px 14px;">
       <a href="index.html" title="{{ schoolName }}" style="display:flex; align-items:center; gap:10px; text-decoration:none; min-width:0;">
+        <sc-if value="{{ brandIsK12 }}" hint-placeholder-val="{{ false }}">
+        <span style="width:30px; height:30px; border-radius:9px; flex-shrink:0; background:linear-gradient(135deg,#8B5CF6,#5B34D9); display:flex; align-items:center; justify-content:center; color:#fff; font-size:15px; font-weight:800; font-family:'Comfortaa',sans-serif; box-shadow:0 2px 6px rgba(91,52,217,.28);">K</span>
+        </sc-if>
+        <sc-if value="{{ brandIsSchool }}" hint-placeholder-val="{{ true }}">
         <span style="position:relative; width:36px; height:36px; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
           <svg width="36" height="36" viewBox="0 0 36 36" style="position:absolute; inset:0;"><defs><linearGradient id="k12crest" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#8B5CF6"></stop><stop offset="100%" stop-color="#5B34D9"></stop></linearGradient></defs><path d="M18 1.5l13.5 5v12c0 7.5-5.7 13.6-13.5 16-7.8-2.4-13.5-8.5-13.5-16v-12z" fill="url(#k12crest)"></path><path d="M18 1.5l13.5 5v12c0 7.5-5.7 13.6-13.5 16z" fill="#fff" opacity=".12"></path></svg>
           <span style="position:relative; color:#fff; font-size:12.5px; font-weight:800; letter-spacing:0.5px; font-family:'Comfortaa',sans-serif;">{{ schoolMonogram }}</span>
         </span>
+        </sc-if>
         <span style="display:block; font-size:14px; font-weight:700; color:var(--ink); line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:118px; letter-spacing:0.2px;">{{ schoolShort }}</span>
       </a>
       <span style="flex:1;"></span>
@@ -65,7 +70,7 @@ button { font-family:'Poppins',sans-serif; }
     </div>
     <sc-for list="{{ sideItems }}" as="i" hint-placeholder-count="4">
       <div style="display:flex; flex-direction:column;">
-        <button onClick="{{ i.pick }}" style="display:flex; align-items:center; gap:10px; border:none; background:none; color:#3A3D52; border-radius:11px; padding:10px 13px; font-size:13.5px; font-weight:500; cursor:pointer; text-align:left;" style-hover="background:var(--chip);">
+        <button onClick="{{ i.pick }}" style="display:flex; align-items:center; gap:11px; border:none; background:none; color:#3A3D52; border-radius:11px; padding:7px 11px; font-size:13.5px; font-weight:500; cursor:pointer; text-align:left;" style-hover="background:var(--chip);">
           {{ i.icon }}<span style="flex:1;">{{ i.label }}</span>
           <sc-if value="{{ i.hasSubs }}" hint-placeholder-val="{{ false }}">{{ i.chev }}</sc-if>
         </button>
@@ -131,13 +136,20 @@ button { font-family:'Poppins',sans-serif; }
   <sc-if value="{{ sideClosed }}" hint-placeholder-val="{{ false }}">
   <aside style="width:64px; flex-shrink:0; background:#fff; border-right:1px solid var(--line); display:flex; flex-direction:column; align-items:center; gap:4px; padding:16px 0; height:100vh; position:sticky; top:0;">
     <a href="index.html" title="{{ schoolName }}" style="position:relative; width:36px; height:36px; display:flex; align-items:center; justify-content:center; margin-bottom:6px; text-decoration:none;">
+      <sc-if value="{{ brandIsK12 }}" hint-placeholder-val="{{ false }}">
+      <span style="width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg,#8B5CF6,#5B34D9); display:flex; align-items:center; justify-content:center; color:#fff; font-size:15px; font-weight:800; font-family:'Comfortaa',sans-serif; box-shadow:0 2px 6px rgba(91,52,217,.28);">K</span>
+      </sc-if>
+      <sc-if value="{{ brandIsSchool }}" hint-placeholder-val="{{ true }}">
+      <span style="position:relative; width:36px; height:36px; display:flex; align-items:center; justify-content:center;">
       <svg width="36" height="36" viewBox="0 0 36 36" style="position:absolute; inset:0;"><defs><linearGradient id="k12crest2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#8B5CF6"></stop><stop offset="100%" stop-color="#5B34D9"></stop></linearGradient></defs><path d="M18 1.5l13.5 5v12c0 7.5-5.7 13.6-13.5 16-7.8-2.4-13.5-8.5-13.5-16v-12z" fill="url(#k12crest2)"></path><path d="M18 1.5l13.5 5v12c0 7.5-5.7 13.6-13.5 16z" fill="#fff" opacity=".12"></path></svg>
       <span style="position:relative; color:#fff; font-size:12.5px; font-weight:800; letter-spacing:0.5px; font-family:'Comfortaa',sans-serif;">{{ schoolMonogram }}</span>
+      </span>
+      </sc-if>
     </a>
     <button onClick="{{ toggleSide }}" title="Open sidebar" style="border:none; background:none; color:var(--muted); cursor:pointer; padding:8px; border-radius:9px; margin-bottom:8px;" style-hover="background:var(--chip); color:var(--ink);"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M9 4v16"></path></svg></button>
     <button onClick="{{ openSearch }}" title="Search chats" style="border:none; background:none; color:var(--muted); cursor:pointer; padding:9px; border-radius:9px;" style-hover="background:var(--chip); color:var(--ink);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.35-4.35"></path></svg></button>
     <sc-for list="{{ sideItems }}" as="i" hint-placeholder-count="7">
-      <button onClick="{{ i.pick }}" title="{{ i.label }}" style="border:none; background:none; cursor:pointer; padding:9px; border-radius:9px; display:flex;" style-hover="background:var(--chip);">{{ i.icon }}</button>
+      <button onClick="{{ i.pick }}" title="{{ i.label }}" style="border:none; background:none; cursor:pointer; padding:6px; border-radius:11px; display:flex;" style-hover="background:var(--chip);">{{ i.icon }}</button>
     </sc-for>
     <span style="flex:1;"></span>
     <button onClick="{{ openProfile }}" title="My profile" style="border:none; background:none; padding:0; cursor:pointer; display:flex;">
@@ -357,10 +369,23 @@ button { font-family:'Poppins',sans-serif; }
         </div>
       </div>
     </sc-if>
+    <sc-if value="{{ showLock }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1; display:flex; align-items:center; justify-content:center; padding:24px;">
+        <div style="background:#fff; border:1px solid var(--line); border-radius:18px; padding:34px 38px 30px; max-width:430px; width:100%; text-align:center; box-shadow:0 10px 40px rgba(31,32,51,.07); animation:k12pop .18s ease;">
+          <span style="width:54px; height:54px; border-radius:16px; background:var(--chip); color:var(--primary); display:inline-flex; align-items:center; justify-content:center; margin-bottom:14px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"></rect><path d="M8 11V7a4 4 0 018 0v4"></path><circle cx="12" cy="16" r="1.2" fill="currentColor"></circle></svg></span>
+          <h2 style="font-size:16.5px; font-weight:700; margin:0 0 6px;">Log in to access your {{ lockNoun }}</h2>
+          <p style="font-size:12.5px; color:var(--muted); line-height:1.7; margin:0 0 18px;">Your progress, quizzes and school schedule live here once you have an account.</p>
+          <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+            <a href="signup.html#login" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:9px 22px; font-size:12.5px; font-weight:600; text-decoration:none;" style-hover="background:var(--chip); color:var(--ink);">Log in</a>
+            <a href="signup.html" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:10px 22px; font-size:12.5px; font-weight:600; text-decoration:none;" style-hover="opacity:.9; color:#fff;">Sign up for free</a>
+          </div>
+        </div>
+      </div>
+    </sc-if>
     <sc-if value="{{ isDash }}" hint-placeholder-val="{{ false }}">
       <div class="k12dd" style="flex:1; overflow-y:auto; padding:4px 24px 28px;">
         <div style="display:flex; align-items:center; gap:14px; margin-bottom:14px; flex-wrap:wrap;">
-          <h1 style="font-size:17px; font-weight:500; margin:0;">Welcome to class, Ndapewa! <strong style="font-weight:700;">Grade 12 C</strong></h1>
+          <h1 style="font-size:17px; font-weight:500; margin:0;">Welcome to class{{ welcomeName }}!<sc-if value="{{ hasGradeChip }}" hint-placeholder-val="{{ false }}"><strong style="font-weight:700; margin-left:7px;">{{ gradeChip }}</strong></sc-if></h1>
           <button style="margin-left:auto; display:flex; align-items:center; gap:7px; border:1px solid var(--line); background:var(--chip); color:var(--muted); border-radius:9px; padding:7px 14px; font-size:12.5px; font-weight:500; cursor:pointer;">Term 3 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button>
         </div>
         <div style="display:flex; align-items:center; gap:12px; background:linear-gradient(90deg,#FFF6DC,#FDF0E4); border:1px solid #F2E2AE; border-radius:14px; padding:11px 18px; margin-bottom:18px; flex-wrap:wrap;">
@@ -935,7 +960,7 @@ button { font-family:'Poppins',sans-serif; }
               <input value="{{ nameDraft }}" onChange="{{ onNameDraft }}" style="width:100%; border:1px solid var(--line); border-radius:9px; padding:10px 13px; font-size:13.5px; font-family:'Poppins',sans-serif; outline:none; background:var(--chip); color:var(--ink);">
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-              <div style="background:var(--chip); border-radius:10px; padding:10px 13px;"><span style="display:block; font-size:10.5px; color:var(--muted);">Grade &amp; class</span><span style="display:block; font-size:13px; font-weight:600;">Grade 12 C</span></div>
+              <div style="background:var(--chip); border-radius:10px; padding:10px 13px;"><span style="display:block; font-size:10.5px; color:var(--muted);">Grade &amp; class</span><span style="display:block; font-size:13px; font-weight:600;">{{ gradeLabel }}</span></div>
               <div style="background:var(--chip); border-radius:10px; padding:10px 13px;"><span style="display:block; font-size:10.5px; color:var(--muted);">Learner ID</span><span style="display:block; font-size:13px; font-weight:600;">K12-NA-8F3K92</span></div>
             </div>
             <div style="background:var(--chip); border-radius:10px; padding:10px 13px;"><span style="display:block; font-size:10.5px; color:var(--muted);">School</span><span style="display:block; font-size:13px; font-weight:600;">{{ schoolName }}</span></div>
@@ -1059,13 +1084,13 @@ button { font-family:'Poppins',sans-serif; }
         </button>
         <div style="display:flex; align-items:center; gap:9px; background:var(--chip); border-radius:24px; padding:5px 14px 5px 5px; cursor:pointer;">
           <span style="width:34px; height:34px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700;">N</span>
-          <span style="font-size:14px; font-weight:600;">Ndapewa</span>
+          <span style="font-size:14px; font-weight:600;">Learner</span>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
         </div>
       </header>
       <div style="padding:20px 26px 30px;">
         <div style="display:flex; align-items:center; gap:14px; margin-bottom:20px; flex-wrap:wrap;">
-          <h1 style="font-size:17px; font-weight:500; margin:0;">Welcome to class, Ndapewa! <strong style="font-weight:700;">Grade 12 C</strong></h1>
+          <h1 style="font-size:17px; font-weight:500; margin:0;">Welcome to class! <strong style="font-weight:700;">Grade 12 C</strong></h1>
           <button style="margin-left:auto; display:flex; align-items:center; gap:7px; border:1px solid var(--line); background:var(--chip); color:var(--muted); border-radius:9px; padding:7px 14px; font-size:12.5px; font-weight:500; cursor:pointer;">Term 3 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button>
         </div>
         <div class="k12main" style="display:grid; grid-template-columns:1fr 300px; gap:20px;">
@@ -1229,7 +1254,7 @@ button { font-family:'Poppins',sans-serif; }
 </sc-if></x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { view: 'chat', chatOpen: false, chatInput: '', chatMsgs: [], recents: [], chatBusy: false, countdown: 27 * 3600 + 45 * 60 + 40 };
+  state = { view: 'chat', chatOpen: false, chatInput: '', chatMsgs: [], recents: [], chatBusy: false, countdown: 27 * 3600 + 45 * 60 + 40, loggedIn: (() => { try { return localStorage.getItem('k12plus-loggedin') === '1'; } catch (e) { return false; } })() };
 
   componentDidMount() {
     try {
@@ -1238,15 +1263,17 @@ class Component extends DCLogic {
       const subject = localStorage.getItem('k12plus-tutor-subject') || '';
       const school = localStorage.getItem('k12plus-school') || '';
       const avatar = localStorage.getItem('k12plus-avatar') || '';
-      const userName = localStorage.getItem('k12plus-name') || 'Ndapewa';
+      const userName = localStorage.getItem('k12plus-name') || '';
       const role = localStorage.getItem('k12plus-role') || 'Learner';
       const loggedIn = localStorage.getItem('k12plus-loggedin') === '1';
+      const grade = (localStorage.getItem('k12plus-grade') || '').replace(/\D/g, '');
+      const classLetter = (localStorage.getItem('k12plus-class') || '').trim();
       const guestUsed = parseInt(localStorage.getItem('k12plus-free-used') || '0', 10) || 0;
       const quizHistory = JSON.parse(localStorage.getItem('k12plus-quiz-history') || '[]');
       const tourDone = localStorage.getItem('k12plus-tour-done') === '1';
       this.setState({
         chatMsgs: Array.isArray(saved) ? saved : [], recents: Array.isArray(recents) ? recents : [],
-        subject, school, avatar, userName, nameDraft: userName, role, loggedIn, guestUsed,
+        subject, school, avatar, userName, nameDraft: userName, role, loggedIn, guestUsed, grade, classLetter,
         quizHistory: Array.isArray(quizHistory) ? quizHistory : [],
         view: (loggedIn && role !== 'Learner') ? 'dashboard' : (this.state.view || 'chat'),
         tourStep: (!tourDone && loggedIn && role === 'Learner') ? 1 : 0,
@@ -1465,7 +1492,7 @@ class Component extends DCLogic {
       'Country': ['Pass rate by region', [['Khomas', 78, '18,340'], ['Erongo', 74, '9,215'], ['Oshana', 72, '11,406'], ['Omusati', 69, '12,881'], ['Ohangwena', 64, '14,502'], ['Zambezi', 58, '6,114']]],
       'Region': ['Khomas region \u00b7 by circuit', [['Windhoek Central', 81, '6,204'], ['Khomasdal', 77, '4,410'], ['Katutura East', 72, '4,988'], ['Katutura West', 68, '5,317'], ['Rural Khomas', 62, '2,421']]],
       'Community': ['Katutura East \u00b7 by community', [['Soweto', 74, '1,802'], ['Babilon', 70, '1,215'], ['Okuryangava', 68, '1,466'], ['Goreangab', 63, '505']]],
-      'School': ['Katutura East \u00b7 by school', [['Eldorado Secondary', 78, '1,214'], ['A. Shipena Secondary', 73, '988'], ['Jakob Marengo SS', 69, '742'], ['Hage Geingob SS', 66, '1,044']]]
+      'School': ['Katutura East \u00b7 by school', [['Immanuel Shifidi SS', 78, '1,214'], ['A. Shipena Secondary', 73, '988'], ['Jakob Marengo SS', 69, '742'], ['Hage Geingob SS', 66, '1,044']]]
     };
     const rd = REG[scope];
     const minRows = rd[1].map(r => ({ name: r[0], pct: r[1] + '%', learners: r[2] + ' learners', color: r[1] >= 72 ? '#3BB273' : (r[1] >= 65 ? '#E8A13A' : '#E0653A') }));
@@ -1616,8 +1643,11 @@ class Component extends DCLogic {
     let reply;
     try {
       if (window.claude && window.claude.complete) {
+        const tutorFirst = this.state.loggedIn ? (String(this.state.userName || '').trim().split(/\s+/)[0] || '') : '';
+        const tutorGrade = (this.state.loggedIn && this.state.grade) ? ('Grade ' + this.state.grade + (this.state.classLetter ? ' ' + this.state.classLetter : '') + ' ') : '';
+        const tutorWho = tutorFirst ? ('chatting with ' + tutorFirst + ', a ' + tutorGrade + 'learner in Namibia') : 'chatting with a learner in Namibia';
         reply = await window.claude.complete({
-          system: (this.state.subject ? 'Focus subject for this chat: ' + this.state.subject + '. ' : '') + 'You are the k12plus tutor chatting with Ndapewa, a Grade 12 C learner in Namibia studying Mathematics, Biology, Physical Science and Business Studies (NSSCO/NSSCAS curriculum). She is currently on Quadratic functions in Maths and slightly behind in Physical Science. Talk like a patient, warm teacher who never shames a learner for asking. Explain step by step in simple everyday language. Keep answers under 150 words. Plain text only, no markdown headings, no em dashes.',
+          system: (this.state.subject ? 'Focus subject for this chat: ' + this.state.subject + '. ' : '') + 'You are the k12plus tutor ' + tutorWho + ', following the NSSCO/NSSCAS curriculum (subjects include Mathematics, Biology, Physical Science and Business Studies). Talk like a patient, warm teacher who never shames a learner for asking. Explain step by step in simple everyday language. Keep answers under 150 words. Plain text only, no markdown headings, no em dashes.',
           messages: msgs.map(m => ({ role: m.role, content: m.text })),
           image: img || undefined
         });
@@ -1825,6 +1855,9 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state;
     const h = React.createElement;
+    const brandK12 = !s.loggedIn || !s.school;
+    const LOCKED_VIEWS = { dashboard: 'dashboard', quiz: 'assessments', syllabus: 'syllabus', timetable: 'timetable', calendar: 'calendar' };
+    const lockNoun = !s.loggedIn ? (LOCKED_VIEWS[s.view] || '') : '';
     const ico = (paths, filled) => h('svg', { width: 20, height: 20, viewBox: '0 0 24 24', fill: filled ? 'currentColor' : 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, ...paths.map((d, i) => h('path', { key: i, d })));
     const railBtn = (active) => 'border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0;width:76px;border-radius:12px;' + (active ? 'color:var(--blue);' : 'color:var(--muted);');
     const railItems = [
@@ -1904,33 +1937,25 @@ class Component extends DCLogic {
         chats
       };
     });
-    // Facebook-style rich icons: soft gradient fills, white detail strokes
-    const grad = (id, c1, c2) => h('linearGradient', { id, x1: '0', y1: '0', x2: '0.6', y2: '1' }, h('stop', { offset: '0%', stopColor: c1 }), h('stop', { offset: '100%', stopColor: c2 }));
-    const fbDash = h('svg', { width: 22, height: 22, viewBox: '0 0 24 24', style: { flexShrink: 0 } },
-      h('defs', {}, grad('k12gDash', '#5AA7FF', '#2664F4')),
-      h('rect', { x: 2.5, y: 2.5, width: 8.6, height: 8.6, rx: 2.4, fill: 'url(#k12gDash)' }),
-      h('rect', { x: 12.9, y: 2.5, width: 8.6, height: 8.6, rx: 2.4, fill: 'url(#k12gDash)', opacity: .72 }),
-      h('rect', { x: 2.5, y: 12.9, width: 8.6, height: 8.6, rx: 2.4, fill: 'url(#k12gDash)', opacity: .72 }),
-      h('rect', { x: 12.9, y: 12.9, width: 8.6, height: 8.6, rx: 2.4, fill: 'url(#k12gDash)' }));
-    const fbSubjects = h('svg', { width: 22, height: 22, viewBox: '0 0 24 24', style: { flexShrink: 0 } },
-      h('defs', {}, grad('k12gSubj', '#B36BFF', '#7C3AED')),
-      h('path', { d: 'M12 3.2l9.2 4.4a.7.7 0 010 1.3L12 13.3 2.8 8.9a.7.7 0 010-1.3z', fill: 'url(#k12gSubj)' }),
-      h('path', { d: 'M5.4 10.8v4.1c0 1.8 3 3.3 6.6 3.3s6.6-1.5 6.6-3.3v-4.1l-6.6 3.1z', fill: 'url(#k12gSubj)', opacity: .7 }),
-      h('path', { d: 'M20.7 9.4v4.9', stroke: '#7C3AED', strokeWidth: 1.6, strokeLinecap: 'round', fill: 'none' }),
-      h('circle', { cx: 20.7, cy: 16, r: 1.3, fill: '#7C3AED' }));
-    const fbLab = h('svg', { width: 22, height: 22, viewBox: '0 0 24 24', style: { flexShrink: 0 } },
-      h('defs', {}, grad('k12gLab', '#FF9D5C', '#F5426C')),
-      h('path', { d: 'M9.6 2.8h4.8v5.4l4.9 8.8a2.6 2.6 0 01-2.3 3.9H7a2.6 2.6 0 01-2.3-3.9l4.9-8.8z', fill: 'url(#k12gLab)' }),
-      h('path', { d: 'M8.4 2.8h7.2', stroke: '#F5426C', strokeWidth: 1.8, strokeLinecap: 'round', fill: 'none' }),
-      h('path', { d: 'M8.1 13.6h7.8l3 5.4a1.3 1.3 0 01-1.1 1.9H6.2a1.3 1.3 0 01-1.1-1.9z', fill: '#fff', opacity: .3 }),
-      h('circle', { cx: 10.4, cy: 16.6, r: 1.1, fill: '#fff', opacity: .85 }),
-      h('circle', { cx: 13.8, cy: 18.3, r: .8, fill: '#fff', opacity: .7 }));
-    const fbAssess = h('svg', { width: 22, height: 22, viewBox: '0 0 24 24', style: { flexShrink: 0 } },
-      h('defs', {}, grad('k12gAss', '#3EDC97', '#0FA968')),
-      h('rect', { x: 3.5, y: 2.8, width: 17, height: 18.4, rx: 3, fill: 'url(#k12gAss)' }),
-      h('rect', { x: 8, y: 1.6, width: 8, height: 3.6, rx: 1.6, fill: '#0B8A54' }),
-      h('path', { d: 'M8 10.2l2.4 2.4 5.4-5.2', stroke: '#fff', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none' }),
-      h('path', { d: 'M8 16.4h8', stroke: '#fff', strokeWidth: 2, strokeLinecap: 'round', fill: 'none', opacity: .85 }));
+    // Facebook-style menu icons: rounded gradient tiles, white glyphs
+    const tile = (c1, c2, kids) => h('span', { style: { width: 30, height: 30, borderRadius: 9, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg,' + c1 + ',' + c2 + ')', boxShadow: '0 2px 5px rgba(31,32,51,.16)' } },
+      h('svg', { width: 17, height: 17, viewBox: '0 0 24 24', fill: 'none', stroke: '#fff', strokeWidth: 2.1, strokeLinecap: 'round', strokeLinejoin: 'round' }, ...kids));
+    const tp = (d, i) => h('path', { key: i, d });
+    const tdot = (cx, cy, r, o) => h('circle', { key: 'c' + cx + '-' + cy, cx, cy, r, fill: '#fff', stroke: 'none', opacity: o || 1 });
+    const fbDash = tile('#3B82F6', '#6673E8', ['M4 4h6v6H4z', 'M14 4h6v6h-6z', 'M4 14h6v6H4z', 'M14 14h6v6h-6z'].map(tp));
+    const fbSubjects = tile('#7C3AED', '#B400D9', ['M12 3l9 5-9 5-9-5 9-5z', 'M5 10v5c0 1.5 3.1 3 7 3s7-1.5 7-3v-5'].map(tp));
+    const fbAssess = tile('#22B573', '#22C6C6', ['M8 4H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2', 'M9 2h6v4H9z', 'M8.6 13.2l2.3 2.3 4.5-4.4'].map(tp));
+    const fbSyllabus = tile('#14B8A6', '#22B573', ['M4 19.5A2.5 2.5 0 016.5 17H20V2H6.5A2.5 2.5 0 004 4.5z', 'M4 19.5A2.5 2.5 0 006.5 22H20v-5', 'M9 7.5h7M9 11.5h5'].map(tp));
+    const fbLab = tile('#B400D9', '#EC1E79', ['M10 2.5v5.5l-5.4 9.4a2 2 0 001.7 3.1h11.4a2 2 0 001.7-3.1L14 8V2.5', 'M8.5 2.5h7', 'M7.6 14.5h8.8'].map(tp));
+    const fbGames = tile('#F5A623', '#FFC324', [
+      ...['M7.2 6.5h9.6a4.8 4.8 0 014.7 5.8l-.8 3.8a2.7 2.7 0 01-4.8 1.1l-1.4-1.7h-5l-1.4 1.7a2.7 2.7 0 01-4.8-1.1l-.8-3.8A4.8 4.8 0 017.2 6.5z', 'M8.2 9.8v3.4M6.5 11.5h3.4'].map(tp),
+      tdot(15.3, 10.6, 1), tdot(17.5, 12.6, 1, .8)
+    ]);
+    const fbTimetable = tile('#6366F1', '#4338CA', ['M4 4.5h16v16H4z', 'M4 9.5h16', 'M10 9.5v11M16 9.5v11'].map(tp));
+    const fbCalendar = tile('#EF4444', '#EC4899', [
+      ...['M4 5h16v16H4z', 'M4 10h16', 'M8 3v4M16 3v4'].map(tp),
+      tdot(12, 15.5, 1.9, .95)
+    ]);
     const sideItems = [
       { label: 'My dashboard', icon: fbDash, pick: () => this.setState({ view: 'dashboard' }), hasSubs: false, subsOpen: false },
       { label: 'Subjects', icon: fbSubjects, pick: () => this.setState({ subjOpen: !s.subjOpen }), hasSubs: true, chev, subsOpen: !!s.subjOpen, subs: subjSubs },
@@ -1945,43 +1970,21 @@ class Component extends DCLogic {
         label: a.label,
         icon: h('span', { style: { width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: 'var(--muted)' } }, h('svg', { width: 15, height: 15, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round' }, ...a.paths.map((d, i) => h('path', { key: i, d })))),
         style: 'display:flex;align-items:center;gap:9px;border:none;border-radius:9px;padding:6px 8px 6px 12px;font-size:12.5px;font-weight:500;cursor:pointer;text-align:left;background:none;color:#3A3D52;',
-        pick: () => (a.label === 'Quizzes' || a.label === 'My results') ? this.setState({ view: 'quiz', quizAnswers: {}, quizDone: false }) : this.setState({ view: 'chat', chatInput: 'Help me prepare: what ' + a.label.toLowerCase() + ' do I have coming up?' }),
+        pick: () => {
+          if (!this.state.loggedIn) return this.setState({ view: 'quiz' });
+          return (a.label === 'Quizzes' || a.label === 'My results') ? this.setState({ view: 'quiz', quizAnswers: {}, quizDone: false }) : this.setState({ view: 'chat', chatInput: 'Help me prepare: what ' + a.label.toLowerCase() + ' do I have coming up?' });
+        },
         hasChats: false, chatsOpen: false
       })) },
-      { label: 'Syllabus', icon: h('svg', { width: 22, height: 22, viewBox: '0 0 24 24', style: { flexShrink: 0 } },
-        h('defs', {}, grad('k12gSyl', '#34D399', '#0E9F6E')),
-        h('path', { d: 'M4 4.5A2.5 2.5 0 016.5 2H20v17.5H6.5A2.5 2.5 0 004 22z', fill: 'url(#k12gSyl)' }),
-        h('path', { d: 'M4 19.5A2.5 2.5 0 016.5 17H20', stroke: '#0B7A54', strokeWidth: 1.8, fill: 'none' }),
-        h('path', { d: 'M9 8l2.2 2.2L15.5 6', stroke: '#fff', strokeWidth: 1.9, strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none' }),
-        h('path', { d: 'M9 13h7', stroke: '#fff', strokeWidth: 1.8, strokeLinecap: 'round', opacity: .85 })), pick: () => this.setState({ view: 'syllabus' }), hasSubs: false, subsOpen: false },
+      { label: 'Syllabus', icon: fbSyllabus, pick: () => this.setState({ view: 'syllabus' }), hasSubs: false, subsOpen: false },
       { label: 'Real-Life Lab', icon: fbLab, pick: () => this.setState({ view: 'lab' }), hasSubs: false, subsOpen: false },
-      { label: 'Games', icon: h('svg', { width: 22, height: 22, viewBox: '0 0 24 24', style: { flexShrink: 0 } },
-        h('defs', {}, grad('k12gGame', '#9F7BFF', '#5B34D9')),
-        h('path', { d: 'M7.2 6h9.6a5.2 5.2 0 015.1 6.3l-.9 4.2a3 3 0 01-5.3 1.2l-1.5-1.9a1.5 1.5 0 00-1.2-.6h-2a1.5 1.5 0 00-1.2.6l-1.5 1.9a3 3 0 01-5.3-1.2l-.9-4.2A5.2 5.2 0 017.2 6z', fill: 'url(#k12gGame)' }),
-        h('path', { d: 'M8.2 9.4v3.6M6.4 11.2H10', stroke: '#fff', strokeWidth: 1.7, strokeLinecap: 'round' }),
-        h('circle', { cx: 15.4, cy: 10.2, r: 1.05, fill: '#fff', opacity: .95 }),
-        h('circle', { cx: 17.6, cy: 12.2, r: 1.05, fill: '#fff', opacity: .7 })), pick: () => this.setState({ view: 'chat', chatInput: 'Play a learning game with me: quiz battle on ' + (s.subject || 'my subjects') }), hasSubs: false, subsOpen: false },
-      { label: 'Timetable', icon: h('svg', { width: 22, height: 22, viewBox: '0 0 24 24', style: { flexShrink: 0 } },
-        h('defs', {}, grad('k12gTt', '#4DD0E1', '#0E9AAF')),
-        h('rect', { x: 3, y: 3.5, width: 18, height: 17, rx: 3, fill: 'url(#k12gTt)' }),
-        h('path', { d: 'M3 8.5h18', stroke: '#fff', strokeWidth: 1.6, opacity: .85 }),
-        h('path', { d: 'M9 8.5v12M15 8.5v12', stroke: '#fff', strokeWidth: 1.4, opacity: .55 }),
-        h('path', { d: 'M3 14.5h18', stroke: '#fff', strokeWidth: 1.4, opacity: .55 })), pick: () => this.setState({ view: 'timetable' }), hasSubs: false, subsOpen: false },
-      { label: 'Calendar', icon: h('svg', { width: 22, height: 22, viewBox: '0 0 24 24', style: { flexShrink: 0 } },
-        h('defs', {}, grad('k12gCal', '#FF7BAC', '#E63472')),
-        h('rect', { x: 3, y: 4.5, width: 18, height: 16.5, rx: 3, fill: 'url(#k12gCal)' }),
-        h('path', { d: 'M7.5 2.5v4M16.5 2.5v4', stroke: '#C21E58', strokeWidth: 2, strokeLinecap: 'round' }),
-        h('path', { d: 'M3 9.5h18', stroke: '#fff', strokeWidth: 1.6, opacity: .85 }),
-        h('circle', { cx: 12, cy: 15, r: 2.6, fill: '#fff', opacity: .9 }),
-        h('path', { d: 'M12 13.8v1.2l.9.9', stroke: '#E63472', strokeWidth: 1.3, strokeLinecap: 'round', fill: 'none' })), pick: () => this.setState({ view: 'calendar' }), hasSubs: false, subsOpen: false },
+      { label: 'Games', icon: fbGames, pick: () => this.setState({ view: 'chat', chatInput: 'Play a learning game with me: quiz battle on ' + (s.subject || 'my subjects') }), hasSubs: false, subsOpen: false },
+      { label: 'Timetable', icon: fbTimetable, pick: () => this.setState({ view: 'timetable' }), hasSubs: false, subsOpen: false },
+      { label: 'Calendar', icon: fbCalendar, pick: () => this.setState({ view: 'calendar' }), hasSubs: false, subsOpen: false },
     ];
     if (s.role === 'Educator') {
       const line = (paths) => h('span', { style: { width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: 'var(--muted)' } }, h('svg', { width: 15, height: 15, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round' }, ...paths.map((d, i) => h('path', { key: i, d }))));
-      const fbPlans = h('svg', { width: 22, height: 22, viewBox: '0 0 24 24', style: { flexShrink: 0 } },
-        h('defs', {}, grad('k12gPlan', '#5AC8FA', '#2680EB')),
-        h('path', { d: 'M5 3h10l4 4v14H5z', fill: 'url(#k12gPlan)' }),
-        h('path', { d: 'M15 3v4h4', fill: '#1B5FB8' }),
-        h('path', { d: 'M8.5 12h7M8.5 15.5h7M8.5 8.5H12', stroke: '#fff', strokeWidth: 1.7, strokeLinecap: 'round' }));
+      const fbPlans = tile('#5AC8FA', '#2680EB', ['M5 3h10l4 4v14H5z', 'M15 3v4h4', 'M9 12h6M9 16h6'].map(tp));
       const teachSub = (label, paths, prompt) => ({
         label, icon: line(paths),
         style: 'display:flex;align-items:center;gap:9px;border:none;border-radius:9px;padding:6px 8px 6px 12px;font-size:12.5px;font-weight:500;cursor:pointer;text-align:left;background:none;color:#3A3D52;',
@@ -2054,9 +2057,10 @@ class Component extends DCLogic {
     return {
       shellOn: true, never: false,
       ...this.extraVals(s),
-      schoolName: s.school || 'Eldorado Secondary School',
-      schoolShort: this.shortSchool(s.school || 'Eldorado Secondary School'),
-      schoolMonogram: this.monogram(s.school || 'Eldorado Secondary School'),
+      brandIsK12: brandK12, brandIsSchool: !brandK12,
+      schoolName: brandK12 ? 'K12Plus' : s.school,
+      schoolShort: brandK12 ? 'K12Plus' : this.shortSchool(s.school),
+      schoolMonogram: brandK12 ? 'K' : this.monogram(s.school),
       sideOpen: !s.sideCollapsed, sideClosed: !!s.sideCollapsed,
       roleOpts: ['Learner', 'Educator', 'Parent', 'Principal & HOD', 'Ministry'].map(r => ({
         label: r,
@@ -2067,16 +2071,20 @@ class Component extends DCLogic {
         }
       })),
       profileOpen: !!s.profileOpen,
-      openProfile: () => this.setState({ profileOpen: true, nameDraft: s.userName || 'Ndapewa' }),
+      openProfile: () => this.setState({ profileOpen: true, nameDraft: s.userName || '' }),
       closeProfile: () => this.setState({ profileOpen: false }),
       avatarBg: s.avatar ? 'url(' + s.avatar + ')' : 'none', hasAvatar: !!s.avatar, noAvatar: !s.avatar,
-      userName: s.role === 'Educator' ? 'Ms Amukoto' : (s.role === 'Parent' ? 'Mr Shikongo' : (s.role === 'Principal & HOD' || s.role === 'Principal') ? 'Mrs Nghipondoka' : s.role === 'Ministry' ? 'Ministry of Education' : (s.userName || 'Ndapewa')),
-      userSub: s.role === 'Educator' ? 'Educator \u00b7 Grade 12 C \u00b7 Mathematics' : s.role === 'Parent' ? 'Parent \u00b7 2 linked learners' : (s.role === 'Principal & HOD' || s.role === 'Principal') ? 'Principal' : s.role === 'Ministry' ? 'National analyst' : 'Grade 12 C \u00b7 K12-NA-8F3K92',
-      userInitial: ((s.role === 'Educator' ? 'Amukoto' : s.role === 'Parent' ? 'Shikongo' : (s.role === 'Principal & HOD' || s.role === 'Principal') ? 'Nghipondoka' : s.role === 'Ministry' ? 'Ministry' : (s.userName || 'Ndapewa'))[0] || 'N').toUpperCase(),
-      nameDraft: s.nameDraft !== undefined ? s.nameDraft : (s.userName || 'Ndapewa'),
+      userName: s.role === 'Educator' ? 'Ms Amukoto' : (s.role === 'Parent' ? 'Mr Shikongo' : (s.role === 'Principal & HOD' || s.role === 'Principal') ? 'Mrs Nghipondoka' : s.role === 'Ministry' ? 'Ministry of Education' : (s.userName || 'Learner')),
+      userSub: s.role === 'Educator' ? 'Educator \u00b7 Grade 12 C \u00b7 Mathematics' : s.role === 'Parent' ? 'Parent \u00b7 2 linked learners' : (s.role === 'Principal & HOD' || s.role === 'Principal') ? 'Principal' : s.role === 'Ministry' ? 'National analyst' : (s.grade ? 'Grade ' + s.grade + (s.classLetter ? ' ' + s.classLetter : '') : 'Learner'),
+      userInitial: ((s.role === 'Educator' ? 'Amukoto' : s.role === 'Parent' ? 'Shikongo' : (s.role === 'Principal & HOD' || s.role === 'Principal') ? 'Nghipondoka' : s.role === 'Ministry' ? 'Ministry' : (s.userName || 'Learner'))[0] || 'L').toUpperCase(),
+      welcomeName: (s.loggedIn && String(s.userName || '').trim()) ? ', ' + String(s.userName).trim().split(/\s+/)[0] : '',
+      hasGradeChip: !!(s.loggedIn && s.grade),
+      gradeChip: 'Grade ' + (s.grade || '') + (s.classLetter ? ' ' + s.classLetter : ''),
+      gradeLabel: s.grade ? 'Grade ' + s.grade + (s.classLetter ? ' ' + s.classLetter : '') : 'Not set',
+      nameDraft: s.nameDraft !== undefined ? s.nameDraft : (s.userName || ''),
       onNameDraft: (e) => this.setState({ nameDraft: e.target.value }),
       saveProfile: () => {
-        const name = (this.state.nameDraft || '').trim() || 'Ndapewa';
+        const name = (this.state.nameDraft || '').trim() || this.state.userName || 'Learner';
         try { localStorage.setItem('k12plus-name', name); } catch (e) {}
         this.setState({ userName: name, profileOpen: false });
       },
@@ -2160,7 +2168,7 @@ class Component extends DCLogic {
       guestMeterNote: Math.max(0, 10 - (s.guestUsed || 0)) + ' of 10 free questions left \u00b7 ',
       signOut: () => { try { localStorage.setItem('k12plus-loggedin', ''); } catch (e) {} },
       homeHeading: (() => {
-        const firstName = s.loggedIn ? String(s.userName || 'Ndapewa').trim().split(/\s+/)[0] : '';
+        const firstName = s.loggedIn ? String(s.userName || '').trim().split(/\s+/)[0] : '';
         const n = firstName ? ', ' + firstName : '';
         const greetings = s.subject ? [
           'Ready to conquer ' + s.subject + n + '?',
@@ -2181,12 +2189,13 @@ class Component extends DCLogic {
         return greetings[gi % greetings.length];
       })(),
       isChat: s.view === 'chat',
-      isDash: s.view === 'dashboard' && (s.role || 'Learner') === 'Learner',
-      isDashEd: s.view === 'dashboard' && s.role === 'Educator',
-      isDashParent: s.view === 'dashboard' && s.role === 'Parent',
-      isDashPrin: s.view === 'dashboard' && (s.role === 'Principal & HOD' || s.role === 'Principal'),
-      isDashMin: s.view === 'dashboard' && s.role === 'Ministry',
-      isLab: s.view === 'lab', isTimetable: s.view === 'timetable', isCalendar: s.view === 'calendar', isQuiz: s.view === 'quiz', isSyllabus: s.view === 'syllabus',
+      showLock: !!lockNoun, lockNoun: lockNoun,
+      isDash: !lockNoun && s.view === 'dashboard' && (s.role || 'Learner') === 'Learner',
+      isDashEd: !lockNoun && s.view === 'dashboard' && s.role === 'Educator',
+      isDashParent: !lockNoun && s.view === 'dashboard' && s.role === 'Parent',
+      isDashPrin: !lockNoun && s.view === 'dashboard' && (s.role === 'Principal & HOD' || s.role === 'Principal'),
+      isDashMin: !lockNoun && s.view === 'dashboard' && s.role === 'Ministry',
+      isLab: s.view === 'lab', isTimetable: !lockNoun && s.view === 'timetable', isCalendar: !lockNoun && s.view === 'calendar', isQuiz: !lockNoun && s.view === 'quiz', isSyllabus: !lockNoun && s.view === 'syllabus',
       goDash: () => this.setState({ view: 'dashboard' }),
       goChat: () => this.setState({ view: 'chat' }),
       toggleNewChat: () => this.setState({ newChatOpen: !s.newChatOpen }),
