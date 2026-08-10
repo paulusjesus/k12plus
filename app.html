@@ -70,7 +70,7 @@ button { font-family:'Poppins',sans-serif; }
     </div>
     <sc-for list="{{ sideItems }}" as="i" hint-placeholder-count="4">
       <div style="display:flex; flex-direction:column;">
-        <button onClick="{{ i.pick }}" style="display:flex; align-items:center; gap:11px; border:none; background:none; color:#3A3D52; border-radius:11px; padding:7px 11px; font-size:13.5px; font-weight:500; cursor:pointer; text-align:left;" style-hover="background:var(--chip);">
+        <button onClick="{{ i.pick }}" style="display:flex; align-items:center; gap:12px; min-height:50px; border:none; background:none; color:#3A3D52; border-radius:11px; padding:8px 12px; font-size:15px; font-weight:500; cursor:pointer; text-align:left;" style-hover="background:var(--chip);">
           {{ i.icon }}<span style="flex:1;">{{ i.label }}</span>
           <sc-if value="{{ i.hasSubs }}" hint-placeholder-val="{{ false }}">{{ i.chev }}</sc-if>
         </button>
@@ -1937,24 +1937,30 @@ class Component extends DCLogic {
         chats
       };
     });
-    // Facebook-style menu icons: rounded gradient tiles, white glyphs
-    const tile = (c1, c2, kids) => h('span', { style: { width: 30, height: 30, borderRadius: 9, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg,' + c1 + ',' + c2 + ')', boxShadow: '0 2px 5px rgba(31,32,51,.16)' } },
-      h('svg', { width: 17, height: 17, viewBox: '0 0 24 24', fill: 'none', stroke: '#fff', strokeWidth: 2.1, strokeLinecap: 'round', strokeLinejoin: 'round' }, ...kids));
-    const tp = (d, i) => h('path', { key: i, d });
-    const tdot = (cx, cy, r, o) => h('circle', { key: 'c' + cx + '-' + cy, cx, cy, r, fill: '#fff', stroke: 'none', opacity: o || 1 });
-    const fbDash = tile('#3B82F6', '#6673E8', ['M4 4h6v6H4z', 'M14 4h6v6h-6z', 'M4 14h6v6H4z', 'M14 14h6v6h-6z'].map(tp));
-    const fbSubjects = tile('#7C3AED', '#B400D9', ['M12 3l9 5-9 5-9-5 9-5z', 'M5 10v5c0 1.5 3.1 3 7 3s7-1.5 7-3v-5'].map(tp));
-    const fbAssess = tile('#22B573', '#22C6C6', ['M8 4H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2', 'M9 2h6v4H9z', 'M8.6 13.2l2.3 2.3 4.5-4.4'].map(tp));
-    const fbSyllabus = tile('#14B8A6', '#22B573', ['M4 19.5A2.5 2.5 0 016.5 17H20V2H6.5A2.5 2.5 0 004 4.5z', 'M4 19.5A2.5 2.5 0 006.5 22H20v-5', 'M9 7.5h7M9 11.5h5'].map(tp));
-    const fbLab = tile('#B400D9', '#EC1E79', ['M10 2.5v5.5l-5.4 9.4a2 2 0 001.7 3.1h11.4a2 2 0 001.7-3.1L14 8V2.5', 'M8.5 2.5h7', 'M7.6 14.5h8.8'].map(tp));
-    const fbGames = tile('#F5A623', '#FFC324', [
-      ...['M7.2 6.5h9.6a4.8 4.8 0 014.7 5.8l-.8 3.8a2.7 2.7 0 01-4.8 1.1l-1.4-1.7h-5l-1.4 1.7a2.7 2.7 0 01-4.8-1.1l-.8-3.8A4.8 4.8 0 017.2 6.5z', 'M8.2 9.8v3.4M6.5 11.5h3.4'].map(tp),
-      tdot(15.3, 10.6, 1), tdot(17.5, 12.6, 1, .8)
+    // Facebook-style menu icons: standalone gradient-filled SVG glyphs, no background tiles
+    const GSZ = s.sideCollapsed ? 30 : 34;
+    const gfill = (gid) => 'url(#' + gid + ')';
+    const glyph = (c1, c2, gid, kids) => h('svg', { width: GSZ, height: GSZ, viewBox: '0 0 24 24', style: { flexShrink: 0, display: 'block' } },
+      h('defs', null, h('linearGradient', { id: gid, x1: '0', y1: '0', x2: '1', y2: '1' },
+        h('stop', { offset: '0%', stopColor: c1 }),
+        h('stop', { offset: '100%', stopColor: c2 }))),
+      ...kids);
+    const gp = (gid) => (d, i) => h('path', { key: 'p' + i, d, fill: gfill(gid), fillRule: 'evenodd' });
+    const rsq = (x, y) => 'M' + (x + 2) + ' ' + y + 'h3.6a2 2 0 012 2v3.6a2 2 0 01-2 2h-3.6a2 2 0 01-2-2V' + (y + 2) + 'a2 2 0 012-2z';
+    const fbDash = glyph('#2E8DF6', '#5B6CFF', 'k12g-dash', [rsq(3.2, 3.2) + rsq(13.2, 3.2) + rsq(3.2, 13.2) + rsq(13.2, 13.2)].map(gp('k12g-dash')));
+    const fbSubjects = glyph('#8B5CF6', '#C026D3', 'k12g-subj', ['M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z'].map(gp('k12g-subj')));
+    const fbAssess = glyph('#10B981', '#2DD4BF', 'k12g-assess', ['M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-2 14l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z'].map(gp('k12g-assess')));
+    const fbSyllabus = glyph('#14B8A6', '#34D399', 'k12g-syll', ['M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z'].map(gp('k12g-syll')));
+    const fbLab = glyph('#C026D3', '#F0459B', 'k12g-lab', ['M9.5 2h5v2h-1v4.3a6.6 6.6 0 11-3 0V4h-1V2z'].map(gp('k12g-lab')));
+    const fbGames = glyph('#F59E0B', '#FBBF24', 'k12g-games', ['M21.58 16.09l-1.09-7.66C20.21 6.46 18.52 5 16.53 5H7.47C5.48 5 3.79 6.46 3.51 8.43l-1.09 7.66C2.2 17.63 3.39 19 4.94 19c.68 0 1.32-.27 1.8-.75L9 16h6l2.25 2.25c.48.48 1.13.75 1.8.75 1.56 0 2.75-1.37 2.53-2.91zM11 11H9v2H8v-2H6v-1h2V8h1v2h2v1zm4-1c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm2 3c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z'].map(gp('k12g-games')));
+    const fbTimetable = glyph('#6366F1', '#8B5CF6', 'k12g-tt', [
+      h('circle', { key: 'bg', cx: 12, cy: 12, r: 11, fill: gfill('k12g-tt') }),
+      ...[[7.2, 7.2], [12.8, 7.2], [7.2, 12.8], [12.8, 12.8]].map((p, i) => h('rect', { key: 'r' + i, x: p[0], y: p[1], width: 4, height: 4, rx: 1.1, fill: '#fff' }))
     ]);
-    const fbTimetable = tile('#6366F1', '#4338CA', ['M4 4.5h16v16H4z', 'M4 9.5h16', 'M10 9.5v11M16 9.5v11'].map(tp));
-    const fbCalendar = tile('#EF4444', '#EC4899', [
-      ...['M4 5h16v16H4z', 'M4 10h16', 'M8 3v4M16 3v4'].map(tp),
-      tdot(12, 15.5, 1.9, .95)
+    const fbCalendar = glyph('#EF4444', '#F472B6', 'k12g-cal', [
+      h('path', { key: 'b', d: 'M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2z', fill: gfill('k12g-cal') }),
+      h('rect', { key: 'l', x: 3, y: 8.2, width: 18, height: 1.7, fill: '#fff', opacity: .92 }),
+      h('circle', { key: 'd', cx: 12, cy: 15, r: 2.1, fill: '#fff' })
     ]);
     const sideItems = [
       { label: 'My dashboard', icon: fbDash, pick: () => this.setState({ view: 'dashboard' }), hasSubs: false, subsOpen: false },
@@ -1984,7 +1990,7 @@ class Component extends DCLogic {
     ];
     if (s.role === 'Educator') {
       const line = (paths) => h('span', { style: { width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: 'var(--muted)' } }, h('svg', { width: 15, height: 15, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round' }, ...paths.map((d, i) => h('path', { key: i, d }))));
-      const fbPlans = tile('#5AC8FA', '#2680EB', ['M5 3h10l4 4v14H5z', 'M15 3v4h4', 'M9 12h6M9 16h6'].map(tp));
+      const fbPlans = glyph('#5AC8FA', '#2680EB', 'k12g-plans', ['M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z'].map(gp('k12g-plans')));
       const teachSub = (label, paths, prompt) => ({
         label, icon: line(paths),
         style: 'display:flex;align-items:center;gap:9px;border:none;border-radius:9px;padding:6px 8px 6px 12px;font-size:12.5px;font-weight:500;cursor:pointer;text-align:left;background:none;color:#3A3D52;',
