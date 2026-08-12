@@ -1853,12 +1853,20 @@ class Component extends DCLogic {
       const raw = await window.claude.complete({
         system: 'You suggest lesson topics for a Grade ' + grade + ' ' + subject + ' educator following the official ' +
           (info.country === 'South Africa' ? 'South African CAPS' : 'Namibian NIED') + ' curriculum. ' +
-          'Return a STRICT JSON array only, no markdown fences, exactly this shape: [{"topic":"","angle":""}] with 8 items. ' +
-          '"topic" is a real syllabus topic, "angle" is one short engaging teaching angle for it. UK English, no em dashes.' +
-          (info.digest ? '\nOfficial syllabus topics:\n' + info.digest : ''),
-        messages: [{ role: 'user', content: 'Give me 8 lesson ideas now.' }]
+          'Return a STRICT JSON array only, no markdown fences, no other text, exactly this shape: [{"topic":"","angle":""}] with 6 items. ' +
+          '"topic" is a real syllabus topic (max 6 words), "angle" is one short engaging teaching angle (max 8 words). UK English, no em dashes.' +
+          (info.digest ? '\nOfficial syllabus topics:\n' + info.digest.slice(0, 1200) : ''),
+        messages: [{ role: 'user', content: 'Give me 6 lesson ideas now.' }]
       });
-      const ideas = JSON.parse(String(raw).replace(/^```json?\s*/i, '').replace(/```\s*$/, '').trim());
+      let ideas = null;
+      const cleaned = String(raw).replace(/^```json?\s*/i, '').replace(/```\s*$/, '').trim();
+      try { ideas = JSON.parse(cleaned); } catch (e) {
+        // salvage complete items from a truncated reply
+        ideas = [];
+        const re = /\{\s*"topic"\s*:\s*"([^"]+)"\s*,\s*"angle"\s*:\s*"([^"]*)"\s*\}/g;
+        let mm;
+        while ((mm = re.exec(cleaned))) ideas.push({ topic: mm[1], angle: mm[2] });
+      }
       this.setState({ plansIdeasBusy: false, plansIdeas: Array.isArray(ideas) ? ideas.slice(0, 8) : [] });
     } catch (e) {
       this.setState({ plansIdeasBusy: false, plansErr: 'Could not fetch ideas right now. Try again in a moment.' });
