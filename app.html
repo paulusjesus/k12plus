@@ -355,10 +355,11 @@ button { font-family:'Poppins',sans-serif; }
           </sc-for>
           <sc-if value="{{ chatBusy }}" hint-placeholder-val="{{ false }}">
             <div style="display:flex;">
-              <div style="background:#EFEFF6; border-radius:13px 13px 13px 4px; padding:11px 15px; display:flex; gap:5px;">
+              <div style="background:#fff; border:1px solid var(--line); border-left:3px solid var(--primary); border-radius:4px 13px 13px 13px; padding:10px 15px; display:flex; gap:5px; align-items:center; box-shadow:0 2px 10px rgba(31,32,51,.05);">
                 <span style="width:6px;height:6px;border-radius:50%;background:#8A8DA3;animation:k12pulse 1s infinite;"></span>
                 <span style="width:6px;height:6px;border-radius:50%;background:#8A8DA3;animation:k12pulse 1s .2s infinite;"></span>
                 <span style="width:6px;height:6px;border-radius:50%;background:#8A8DA3;animation:k12pulse 1s .4s infinite;"></span>
+                <span style="font-size:12px; color:var(--muted); font-weight:500; margin-left:5px;">{{ thinkLabel }}</span>
               </div>
             </div>
           </sc-if>
@@ -1410,10 +1411,11 @@ button { font-family:'Poppins',sans-serif; }
         </sc-for>
         <sc-if value="{{ chatBusy }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;">
-            <div style="background:#EFEFF6; border-radius:13px 13px 13px 4px; padding:11px 15px; display:flex; gap:5px;">
+            <div style="background:#fff; border:1px solid var(--line); border-left:3px solid var(--primary); border-radius:4px 13px 13px 13px; padding:10px 15px; display:flex; gap:5px; align-items:center; box-shadow:0 2px 10px rgba(31,32,51,.05);">
               <span style="width:6px;height:6px;border-radius:50%;background:#8A8DA3;animation:k12pulse 1s infinite;"></span>
               <span style="width:6px;height:6px;border-radius:50%;background:#8A8DA3;animation:k12pulse 1s .2s infinite;"></span>
               <span style="width:6px;height:6px;border-radius:50%;background:#8A8DA3;animation:k12pulse 1s .4s infinite;"></span>
+              <span style="font-size:12px; color:var(--muted); font-weight:500; margin-left:5px;">{{ thinkLabel }}</span>
             </div>
           </div>
         </sc-if>
@@ -1561,6 +1563,7 @@ class Component extends DCLogic {
   }
   componentWillUnmount() {
     if (this._timer) clearInterval(this._timer);
+    if (this._thinkT) clearInterval(this._thinkT);
     if (this._onNet) { window.removeEventListener('online', this._onNet); window.removeEventListener('offline', this._onNet); }
     if (this._recog) { try { this._recog.stop(); } catch (e) {} }
     if (this._voiceNoteT) clearTimeout(this._voiceNoteT);
@@ -2182,7 +2185,9 @@ class Component extends DCLogic {
       this.setState({ guestUsed });
     }
     const msgs = [...this.state.chatMsgs, { role: 'user', text: q + (img ? ' [image attached]' : '') }];
-    this.setState({ chatMsgs: msgs, chatInput: '', chatBusy: true, pendingImage: null, pendingImageSrc: '' });
+    this.setState({ chatMsgs: msgs, chatInput: '', chatBusy: true, pendingImage: null, pendingImageSrc: '', thinkIdx: 0 });
+    clearInterval(this._thinkT);
+    this._thinkT = setInterval(() => this.setState(st => ({ thinkIdx: (st.thinkIdx || 0) + 1 })), 1700);
     let reply;
     try {
       if (window.claude && window.claude.complete) {
@@ -2206,7 +2211,7 @@ class Component extends DCLogic {
             return (st.subject ? 'Focus subject for this chat: ' + st.subject + '. ' : '') +
               'You are the k12plus tutor ' + tutorWho + ', following the official ' +
               (country === 'South Africa' ? 'South African CAPS (NSC)' : 'Namibian NSSCO/NSSCAS (NIED)') +
-              ' curriculum for Grade ' + grade + '. Teach strictly to syllabus depth. Talk like a patient, warm teacher who never shames a learner for asking. Explain step by step in simple everyday language. Keep answers under 150 words. Plain text only, no markdown headings, no em dashes.' +
+              ' curriculum for Grade ' + grade + '. Teach strictly to syllabus depth. Talk like a patient, warm teacher who never shames a learner for asking. Explain step by step in simple everyday language. Keep answers under 150 words. Add one or two fitting emojis per reply (like 💡📘✅🎉🌱⚡) to keep it warm and engaging, never more than three, placed naturally, and never as a substitute for a clear explanation. Plain text only, no markdown headings, no em dashes.' +
               (digest ? '\nOfficial syllabus reference for ' + subj + ':\n' + digest : '');
           })(this.state),
           messages: msgs.map(m => ({ role: m.role, content: m.text })),
@@ -2218,6 +2223,7 @@ class Component extends DCLogic {
     } catch (e) {
       reply = 'Sorry, something went wrong reaching the tutor. Please try again.';
     }
+    clearInterval(this._thinkT);
     const finalMsgs = [...this.state.chatMsgs, { role: 'assistant', text: reply }];
     this.setState({ chatMsgs: finalMsgs, chatBusy: false });
     try { localStorage.setItem('k12plus-tutor-chat', JSON.stringify(finalMsgs.slice(-40))); } catch (e) {}
@@ -2453,13 +2459,16 @@ class Component extends DCLogic {
     ];
     const cd = s.countdown;
     const pad = (n) => String(n).padStart(2, '0');
+    const SUBJ_EDGE = { 'Mathematics': '#5563E0', 'Biology': '#3BB273', 'Physical Science': '#E8A13A', 'Business Studies': '#B400D9' };
+    const chatEdge = SUBJ_EDGE[s.subject] || '#7C3AED';
     const chatMsgs = s.chatMsgs.map(m => ({
       text: m.text,
       rowStyle: 'display:flex;' + (m.role === 'user' ? 'justify-content:flex-end;' : ''),
       bubbleStyle: m.role === 'user'
-        ? 'background:var(--primary);color:#fff;border-radius:13px 13px 4px 13px;padding:10px 14px;font-size:13px;line-height:1.6;max-width:82%;white-space:pre-wrap;'
-        : 'background:#EFEFF6;color:var(--ink);border-radius:13px 13px 13px 4px;padding:10px 14px;font-size:13px;line-height:1.6;max-width:82%;white-space:pre-wrap;'
+        ? 'background:var(--chip);color:var(--ink);border:1px solid var(--line);border-radius:14px 14px 4px 14px;padding:10px 14px;font-size:13px;line-height:1.6;max-width:82%;white-space:pre-wrap;'
+        : 'background:#fff;color:var(--ink);border:1px solid var(--line);border-left:3px solid ' + chatEdge + ';border-radius:4px 14px 14px 14px;padding:10px 14px;font-size:13px;line-height:1.6;max-width:82%;white-space:pre-wrap;box-shadow:0 2px 10px rgba(31,32,51,.05);'
     }));
+    const THINK_PHRASES = ['Thinking 🤔', 'Brainstorming 💭', 'Working it out ✍️', 'Almost there ✨'];
     const sideIco = (paths) => h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round', style: { flexShrink: 0 } }, ...paths.map((d, i) => h('path', { key: i, d })));
     const chev = h('svg', { width: 12, height: 12, viewBox: '0 0 24 24', fill: 'none', stroke: 'var(--muted)', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round', style: { transform: s.subjOpen ? 'rotate(180deg)' : 'none', transition: 'transform .15s' } }, h('path', { d: 'M6 9l6 6 6-6' }));
     const subGlyph = (name, color) => {
@@ -2954,6 +2963,7 @@ class Component extends DCLogic {
       openChat: () => this.setState({ chatOpen: true }),
       closeChat: () => this.setState({ chatOpen: false }),
       chatMsgs, chatBusy: s.chatBusy, chatInput: s.chatInput,
+      thinkLabel: THINK_PHRASES[Math.min(s.thinkIdx || 0, THINK_PHRASES.length - 1)],
       onChatInput: (e) => this.setState({ chatInput: e.target.value }),
       onChatKey: (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.sendChat(); } },
       micOn: !!s.micOn,
