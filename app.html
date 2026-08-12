@@ -1801,7 +1801,7 @@ class Component extends DCLogic {
     const objectives =
       'IMPORTANT: This plan is for the subject ' + subject.toUpperCase() + ' (if this is not Mathematics, ignore every mention of Mathematics elsewhere and plan strictly for ' + subject + '). ' +
       'Curriculum: ' + curName + ', Grade ' + grade + '. ' +
-      (kind === 'lesson_plan' ? 'Lesson length: ' + (s.plansDuration || '40') + ' minutes. ' + tplNote : 'Cover a full school term of 10 to 12 weeks, one row per week. ') +
+      (kind === 'lesson_plan' ? 'Lesson length: ' + (s.plansDuration || '40') + ' minutes. ' + tplNote : 'Cover exactly 10 weeks, one row per week. KEEP IT CONCISE so the JSON stays short: focus max 8 words, exactly 2 short objectives and 2 short activities per week, assessment max 6 words. ') +
       'In the JSON, ALSO include these extra top-level fields: "theme" (the official syllabus theme this topic falls under) and "competencies" (3 to 5 statements each starting with an action verb, completing "Learners should be able to..."). ' +
       'Use "learners" not "students". UK English. No em dashes anywhere.' +
       (info.digest ? '\nOfficial syllabus reference for ' + subject + ':\n' + info.digest : '');
