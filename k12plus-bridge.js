@@ -38,9 +38,16 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
-    if (!res.ok) throw new Error('tutor unavailable (' + res.status + ')');
-    var data = await res.json();
-    return data.reply || 'Sorry, I could not answer that. Please try again.';
+    var data = null;
+    try { data = await res.json(); } catch (e) {}
+    if (!res.ok) {
+      var detail = (data && (data.detail || data.error)) || '';
+      if (res.status === 429 || String(detail).indexOf('429') > -1 || /quota/i.test(String(detail))) {
+        return 'Wow, a lot of learners are studying right now and the tutor is at full capacity 😅 Please try again in a little while. Your question is not lost, just send it again later.';
+      }
+      throw new Error('tutor unavailable (' + res.status + ')');
+    }
+    return (data && data.reply) || 'Sorry, I could not answer that. Please try again.';
   };
 
   // ---- flush offline outbox on reconnect (answers land in tutor chat storage) ----
