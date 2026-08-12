@@ -364,9 +364,31 @@ button { font-family:'Poppins',sans-serif; }
         </div>
       </div>
       <div style="padding:12px 24px 20px;">
-        <div style="max-width:760px; margin:0 auto; background:#fff; border:1px solid var(--line); border-radius:20px; box-shadow:0 8px 30px rgba(31,32,51,.06); padding:8px 10px; display:flex; align-items:flex-end; gap:9px;">
-          <textarea rows="1" value="{{ chatInput }}" onChange="{{ onChatInput }}" onKeyDown="{{ onChatKey }}" placeholder="Ask a follow-up…" style="flex:1; border:none; outline:none; resize:none; background:transparent; font-size:14.5px; font-family:'Poppins',sans-serif; color:var(--ink); padding:11px 10px;"></textarea>
-          <button onClick="{{ sendChat }}" title="Send" style="width:42px; height:42px; flex-shrink:0; border-radius:50%; border:none; background:var(--primary); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;" style-hover="opacity:.85;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
+        <div style="max-width:760px; margin:0 auto; position:relative;">
+          <sc-if value="{{ symbolsOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute; left:0; right:0; bottom:calc(100% + 8px); z-index:30; display:grid; grid-template-columns:repeat(12,1fr); gap:6px; padding:10px; background:#fff; border:1px solid var(--line); border-radius:12px; box-shadow:0 12px 34px rgba(31,32,51,.14);">
+              <sc-for list="{{ symKeys }}" as="tk" hint-placeholder-count="12">
+                <button onClick="{{ tk.pick }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:8px; padding:6px 0; font-size:14px; cursor:pointer; font-family:Georgia,serif;" style-hover="border-color:var(--primary); color:var(--primary);">{{ tk.label }}</button>
+              </sc-for>
+            </div>
+          </sc-if>
+          <div style="background:#fff; border:1px solid var(--line); border-radius:20px; box-shadow:0 8px 30px rgba(31,32,51,.06); padding:8px 12px;">
+            <sc-if value="{{ hasPendingImage }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex; align-items:center; gap:10px; padding:6px 4px 4px;">
+                <img src="{{ pendingImageSrc }}" alt="Attached image" style="width:44px; height:44px; object-fit:cover; border-radius:9px; border:1px solid var(--line); background:var(--chip);">
+                <span style="font-size:11.5px; color:var(--muted);">Image attached - it will be sent with your question</span>
+                <button onClick="{{ removePendingImage }}" title="Remove image" style="margin-left:auto; border:none; background:none; color:var(--muted); cursor:pointer; padding:4px;" style-hover="color:#E0653A;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+              </div>
+            </sc-if>
+            <div style="display:flex; align-items:flex-end; gap:5px;">
+              <button onClick="{{ attachClick }}" title="Attach an image" style="border:none; background:none; color:var(--muted); cursor:pointer; padding:6px 4px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"></path></svg></button>
+              <button onClick="{{ micClick }}" title="{{ micTitle }}" style="{{ micBtnStyle }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="12" rx="3"></rect><path d="M5 10v2a7 7 0 0014 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg></button>
+              <button onClick="{{ openPenModal }}" title="Write with a pen" style="border:none; background:none; color:var(--muted); cursor:pointer; padding:6px 4px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg></button>
+              <button onClick="{{ toggleSymbols }}" title="Equations and symbols" style="{{ symBtnStyle }}" style-hover="border-color:var(--primary);">{{ symShort }}</button>
+              <textarea rows="1" value="{{ chatInput }}" onChange="{{ onChatInput }}" onKeyDown="{{ onChatKey }}" placeholder="Ask a follow-up…" style="flex:1; border:none; outline:none; resize:none; background:transparent; font-size:14.5px; font-family:'Poppins',sans-serif; color:var(--ink); padding:11px 6px;"></textarea>
+              <button onClick="{{ sendChat }}" title="Send" style="width:42px; height:42px; flex-shrink:0; border-radius:50%; border:none; background:var(--primary); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;" style-hover="opacity:.85;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
+            </div>
+          </div>
         </div>
       </div>
     </sc-if>
@@ -1373,9 +1395,29 @@ button { font-family:'Poppins',sans-serif; }
           </div>
         </sc-if>
       </div>
-      <div style="padding:12px 14px; border-top:1px solid var(--line); display:flex; gap:9px; align-items:flex-end;">
-        <textarea rows="1" value="{{ chatInput }}" onChange="{{ onChatInput }}" onKeyDown="{{ onChatKey }}" placeholder="Ask your tutor anything…" style="flex:1; border:1px solid var(--line); border-radius:11px; padding:11px 13px; font-size:13.5px; font-family:'Poppins',sans-serif; outline:none; resize:none; background:var(--chip); color:var(--ink);"></textarea>
-        <button onClick="{{ sendChat }}" title="Send" style="width:42px; height:42px; flex-shrink:0; border-radius:11px; border:none; background:var(--primary); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;" style-hover="opacity:.85;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
+      <div style="padding:10px 14px 12px; border-top:1px solid var(--line);">
+        <sc-if value="{{ symbolsOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid; grid-template-columns:repeat(8,1fr); gap:5px; padding:8px; background:var(--chip); border:1px solid var(--line); border-radius:10px; margin-bottom:8px;">
+            <sc-for list="{{ symKeys }}" as="mk" hint-placeholder-count="8">
+              <button onClick="{{ mk.pick }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:7px; padding:5px 0; font-size:13px; cursor:pointer; font-family:Georgia,serif;" style-hover="border-color:var(--primary); color:var(--primary);">{{ mk.label }}</button>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasPendingImage }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+            <img src="{{ pendingImageSrc }}" alt="Attached image" style="width:38px; height:38px; object-fit:cover; border-radius:8px; border:1px solid var(--line); background:var(--chip);">
+            <span style="font-size:11px; color:var(--muted);">Image attached</span>
+            <button onClick="{{ removePendingImage }}" title="Remove image" style="margin-left:auto; border:none; background:none; color:var(--muted); cursor:pointer; padding:3px;" style-hover="color:#E0653A;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+          </div>
+        </sc-if>
+        <div style="display:flex; gap:6px; align-items:flex-end;">
+          <button onClick="{{ attachClick }}" title="Attach an image" style="border:none; background:none; color:var(--muted); cursor:pointer; padding:5px 2px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"></path></svg></button>
+          <button onClick="{{ micClick }}" title="{{ micTitle }}" style="{{ micBtnStyle }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="12" rx="3"></rect><path d="M5 10v2a7 7 0 0014 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg></button>
+          <button onClick="{{ openPenModal }}" title="Write with a pen" style="border:none; background:none; color:var(--muted); cursor:pointer; padding:5px 2px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg></button>
+          <button onClick="{{ toggleSymbols }}" title="Equations and symbols" style="{{ symBtnStyle }}" style-hover="border-color:var(--primary);">{{ symShort }}</button>
+          <textarea rows="1" value="{{ chatInput }}" onChange="{{ onChatInput }}" onKeyDown="{{ onChatKey }}" placeholder="Ask your tutor anything…" style="flex:1; border:1px solid var(--line); border-radius:11px; padding:11px 13px; font-size:13.5px; font-family:'Poppins',sans-serif; outline:none; resize:none; background:var(--chip); color:var(--ink);"></textarea>
+          <button onClick="{{ sendChat }}" title="Send" style="width:42px; height:42px; flex-shrink:0; border-radius:11px; border:none; background:var(--primary); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;" style-hover="opacity:.85;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
+        </div>
       </div>
     </div>
   </sc-if>
@@ -1430,6 +1472,19 @@ class Component extends DCLogic {
         localStorage.removeItem('k12plus-pending-q');
         const pending = JSON.parse(pendingRaw);
         if (pending && pending.q) {
+          try {
+            const pimgRaw = localStorage.getItem('k12plus-pending-img');
+            if (pimgRaw) {
+              localStorage.removeItem('k12plus-pending-img');
+              const pimg = JSON.parse(pimgRaw);
+              if (pimg && pimg.data) {
+                this.setState({
+                  pendingImage: { mime: pimg.mime || 'image/jpeg', data: pimg.data },
+                  pendingImageSrc: 'data:' + (pimg.mime || 'image/jpeg') + ';base64,' + pimg.data
+                });
+              }
+            }
+          } catch (e3) {}
           if (pending.subject) {
             try { localStorage.setItem('k12plus-tutor-subject', pending.subject); } catch (e2) {}
             this.setState({ subject: pending.subject, view: 'chat' });
@@ -2560,6 +2615,7 @@ class Component extends DCLogic {
       periodicOpen: !!s.periodicOpen,
       togglePeriodic: () => this.setState({ periodicOpen: !s.periodicOpen }),
       symbolsOpen: !!s.symbolsOpen,
+      symShort: symLabel.split(' ')[0],
       toggleSymbols: () => this.setState({ symbolsOpen: !s.symbolsOpen }),
       symBtnStyle: 'display:flex;align-items:center;gap:6px;border:1px solid ' + (s.symbolsOpen ? 'var(--primary)' : 'var(--line)') + ';background:#fff;color:var(--primary);border-radius:10px;padding:6px 13px;font-size:12px;font-weight:600;cursor:pointer;',
       homePlaceholder: s.subject ? 'Ask me anything about ' + s.subject + '\u2026' : 'Ask me anything\u2026',
