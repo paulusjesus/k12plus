@@ -1,0 +1,1713 @@
+{
+ "meta": {
+  "country": "Namibia",
+  "authority": "NIED (National Institute for Educational Development), Ministry of Education, Arts and Culture",
+  "extracted": "2026-08-12",
+  "notes": [
+   "NSSCO (Ordinary Level) is the revised Grades 10-11 curriculum implemented in 2019 (first examination 2020); NSSCAS (Advanced Subsidiary) is the one-year Grade 12 course that follows it.",
+   "Physical Science: in the revised curriculum the former combined NSSCO Physical Science subject is taught and examined as two separate syllabuses, Physics (6118) and Chemistry (6117), which NIED still files under its PhysicalScience/Chemistry folders; at NSSCAS level Grade 12 likewise has separate Physics (8225) and Chemistry (8224) syllabuses. Both components are included here under 'Physical Science'. A legacy combined NSSCO Physical Science syllabus (May 2009, old Grades 11-12 system) exists at NIED but was not extracted.",
+   "NSSCAS syllabuses exist for all three subjects (Biology 8223; Physics 8225 and Chemistry 8224; Business Studies 8245), so no subject in this pack is NSSCO-only.",
+   "Business Studies additionally includes the legacy NSSCH Higher Level syllabus (code 8336, Grades 11-12, 2010, old curriculum, developed with University of Cambridge International Examinations) extracted from a locally supplied PDF as a supplement; its Theme 6 (Entrepreneurship) has no direct NSSCO 6144 equivalent.",
+   "Objectives are representative selections (3-12 per topic) of the 'Learners should be able to' specific objectives, lightly cleaned from PDF text extraction; each syllabus contains many more objectives than listed here.",
+   "nied.edu.na blocked direct fetching from this environment; NSSCO Biology/Physics/Chemistry texts were taken from pan.edu.na mirrors of the official NIED PDFs, and the remaining NIED PDFs were read through the r.jina.ai reader proxy. Official NIED URLs are recorded per syllabus."
+  ],
+  "sources": [
+   "http://www.pan.edu.na/images/GR_10_11_BIO_NSSCO_6116.pdf",
+   "http://www.pan.edu.na/images/GR_10_11_PHY_NSSCO_6118.pdf",
+   "http://www.pan.edu.na/images/GR_10_11_CHM_NSSCO_6117.pdf",
+   "https://www.nied.edu.na/assets/documents/02Syllabuses/05SeniorSecondary/Biology/NSSCO_BIOLOGY_SYLLABUS.pdf",
+   "https://www.nied.edu.na/assets/documents/02Syllabuses/05SeniorSecondary/PhysicalScience/NSSCO_Physics_syllabus.pdf",
+   "http://www.nied.edu.na/assets/documents/02Syllabuses/05SeniorSecondary/Chemistry/NSSCO_Chemistry_syllabus.pdf",
+   "https://www.nied.edu.na/assets/documents/02Syllabuses/05SeniorSecondary/BusinessStudies/NSSCO_6144_Business_Studies_syllabus_June_2020_final.pdf",
+   "https://www.nied.edu.na/assets/documents/02Syllabuses/05SeniorSecondary/Biology/NSSCAS_Biology_signed_off_and_approved_syllabus_26_November_2020.pdf",
+   "https://www.nied.edu.na/assets/documents/02Syllabuses/05SeniorSecondary/Physics/NSSCAS_8225_Physics_syllabus_updated_19_November_2020_SIGNED_OFF.pdf",
+   "https://www.nied.edu.na/assets/documents/02Syllabuses/05SeniorSecondary/Chemistry/NSSCAS_8224_Chemistry_approved_syllabus_updated_20_November_2020.pdf",
+   "https://www.nied.edu.na/assets/documents/02Syllabuses/05SeniorSecondary/BusinessStudies/NSSCAS_8245_Business_Studies_SyllabusJuly2020Final.pdf",
+   "local upload: NSSCH_Syllabuses_Bu-stu_Apr2010.pdf (NSSCH Business Studies 8336, Grades 11-12)",
+   "https://www.namibiapapers.com/nssco (NSSCO subject list cross-check)"
+  ]
+ },
+ "subjects": {
+  "Biology": {
+   "syllabi": [
+    {
+     "code": "6116",
+     "level": "NSSCO",
+     "grades": [
+      10,
+      11
+     ],
+     "title": "NSSCO Biology Syllabus, NIED 2018 (implementation 2019, first examination 2020)",
+     "source": "http://www.pan.edu.na/images/GR_10_11_BIO_NSSCO_6116.pdf",
+     "topics": [
+      {
+       "topic": "Topic 1: Scientific processes",
+       "objectives": [
+        "perform simple arithmetical calculations (add, subtract, multiply and divide)",
+        "use averages, decimals, fractions, percentages, ratios and reciprocals",
+        "make observations accurately; use appropriate techniques; handle apparatus/material competently and have due regard to safety",
+        "distinguish between independent, dependent and constant variables",
+        "record results of experimental investigations in a logical manner (tables or graphs) and explain the importance of units",
+        "select suitable scales and axes for graphs",
+        "identify the correct SI unit and derived units",
+        "identify sources of error and suggest possible improvements in procedures",
+        "plan an experiment or investigation, including making reasoned predictions of expected results and suggesting suitable apparatus and techniques",
+        "make a clear line drawing from an image of a specimen, calculating the magnification and adding labels as required"
+       ]
+      },
+      {
+       "topic": "Topic 2: Classification and diversity of living organisms",
+       "objectives": [
+        "state that organisms can be classified into groups by features that they share",
+        "describe the binomial system of naming species as a system in which the scientific name of an organism is made up of two parts showing the genus and species",
+        "outline the use of a hierarchical classification system for living organisms",
+        "construct and use simple dichotomous keys based on easily identifiable features",
+        "outline the structure of a virus, limited to protein coat and genetic material, and consider the arguments for and against the classification of viruses as living organisms",
+        "list the main features used in the classification of flowering plants (monocotyledons and dicotyledons), molluscs, annelids, arthropods (insects, arachnids, crustacean and myriapods) and vertebrates (fish, amphibians, reptiles, birds and mammals)",
+        "observe and draw organisms found locally, concentrating on diagnostic features and/or features that adapt them to their environment"
+       ]
+      },
+      {
+       "topic": "Topic 3: Organisation and maintenance of the organism",
+       "objectives": [
+        "calculate the magnification and size of biological specimens using millimetres and micrometres as units",
+        "describe and compare the structure of a plant cell (palisade cell) and animal cell (liver cell) as seen under a light microscope",
+        "describe the process of diffusion and the factors that influence it, limited to surface area, temperature, concentration gradients and distance",
+        "describe the effects of osmosis on plant and animal tissues (include references to hypotonic, isotonic and hypertonic solutions)",
+        "define active transport as the movement of particles through a cell membrane from a region of lower concentration to a region of higher concentration using energy from respiration",
+        "describe the use of Benedict's solution to test for reducing sugars, iodine solution to test for starch, biuret test for proteins, ethanol test for fats and oils and DCPIP test for vitamin C",
+        "explain enzyme action with reference to the active site, enzyme-substrate complex, substrate and product",
+        "state the word and balanced chemical equation for photosynthesis",
+        "describe the functions of the various parts of the alimentary canal in relation to ingestion, digestion, absorption and egestion of food",
+        "explain the mechanisms by which water enters a plant, crosses the root, moves up through xylem vessels, enters leaf cells, and leaves the plants through stomata",
+        "describe the heart in terms of its gross structure and the functions of the parts",
+        "define aerobic respiration as the chemical reactions in cells that use oxygen to break down nutrient molecules to release energy"
+       ]
+      },
+      {
+       "topic": "Topic 4: Development of the organism and the continuity of life",
+       "objectives": [
+        "define mitosis as nuclear division, giving rise to genetically identical cells",
+        "define meiosis as a reduction division in which the chromosome number is halved from diploid to haploid resulting in genetically different cells",
+        "define asexual reproduction as a process resulting in the production of genetically identical offspring from one parent",
+        "describe the different structural adaptations and functions of the parts of insect-pollinated and wind-pollinated flowers",
+        "identify from diagrams the parts of the male and female reproductive system and state the functions of these parts",
+        "explain the role of hormones in controlling the menstrual cycle and pregnancy limited to FSH, LH, progesterone and oestrogen",
+        "outline the following methods of birth control: natural methods, chemical methods (IUD, contraceptive pill, implant and injection), barrier methods (condom, femidom and diaphragm) and surgical methods (vasectomy and tubal ligation)",
+        "describe the methods of transmission of the human immunodeficiency virus (HIV) and the ways in which it can be prevented from spreading",
+        "define gene as a length of DNA that codes for a protein",
+        "calculate and predict the results of monohybrid crosses involving 1:1 and 3:1 ratios",
+        "define natural selection as the selection of only the best adapted organisms for survival and reproduction",
+        "describe the development of strains of antibiotic resistant bacteria as an example of evolution by natural selection"
+       ]
+      },
+      {
+       "topic": "Topic 5: Relationship of organisms with one another and with their environment",
+       "objectives": [
+        "define a food chain as showing the transfer of energy from one organism to the next, beginning with a producer",
+        "describe how energy is transferred between trophic levels",
+        "explain why food chains have usually fewer than five trophic levels",
+        "describe the nitrogen cycle and state the roles of microorganisms in it, limited to decomposition, nitrification, nitrogen fixation and denitrification",
+        "describe the carbon cycle limited to photosynthesis, respiration, feeding, decomposition, fossilisation and combustion",
+        "define population as a group of organisms of one species that live in the same area, at the same time",
+        "identify the phases of a sigmoid population growth curve for a population growing in an environment with limited resources",
+        "explain the undesirable effects of deforestation on the environment",
+        "describe the undesirable effects of water pollution by sewage and chemical waste (pesticides and herbicides), with reference to eutrophication",
+        "define conservation as maintaining the environment and natural resources in a state that maintains biodiversity",
+        "describe how endangered species can be conserved limited to monitoring and protecting species, habitats, education and captive breeding programmes and seed banks",
+        "investigate the impact of Rhinoceros poaching on the tourism sector in Namibia"
+       ]
+      }
+     ]
+    },
+    {
+     "code": "8223",
+     "level": "NSSCAS",
+     "grades": [
+      12
+     ],
+     "title": "NSSCAS Biology Syllabus, approved 26 November 2020",
+     "source": "https://www.nied.edu.na/assets/documents/02Syllabuses/05SeniorSecondary/Biology/NSSCAS_Biology_signed_off_and_approved_syllabus_26_November_2020.pdf",
+     "topics": [
+      {
+       "topic": "Theme 1: Classification of living organisms - 1.1 Classification",
+       "objectives": [
+        "use and describe the binomial system of naming organisms",
+        "describe the use of a hierarchical classification system for living organisms",
+        "explain the concept of natural classification, based on homologous features and evolutionary relationships",
+        "construct dichotomous keys for the identification of locally occurring organisms",
+        "discuss the meaning of the term species, limited to the biological, morphological, ecological and behavioural concepts"
+       ]
+      },
+      {
+       "topic": "Theme 1: Classification of living organisms - 1.2 Biodiversity",
+       "objectives": [
+        "define ecosystem and niche",
+        "explain that biodiversity can be assessed at different levels: the number and range of different ecosystems and habitats; the number of species and their relative abundance; the genetic variation within each species",
+        "explain the importance of random sampling in determining the biodiversity of an area",
+        "use Simpson's Index of Diversity (D) to calculate the biodiversity of an area, and state the significance of different values of D",
+        "describe and use suitable methods to assess the distribution and abundance of organisms in an area, limited to frame quadrats, line transects, belt transects and mark-release-recapture using the Lincoln index",
+        "investigate the distribution and abundance of species in a local area, using suitable methods"
+       ]
+      },
+      {
+       "topic": "Theme 1: Classification of living organisms - 1.3 Conservation",
+       "objectives": [
+        "discuss the reasons for the need to maintain biodiversity",
+        "explain the importance of reducing the pollution of water ways with reference to bioaccumulation and eutrophication",
+        "outline the roles of zoos, botanic gardens, conserved areas (national parks and marine parks), 'frozen zoos' and seed banks, in the conservation of endangered species",
+        "explain why it may be necessary to limit the population of species, for example by culling or contraception, in order to reduce pressure of other species",
+        "explain, using examples, the importance of controlling alien species",
+        "describe how degraded habitats may be restored, limited to local or regional examples",
+        "investigate the negative impact of rhino and elephant poaching on the tourism sector locally (Namibia) and regionally (South Africa and Botswana)"
+       ]
+      },
+      {
+       "topic": "Theme 2: Organisation and maintenance of the organism - 2.1 The microscope",
+       "objectives": [
+        "state and explain the principles of microscopy",
+        "explain and distinguish between resolution and magnification, with reference to light- and electron microscope",
+        "use an eyepiece graticule and stage micrometer scale to measure cells and be familiar with units (millimetre, micrometre and nanometre)",
+        "calculate actual sizes of specimens from drawings, photomicrographs and electron micrographs",
+        "calculate the linear magnifications of drawings, photomicrographs and electron micrographs"
+       ]
+      },
+      {
+       "topic": "Theme 2: Organisation and maintenance of the organism - 2.2 Cell structure",
+       "objectives": [
+        "identify and recognise the parts of a eukaryotic cell and outline the functions of the cell surface membrane, nucleus (nuclear envelope and nucleolus), mitochondrion, ribosomes (80S in the cytoplasm and 70S in chloroplasts and mitochondria), chloroplast, rough and smooth endoplasmic reticulum, Golgi body, lysosomes, cell wall and centrioles",
+        "describe and interpret the structure of plant and animal cells as seen with an electron microscope",
+        "draw and label low power plan diagrams of tissues and organs (including a transverse section of stems, roots and leaves)",
+        "compare the structure of a typical plant (palisade) and animal (liver) cells",
+        "make temporary slides (wet mounts) of plant and animal cells",
+        "make observations and drawings of cells as seen under a light microscope",
+        "outline key structural features of typical prokaryotic cells as found in a typical bacterium"
+       ]
+      },
+      {
+       "topic": "Theme 2: Organisation and maintenance of the organism - 2.3 Cell membranes and transport",
+       "objectives": [
+        "describe the fluid mosaic model of membrane structure, including the components phospholipids, cholesterol, glycolipids, proteins and glycoproteins",
+        "outline the roles of the cell surface membrane",
+        "describe the roles in cell surface membranes of phospholipids, cholesterol, carrier proteins, channel proteins, cell surface receptors and cell surface antigens",
+        "outline the process of cell signalling involving the release of chemicals that combine with cell surface receptors on target cells, leading to specific responses",
+        "understand how substances enter and exit cells by a variety of mechanisms",
+        "describe and explain the processes of diffusion, facilitated diffusion, osmosis, active transport, endocytosis and exocytosis",
+        "investigate simple diffusion and osmosis using plant tissue and non-living materials, such as glucose solutions, Visking tubing and agar",
+        "calculate surface areas and volumes of simple shapes to illustrate the principle that surface area to volume ratios decrease with increasing size"
+       ]
+      },
+      {
+       "topic": "Theme 2: Organisation and maintenance of the organism - 2.4 Biological molecules",
+       "objectives": [
+        "define the terms monomer, polymer, macromolecule, monosaccharide, disaccharide and polysaccharide",
+        "describe and draw the ring forms of alpha-glucose and beta-glucose",
+        "describe the formation of a glycosidic bond by condensation, with reference both to polysaccharides and to disaccharides, including sucrose",
+        "describe the breakage of glycosidic bonds in polysaccharides and disaccharides by hydrolysis, with reference to the non-reducing sugar test",
+        "describe the molecular structure of the polysaccharides starch (amylose and amylopectin) and glycogen and relate their structures to their functions in living organisms",
+        "describe the molecular structure of the polysaccharide cellulose and outline how the arrangement of cellulose molecules contributes to the function of plant cell walls",
+        "describe the molecular structure of a triglyceride with reference to the formation of ester bonds and relate the structure of triglycerides to their functions in living organisms",
+        "describe the structure of a phospholipid and relate the structure to the functions of phospholipids in living organisms"
+       ]
+      },
+      {
+       "topic": "Theme 2: Organisation and maintenance of the organism - 2.5 Enzymes",
+       "objectives": [
+        "explain the nature of enzymes as globular proteins that catalyse metabolic reactions",
+        "state that enzymes function as intracellular and as extracellular enzymes",
+        "explain the mode of enzyme action in terms of an active site, enzyme-substrate complex, lowering of activation energy and enzyme specificity (the lock and key hypothesis and the induced fit hypothesis should be included)",
+        "investigate the progress of an enzyme-catalysed reaction by measuring formation or rates of formation of products and by-products (for example using catalase) or rates of disappearance of substrate (for example, using amylase)",
+        "understand the importance of the factors that affect the rate of enzyme-catalysed reactions",
+        "investigate and explain the factors that affect the rate of enzyme-catalysed reactions, including temperature and pH (using buffer solutions)"
+       ]
+      },
+      {
+       "topic": "Theme 2: Organisation and maintenance of the organism - 2.6 Transport in plants",
+       "objectives": [
+        "identify and label the various parts of the transverse sections of stems, roots and leaves of herbaceous dicotyledonous plants, using an eyepiece graticule to show correct proportions",
+        "describe the structure of xylem vessel elements, phloem sieve tube elements and companion cells",
+        "relate the structure of xylem vessel elements, phloem sieve tube elements and companion cells to their functions",
+        "draw and label from prepared slides the structure of xylem vessel elements, phloem sieve tube elements and companion cells",
+        "understand mass flow in relation to the movement of xylem and phloem sap",
+        "explain that transpiration involves the evaporation of water from the internal surfaces of leaves followed by diffusion of water vapour to the atmosphere",
+        "describe, in terms of water potential, the movement of water between plant cells and between the plant and its environment",
+        "investigate experimentally and explain the factors that affect transpiration rate using a simple potometer, epidermal peels and grids for determining surface area"
+       ]
+      },
+      {
+       "topic": "Theme 2: Organisation and maintenance of the organism - 2.7 Transport in animals (mammals)",
+       "objectives": [
+        "know the structure and function of the mammalian circulatory system and the components of blood",
+        "state that the mammalian circulatory system is a closed double circulation consisting of a heart, blood vessels and blood",
+        "observe and make plan diagrams of the structure of arteries and veins, using prepared microscope slides",
+        "explain the relationship between the structure and function of arteries, veins and capillaries",
+        "recognise and draw the structure of red blood cells, monocytes, neutrophils and lymphocytes using prepared slides, photomicrographs and electron micrographs",
+        "state the functions of tissue fluid and describe the formation of tissue fluid in a capillary network",
+        "state and explain the differences between blood, tissue fluid and lymph",
+        "describe the role of red blood cells in carrying oxygen and carbon dioxide"
+       ]
+      },
+      {
+       "topic": "Theme 2: Organisation and maintenance of the organism - 2.8 Disease",
+       "objectives": [
+        "define the term disease and explain the difference between an infectious disease and a non-infectious disease (limited to sickle cell anaemia and lung cancer)",
+        "state the name and type of pathogen that causes cholera (the bacterium Vibrio cholerae), malaria (the protoctists Plasmodium falciparum, Plasmodium malariae, Plasmodium ovale and Plasmodium vivax), tuberculosis (the bacteria Mycobacterium tuberculosis and Mycobacterium bovis), HIV/AIDS (the human immunodeficiency virus) and measles (Morbillivirus)",
+        "explain how cholera, malaria, TB and HIV/AIDS are transmitted",
+        "discuss the biological, social and economic factors that need to be considered in the prevention and control of cholera, measles, malaria, TB and HIV/AIDS",
+        "discuss the factors that influence the global patterns of distribution of malaria",
+        "describe how penicillin acts on bacteria and why antibiotics do not affect viruses and eukaryotic cells",
+        "outline how bacteria become resistant to antibiotics with reference to mutation and selection",
+        "discuss the consequences of antibiotic resistance and the steps that can be taken to reduce it"
+       ]
+      },
+      {
+       "topic": "Theme 2: Organisation and maintenance of the organism - 2.9 The immune system",
+       "objectives": [
+        "understand the roles of the cells and molecules of the immune system and their functions in protecting the body against infectious diseases",
+        "describe the mode of action of phagocytes (macrophages and neutrophils)",
+        "describe the sequence of events that occurs during a primary immune response with reference to the roles of macrophages, B-lymphocytes (including plasma cells) and T-lymphocytes (limited to T-helper cells and T-killer cells)",
+        "explain what is meant by an antigen and state the difference between self antigens and non-self antigens",
+        "explain the role of memory cells in the secondary immune response and in long-term immunity"
+       ]
+      },
+      {
+       "topic": "Theme 2: Organisation and maintenance of the organism - 2.10 Human gas exchange and smoking",
+       "objectives": [
+        "describe the gross structure of the human gas exchange system",
+        "investigate and observe the gross structure of lungs and associated organs of a sheep or other mammal (dissect)",
+        "describe the distribution in the gas exchange system of cartilage, ciliated epithelium, smooth muscle, capillaries and squamous epithelium of alveoli",
+        "recognise cartilage, ciliated epithelium, smooth muscle, capillaries and squamous epithelium of alveoli in microscope slides, photomicrographs and electron micrographs",
+        "recognise trachea, bronchi, bronchioles and alveoli in microscope slides, photomicrographs and electron micrographs and make plan diagrams of transverse sections of the walls of the trachea and bronchus",
+        "describe the functions of ciliated epithelial cells, goblet cells and mucous glands in maintaining the health of the gas exchange system",
+        "describe the functions in the gas exchange system of cartilage, smooth muscle, elastic fibres and squamous epithelium",
+        "describe the process of gas exchange between air in the alveoli and the blood in the capillaries"
+       ]
+      },
+      {
+       "topic": "Theme 3: Development of the organism and the continuity of life - 3.1 Mitotic cell cycle",
+       "objectives": [
+        "acknowledge the significance of the cell cycle and replication in the uniformity of daughter cells",
+        "describe the structure of a chromosome, limited to DNA, histone proteins, chromatids, centromere and telomeres",
+        "explain the importance of mitosis in the production of genetically identical cells, growth, cell replacement, repair of tissues and asexual reproduction",
+        "observe and draw the mitotic stages visible in temporary root tip squash preparations and in prepared slides of root tips of species such as those of Vicia faba and Allium cepa",
+        "outline the mitotic cell cycle, including interphase (growth in G1 and G2 phases and DNA replication in S phase), mitosis and cytokinesis",
+        "outline the significance of telomeres in permitting continued replication and preventing the loss of genes",
+        "outline the role of stem cells in cell replacement and tissue repair by mitosis",
+        "explain how uncontrolled cell division can result in the formation of a tumour"
+       ]
+      },
+      {
+       "topic": "Theme 3: Development of the organism and the continuity of life - 3.2 Nucleic acids and protein synthesis",
+       "objectives": [
+        "know the structure of nucleic acids and understand their role in the storage of genetic information and how that information is used in the synthesis of proteins",
+        "describe the structure of nucleotides, including the phosphorylated nucleotide ATP",
+        "state that adenine and guanine are purines with a double ring structure, and that cytosine, thymine and uracil are pyrimidines with a single ring structure",
+        "describe the structure of RNA and DNA and explain the importance of base pairing and the different hydrogen bonding between bases",
+        "describe the semi-conservative replication of DNA during S phase",
+        "state that a polypeptide is coded for by a gene and that a gene is a sequence of nucleotides that forms part of a DNA molecule",
+        "state that a gene mutation is a change in the sequence of nucleotides that may result in an altered polypeptide",
+        "describe the way in which the nucleotide sequence codes for the amino acid sequence in a polypeptide with reference to the nucleotide sequence for Hb A (normal) and Hb S (sickle cell) alleles of the gene for the beta-globin polypeptide"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "Physical Science": {
+   "syllabi": [
+    {
+     "code": "6118",
+     "level": "NSSCO",
+     "grades": [
+      10,
+      11
+     ],
+     "title": "NSSCO Physics Syllabus, NIED 2018",
+     "component": "Physics",
+     "note": "Official NIED copy: https://www.nied.edu.na/assets/documents/02Syllabuses/05SeniorSecondary/PhysicalScience/NSSCO_Physics_syllabus.pdf",
+     "source": "http://www.pan.edu.na/images/GR_10_11_PHY_NSSCO_6118.pdf",
+     "topics": [
+      {
+       "topic": "Topic 1: Scientific processes",
+       "objectives": [
+        "add, subtract, multiply and divide rounding the answer correctly",
+        "use averages, decimals, fractions, percentages, ratios and reciprocals",
+        "use direct and inverse proportion",
+        "use positive and negative, whole number indices and exponents in calculations",
+        "make observations accurately; use appropriate techniques; handle apparatus/material competently and have due regard to safety",
+        "distinguish between dependent, independent, and control variables",
+        "record entries in tables with constancy in terms of decimal places for initial readings and significant figures for calculations",
+        "select suitable scales and axes for graphs",
+        "explain that precise measurements are all close to one another and that accurate measurements have an average close to the true value"
+       ]
+      },
+      {
+       "topic": "Topic 2: General Physics",
+       "objectives": [
+        "use and describe the use of a metre rule, a ruler and measuring tape to determine length, and measuring cylinders to determine volume",
+        "define a scalar as a quantity which has a magnitude, but no direction (e.g. mass)",
+        "define a vector as a quantity which has both magnitude and direction (e.g. velocity)",
+        "recognise and state that the concepts 'position' and 'reference point' (can be represented as x, y or z) are fundamental in the study of speed, velocity and acceleration",
+        "define the mass of a body as a measure of the matter in it and that mass depends on the number of particles the body contains and the mass of those atoms",
+        "describe an experiment to determine the density of a liquid and of a regularly shaped solid",
+        "describe the moment of a force as a measure of its turning effect and give everyday examples (such as crowbar, wheelbarrow, pliers, scissors, tweezers or tongs)",
+        "describe an experiment to determine the position of the centre of mass of a plane lamina",
+        "give examples of energy in different forms, its conversion and conservation and apply the principle of energy conservation to simple examples (e.g. the kinetic energy changing to potential energy in a pendulum and the sum of the two is constant if air resistance is negligible)",
+        "define work done as the product of the magnitude of a force and distance moved in the direction of the force",
+        "define power as the rate of doing work or the rate of energy conversion (1 J s-1 = 1 W)",
+        "define pressure as the perpendicular force acting on a unit area"
+       ]
+      },
+      {
+       "topic": "Topic 3: Thermal Physics",
+       "objectives": [
+        "state the concept of absolute zero and the Kelvin scale of temperature",
+        "recall and use the information that absolute temperature is given by T/K = T/°C + 273 (example 20°C is 20°C + 273 = 293 K)",
+        "relate a rise in the temperature of a body to an increase in internal energy",
+        "explain the term thermal capacity",
+        "describe melting and boiling in terms of energy input without a change in temperature",
+        "distinguish between boiling and evaporation",
+        "define conduction of heat as the flow of heat through a material without any flow of the material",
+        "define convection as the flow of liquid or gas caused by a change in density, in which the whole medium moves and carries heat energy with it",
+        "define radiation as the transfer of heat by electromagnetic waves which do not require a medium"
+       ]
+      },
+      {
+       "topic": "Topic 4: Properties of waves",
+       "objectives": [
+        "define a pulse as a single disturbance",
+        "define oscillations or simple harmonic motion as any repeated to-and-fro motion of a fluid or elastic solid, e.g. a tuning-fork, pendulum or stretched string",
+        "outline the difference between luminous and illuminated objects",
+        "draw a ray diagram to show the formation of the image of a point on an object produced by a plane mirror",
+        "state the components of the electromagnetic spectrum and place them in the correct order of frequency and wavelength",
+        "describe the main features of the electromagnetic spectrum and state that all electromagnetic waves are transverse and travel with the same high speed in vacuum and that this speed is 3.0 x 10^8 m/s",
+        "describe the production of sound by vibrating sources, how sound moves through the air and how the ear receives sound waves",
+        "suggest the approximate range of audible frequencies for the healthy human ear (20 Hz to 20 000 Hz)"
+       ]
+      },
+      {
+       "topic": "Topic 5: Electricity and magnetism",
+       "objectives": [
+        "describe simple experiments to show the production of charges by friction and detection of electrostatic charges (using an electroscope)",
+        "state that there are positive and negative charges",
+        "state that a current is a flow of charge and that current is measured in amperes [A] using an ammeter",
+        "distinguish between static electricity and current electricity",
+        "draw circuit diagrams with power sources (cell, battery or a.c. mains), switches (closed and open), resistors (fixed and variable), bulbs/lamps, ammeters, voltmeters, fuses, and relays",
+        "state that the current at every point in a series circuit is the same and use this in calculations",
+        "define electric power as the rate at which electrical energy is transferred to other sources of energy by an electric circuit, and is measured in watt [W]",
+        "distinguish between mains electricity (a.c 220 V) and electricity from batteries (d.c low voltage)",
+        "describe the uses of electricity in heating, lighting (including bulb/lamps in parallel), motors, bell and relay",
+        "state the properties of magnets",
+        "explain magnetism and induced magnetism in terms of alignment of magnetic dipoles (molecular magnets)",
+        "describe the structure and principle of operation of a simple iron-cored transformer"
+       ]
+      },
+      {
+       "topic": "Topic 6: Nuclear Physics",
+       "objectives": [
+        "describe the composition of the nucleus in terms of protons and neutrons",
+        "use the term proton number (atomic number), denoted by Z",
+        "use the term nucleon number (mass number), denoted by A",
+        "define isotopes as atoms with the same proton number but different nucleon number",
+        "describe how radioactive materials are handled, used and stored in a safe way",
+        "describe the existence and major causes of background radioactivity",
+        "state that radioactive emissions occur randomly over space and time",
+        "state the meaning of radioactive decay and give appropriate nuclide equations to represent changes in the composition of the nucleus when particles are emitted",
+        "define half-life as the time taken for half of the radioactive nuclei to decay",
+        "use the term half-life in simple calculations which might involve information in tables or decay curves"
+       ]
+      }
+     ]
+    },
+    {
+     "code": "6117",
+     "level": "NSSCO",
+     "grades": [
+      10,
+      11
+     ],
+     "title": "NSSCO Chemistry Syllabus, NIED 2018",
+     "component": "Chemistry",
+     "note": "Official NIED copy: http://www.nied.edu.na/assets/documents/02Syllabuses/05SeniorSecondary/Chemistry/NSSCO_Chemistry_syllabus.pdf",
+     "source": "http://www.pan.edu.na/images/GR_10_11_CHM_NSSCO_6117.pdf",
+     "topics": [
+      {
+       "topic": "Topic 1: Scientific processes",
+       "objectives": [
+        "add, subtract, multiply and divide",
+        "use averages, decimals, fractions, percentages, ratios and reciprocals",
+        "use direct and inverse proportion",
+        "make observations accurately; use appropriate techniques; handle apparatus/materials competently and have due regard to safety",
+        "explain and use the relationships between length, surface area and volume and their units on metric scales",
+        "state and use the relationship between precision, accuracy and uncertainty of measurement and the appropriate number of significant figures used to record measurements and present calculated data",
+        "name appropriate apparatus for the measurement of time, temperature, mass and volume, including burettes, pipettes and measuring cylinders",
+        "indicate that mixtures melt and boil over a range of temperatures"
+       ]
+      },
+      {
+       "topic": "Topic 2: Matter",
+       "objectives": [
+        "state and describe the distinguishing properties of solids, liquids and gases",
+        "describe the structure of solids, liquids and gases in terms of particle separation (spaces), arrangement and types of motion",
+        "define isotopes as atoms with the same proton (atomic) number but different nucleon (mass) numbers",
+        "interpret the Periodic Table as a method of classifying elements according to their properties (metallic and non-metallic, groups and periods)",
+        "explain that atoms, molecules and ions are the building blocks of all material (an extension of the particle model)",
+        "describe how non-metal atoms combine with other non-metal atoms by sharing electrons in their outer shells with the result that both atoms achieve full outer shells",
+        "use the symbols of the elements to write the formulae of simple compounds",
+        "deduce the formula of a simple compound from the relative numbers of atoms present"
+       ]
+      },
+      {
+       "topic": "Topic 3: Materials",
+       "objectives": [
+        "classify materials into categories such as wood, metals, glasses, ceramics, concrete, plastics and fibres and identify examples of these materials in the local environment",
+        "distinguish between materials that occur naturally and those that are synthetic",
+        "describe the use of different building materials in the local environment: bricks (mud or ceramic), concrete, wood, metal, thatch and glass",
+        "explain how their uses depend on the properties of the materials",
+        "outline and sketch the generalised structure of a soap or detergent",
+        "explain how the structure allows the soap or detergent to act as an emulsifying agent",
+        "outline the preparation of soap through hydrolysis of fat or oil",
+        "state that nanotechnology is used to produce nano-materials such as graphene and fullerenes",
+        "state that nano-materials are materials in which the particle sizes range between approximately 1 and 100 nanometers (nm), in one dimension"
+       ]
+      },
+      {
+       "topic": "Topic 4: Stoichiometry",
+       "objectives": [
+        "define relative atomic mass, Ar, of an element as the ratio of the average mass of the atoms of the naturally occurring element to 1/12 of the mass of a carbon-12 atom",
+        "define relative formula mass, Mr, of a molecule or chemical compound as the sum of the relative atomic masses of all atoms present in that molecule or compound",
+        "state that 'a mole' is an amount of substance containing approximately 6.022 x 10^23 particles",
+        "define concentration as mass per volume or moles per volume (in g/dm3 and mol/dm3)",
+        "calculate stoichiometric reacting masses of pure substances",
+        "carry out calculations involving the concentrations and volumes of solutions, solution concentrations may be expressed in either g/dm3 or mol/dm3",
+        "calculate % composition, % yield and % purity"
+       ]
+      },
+      {
+       "topic": "Topic 5: Electrochemistry",
+       "objectives": [
+        "describe the terms electrodes, electrolytes, anodes and cathodes in electrolysis",
+        "draw diagrams of electrolytic cells",
+        "describe the reactions at the electrodes during electrolysis of molten and aqueous electrolytes (the oxidation and reduction reactions) using half equations",
+        "state the general principle that metals or hydrogen are formed at the negative electrode (cathode), and that non-metals (other than hydrogen) are formed at the positive electrode (anode)"
+       ]
+      },
+      {
+       "topic": "Topic 6: Chemical reactions",
+       "objectives": [
+        "distinguish between chemical and physical changes",
+        "recall that chemical reactions involve an energy change",
+        "explain the meanings of the terms exothermic and endothermic",
+        "describe the meaning of enthalpy change in terms of exothermic (∆H negative) and endothermic (∆H positive) reactions (including the use of simple energy level diagrams)",
+        "describe the production of heat energy by burning fuels",
+        "describe the production of electrical energy from simple cells, i.e. two electrodes in an electrolyte",
+        "describe sources of clean energy",
+        "explain the meaning of the term rate of reaction",
+        "define a catalyst as a substance that increases the rate of a chemical reaction",
+        "describe the idea that some chemical reactions can be reversed by changing the reaction conditions (including the effects of heat on hydrated salts, e.g. hydrated copper(II) sulfate and hydrated cobalt(II) chloride)",
+        "define dynamic equilibrium",
+        "define oxidation and reduction in terms of oxygen gain/loss and in terms of the transfer of electrons"
+       ]
+      },
+      {
+       "topic": "Topic 7: Acids, bases and salts",
+       "objectives": [
+        "define acids and bases in terms of proton transfer (limited to aqueous solutions)",
+        "explain the difference between alkalis and bases",
+        "classify oxides as basic (e.g. Na2O and MgO), acidic (e.g. SO2, SO3 and NO2) or amphoteric (e.g. Al2O3), related to the metallic, non-metallic or metalloid character of the element forming the oxide",
+        "describe the reaction of a base/alkali with an acid as neutralisation",
+        "describe the neutralisation reaction of an acid with an alkali as H+ + OH- -> H2O",
+        "describe neutralisation as one method of preparing soluble salts, e.g. sodium chloride",
+        "describe the preparation, separation and purification of soluble and insoluble salts as examples of the application of some of the techniques specified in section 1.5 and the reactions specified in section 7.3",
+        "recall and apply solubility rules: all common sodium, potassium and ammonium salts are soluble; all nitrates are soluble"
+       ]
+      },
+      {
+       "topic": "Topic 8: Qualitative analysis",
+       "objectives": [
+        "describe the use of the following tests to identify aqueous cations: ammonium, aluminium, zinc, calcium, copper(II), iron(II) and iron(III) using aqueous sodium hydroxide and aqueous ammonia as appropriate (formulae of complex ions are not required)",
+        "describe the use of the following tests to identify: lithium, sodium, potassium, calcium, barium by flame tests",
+        "describe the use of the following tests to identify aqueous anions: carbonate (by reaction with dilute acid and then with limewater), chloride (by reaction under acidic conditions with aqueous silver nitrate)",
+        "describe the use of the following tests to identify: ammonia (using damp red litmus paper), carbon dioxide (using limewater), chlorine (using damp litmus paper), hydrogen (using a lighted splint), oxygen (using a glowing splint)"
+       ]
+      },
+      {
+       "topic": "Topic 9: Metals",
+       "objectives": [
+        "compare the general physical and chemical properties of metals and non-metals",
+        "identify metals and alloys from diagrams",
+        "represent metals and alloys using diagrammatic representations",
+        "place in order of reactivity: potassium, sodium, calcium, magnesium, aluminium, (carbon), zinc, iron, tin, lead, (hydrogen), copper, silver, gold and platinum by reference to the reactions, if any and where relevant, of the metals with water or steam and dilute hydrochloric acid",
+        "describe the extraction of zinc from zinc blende (zinc sulfide)",
+        "describe the methods of extraction of aluminium (electrolysis) and copper (reduction/roasting)",
+        "describe metal ores as a finite resource and hence the need to recycle metals",
+        "explain that alloys are mixtures of metals and that the properties of metals can be changed, often to make them more useful",
+        "describe the idea of changing the properties of iron by the controlled use of additives to form steel alloys"
+       ]
+      },
+      {
+       "topic": "Topic 10: Organic chemistry",
+       "objectives": [
+        "use the International Union of Pure and Applied Chemistry (IUPAC) system to name and draw the structures of the unbranched alkanes, alkenes (not cis and trans), alcohols and carboxylic acids containing up to four carbon atoms per molecule",
+        "name the fuels coal, natural gas and petroleum (crude oil)",
+        "name methane as the main constituent of natural gas",
+        "describe petroleum as a mixture of hydrocarbons and its separation into useful fractions by fractional distillation",
+        "describe alkanes as saturated hydrocarbons with the general formula CnH2n+2",
+        "describe the properties of alkanes (exemplified by methane) as being generally unreactive, except in terms of combustion (both complete and incomplete reaction)",
+        "describe polymers in terms of large molecules built up from small units (monomers)",
+        "name proteins, fats and carbohydrates as the main constituents of food",
+        "describe proteins as possessing the same (amide) linkages as nylon but with different units",
+        "classify fibre polymers as natural or synthetic, give examples of both and observe the different types of fibres used in the home"
+       ]
+      },
+      {
+       "topic": "Topic 11: Environmental and industrial chemistry",
+       "objectives": [
+        "describe a chemical test for the presence of water using anhydrous copper(II) sulfate or cobalt(II) chloride",
+        "describe how to test the purity of water using physical test (melting/boiling points or density)",
+        "describe the need for nitrogen-, phosphorus- and potassium-containing fertilisers",
+        "discuss the dangers of over use of fertilisers with reference to the effect on water resources (eutrophication)",
+        "discuss water pollution from sewage and landfill leachate",
+        "investigate and describe the pollution of air by gases such as carbon monoxide, sulfur dioxide and nitrogen oxides",
+        "explain the incomplete combustion of carbon to form carbon monoxide as a particular problem in confined spaces and its dangers to humans",
+        "describe sulfur dioxide and nitrogen oxides as acidic oxides which combine with water in the air to form acid rain",
+        "describe the manufacture of calcium oxide (lime) from calcium carbonate (limestone) in terms of the chemical reactions involved"
+       ]
+      }
+     ]
+    },
+    {
+     "code": "8225",
+     "level": "NSSCAS",
+     "grades": [
+      12
+     ],
+     "title": "NSSCAS Physics Syllabus, updated 19 November 2020",
+     "component": "Physics",
+     "source": "https://www.nied.edu.na/assets/documents/02Syllabuses/05SeniorSecondary/Physics/NSSCAS_8225_Physics_syllabus_updated_19_November_2020_SIGNED_OFF.pdf",
+     "topics": [
+      {
+       "topic": "Theme 1: General physics - 1.1 Physical quantities and units",
+       "objectives": [
+        "recall that all physical quantities consist of a numerical magnitude and a unit",
+        "make reasonable estimates of physical quantities included within the syllabus",
+        "recall and use the following SI base quantities and their units: mass (kg), length (m), time (s), current (A), temperature (K), amount of substance (mol)",
+        "express derived units as products or quotients of the SI base units and use the named units listed in this syllabus as appropriate",
+        "use SI base units to check the homogeneity of physical equations",
+        "use the following prefixes and their symbols to indicate decimal submultiples or multiples of both base and derived units: pico (p), nano (n), micro (u), milli (m), centi (c), deci (d), kilo (k), mega (M), giga (G), tera (T)",
+        "distinguish between scalar and vector quantities: a scalar as a quantity which has a magnitude but no direction, a vector as a quantity which has both magnitude and direction",
+        "state examples of scalar (e.g. mass) and vector (e.g. velocity) quantities"
+       ]
+      },
+      {
+       "topic": "Theme 1: General physics - 1.2 Measurement techniques",
+       "objectives": [
+        "use techniques for the measurement of length, volume, angle, mass, time, temperature and electrical quantities appropriate to the ranges of magnitude implied by the relevant parts of the syllabus, including measuring lengths using rulers, calipers and micrometers, weight and hence mass using balances, angles using a protractor and time intervals using clocks",
+        "explain the effects of systematic errors (including zero errors) and random errors in measurements",
+        "distinguish between precision and accuracy (precise measurements are all close to one another; an accurate measurement is close to the true value)",
+        "assess the uncertainty in a derived quantity by simple addition of absolute, fractional or percentage uncertainties"
+       ]
+      },
+      {
+       "topic": "Theme 1: General physics - 1.3 Kinematics",
+       "objectives": [
+        "define and use distance, displacement, speed, velocity and acceleration",
+        "use graphical methods to represent distance, displacement, speed, velocity and acceleration",
+        "determine displacement from the area under a velocity-time graph",
+        "determine velocity using the gradient of a displacement-time graph",
+        "determine acceleration using the gradient of a velocity-time graph",
+        "recall and use the equations of uniformly accelerated motion, including v = u + at, a = (v - u)/t and s = ((v + u)/2)t",
+        "derive, from the definitions of velocity and acceleration, equations that represent uniformly accelerated motion in a straight line",
+        "solve problems using equations that represent uniformly accelerated (constant acceleration) motion in a straight line, including the motion of bodies falling in a uniform gravitational field without air resistance"
+       ]
+      },
+      {
+       "topic": "Theme 1: General physics - 1.4 Dynamics",
+       "objectives": [
+        "state that mass is the property of a body that resists change in motion",
+        "recall the relationship F = ma and solve problems using it, appreciating that acceleration and resultant force are always in the same direction",
+        "define and use linear momentum as the product of mass and velocity (recall p = mv)",
+        "define and use force as rate of change of momentum",
+        "state and apply each of Newton's laws of motion, including the first law (the law of inertia) and the second law (the resultant force exerted on a body is directly proportional to the rate of change of linear momentum of that body; recall and use F = delta-p/delta-t)",
+        "describe and use the concept of weight as the effect of a gravitational field on a mass and recall that the weight of a body is equal to the product of its mass and the acceleration of free fall",
+        "describe and explain qualitatively the motion of bodies falling in a uniform gravitational field with air resistance (including reference to terminal velocity)"
+       ]
+      },
+      {
+       "topic": "Theme 1: General physics - 1.5 Forces, density and pressure",
+       "objectives": [
+        "describe the force on a mass in a uniform gravitational field and on a charge in a uniform electric field",
+        "explain the origin of the up-thrust acting on a body in a fluid (due to the difference in hydrostatic pressure)",
+        "explain frictional forces and viscous forces including air resistance",
+        "apply the concept that the weight of a body may be taken as acting at a single point known as its centre of gravity",
+        "define moment as the product of force and perpendicular distance through the line of action from the pivot",
+        "apply the moment of a force to everyday examples such as crowbar, wheelbarrow, pliers, scissors, tweezers or tongs",
+        "state that a couple is a pair of (equal but opposite) forces (acting along parallel but different lines) that tends to produce rotation only",
+        "define and apply the torque of a couple (torque as the product of the magnitude of one of the forces and the perpendicular distance of separation)"
+       ]
+      },
+      {
+       "topic": "Theme 1: General physics - 1.6 Work, energy and power",
+       "objectives": [
+        "give examples of energy in different forms, its conversion and conservation, and apply the principle of conservation of energy to simple examples",
+        "explain the concept of work in terms of the product of a force and displacement in the direction of the force",
+        "calculate the work done in a number of situations including the work done by a gas that is expanding against a constant external pressure: W = p delta-V",
+        "recall and apply that the efficiency of a system is the ratio (which can be expressed as percentage) of useful energy output from the system to the total energy input",
+        "discuss the implications of energy losses in practical devices and use the concept of efficiency to solve problems",
+        "derive, from the equations of motion, the formula for kinetic energy Ek = 1/2 mv^2",
+        "recall and apply the formula Ek = 1/2 mv^2",
+        "distinguish between gravitational potential energy (energy of a mass due to its position in a gravitational field) and elastic potential energy (energy stored in an object as a result of reversible elastic deformation)"
+       ]
+      },
+      {
+       "topic": "Theme 1: General physics - 1.7 Deformation of solids",
+       "objectives": [
+        "outline that deformation is caused by a force and that, in one dimension, the deformation can be tensile or compressive",
+        "use the terms load, extension and compression",
+        "explain and use the terms limit of proportionality, elastic limit, yield point and the spring constant (i.e. force per unit extension)",
+        "obtain and draw force-extension, force-compression, and tensile/compressive stress-strain graphs",
+        "recall and use Hooke's law (F = kx)",
+        "define and use the terms stress (force per unit area of a material), strain (extension per unit length) and the Young modulus (the ratio of stress to strain)",
+        "describe an experiment to determine the Young modulus of a metal in the form of a wire"
+       ]
+      },
+      {
+       "topic": "Theme 2: Waves - 2.1 Progressive waves",
+       "objectives": [
+        "describe what is meant by wave motion (propagation), an oscillation which transfers energy from one place to another without any net movement of the medium, as illustrated by vibration in ropes, springs and by experiments using water waves",
+        "describe and use the terms displacement, amplitude, phase difference, period, frequency, wavelength and speed",
+        "derive, from the definitions of speed, frequency and wavelength, the wave equation v = f lambda",
+        "recall and use the equations v = f lambda and f = 1/T",
+        "describe that energy is transferred by a progressive wave",
+        "recall and use the relationship intensity = power/area and intensity proportional to (amplitude)^2"
+       ]
+      },
+      {
+       "topic": "Theme 2: Waves - 2.2 Transverse and longitudinal waves",
+       "objectives": [
+        "compare transverse and longitudinal waves: for a transverse wave the oscillations are perpendicular to the direction of travel of the energy of the wave, for a longitudinal wave the oscillations are parallel to the direction of travel of the energy of the wave",
+        "analyse and interpret graphical representations of transverse and longitudinal waves"
+       ]
+      },
+      {
+       "topic": "Theme 2: Waves - 2.3 Determination of frequency and wavelength of sound waves",
+       "objectives": [
+        "determine the frequency of sound using a calibrated cathode-ray or PC oscilloscope",
+        "determine the wavelength of sound using stationary waves (e.g. use of sonometer, resonance tubes, tuning forks)"
+       ]
+      },
+      {
+       "topic": "Theme 2: Waves - 2.4 Doppler effect",
+       "objectives": [
+        "explain that when a source (of waves) moves relative to a stationary observer, there is a change in observed frequency",
+        "use the expression fo = fs v/(v +/- vs) for the observed frequency when a source of sound waves moves relative to a stationary observer",
+        "explain that Doppler shift is observed with all waves, including sound and light"
+       ]
+      },
+      {
+       "topic": "Theme 2: Waves - 2.5 Electromagnetic spectrum",
+       "objectives": [
+        "state that all electromagnetic waves are transverse waves that travel with the same speed in free space",
+        "recall the orders of magnitude of the wavelengths of the principal regions of the electromagnetic spectrum from radio waves to gamma rays"
+       ]
+      },
+      {
+       "topic": "Theme 2: Waves - 2.6 Superposition",
+       "objectives": [
+        "explain and use the principle of superposition in simple application",
+        "describe experiments that demonstrate stationary waves using microwaves, stretched strings and air columns",
+        "explain the formation of a stationary wave using a graphical method and identify nodes and antinodes",
+        "explain the meaning of the term diffraction",
+        "describe experiments that demonstrate diffraction, including the qualitative effect of the gap width relative to the wavelength of the wave, for example diffraction of water waves in a ripple tank",
+        "define the terms interference (when two or more waves overlap/superpose, the resultant displacement is the sum of the displacements of each wave) and coherence (when two waves both have the same frequency and a constant phase difference)",
+        "describe experiments that demonstrate two-source interference using water ripples, light (monochromatic light source e.g. laser) and microwaves"
+       ]
+      },
+      {
+       "topic": "Theme 3: Electricity - 3.1 Electric fields",
+       "objectives": [
+        "define and use electric field strength as force per unit positive charge (E = F/Q)",
+        "explain the concept of an electric field as an example of a field of force (a region in which an electric charge experiences a force due to another charge)",
+        "represent an electric field by means of field lines",
+        "recall and use E = delta-V/delta-d to calculate the field strength of the uniform field between charged parallel plates in terms of potential difference and separation",
+        "calculate the forces on charges in uniform electric fields",
+        "describe the effect of a uniform electric field on the motion of charged particles"
+       ]
+      },
+      {
+       "topic": "Theme 3: Electricity - 3.2 Current of electricity",
+       "objectives": [
+        "explain that electric current is a flow of charge carriers",
+        "recall that the charge on charge carriers is quantised",
+        "define the coulomb as the SI unit of electric charge, equal to the quantity of charge conveyed in one second by a current of one ampere",
+        "recall and use Q = It",
+        "derive and use, for a current-carrying conductor, the expression I = Anvq, where A is the cross sectional area, n is the number density of charge carriers, v is drift velocity and q is the charge carried by the individual charge carrier",
+        "define potential difference (energy transferred per unit charge) and the volt (the ratio of joule to coulomb)",
+        "recall and use V = W/Q",
+        "recall and use P = VI, P = V^2/R and P = I^2 R"
+       ]
+      },
+      {
+       "topic": "Theme 3: Electricity - 3.3 DC circuits",
+       "objectives": [
+        "recall and use appropriate circuit symbols",
+        "draw and interpret circuit diagrams containing sources, switches, resistors, ammeters, voltmeters, and/or any other type of component referred to in the syllabus",
+        "define electromotive force (e.m.f.) of a source as energy transferred per unit charge in driving charge round a complete circuit",
+        "distinguish between e.m.f. and potential difference",
+        "discuss the effects of the internal resistance of a source of e.m.f. on the terminal potential difference and output power",
+        "recall and use the equation V = E - Ir, where V is the p.d., E is the e.m.f., I is the current and r is the internal resistance",
+        "apply Kirchhoff's laws in calculations",
+        "recall Kirchhoff's first law and appreciate the link to conservation of charge"
+       ]
+      },
+      {
+       "topic": "Theme 4: Modern physics - 4.1 Atoms, nuclei and radiation",
+       "objectives": [
+        "describe and explain the simple structure of the nucleus",
+        "recall that radioactive decay is the random and spontaneous emission of particles and/or electromagnetic radiation from an unstable nucleus",
+        "recall the nature and properties of alpha, beta and gamma radiations (both beta-minus and beta-plus are included)",
+        "distinguish between nucleon number (mass number, denoted by A) and proton number (atomic number, denoted by Z) and use standard nuclide notation",
+        "state that an element can exist in various isotopic forms each with a different number of neutrons",
+        "describe and explain the transformation of nuclei when they emit radiation",
+        "appreciate that nucleon number, proton number and energy are all conserved in nuclear processes"
+       ]
+      },
+      {
+       "topic": "Theme 4: Modern physics - 4.2 Fundamental particles",
+       "objectives": [
+        "appreciate that protons and neutrons are not fundamental particles since they consist of quarks",
+        "describe a simple quark model of hadrons in terms of up, down and strange quarks and their respective antiquarks",
+        "describe protons and neutrons in terms of a simple quark model",
+        "appreciate that there is a weak interaction between quarks, giving rise to beta decay",
+        "describe beta-minus and beta-plus decay in terms of a simple quark model",
+        "appreciate that electrons and neutrinos are leptons"
+       ]
+      }
+     ]
+    },
+    {
+     "code": "8224",
+     "level": "NSSCAS",
+     "grades": [
+      12
+     ],
+     "title": "NSSCAS Chemistry Syllabus, updated 20 November 2020",
+     "component": "Chemistry",
+     "source": "https://www.nied.edu.na/assets/documents/02Syllabuses/05SeniorSecondary/Chemistry/NSSCAS_8224_Chemistry_approved_syllabus_updated_20_November_2020.pdf",
+     "topics": [
+      {
+       "topic": "Theme 1: The particulate nature of matter and stoichiometry - 1.1 Atoms, molecules and stoichiometry",
+       "objectives": [
+        "define and use the terms relative atomic, isotopic, molecular and formula masses, based on the 12C scale",
+        "define and use the term mole in terms of the Avogadro constant",
+        "analyse mass spectra in terms of isotopic abundances",
+        "calculate the relative atomic mass of an element given the relative abundances of its isotopes, or its mass spectrum",
+        "calculate the percentage by mass of an element in a compound",
+        "define and use the terms empirical and molecular formula",
+        "calculate empirical and molecular formulae, using combustion data or composition by mass",
+        "write and construct balanced equations, including state symbols"
+       ]
+      },
+      {
+       "topic": "Theme 1: The particulate nature of matter and stoichiometry - 1.2 Atomic structure",
+       "objectives": [
+        "identify and describe protons, neutrons and electrons in terms of their relative charges and relative masses",
+        "describe the distribution of mass and charge within an atom",
+        "deduce the numbers of protons, neutrons and electrons present in both atoms and ions given proton (atomic) and nucleon (mass) numbers and charge",
+        "describe the contribution of protons and neutrons to atomic nuclei in terms of proton (atomic) number and nucleon (mass) number",
+        "distinguish between isotopes on the basis of different numbers of neutrons present",
+        "recognise and use the symbolism for isotopes, where A is the nucleon (mass) number and Z is the proton (atomic) number",
+        "describe the number and relative energies of the s, p and d orbitals for the principal quantum numbers (shells) 1, 2 and 3 and also the 4s and 4p orbitals"
+       ]
+      },
+      {
+       "topic": "Theme 1: The particulate nature of matter and stoichiometry - 1.3 Chemical bonding",
+       "objectives": [
+        "describe ionic bonding, as in sodium chloride, magnesium oxide and calcium fluoride, including the use of dot-and-cross diagrams",
+        "describe the electrostatic forces in ionic compounds as being attraction between oppositely charged ions",
+        "describe, interpret and predict the effect of ionic bonding on physical properties (including physical state, melting point, boiling point, solubility)",
+        "explain the electrical conductivity of ionic compounds when solid, molten or in solution",
+        "describe, including the use of dot-and-cross diagrams, covalent bonding in molecules such as hydrogen, chlorine, oxygen, nitrogen, hydrogen chloride, carbon dioxide, methane and ethene",
+        "describe dative covalent (co-ordinate) bonding, including in the formation of the ammonium ion and in the Al2Cl6 molecule, CO, NH4+ and H3O+",
+        "understand shapes of simple molecules including bond angles and the principle of electron-pair repulsion"
+       ]
+      },
+      {
+       "topic": "Theme 1: The particulate nature of matter and stoichiometry - 1.4 The ideal gas and real gases and pV = nRT",
+       "objectives": [
+        "state the basic assumptions of the kinetic theory as applied to an ideal gas",
+        "explain qualitatively in terms of intermolecular forces and molecular size the conditions necessary for a gas to approach ideal behaviour and the limitations of ideality at very high pressures and very low temperatures",
+        "recall and use the general gas equation pV = nRT in calculations, including the determination of Mr"
+       ]
+      },
+      {
+       "topic": "Theme 2: Physical chemistry - 2.1 Chemical energetics",
+       "objectives": [
+        "understand and interpret reaction pathway diagrams",
+        "explain that chemical reactions are accompanied by energy changes, principally in the form of heat energy; the energy changes can be exothermic (Delta H is negative) or endothermic (Delta H is positive)",
+        "explain and use the terms enthalpy change of reaction and standard conditions, with particular reference to formation, combustion, hydration, solution, neutralisation and atomisation, and bond energy",
+        "calculate enthalpy changes from appropriate experimental results, including the use of the relationship Delta H = -mc Delta T",
+        "outline chemical reactions in terms of energy transfers associated with the breaking and making of chemical bonds",
+        "calculate energy changes for simple reactions using bond energies",
+        "explain why Delta H values from calculated bond energies differ from those obtained from data booklet and experimentally determined values"
+       ]
+      },
+      {
+       "topic": "Theme 2: Physical chemistry - 2.2 Electrochemistry",
+       "objectives": [
+        "calculate oxidation numbers of elements in compounds and ions",
+        "describe and explain redox processes in terms of electron transfer and changes in oxidation number",
+        "use changes in oxidation numbers to help balance chemical equations",
+        "describe the use of aqueous potassium iodide in testing for oxidising agents and acidified potassium manganate(VII) in testing for reducing agents from the resulting colour changes",
+        "use oxidation numbers to name oxyanions, including nitrate(III), nitrate(V), chlorate(I) and chlorate(V)",
+        "describe electrolysis as the conduction of electricity by an ionic compound (an electrolyte), when molten or dissolved in water, leading to the decomposition of the electrolyte",
+        "use the concept of selective discharge to identify the electrode products of aqueous solutions"
+       ]
+      },
+      {
+       "topic": "Theme 2: Physical chemistry - 2.3 Equilibria",
+       "objectives": [
+        "explain, in terms of rates of the forward and reverse reactions, what is meant by a reversible reaction and dynamic equilibrium",
+        "state Le Chatelier's principle and apply it to deduce qualitatively the effects of changes in temperature, concentration or pressure on a system at equilibrium",
+        "state whether changes in temperature, concentration or pressure or the presence of a catalyst affect the value of the equilibrium constant for a reaction",
+        "deduce expressions for equilibrium constants in terms of concentrations, Kc, and partial pressures, Kp",
+        "calculate the values of equilibrium constants in terms of concentrations or partial pressures from appropriate data",
+        "understand the application of chemical equilibria in the Haber and Contact processes"
+       ]
+      },
+      {
+       "topic": "Theme 2: Physical chemistry - 2.4 Reaction kinetics",
+       "objectives": [
+        "explain and use the term rate of reaction",
+        "explain qualitatively, in terms of collisions, the effect of concentration changes on the rate of a reaction",
+        "explain and use the term activation energy, including reference to the Boltzmann distribution",
+        "explain qualitatively, in terms both of the Boltzmann distribution and of collision frequency, the effect of temperature change on the rate of a reaction",
+        "explain and use the term catalysis",
+        "explain that catalysts can be homogenous or heterogeneous",
+        "explain that, in the presence of a catalyst, a reaction has a different mechanism, i.e. one of lower activation energy, and interpret this catalytic effect in terms of the Boltzmann distribution",
+        "describe enzymes as biological catalysts which may have specificity"
+       ]
+      },
+      {
+       "topic": "Theme 3: Inorganic chemistry - 3.1 The Periodic Table and chemical periodicity",
+       "objectives": [
+        "explain and use the term ionisation energy",
+        "explain the factors influencing the ionisation energies of elements",
+        "describe qualitatively and explain the variations in atomic radius, ionic radius and electronegativity across Period 3 in terms of attraction, number of electrons and nuclear charge",
+        "describe qualitatively and explain the general trend in first ionisation energy across Period 3 in terms of attraction, nuclear charge and atomic radius",
+        "describe qualitatively and explain the variations in melting point and electrical conductivity across Period 3 in terms of the simple molecular, giant molecular or metallic bonding in the elements",
+        "describe qualitatively and explain the trends in atomic radius, ionic radius and electronegativity down Group 2 and Group 17 in terms of attraction, number of electrons, nuclear charge and degree of shielding"
+       ]
+      },
+      {
+       "topic": "Theme 3: Inorganic chemistry - 3.2 Group 2",
+       "objectives": [
+        "describe the trends in physical properties down Group 2 including melting points",
+        "describe the reactions of the elements with oxygen, water and dilute acids",
+        "describe the behaviour of the oxides, hydroxides and carbonates with water and dilute acids",
+        "describe the thermal decomposition of the nitrates and carbonates",
+        "interpret, and make predictions from, the trends in physical and chemical properties of the elements and their compounds",
+        "describe the variation in the solubilities of the hydroxides and sulfates",
+        "appreciate the uses of calcium hydroxide and calcium carbonate in agriculture"
+       ]
+      },
+      {
+       "topic": "Theme 3: Inorganic chemistry - 3.3 Transition elements",
+       "objectives": [
+        "explain what is meant by a transition element in terms of d-block elements forming one or more ions with incomplete d orbitals",
+        "represent the electronic configuration of transition elements using s, p, d and electrons-in-boxes notations",
+        "recognise that transition elements have variable oxidation states, act as catalysts and form coloured compounds and that these properties are linked to their incomplete d orbitals",
+        "contrast qualitatively the melting points and densities of the transition elements with those of calcium as a typical s-block element",
+        "recognise that copper, manganese and uranium are produced from ores in Namibia",
+        "describe the reduction by carbon of metals from their ores",
+        "describe the use of carbon as a reducer, including in the production of (impure) copper from copper oxide and (impure) ferromanganese from a mixture of iron oxide and manganese oxide in Namibia",
+        "describe the use of sulfuric acid as a leaching agent for example in the production of copper, manganese and uranium"
+       ]
+      },
+      {
+       "topic": "Theme 3: Inorganic chemistry - 3.4 Group 17",
+       "objectives": [
+        "describe the colours of chlorine, bromine and iodine as vapours, at room temperature and pressure, and in solution",
+        "describe the trend in state of chlorine, bromine and iodine at room temperature and pressure",
+        "interpret the volatility of the elements in terms of intermolecular forces",
+        "describe the relative reactivity of the elements as oxidising agents",
+        "describe and explain the reactions of the elements with hydrogen",
+        "describe and explain the relative thermal stabilities of the hydrides",
+        "interpret these relative stabilities in terms of bond energies"
+       ]
+      },
+      {
+       "topic": "Theme 3: Inorganic chemistry - 3.5 Nitrogen and Sulfur",
+       "objectives": [
+        "describe and explain the basicity of ammonia",
+        "comment on the depletion of nitrogen, phosphorus and potassium from soils by leaching and farming",
+        "explain the lack of reactivity of nitrogen and relate this to the need for the industrial manufacture of ammonia and its salts for use as fertilisers",
+        "describe the changes in the oxidation number of nitrogen in the nitrogen cycle in terms of the ions and molecules involved",
+        "state the industrial importance of ammonia and ammonium salts for use as fertilisers",
+        "explain the environmental consequences of using soluble, synthetic nitrate fertilisers, including their rapid leaching, eutrophication and possible contamination of drinking water",
+        "suggest the benefits of the use of organic fertilisers in terms of their lower solubility",
+        "recall that sulfur dioxide is an atmospheric pollutant formed from burning fossil fuels and from the processing of metal sulfide ores"
+       ]
+      },
+      {
+       "topic": "Theme 4: Organic chemistry and analysis - 4.1 Foundations of organic chemistry",
+       "objectives": [
+        "interpret and use the terminology associated with organic reactions: functional group; homolytic and heterolytic fission; free radical, initiation, propagation, termination; nucleophile, electrophile; addition, substitution, elimination, hydrolysis, condensation; oxidation and reduction",
+        "recall and use systematic nomenclature to name alkanes, alkenes, halogenoalkanes, alcohols, aldehydes, ketones, carboxylic acids, esters and amines, with chain length up to six carbon atoms",
+        "describe and explain the shape of, and bond angles in, the ethane and ethene molecules in terms of electron pair repulsion theory",
+        "predict the shapes of, and bond angles in, other related molecules",
+        "analyse an infra-red spectrum of a simple molecule to identify functional groups"
+       ]
+      },
+      {
+       "topic": "Theme 4: Organic chemistry and analysis - 4.2 Hydrocarbons",
+       "objectives": [
+        "interpret and use the general, structural, displayed and skeletal formulae of the alkanes",
+        "recall and use systematic nomenclature to name alkanes, with chain length up to six carbon atoms",
+        "deduce the molecular formula of alkanes, given its structural, displayed or skeletal formula",
+        "explain the general unreactivity of alkanes, including towards polar reagents",
+        "describe the chemistry of alkanes as exemplified by the reactions of ethane: combustion, and substitution by chlorine and by bromine",
+        "describe the mechanism of free-radical reactions with particular reference to the initiation (homolytic fission), propagation and termination reactions, including the substitution of methyl groups by halogens",
+        "explain the use of crude oil as a source of both aliphatic and aromatic hydrocarbons",
+        "explain that cracking can be used to obtain more useful alkanes and alkenes of lower Mr from larger hydrocarbon molecules"
+       ]
+      },
+      {
+       "topic": "Theme 4: Organic chemistry and analysis - 4.3 Halogen derivatives",
+       "objectives": [
+        "interpret and use the general, structural (condensed/semi-structural and displayed) and skeletal formulae of the halogenoalkanes",
+        "recall and use systematic nomenclature to name halogenoalkanes, with chain length up to six carbon atoms, including naming halogeno groups in alphabetical order",
+        "deduce the molecular formula of halogenoalkanes, given its structural or skeletal formula",
+        "describe the chemistry of halogenoalkanes as exemplified by the nucleophilic substitution reactions of bromoethane (hydrolysis, formation of nitriles, formation of primary amines by reaction with ammonia) and the elimination of hydrogen bromide from 2-bromopropane",
+        "interpret the different reactivities of halogenoalkanes, with particular reference to hydrolysis and to the relative strengths of the C-Hal bonds",
+        "explain the uses of fluoroalkanes and fluorohalogenoalkanes in terms of their relative chemical inertness",
+        "recall that the use of chlorofluoroalkanes leads to depletion of the ozone layer",
+        "recall the development of replacement compounds to prevent further depletion and allow the ozone layer to repair"
+       ]
+      },
+      {
+       "topic": "Theme 4: Organic chemistry and analysis - 4.4 Hydroxyl compounds",
+       "objectives": [
+        "interpret and use the general, structural (condensed/semi-structural and displayed) and skeletal formulae of the alcohols (primary, secondary and tertiary)",
+        "recall and use systematic nomenclature of alcohols, with chain length up to six carbon atoms",
+        "deduce the molecular formula of alcohols (including primary, secondary and tertiary), given its structural or skeletal formula",
+        "recall the chemistry of alcohols, exemplified by ethanol: combustion, substitution to give halogenoalkanes, reaction with sodium, oxidation to carbonyl compounds and carboxylic acids, dehydration to alkenes, and formation of esters by esterification with carboxylic acids",
+        "classify hydroxy compounds into primary, secondary and tertiary alcohols",
+        "suggest characteristic distinguishing reactions, e.g. mild oxidation",
+        "deduce the presence of a CH3CH(OH)- group in an alcohol from its reaction with alkaline aqueous iodine to form tri-iodomethane",
+        "explain why alcohols are used as solvents, including their use in cosmetics and to remove sulfur compounds from coal"
+       ]
+      },
+      {
+       "topic": "Theme 4: Organic chemistry and analysis - 4.5 Isomerism: structural and stereoisomerism",
+       "objectives": [
+        "deduce (draw and name) the possible isomers for an organic molecule of known molecular formula",
+        "describe structural isomerism and its division into chain, positional and functional group isomerism",
+        "describe stereoisomerism and its division into geometrical (cis-trans) and optical isomerism",
+        "describe geometrical (cis-trans) isomerism in alkenes, and explain its origin in terms of restricted rotation due to the presence of double bonds",
+        "explain what is meant by a chiral centre and that such a centre normally gives rise to optical isomerism",
+        "identify chiral centres and geometrical (cis-trans) isomerism in a molecule of given structural formula"
+       ]
+      },
+      {
+       "topic": "Theme 4: Organic chemistry and analysis - 4.6 Carbonyl compounds",
+       "objectives": [
+        "interpret and use the general, structural (condensed/semi-structural and displayed) and skeletal formulae of the aldehydes and ketones",
+        "recall and use systematic nomenclature of aldehydes and ketones with chain length up to six carbon atoms",
+        "deduce the molecular formula of aldehydes and ketones, given their structural or skeletal formula",
+        "describe the formation of aldehydes and ketones from primary and secondary alcohols respectively using acidified dichromate"
+       ]
+      },
+      {
+       "topic": "Theme 4: Organic chemistry and analysis - 4.7 Carboxylic acids and derivatives",
+       "objectives": [
+        "interpret and use the general, structural (condensed/semi-structural and displayed) and skeletal formulae of the carboxylic acids",
+        "recall and use systematic nomenclature of carboxylic acids with chain length up to six carbon atoms",
+        "deduce the molecular formula of carboxylic acids, given its structural or skeletal formula",
+        "describe the formation of carboxylic acids from alcohols and aldehydes",
+        "describe the reactions of carboxylic acids in the formation of salts (by the use of reactive metals, alkalis or carbonates) and alkyl esters",
+        "interpret and use the general, structural (condensed/semi-structural and displayed) and skeletal formulae of the amines (primary only) and esters",
+        "recall and use systematic nomenclature of esters and amines, with chain length up to six carbon atoms, including using the parent alcohol and carboxylic acid to name esters",
+        "deduce the molecular formulae of esters and amines (primary only) given their structural or skeletal formula"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "Business Studies": {
+   "syllabi": [
+    {
+     "code": "6144",
+     "level": "NSSCO",
+     "grades": [
+      10,
+      11
+     ],
+     "title": "NSSCO Business Studies Syllabus, NIED 2019",
+     "source": "https://www.nied.edu.na/assets/documents/02Syllabuses/05SeniorSecondary/BusinessStudies/NSSCO_6144_Business_Studies_syllabus_June_2020_final.pdf",
+     "topics": [
+      {
+       "topic": "Theme 1: Why is business activity needed? - 1.1 The nature and purpose of business activity",
+       "objectives": [
+        "describe the purpose of business activity",
+        "explain how businesses respond to the needs of the community",
+        "list five basic types of businesses (primary, manufacturing, wholesale, retail and service)",
+        "describe and explain the role of the government in the economy",
+        "distinguish between market, mixed and planned economies with reference to characteristics, advantages and disadvantages",
+        "explain the meaning of specialisation and division of labour",
+        "discuss the advantages and disadvantages of specialisation",
+        "identify the objectives of the groups involved in business activity: consumers, workers, managers, owners, those with a financial interest, the community as a whole",
+        "give examples of the conflict of objectives between the various groups involved in business activities"
+       ]
+      },
+      {
+       "topic": "Theme 1: Why is business activity needed? - 1.2 Types of business activity",
+       "objectives": [
+        "explain, with examples, the difference between public and private sectors, and ways of organising business activity",
+        "distinguish between nationalisation and privatisation",
+        "differentiate, with examples, between the different types of business activity in the primary, secondary and tertiary sectors",
+        "state the main methods of measuring the size of businesses (legal form of ownership, nature of business, nature of product, capital employed, total assets, number of employees, level of technology, market share, turnover, profitability, value of output)",
+        "explain the purpose of the classification and measurement of business units",
+        "explain the survival of small firms"
+       ]
+      },
+      {
+       "topic": "Theme 2: How is business activity organised and financed? - 2.1 Forms of business organisations",
+       "objectives": [
+        "explain the purpose of business activity in terms of the objectives of non-profit making activity, private enterprise, public enterprise",
+        "describe the main characteristics, advantages and disadvantages of the different forms of business organisations: sole proprietors, partnerships, private limited companies, public limited companies, co-operatives, close corporations, public corporations, joint ventures, franchises",
+        "analyse the appropriateness of each of these forms of business ownership to particular circumstances and make a justified choice between them",
+        "explain how ownership becomes divorced from control as business grows",
+        "evaluate the implications resulting from changing from one form of ownership to another"
+       ]
+      },
+      {
+       "topic": "Theme 2: How is business activity organised and financed? - 2.2 Organisational structures, by level and by function",
+       "objectives": [
+        "define an organisational structure (centralised, decentralised) and explain its importance",
+        "define hierarchy, responsibility, authority, span of control, chain of command, centralisation, delegation",
+        "draw and explain a simple organisation chart",
+        "explain the need to change the organisational structure as the business expands and how this might affect the business",
+        "describe types of organisation structure: by function, by product, by market, by systems"
+       ]
+      },
+      {
+       "topic": "Theme 2: How is business activity organised and financed? - 2.3 Finance in the private/public sector, meeting targets, raising finance",
+       "objectives": [
+        "identify the main needs for funds and explain how such needs can be met",
+        "identify and comment upon the main sources of private and public sector finance",
+        "explain the main ways of seeking finance from these sources",
+        "identify the main ways in which a business is able to use funds from internal sources",
+        "explain the factors which financial providers (banks, shareholders, institutions) will consider in providing funds"
+       ]
+      },
+      {
+       "topic": "Theme 2: How is business activity organised and financed? - 2.4 The accounting function, planning and controlling business activity",
+       "objectives": [
+        "explain the role of the accounting function in the planning and control of business activity",
+        "distinguish between various kinds of costs, explaining their nature and significance (fixed vs variable, direct vs indirect, unit, average, marginal and total)",
+        "recognise and use the following concepts: income, expenses, gross profit, net profit, capital employed, employment of capital, owner's equity, drawings, assets (non-current and current), liabilities, working capital",
+        "explain the difference between profit and cash",
+        "use and interpret simple quantitative accounting data, in particular the financial statements (Income Statement and Statement of Financial Position) of a business, calculating performance ratios (return on capital employed, gross profit margin, net profit margin), liquidity ratios (current ratio, quick/liquid ratio, rate of inventory turnover) and the solvency ratio",
+        "identify and explain the users of financial statements"
+       ]
+      },
+      {
+       "topic": "Theme 2: How is business activity organised and financed? - 2.5 Management of business",
+       "objectives": [
+        "define effective management",
+        "explain the need for effective management",
+        "explain the functions of management",
+        "explain the qualities of a good manager",
+        "explain the different business decisions (strategic, tactical and operational) at different managerial levels"
+       ]
+      },
+      {
+       "topic": "Theme 2: How is business activity organised and financed? - 2.6 Communication",
+       "objectives": [
+        "explain what is effective communication and why is it necessary",
+        "distinguish between internal and external communication, and between one way and two-way communication",
+        "explain the different ways (verbal, written, visual) as well as methods (e.g. letters, meetings) of communication and their appropriateness",
+        "explain and analyse the main elements of effective communication: sender, message, media, timing, receiver and feedback",
+        "identify and explain the barriers to effective communication and how they may be overcome"
+       ]
+      },
+      {
+       "topic": "Theme 3: What is work like? - 3.1 Why work? Needs of the individual",
+       "objectives": [
+        "identify the reasons why individuals work",
+        "discuss the extent to which work satisfies individual's needs with references to motivational theories of Taylor, Maslow, Herzberg"
+       ]
+      },
+      {
+       "topic": "Theme 3: What is work like? - 3.2 Rewards for work",
+       "objectives": [
+        "identify the financial and non-financial rewards for work",
+        "explain the place of rewards in motivation",
+        "describe the different payments systems (salaries and wages) including piece work, time work, combination systems, bonuses, fringe benefits and commissions, productivity agreements, profit sharing",
+        "identify different types of responsibility structures in business and the way in which work can be organised either to give or to remove responsibility e.g. span of control"
+       ]
+      },
+      {
+       "topic": "Theme 3: What is work like? - 3.3 Groups and relationships",
+       "objectives": [
+        "describe the formation of groups in the workplace",
+        "explain the importance of formal and informal groups and the roles they play in the work situation"
+       ]
+      },
+      {
+       "topic": "Theme 3: What is work like? - 3.4 Formal representation and participation",
+       "objectives": [
+        "discuss what management can do to meet the needs of workers with regard to job satisfaction",
+        "define the term trade union and describe the types of trade unions (craft, general, industrial, white-collar)",
+        "explain the role of shop stewards",
+        "explain causes of organisational conflict",
+        "briefly discuss the means of avoiding and resolving conflict when relations break down (negotiation, collective bargaining, arbitration)",
+        "explain the difference between dismissal and redundancy",
+        "identify and describe the types of industrial action (strike, picketing, work to rule, go slow, non-cooperation, overtime ban, lock-out)",
+        "explain what is meant by worker participation in decision making",
+        "list the advantages and disadvantages of worker participation",
+        "describe the role of employer associations"
+       ]
+      },
+      {
+       "topic": "Theme 3: What is work like? - 3.5 Recruitment, training and human resources",
+       "objectives": [
+        "describe the means of selecting and training the workforce: recruitment, selection, induction, training",
+        "evaluate the appropriateness of different types of training to particular circumstances",
+        "develop appropriate materials for recruitment, e.g. job descriptions, job specifications, application forms, advertisements"
+       ]
+      },
+      {
+       "topic": "Theme 4: What is produced and why? - 4.1 The market and marketing",
+       "objectives": [
+        "explain the meaning of a market and marketing",
+        "explain how businesses identify and meet the needs of customers",
+        "list the objectives of marketing",
+        "describe how businesses divide the market into segments e.g. by product, region, purpose, price, age, gender and make a justified decision which segment to enter in particular circumstances",
+        "distinguish between market orientation and product orientation"
+       ]
+      },
+      {
+       "topic": "Theme 4: What is produced and why? - 4.2 Market research",
+       "objectives": [
+        "explain the meaning and importance of market research",
+        "distinguish between the methods of primary research and secondary research",
+        "develop a questionnaire",
+        "present and disperse information for businesses using graphs, pie charts, bar charts, tabulation"
+       ]
+      },
+      {
+       "topic": "Theme 4: What is produced and why? - 4.3 Business plan",
+       "objectives": [
+        "define a business plan",
+        "list and explain the elements (description of business, market research, marketing plan, production plan, organisational plan, financial plan, action plan) of a business plan",
+        "list and explain the uses/applications of a business plan (goals, product, consumer, market research, marketing, finance)"
+       ]
+      },
+      {
+       "topic": "Theme 4: What is produced and why? - 4.4 The marketing mix: product and packaging, price, promotion, distribution",
+       "objectives": [
+        "explain the meaning of product and distinguish between types of product",
+        "define, draw and explain a product life cycle",
+        "distinguish between brand name, brand loyalty and brand image",
+        "explain the functions of packaging",
+        "explain the following pricing strategies: cost plus pricing, penetration pricing, price skimming, competitive pricing, promotional pricing",
+        "explain the types of promotion: advertising, sales promotion, personal selling, public relations",
+        "briefly explain the requirements for effective advertising (AIDA)",
+        "explain different channels of distribution and e-commerce",
+        "develop a marketing plan (involving the elements of the marketing mix)"
+       ]
+      },
+      {
+       "topic": "Theme 4: What is produced and why? - 4.5 Deciding on the scale of operations, and location",
+       "objectives": [
+        "explain the meaning of production and productivity",
+        "explain the factors that will increase business productivity",
+        "explain the effects of HIV and AIDS on productivity",
+        "differentiate between methods of production: job production, batch production, flow production",
+        "explain how changes in technology have influenced production",
+        "explain the general idea of scale of operation and the economies/diseconomies associated with scale",
+        "comment on location factors with particular reference to particular firms/industries (manufacturing business, retailing business, service business)",
+        "suggest the best location (at home or abroad) for particular circumstances"
+       ]
+      },
+      {
+       "topic": "Theme 5: Why and how do Government and the community influence business activity? - 5.1 The reasons for regulation of business activity",
+       "objectives": [
+        "list the social and economic objectives of the government",
+        "discuss in general terms why the government needs to intervene in business activity",
+        "define social cost and cost-benefit analysis",
+        "discuss the idea of social costs and the concept of cost-benefit analysis in general terms",
+        "discuss how the government can protect the environment against harm (protection against pollution, protection against the exploitation of non-renewable resources)"
+       ]
+      },
+      {
+       "topic": "Theme 5: Why and how do Government and the community influence business activity? - 5.2 Aiding and influencing the producer",
+       "objectives": [
+        "discuss why and how the government may intervene in the production process: location decisions (local, national, international), production and relationships with other firms",
+        "discuss why and how the government may intervene in assisting businesses: regional assistance, small firms, and exporting of goods and services",
+        "explain barriers to international trade",
+        "calculate exchange rates (currency conversion between two currencies)",
+        "evaluate the implications to Namibia of being a member of SADC"
+       ]
+      },
+      {
+       "topic": "Theme 5: Why and how do Government and the community influence business activity? - 5.3 Aiding and protecting the employee",
+       "objectives": [
+        "discuss how and why the government may protect the employee with reference to: working conditions, social security, employment contracts, health and safety, redundancy, minimum wages, unfair labour practices",
+        "advise how the government can protect people with HIV and AIDS at the workplace",
+        "evaluate government protection of employees in particular circumstances"
+       ]
+      },
+      {
+       "topic": "Theme 5: Why and how do Government and the community influence business activity? - 5.4 Persuading and protecting the consumers and providers of capital",
+       "objectives": [
+        "discuss how the government and pressure groups may protect the interests of consumers",
+        "discuss why and how the government may intervene in protecting the interests of those who lend and provide capital",
+        "evaluate government protection of consumers and capital providers in particular circumstances"
+       ]
+      }
+     ]
+    },
+    {
+     "code": "8245",
+     "level": "NSSCAS",
+     "grades": [
+      12
+     ],
+     "title": "NSSCAS Business Studies Syllabus, July 2020",
+     "source": "https://www.nied.edu.na/assets/documents/02Syllabuses/05SeniorSecondary/BusinessStudies/NSSCAS_8245_Business_Studies_SyllabusJuly2020Final.pdf",
+     "topics": [
+      {
+       "topic": "Theme 1: Why business activity is needed - 1.1 The nature and purpose of business activity",
+       "objectives": [
+        "explain the purpose of business activity",
+        "explain the scarcity problem and opportunity cost",
+        "describe the relationship between the scarcity problem and opportunity cost",
+        "evaluate the impact of specialisation on workers and the business",
+        "explain the purpose of business activity in terms of the objectives of non-profit making organisations, private sector businesses and public sector businesses",
+        "assess the impact of a business plan on the business operations and the management of the business",
+        "analyse what a business needs to succeed and why many businesses fail during an early stage"
+       ]
+      },
+      {
+       "topic": "Theme 1: Why business activity is needed - 1.2 Types of business activity",
+       "objectives": [
+        "distinguish between internal growth and external growth",
+        "explain the different types of merger and takeover: horizontal, vertical (forwards and backwards) and conglomerate",
+        "discuss the effect of growth on the business",
+        "distinguish between market share and market growth",
+        "analyse the implications of changes in market share and growth",
+        "evaluate the methods of measuring the size of a business referring to market share and market growth",
+        "explain the main differences between local, national and multinational companies (MNCs)",
+        "analyse the advantages and disadvantages of multinationals to the host country",
+        "explain the importance of globalisation"
+       ]
+      },
+      {
+       "topic": "Theme 2: How business activity is organised and financed - 2.1 Forms of business organisations",
+       "objectives": [
+        "compare formal and non-formal sectors, public and private sectors, and primary, secondary and tertiary sectors",
+        "discuss advantages and disadvantages for the business and workforce, when working in the formal versus non-formal sector",
+        "analyse the effect of the non-formal sector on unemployment and crime",
+        "analyse how ownership in the formal sector becomes divorced from control as business grows",
+        "evaluate the implications resulting from changing from one form of ownership to another",
+        "explain the functions and operation of the Namibian Stock Exchange (NSE)"
+       ]
+      },
+      {
+       "topic": "Theme 2: How business activity is organised and financed - 2.2 Finance in the private/public sector",
+       "objectives": [
+        "analyse a firm's need for funds for specific purposes",
+        "identify and explain the main criteria which business will use when seeking short, medium and long-term finance (purpose, amount, time, risk)",
+        "evaluate the choice of finance in a given context: short term (e.g. bank overdraft, trade credit, factoring of debts), medium term (e.g. hire purchase, leasing, bank loan) and long term (e.g. bank loan, mortgage bond or long-term loan, issuing of shares)"
+       ]
+      },
+      {
+       "topic": "Theme 2: How business activity is organised and financed - 2.3 The accounting function, planning and controlling business activity",
+       "objectives": [
+        "assess simple quantitative accounting data, in particular the financial statements (Income Statement and Statement of Financial Position, including working capital) of a business, using performance ratios (return on capital employed, gross margin, net profit margin), liquidity ratios (current ratio, quick ratio/liquid ratio, rate of inventory turnover) and the solvency ratio",
+        "distinguish between retained profit and cash",
+        "explain what is meant by fixed cost, variable cost, total cost, income and operating expenses",
+        "explain the nature and usefulness of budgets and cash flow forecasts",
+        "compile and analyse budgets, including variance analysis of cash budgets",
+        "compile and analyse simple cash flow forecasts",
+        "compile and analyse a break-even chart",
+        "calculate the break-even point",
+        "assess the importance of break-even analysis, budgets and cash flow forecasts for decision making"
+       ]
+      },
+      {
+       "topic": "Theme 2: How business activity is organised and financed - 2.4 Management of business",
+       "objectives": [
+        "explain the difference between leadership and management",
+        "discuss the nature of management and the need for effective management",
+        "discuss Mintzberg's roles of management",
+        "assess the different types of leadership styles",
+        "discuss leadership in terms of qualities, styles (autocratic, democratic, laissez-faire, McGregor's Theory X and Theory Y), effectiveness and roles (directors, managers, supervisors, worker representatives)"
+       ]
+      },
+      {
+       "topic": "Theme 2: How business activity is organised and financed - 2.5 Formal representation and participation",
+       "objectives": [
+        "define labour relations",
+        "assess the role of HRM in workforce planning, recruitment, selection, training, induction, health and safety, redundancy, industrial relations, and wages and salaries",
+        "describe the structure of trade unions and the way they work (locally)",
+        "evaluate the importance of trade unions and HRM in collective bargaining",
+        "describe the structure of bargaining at plant level",
+        "justify the appropriate types of industrial action (strike, picketing, work to rule, go-slow, non-cooperation, overtime ban, lockout) in a specific context",
+        "discuss the issues involved in management accepting workforce unionisation and recognising trade unions",
+        "explain the roles of shop stewards, the Human Resources department, joint committees on particular issues, and the board of directors and worker directors",
+        "explain different types of financial rewards (payment methods): time based, salary, piece rates, commission, bonuses, profit sharing and performance related pay",
+        "explain different types of non-financial rewards (motivators): training, induction, opportunities for promotion, development, status, job-redesign, team working, empowerment, participation and fringe benefits/perks"
+       ]
+      },
+      {
+       "topic": "Theme 3: What is produced and why - 3.1 Marketing",
+       "objectives": [
+        "explain the role of marketing and its relationship with other business activities",
+        "discuss the benefits and limitations of market segmentation",
+        "assess the best methods of market segmentation in a specific context including geographic, demographic and psychographic methods",
+        "explain reasons for and benefits and limitations of mass marketing and niche marketing"
+       ]
+      },
+      {
+       "topic": "Theme 3: What is produced and why - 3.2 Market research",
+       "objectives": [
+        "explain the purpose of market research in determining customer characteristics, wants and needs",
+        "discuss when different methods of research should be used",
+        "justify the appropriate sampling method (random, stratified and quota) in a specific context",
+        "recommend a target market and sample in a specific context",
+        "describe methods to collect data for primary and secondary research, e.g. questionnaires, consumer panels and through internet",
+        "analyse data and present information using graphs, pie charts, bar charts and tabulation",
+        "advise and make decisions based on analysed information",
+        "compile a simple market research report from information",
+        "assess the accuracy of information obtained during market research in a specific context"
+       ]
+      },
+      {
+       "topic": "Theme 3: What is produced and why - 3.3 Analyse and present information to guide decision making",
+       "objectives": [
+        "demonstrate how information as obtained from various sources can be used to assist management in decision making",
+        "present and disperse information to guide decision making using graphs and/or pie charts and/or bar charts and/or tabulation",
+        "discuss the nature and importance of the presentation of statistical information in decision making"
+       ]
+      },
+      {
+       "topic": "Theme 3: What is produced and why - 3.4 SWOT analysis",
+       "objectives": [
+        "explain SWOT analysis",
+        "explain the importance of using a SWOT analysis when producing a business plan"
+       ]
+      },
+      {
+       "topic": "Theme 3: What is produced and why - 3.5 Elements of the marketing mix: product, price",
+       "objectives": [
+        "explain the relationship between the customer and the business (the 4 Cs): customer solution, cost to customer, communication with customer and convenience to customer",
+        "explain how the 4 Cs relate to the 4 Ps in the marketing mix",
+        "explain how the product life cycle influences marketing activities",
+        "evaluate the extension strategies of a product life cycle",
+        "define demand and supply",
+        "explain the principle of equilibrium price and quantity",
+        "construct and analyse simple market situations with changes in supply and demand",
+        "describe the causes of changes in demand and supply conditions and analyse such changes to show the effect on prices",
+        "explain and calculate price elasticity of supply"
+       ]
+      },
+      {
+       "topic": "Theme 4: How external factors influence business activity - 4.1 External influences",
+       "objectives": [
+        "understand the external influences on business operations",
+        "evaluate the effect of external influences on the business and its workforce, referring to the PESTEL model"
+       ]
+      }
+     ]
+    },
+    {
+     "code": "8336",
+     "level": "NSSCH",
+     "grades": [
+      11,
+      12
+     ],
+     "title": "NSSCH Business Studies Syllabus, Higher Level, 2010 (legacy curriculum supplement)",
+     "note": "Old-curriculum Higher Level syllabus (Grades 11-12), included as supplement from locally uploaded PDF",
+     "source": "local upload: NSSCH_Syllabuses_Bu-stu_Apr2010.pdf",
+     "topics": [
+      {
+       "topic": "Theme 1: Why is business activity needed? - 1.1 The nature and purpose of economic activity",
+       "objectives": [
+        "describe the development of economic activity",
+        "describe the scarcity problem and opportunity cost",
+        "explain the meaning of specialisation and division of labour",
+        "describe the relationship between specialisation and trade",
+        "identify the levels of specialisation with examples",
+        "discuss the advantages and disadvantages of specialisation",
+        "state the groups involved in business activity",
+        "identify the objectives of the groups involved in business activity: consumers, workers, managers, owners, those with a financial interest, the community as a whole"
+       ]
+      },
+      {
+       "topic": "Theme 1: Why is business activity needed? - 1.2 Economic systems",
+       "objectives": [
+        "describe and explain the role of the State in the economy",
+        "distinguish between market, mixed and planned economies with reference to characteristics, advantages and disadvantages",
+        "explain how wealth is created and distributed",
+        "explain the importance of welfare policies to alleviate poverty"
+       ]
+      },
+      {
+       "topic": "Theme 1: Why is business activity needed? - 1.3 Types of business activity",
+       "objectives": [
+        "differentiate, with examples, between the different types of business activity in the primary, secondary and tertiary sectors",
+        "state the main methods of measuring the size of businesses",
+        "explain the purpose of the classification and measurement of business units",
+        "explain: internal growth, external growth (mergers and take-overs)",
+        "explain, with examples, the meaning of multinational firms",
+        "identify the advantages and disadvantages of multinationals to the host country",
+        "explain the importance of globalisation",
+        "explain the survival of small firms"
+       ]
+      },
+      {
+       "topic": "Theme 2: How is business activity organised and financed? - 2.1 Ways of organising business activity",
+       "objectives": [
+        "explain with examples the difference between public and private sectors",
+        "distinguish between nationalisation and privatisation",
+        "explain the functions and operation of the Namibian Stock Exchange"
+       ]
+      },
+      {
+       "topic": "Theme 2: How is business activity organised and financed? - 2.2 Forms of business organisations",
+       "objectives": [
+        "describe the main characteristics, advantages and disadvantages of the different forms of business organisations: sole proprietors, partnerships, private limited companies, public limited companies, co-operatives, close corporations, public corporations, joint ventures, franchises",
+        "consider the appropriateness of each of these forms of business ownership to particular circumstances and choose between them (a detailed knowledge of legal requirements and procedures is expected)",
+        "describe how ownership becomes divorced from control as business grows",
+        "compare formal and non-formal sectors, origin of non-formal sector, advantages and disadvantages for the business and workforce, effect of non-formal sector on unemployment and crime, evolution from small to large scale enterprises"
+       ]
+      },
+      {
+       "topic": "Theme 2: How is business activity organised and financed? - 2.3 Organisational structures, by level and by function",
+       "objectives": [
+        "define an organisational structure",
+        "define and comment on central features of organisational structure and activity, such as hierarchy, responsibility, authority, span of control, chain of command, line and staff organisation, centralisation, delegation",
+        "draw and explain a detailed organisation chart",
+        "describe the need to change the organisational structure as the business expands and how this might affect the business",
+        "describe types of organisation structure: by function, by product, by market, by systems"
+       ]
+      },
+      {
+       "topic": "Theme 2: How is business activity organised and financed? - 2.4 Finance in the private/public sector, meeting targets, raising finance",
+       "objectives": [
+        "identify the main needs for funds and how such needs can be met",
+        "identify and comment upon the main sources of private and public sector finance",
+        "explain the main ways of seeking finance from these sources",
+        "identify the main ways in which a business is able to use funds from internal sources",
+        "explain the idea of cash flow and cash flow forecasts and its importance in the management of finance",
+        "identify and explain the main criteria which business will use when seeking short- and long-term finance, large and small amounts: purpose, amount, time, risk, gearing",
+        "analyse a firm’s need for funds for specific purposes and make a choice between the available resources",
+        "explain the factors which financial providers (banks, shareholders, institutions) will consider in providing funds"
+       ]
+      },
+      {
+       "topic": "Theme 2: How is business activity organised and financed? - 2.5 Sources of information",
+       "objectives": [
+        "identify appropriate sources of information for interested parties, e.g. financial statements, sales records, questionnaires"
+       ]
+      },
+      {
+       "topic": "Theme 2: How is business activity organised and financed? - 2.6 The accounting function, planning and controlling business activity",
+       "objectives": [
+        "explain the role of the accounting function in the planning and control of business activity",
+        "use and interpret simple quantitative accounting data, in particular the final accounts (Profit and Loss Account and Balance Sheet) of a business, using performance ratio (return on net assets/return on capital employed, gross profit margin, net profit margin), liquidity ratio (current ratio, acid test/liquid ratio, stock turnover ratio) and solvency ratio (debt ratio)",
+        "explain the nature and usefulness of budgets and cash flow forecasts and prepare examples to demonstrate their nature",
+        "distinguish between various kinds of costs, explaining their nature and significance (fixed vs variable, average, marginal and total)",
+        "draw a break-even chart and calculate the break-even point",
+        "explain the importance of break-even analysis on decision making"
+       ]
+      },
+      {
+       "topic": "Theme 2: How is business activity organised and financed? - 2.7 Management of business",
+       "objectives": [
+        "discuss the nature of management and the need for effective management",
+        "define management and explain management functions",
+        "explain the qualities of a good manager",
+        "discuss the different types of management styles",
+        "discuss leadership, qualities, styles, effectiveness, roles"
+       ]
+      },
+      {
+       "topic": "Theme 2: How is business activity organised and financed? - 2.8 Communications",
+       "objectives": [
+        "discuss the nature of communication and the need for effective communication in business situations",
+        "distinguish between: internal and external communication, one way and two way communication",
+        "explain and analyse the main elements of effective communication: message, media (verbal, written, visual), timing",
+        "identify and explain the barriers to effective communication and how they may be overcome",
+        "identify the various communication networks",
+        "explain the characteristics of communication nets"
+       ]
+      },
+      {
+       "topic": "Theme 3: What is work like? - 3.1 Why work? Needs of the individual",
+       "objectives": [
+        "identify the reasons why individuals work",
+        "discuss the extent to which work satisfies individual’s needs"
+       ]
+      },
+      {
+       "topic": "Theme 3: What is work like? - 3.2 Rewards for work",
+       "objectives": [
+        "identify the financial and non-financial rewards for work",
+        "explain the place of rewards in motivation",
+        "describe the different payments systems (salaries and wages) including piece work, time work, combination systems, bonuses and commissions, productivity agreements, profit sharing",
+        "identify different types of responsibility structures in business and the way in which work can be organised either to give or to remove responsibility e.g. span of control"
+       ]
+      },
+      {
+       "topic": "Theme 3: What is work like? - 3.3 Groups and relationships",
+       "objectives": [
+        "describe the formation of groups in the workplace",
+        "explain the importance of formal and informal groups and the roles they play in the work situation"
+       ]
+      },
+      {
+       "topic": "Theme 3: What is work like? - 3.4 Formal representation and participation",
+       "objectives": [
+        "discuss what management can do to meet the needs of workers with participation importance of co-operation and regard to job satisfaction",
+        "explain why co-operation and joint responsibility are important in the workplace",
+        "describe the types of trade unions",
+        "explain the reasons for joining trade unions",
+        "describe the types of industrial action",
+        "outline the structure of trade unions and the way they work (locally)",
+        "explain the issues involved in management accepting workforce/unionisation and recognising trade unions",
+        "outline the structure of bargaining at plant level"
+       ]
+      },
+      {
+       "topic": "Theme 3: What is work like? - 3.5 Recruitment, training and human resources",
+       "objectives": [
+        "describe the means of selecting and training the workforce: recruitment, selection, induction, training",
+        "discuss the appropriateness of different types of training to particular circumstances"
+       ]
+      },
+      {
+       "topic": "Theme 4: What is produced and why? - 4.1 The market and marketing",
+       "objectives": [
+        "explain the meaning of a market and marketing",
+        "explain how businesses identify and meet the needs of customers",
+        "list the objectives of marketing",
+        "describe how businesses divide the market into segments by product, region, purpose, price and decide which segment to enter",
+        "distinguish between market orientation and product orientation"
+       ]
+      },
+      {
+       "topic": "Theme 4: What is produced and why? - 4.2 Present and analyse information",
+       "objectives": [
+        "present and analyse information and use information to advise and make decisions",
+        "present and disperse information for businesses using: graphs, pie charts, bar charts, tabulation"
+       ]
+      },
+      {
+       "topic": "Theme 4: What is produced and why? - 4.3 Nature and presentation of statistical information",
+       "objectives": [
+        "discuss the nature and importance of the presentation of statistical information"
+       ]
+      },
+      {
+       "topic": "Theme 4: What is produced and why? - 4.4 Market research",
+       "objectives": [
+        "explain the meaning of market research",
+        "distinguish between the methods of primary research and secondary research",
+        "discuss when different methods of research should be used",
+        "explain why information obtained in market research might not be accurate"
+       ]
+      },
+      {
+       "topic": "Theme 4: What is produced and why? - 4.5 The marketing mix: product and packaging, price, promotion, distribution",
+       "objectives": [
+        "explain the meaning of product",
+        "distinguish between types of product",
+        "discuss the features that will make a product successful",
+        "distinguish between: brand name, brand loyalty, brand image",
+        "discuss the functions of packaging",
+        "define price",
+        "explain the following pricing strategies: cost plus pricing, penetration pricing, price skimming, competitive pricing, promotional pricing",
+        "define demand and supply"
+       ]
+      },
+      {
+       "topic": "Theme 4: What is produced and why? - 4.6 Deciding on the scale of operations, and location",
+       "objectives": [
+        "explain the meaning of production and productivity",
+        "explain the effects that HIV and AIDS can have on productivity",
+        "explain the role of women and people living with impairment in production",
+        "differentiate between methods of production: job production, batch production, flow production",
+        "explain how changes in technology have influenced production",
+        "explain: quality control, stock control, lean production",
+        "draw a graph to explain how stock levels can be managed effectively",
+        "comment upon location factors with particular reference to particular firms/industries (manufacturing business, retailing business, service business)"
+       ]
+      },
+      {
+       "topic": "Theme 5: How and why do the Government and the community influence business activity? - 5.1 The reasons for regulation of business activity",
+       "objectives": [
+        "list the social and economic objectives of the government",
+        "discuss in general terms why the government needs to intervene in business activity",
+        "discuss the idea of social costs and the concept of cost-benefit analysis in general terms (the treatment should be entirely descriptive)",
+        "apply the concept descriptively to the resolution of simple social cost and social benefits situations",
+        "discuss how the government can protect the environment against harm (protection against pollution, protection against the exploitation of non-renewable resources)"
+       ]
+      },
+      {
+       "topic": "Theme 5: How and why do the Government and the community influence business activity? - 5.2 Aiding and influencing the producer",
+       "objectives": [
+        "discuss why and how the government may intervene in the production process: location decisions (local, national, international), production and relationships with other firms",
+        "discuss why and how the government may intervene in assisting businesses: regional assistance, small firms, and exporting of goods and services",
+        "discuss barriers to International Trade and the calculation of exchange rates (currency conversion between two currencies)",
+        "discuss the implications to Namibia of being a member of SADC"
+       ]
+      },
+      {
+       "topic": "Theme 5: How and why do the Government and the community influence business activity? - 5.3 Aiding and protecting the employee",
+       "objectives": [
+        "discuss how and why the government may protect the employee with reference to: working conditions, social security, employment contracts, health and safety, redundancy, minimum wages, unfair labour practices",
+        "discuss how the government can protect people with HIV and AIDS at the workplace"
+       ]
+      },
+      {
+       "topic": "Theme 5: How and why do the Government and the community influence business activity? - 5.4 Persuading and protecting the consumers and providers of capital",
+       "objectives": [
+        "discuss the aims of private organisations and pressure groups in protecting the interests of consumers",
+        "discuss why and how the government may intervene in protecting the interests of those who lend and provide capital"
+       ]
+      },
+      {
+       "topic": "Theme 6: Entrepreneurship - 6.1 What is an entrepreneur?",
+       "objectives": [
+        "discuss characteristics, advantages and disadvantages of being an entrepreneur (reference should be made to the formal and non-formal sectors)",
+        "discuss factors to be considered in becoming an entrepreneur (need to identify a business idea, types of business, local community, competition, market, goals, risk taking, judgement in business situations and a business plan)"
+       ]
+      },
+      {
+       "topic": "Theme 6: Entrepreneurship - 6.2 Types of enterprises",
+       "objectives": [
+        "list five basic types of enterprises (primary, manufacturing, wholesale, of business enterprise retail and service)",
+        "explain the differences between these types of enterprises"
+       ]
+      },
+      {
+       "topic": "Theme 6: Entrepreneurship - 6.3 A business plan",
+       "objectives": [
+        "define a business plan",
+        "list and explain the elements and uses/applications of a business plan (goals, product, consumer, market research, marketing, finance)",
+        "explain the importance of using the SWOT analysis"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

@@ -88,6 +88,7 @@
       if (school) localStorage.setItem('k12plus-school', school);
       if (grade) localStorage.setItem('k12plus-grade', String(grade)); else localStorage.removeItem('k12plus-grade');
       if (classLetter) localStorage.setItem('k12plus-class', String(classLetter)); else localStorage.removeItem('k12plus-class');
+      if (saveSession._country) localStorage.setItem('k12plus-country', String(saveSession._country));
     } catch (e) {}
   }
 
@@ -143,6 +144,7 @@
           try { pdata = await pres.json(); } catch (e) {}
           return { ok: false, error: supaErr(pdata, 'Could not save your profile (' + pres.status + ')') };
         }
+        saveSession._country = opts.country || 'Namibia';
         saveSession(token, refresh, user.id, opts.username, opts.role, opts.schoolName, profile.grade, opts.classLetter);
         return { ok: true, learnerUid: learnerUid };
       } catch (e) {
@@ -172,6 +174,7 @@
         var displayRole = profile && profile.role
           ? String(profile.role).replace(/_/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); }).replace(/\bHod\b/, 'HOD')
           : '';
+        saveSession._country = (profile && profile.country) || 'Namibia';
         saveSession(token, data.refresh_token, userId,
           (profile && profile.username) || username,
           displayRole,

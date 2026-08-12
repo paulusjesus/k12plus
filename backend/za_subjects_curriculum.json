@@ -1,0 +1,969 @@
+{
+  "meta": {
+    "country": "South Africa",
+    "authority": "Department of Basic Education (DBE)",
+    "extracted": "2026-08-12",
+    "curriculum": "National Curriculum Statement (NCS) - Curriculum and Assessment Policy Statement (CAPS), FET Phase Grades 10-12",
+    "sources": [
+      "https://www.education.gov.za/Portals/0/CD/National%20Curriculum%20Statements%20and%20Vocational/CAPS%20FET%20_%20LIFE%20SCIENCES%20_%20GR%2010-12%20Web_2636.pdf",
+      "https://www.education.gov.za/Portals/0/CD/National%20Curriculum%20Statements%20and%20Vocational/CAPS%20FET%20%20PHYSICAL%20SCIENCE%20WEB.pdf",
+      "https://www.education.gov.za/Portals/0/CD/National%20Curriculum%20Statements%20and%20Vocational/CAPS%20FET%20_%20BUSINESS%20STUDIES%20_%20GR%2010-12%20_%20Web_0CA7.pdf",
+      "https://www.education.gov.za/Portals/0/Documents/Recovery%20plan%20page/2023%20ATPs/FET%20Content%20Subjects/Grade%2011/1.530%20ATP%202023-24%20Gr%2011%20Phys%20Sci%20final.pdf",
+      "https://www.education.gov.za/Portals/0/Documents/Recovery%20plan%20page/2023%20ATPs/FET%20Content%20Subjects/Grade%2011/2024/PHYS%20SCI%202024%20National%20ANNUAL%20TEACHING%20PLAN%20GR%2011%20ENG_.pdf",
+      "https://www.education.gov.za/Portals/0/Documents/Recovery%20plan%20page/2023%20ATPs/FET%20Content%20Subjects/Grade%2012/1.540%20ATP%202023-24%20Gr%2012%20Phys%20Sci%20final.pdf",
+      "https://www.education.gov.za/Portals/0/Documents/Recovery%20plan%20page/2023%20ATPs/FET%20Content%20Subjects/Grade%2012/1.410%20ATP%202023-24%20Gr%2012%20Life%20Sci%20final.pdf",
+      "https://www.education.gov.za/Portals/0/CD/2021%20Exam%20Guidelines/Life%20Sciences%20GR%2012%20Exam%20Guidelines%202021%20Eng.pdf"
+    ],
+    "notes": "Primary source is the official CAPS FET Grades 10-12 policy document for each subject. Where the CAPS PDF text extraction was truncated (Physical Sciences Grades 11-12 detail; Life Sciences Grade 12 Term 3 tail), objective statements were taken from official DBE Annual Teaching Plans (2023/24 and 2024) and the DBE Grade 12 Examination Guidelines, which restate CAPS content. Gaps are flagged per topic where applicable."
+  },
+  "subjects": {
+    "Biology": {
+      "note": "CAPS name: Life Sciences",
+      "grades": {
+        "11": [
+          {
+            "topic": "Biodiversity and Classification of Micro-organisms",
+            "term": 1,
+            "objectives": [
+              "Describe the basic structure and general characteristics of viruses, bacteria, protista and fungi (macroscopic protista and fungi mentioned only, not studied in detail)",
+              "Mention the roles these groups play in maintaining balance in the environment and web of life",
+              "Describe symbiotic relationships, including nitrogen-fixing bacteria in plants and E. coli in the human intestine",
+              "Discuss the effect and management of one disease from each group: viruses (rabies, HIV/AIDS, influenza), bacteria (blight, cholera, tuberculosis, anthrax), protists (malaria) and fungi (rusts, thrush, ringworm, athlete's foot)",
+              "Describe immunity, including plants' and animals' immune responses against infecting microorganisms, and vaccinations (briefly)",
+              "Discuss the use of drugs, e.g. antibiotics, and their effect on microorganisms",
+              "Describe the use of microorganisms to produce medicines (e.g. insulin and antibiotics)",
+              "Describe traditional technology using microorganisms to produce e.g. beer, wine and cheese"
+            ]
+          },
+          {
+            "topic": "Biodiversity of Plants and Reproduction in Plants",
+            "term": 1,
+            "objectives": [
+              "Group bryophytes, pteridophytes, gymnosperms and angiosperms according to the presence or absence of vascular tissue (xylem and phloem), true leaves and roots, seeds or spores, and fruit",
+              "Explain the decreasing dependence on water for reproduction from bryophytes to angiosperms",
+              "Compare asexual and sexual reproduction and name advantages and disadvantages of each",
+              "Describe flowers as reproductive structures and adaptations for pollination by wind, insects and birds (South African examples)",
+              "Discuss the significance of seeds: seed banks, seeds as a food source, and endemic species in South Africa",
+              "Show a basic understanding of phylogenetic trees as reconstructions of evolutionary pathways, and of cladograms, for the four plant groups"
+            ]
+          },
+          {
+            "topic": "Biodiversity of Animals (six major phyla)",
+            "term": 1,
+            "objectives": [
+              "Explain the relationship between the body plan and the grouping of animals into phyla; the concept of a phylum",
+              "Study six phyla: Porifera, Cnidaria, Platyhelminthes, Annelida, Arthropoda and Chordata",
+              "Describe key features of body plans: symmetry and cephalisation, number of tissue layers developed from the embryo, number of openings in the gut, coelom and blood systems",
+              "Relate body plans to modes of living for each of the six phyla, noting similarities and differences",
+              "Describe the role of invertebrates in agriculture and ecosystems (e.g. pollination, decomposition, soil aeration)"
+            ]
+          },
+          {
+            "topic": "Energy Transformations to Sustain Life: Photosynthesis",
+            "term": 2,
+            "objectives": [
+              "Describe the process of photosynthesis using words and symbols: intake of raw materials, trapping and storing of energy, formation of food in chloroplasts and its storage, and the release of oxygen",
+              "Mention only the light and dark phases (no biochemical details required)",
+              "Explain the importance of photosynthesis: release of oxygen, uptake of carbon dioxide from the atmosphere, and food production (trapping energy)",
+              "Discuss the effects of variable amounts of light, carbon dioxide and temperature on the rate of photosynthesis, using graphs",
+              "Explain the role of carbon dioxide enrichment, optimum light and optimum temperatures in greenhouse systems to improve crop yields",
+              "Describe the role of ATP as an important energy carrier in the cell"
+            ]
+          },
+          {
+            "topic": "Animal Nutrition (Mammals)",
+            "term": 2,
+            "objectives": [
+              "Compare dentition for herbivorous, carnivorous and omnivorous lifestyles in terms of nutritional requirements and energy relationships",
+              "Describe the macro-structure of the human alimentary canal and associated organs and the functions of the different parts",
+              "Explain the processes of ingestion, digestion, absorption, assimilation and egestion and the significance of each",
+              "Describe chemical digestion: functions of carbohydrases, proteases and lipases - where produced, substrate, pH and end-products",
+              "Describe absorption in the small intestine: adaptations to increase surface area, structure and significance of villi, and the importance of the hepatic portal system",
+              "Explain assimilation and the role of the liver: glucose metabolism, deamination of excess amino acids, and the breakdown of alcohol, drugs and hormones",
+              "Describe hormonal control of blood sugar levels and briefly explain diabetes",
+              "Discuss the importance of a balanced diet, changing requirements due to age, gender and activity, and malnutrition (kwashiorkor, marasmus, anorexia, bulimia, food allergies, coronary heart disease, diabetes and obesity)",
+              "Discuss the effects of alcohol and drug abuse, and tooth decay related to diet and fluoride in water supplies"
+            ]
+          },
+          {
+            "topic": "Energy Transformations to Sustain Life: Cellular Respiration",
+            "term": 2,
+            "objectives": [
+              "Describe aerobic respiration in the cytoplasm and mitochondria using words and symbols: glycolysis, Krebs cycle and oxidative phosphorylation (no biochemical detail required)",
+              "Describe anaerobic respiration: production of lactic acid in muscles during exercise (words and symbols, no biochemical detail)",
+              "Discuss the role of anaerobic respiration in industry, e.g. beer brewing and bread making",
+              "Compare aerobic and anaerobic respiration in terms of raw materials required, products and relative amounts of energy released"
+            ]
+          },
+          {
+            "topic": "Gaseous Exchange",
+            "term": 3,
+            "objectives": [
+              "Distinguish between cellular respiration, breathing and gas exchange, and explain the need for gas exchange",
+              "List the requirements of efficient gas exchange organs: large surface area, thin, moist, well ventilated, protected, with a transport system",
+              "Briefly describe how these requirements are met in a dicotyledonous plant, earthworm, insect, bony fish and mammal",
+              "Describe the structure, location, adaptations and functioning of the human ventilation system: trachea, epiglottis, bronchi, bronchioles, lungs, ribs, intercostal muscles, diaphragm and alveoli",
+              "Explain ventilation of the lungs, gaseous exchange in alveoli and in tissues, the transport of gases around the body, and compare inspired and expired air",
+              "Briefly mention the homeostatic control of breathing",
+              "Describe causes, symptoms and treatment of TB in South Africa, and briefly study asthma, hay fever, bronchitis, emphysema and lung cancer",
+              "Discuss the effects of smoking on gaseous exchange and smoking legislation in South Africa, and the effects of altitude on gaseous exchange"
+            ]
+          },
+          {
+            "topic": "Excretion in Humans",
+            "term": 3,
+            "objectives": [
+              "Briefly describe the role of the lungs, kidneys and bladder, liver, alimentary canal (gut) and skin in excretion, the substances excreted by each and their origins",
+              "Describe the structure of the urinary system: position of kidneys, ureters, bladder and urethra",
+              "Describe kidney structure and functioning: removal of urea and excess water and salts, and reabsorption of glucose and some salts",
+              "Describe nephron structure and functioning: ultrafiltration, reabsorption, tubular excretion, pH control and the formation of urine",
+              "Explain homeostatic control of water and salts: the role of ADH and aldosterone",
+              "Discuss dialysis and kidney transplants, and mention diseases affecting kidney function (e.g. kidney stones, kidney failure, bilharzia infection)"
+            ]
+          },
+          {
+            "topic": "Population Ecology",
+            "term": 3,
+            "objectives": [
+              "Explain population size in terms of immigration, emigration, mortality and births; fluctuations, limiting factors and carrying capacity; logistic and geometric growth curves with phases",
+              "Describe predation using two South African examples of predator-prey relationships with graphs",
+              "Describe interspecific and intraspecific competition, ecological niches, and specialisation: competitive exclusion and resource partitioning with examples of coexistence",
+              "Describe parasitism, mutualism and commensalism, each with South African examples",
+              "Describe social organisation: benefits of herds/flocks (avoidance), packs (hunting), dominance and division of tasks (castes) (mention only)",
+              "Describe community change over time: primary and secondary succession and possible endpoints (mention only)",
+              "Discuss the human population: reasons for exponential growth, age and gender distributions for different countries including South Africa, and forecast South Africa's population growth with possible consequences for the environment"
+            ]
+          },
+          {
+            "topic": "Human Impact on the Environment: Current Crises for Human Survival",
+            "term": 4,
+            "objectives": [
+              "Discuss causes and consequences of atmosphere and climate change: carbon dioxide emissions, the carbon footprint and the need to reduce it, deforestation, the greenhouse effect and global warming (desertification, drought and floods), methane emissions and ozone depletion",
+              "Discuss water availability: construction of dams, destruction of wetlands, poor farming practices, droughts and floods, exotic plantations and depletion of the water table, boreholes and aquifers, wastage and the cost of water",
+              "Discuss water quality: pollution, diseases, eutrophication and algal blooms, the effect of mining, thermal pollution, and the need for water purification and recycling",
+              "Discuss food security: human exponential population growth, droughts and floods, poor farming practices (monoculture, pest control, loss of topsoil), alien plants, loss of wild varieties and impact on gene pools, genetically engineered foods and wastage",
+              "Discuss loss of biodiversity (the sixth extinction): habitat destruction, poaching (e.g. rhino horn, ivory, bush meat), and alien plant invasions with mechanical, chemical and biological control",
+              "Describe indigenous knowledge systems and the sustainable use of the environment, e.g. devil's claw, rooibos, fynbos, the African potato (Hypoxis) and Hoodia",
+              "Discuss solid waste disposal: managing dumpsites, the need for recycling, using methane from dumpsites for domestic use, and safe disposal of nuclear waste",
+              "Note: this topic must be completed in Grade 11 but is examined in both Grade 11 and the National Senior Certificate at the end of Grade 12"
+            ]
+          }
+        ],
+        "12": [
+          {
+            "topic": "DNA: The Code of Life",
+            "term": 1,
+            "objectives": [
+              "Describe the location of DNA in the cell: chromosomes, genes and extranuclear DNA (mitochondrial and chloroplast DNA)",
+              "Outline the discovery of the structure of DNA by Watson, Crick, Franklin and Wilkins",
+              "Describe the structure of DNA: double helix of nucleotides with nitrogenous bases pairing A-T and G-C, deoxyribose sugar and phosphate",
+              "Explain the role of DNA: genes and non-coding DNA; DNA makes up genes carrying hereditary information and contains coded information for protein synthesis",
+              "Describe DNA replication in the cell cycle and its significance (the necessity for an exact copy)",
+              "Describe RNA: types (mRNA, tRNA), location in cells and structure",
+              "Explain protein synthesis: transcription from DNA and translation of RNA into proteins (mRNA, tRNA) as a sequence of events, with a basic understanding of the genetic code",
+              "Interpret DNA profiles (DNA fingerprinting) and state their uses"
+            ]
+          },
+          {
+            "topic": "Meiosis",
+            "term": 1,
+            "objectives": [
+              "Describe meiosis as the process of reduction division and its purposes (gametogenesis, with exceptions such as mosses and ferns)",
+              "Explain the importance of meiosis: diploid to haploid; production of gametes; maintaining a constant chromosome number across generations",
+              "Describe the events of interphase and of each phase of Meiosis I and Meiosis II using diagrams, including crossing over in Prophase I and random arrangement of chromosomes at the equator",
+              "Explain the introduction of genetic variation through random segregation and crossing over",
+              "Describe the consequences of abnormal meiosis (non-disjunction), e.g. Down syndrome",
+              "Compare similarities and differences between mitosis and meiosis"
+            ]
+          },
+          {
+            "topic": "Reproduction in Vertebrates",
+            "term": 1,
+            "objectives": [
+              "Describe the diversity of reproductive strategies that maximise reproductive success in different environments, using appropriate animal examples",
+              "Distinguish between external and internal fertilisation",
+              "Distinguish between ovipary, ovovivipary and vivipary",
+              "Describe the amniotic egg",
+              "Distinguish between precocial and altricial development, and describe parental care"
+            ]
+          },
+          {
+            "topic": "Human Reproduction",
+            "term": 1,
+            "objectives": [
+              "Describe the structure of the male and female reproductive systems and the functions of the parts",
+              "Describe the main changes at puberty under the influence of testosterone and oestrogen",
+              "Describe gametogenesis (spermatogenesis and oogenesis), related briefly to meiosis (no individual names of stages)",
+              "Explain the menstrual cycle with emphasis on hormonal control (FSH, LH, oestrogen and progesterone), including the ovarian and uterine cycles",
+              "Describe fertilisation and the development of the zygote to blastocyst",
+              "Describe implantation and development, gestation (briefly) and the role of the placenta"
+            ]
+          },
+          {
+            "topic": "Genetics and Inheritance",
+            "term": 2,
+            "objectives": [
+              "Define concepts of inheritance: genes and alleles, dominant and recessive, phenotype and genotype, homozygous and heterozygous; mention Mendel as the father of genetics",
+              "Solve monohybrid crosses with examples of complete dominance, incomplete/partial dominance and co-dominance",
+              "Solve dihybrid crosses involving phenotypes and genotypes",
+              "Explain sex determination, sex-linked alleles and sex-linked diseases (e.g. haemophilia and colour-blindness)",
+              "Solve genetics problems involving blood groups (multiple alleles)",
+              "Describe mutations: harmless, harmful and useful mutations; gene mutations and chromosomal aberrations, with links to natural selection",
+              "Interpret genetic lineages and pedigree diagrams",
+              "Discuss genetic engineering: stem cell research, genetically modified organisms, biotechnology and cloning",
+              "Describe paternity testing and DNA fingerprinting (forensics), and mention mitochondrial DNA in tracing genetic links"
+            ]
+          },
+          {
+            "topic": "Responding to the Environment: Humans (Nervous System and Sense Organs)",
+            "term": 2,
+            "objectives": [
+              "Explain that humans have two systems - nerves and hormones - that enable them to respond to the environment",
+              "Describe the central nervous system: meninges for protection; location and functions of the cerebrum, cerebellum, corpus callosum, medulla oblongata and spinal cord",
+              "Describe the location and functions of the peripheral nervous system and the autonomic nervous system",
+              "Describe the structure of a nerve and of sensory and motor neurons",
+              "Describe the structure, function and significance of a simple reflex arc, and the significance of synapses",
+              "Describe disorders (Alzheimer's disease and multiple sclerosis), brain and spinal injuries (mention stem cell research), and the effects of drugs (dagga, heroin, ecstasy, tik)",
+              "Describe receptors detecting a range of stimuli: light, sound, touch, temperature, pressure, pain and chemicals (taste and smell)",
+              "Describe the structure and functioning of the human eye: binocular vision, accommodation, pupil reflex, and defects (short-sightedness, long-sightedness, astigmatism, cataracts)",
+              "Describe the structure and functioning of the human ear in hearing and balance, and hearing defects (deafness, middle ear infections, grommets)"
+            ]
+          },
+          {
+            "topic": "Human Endocrine System",
+            "term": 3,
+            "objectives": [
+              "Describe the location, hormones secreted and roles of hormones of the following glands: hypothalamus (ADH), pituitary gland (TSH, FSH, LH, prolactin, growth hormone), thyroid gland (thyroxin), pancreas (insulin, glucagon), adrenal gland (adrenalin, aldosterone) and gonads (oestrogen, progesterone and testosterone)",
+              "Distinguish between endocrine and exocrine glands",
+              "Explain examples of negative feedback mechanisms: TSH and thyroxin, and insulin and glucagon",
+              "Describe disorders caused by hormone imbalance, e.g. diabetes mellitus and thyroid disorders (goitre)"
+            ]
+          },
+          {
+            "topic": "Homeostasis in Humans",
+            "term": 3,
+            "objectives": [
+              "Describe homeostasis as the process of maintaining a constant, optimal internal environment",
+              "Explain negative feedback control of glucose, carbon dioxide, water and salts",
+              "Explain thermoregulation: adaptations of human skin, sweating, vasodilation and vasoconstriction"
+            ]
+          },
+          {
+            "topic": "Responding to the Environment: Plants",
+            "term": 3,
+            "objectives": [
+              "Describe the general functions of the plant hormones auxins, gibberellins and abscisic acid",
+              "Explain weed control by using growth hormones",
+              "Explain geotropism and phototropism and growth regulation by auxins",
+              "Describe plant defence mechanisms: chemicals and thorns"
+            ]
+          },
+          {
+            "topic": "Evolution by Natural Selection",
+            "term": 3,
+            "objectives": [
+              "Discuss different kinds of evidence for evolution: the fossil record, modification by descent (homologous structures), biogeography and genetics",
+              "Explain the difference between a hypothesis and a theory",
+              "Give a brief overview of the history of different theories of development: Lamarckism, Darwinism and Punctuated Equilibrium",
+              "Explain Darwin's theory of evolution by natural selection: variation in the gene pool, production of more offspring than required, environmental pressure, and survival and reproduction of better-suited organisms leading to extinction or successful adaptation",
+              "Describe artificial selection using one example of a domesticated animal and one example of a crop species",
+              "Distinguish between continuous and discontinuous variation, and describe sources of variation (crossing over, random arrangement of chromosomes, mutations, random fertilisation and random mating)",
+              "Explain speciation through geographic isolation, and the effect of speciation and extinction on biodiversity",
+              "Outline mechanisms of reproductive isolation that keep species separate: breeding at different times, species-specific courtship behaviour, adaptation to different pollinators, infertile offspring and prevention of fertilisation",
+              "Describe an example of natural selection and evolution in present times, e.g. insect resistance to insecticides, drug-resistant TB strains, HIV resistance to antiretrovirals, or Galapagos finches"
+            ]
+          },
+          {
+            "topic": "Human Evolution",
+            "term": 3,
+            "objectives": [
+              "Interpret a phylogenetic tree to show the place of the family Hominidae in the animal kingdom",
+              "Describe characteristics that humans share with African apes",
+              "Compare anatomical differences between African apes and humans: bipedalism (foramen magnum, spine and pelvic girdle), brain size, teeth (dentition), prognathism, palate shape, cranial ridges and brow ridges",
+              "Discuss lines of evidence for common ancestors of living hominids including humans: fossil evidence with evolutionary trends in Ardipithecus, Australopithecus and Homo, including fossil ages, sites (Cradle of Humankind) and the scientists who discovered them",
+              "Discuss genetic evidence (mitochondrial DNA) and cultural evidence (tool-making)",
+              "Explain the Out-of-Africa hypothesis - modern humans originated in Africa and migrated to other continents - and the fossil and genetic evidence supporting it",
+              "Interpret timelines for the existence of different species of the genus Homo and phylogenetic trees proposed by different scientists"
+            ]
+          },
+          {
+            "topic": "Human Impact on the Environment (examined in Grade 12)",
+            "term": 4,
+            "objectives": [
+              "Revise the Grade 11 topic Human Impact on the Environment (atmosphere and climate change, water availability and quality, food security, loss of biodiversity, solid waste disposal), which is examinable in the National Senior Certificate at the end of Grade 12",
+              "Term 4 is otherwise devoted to revision and preparation for the final NSC examination (Paper 1 and Paper 2, 150 marks and 2.5 hours each)"
+            ]
+          }
+        ]
+      }
+    },
+    "Physical Science": {
+      "note": "CAPS name: Physical Sciences. Six knowledge areas: Mechanics; Waves, Sound and Light; Electricity and Magnetism; Matter and Materials; Chemical Change; Chemical Systems. Detailed objectives below are from the official DBE Annual Teaching Plans (which restate CAPS content statements); topic outline and hours are from the CAPS overview of topics (Section 2.4).",
+      "grades": {
+        "11": [
+          {
+            "topic": "Vectors in Two Dimensions (Mechanics)",
+            "objectives": [
+              "Define a resultant and determine the resultant of vectors (maximum four) on a Cartesian plane using the component method",
+              "Sketch the net vertical vector (Ry) and net horizontal vector (Rx) on a Cartesian plane and sketch the resultant using the tail-to-head or tail-to-tail (parallelogram) method",
+              "Calculate the magnitude of the resultant using the theorem of Pythagoras and determine its direction using simple trigonometric ratios",
+              "Determine the resultant of two vectors graphically as well as by calculation for a maximum of four vectors in one and two dimensions",
+              "Explain the meaning of a closed vector diagram",
+              "Resolve a vector R into its horizontal and vertical components using Rx = R cos(theta) and Ry = R sin(theta)"
+            ]
+          },
+          {
+            "topic": "Newton's Laws and Application of Newton's Laws (Mechanics)",
+            "objectives": [
+              "Define normal force, frictional force, static frictional force and kinetic frictional force; know that friction is proportional to the normal force and independent of contact area; solve problems using fs(max) = us N and fk = uk N",
+              "Draw force diagrams and free-body diagrams, and resolve a two-dimensional force (e.g. weight on an inclined plane) into parallel and perpendicular components",
+              "State Newton's first law of motion; define inertia and state that mass is a quantitative measure of inertia; discuss the importance of seatbelts",
+              "State Newton's second law of motion (Fnet = ma) and apply it to equilibrium and non-equilibrium problems: single objects on horizontal, inclined and vertical planes, with or without friction",
+              "Apply Newton's second law to two-body systems joined by a light inextensible string, including systems over a frictionless pulley",
+              "State Newton's third law of motion and identify action-reaction force pairs and their properties",
+              "State Newton's law of universal gravitation and solve problems using F = G m1 m2 / d^2",
+              "Calculate the acceleration due to gravity on Earth and on other planets; explain the difference between weight and mass; calculate weight using w = mg; explain weightlessness"
+            ]
+          },
+          {
+            "topic": "Geometrical Optics (Waves, Sound and Light)",
+            "objectives": [
+              "Refraction of light",
+              "Snell's Law",
+              "Critical angles and total internal reflection"
+            ],
+            "gap": "Detailed CAPS content statements for this topic (CAPS pages 66-70) could not be extracted (PDF text truncation); objectives reflect the CAPS overview of topics wording. This topic was also trimmed from the 2023/24-2024 recovery ATPs."
+          },
+          {
+            "topic": "2D and 3D Wavefronts (Waves, Sound and Light)",
+            "objectives": [
+              "Wavefronts in two and three dimensions",
+              "Diffraction of waves"
+            ],
+            "gap": "Detailed CAPS content statements for this topic could not be extracted (PDF text truncation); objectives reflect the CAPS overview of topics wording. This topic was also trimmed from the 2023/24-2024 recovery ATPs."
+          },
+          {
+            "topic": "Electrostatics (Electricity and Magnetism)",
+            "objectives": [
+              "State Coulomb's law and solve problems using F = k Q1 Q2 / r^2 for charges in one dimension (restrict to three charges)",
+              "Solve Coulomb's law problems in two dimensions for three charges in a right-angled formation",
+              "Describe an electric field as a region in space in which an electric charge experiences a force",
+              "Draw electric field patterns for a single point charge, two point charges and a charged sphere",
+              "Define the magnitude of the electric field at a point as the force per unit charge (E = F/Q) and solve problems using this equation",
+              "Calculate the electric field at a point due to a number of point charges using E = kQ/r^2 (restrict to three charges in a straight line)"
+            ]
+          },
+          {
+            "topic": "Electromagnetism (Electricity and Magnetism)",
+            "objectives": [
+              "Use the Right Hand Rule to determine the direction of the magnetic field associated with a straight current-carrying wire, a single current-carrying loop and a solenoid",
+              "Draw the magnetic field lines around a straight current-carrying wire, a current-carrying loop and a solenoid",
+              "Discuss qualitatively the environmental impact of overhead electrical cables",
+              "Define magnetic flux (phi = BA cos(theta))",
+              "State Faraday's law and describe what happens when a bar magnet is pushed into or pulled out of a solenoid connected to a galvanometer",
+              "Use the Right Hand Rule to determine the direction of the induced current in a solenoid, and know that the induced current opposes the change in magnetic flux",
+              "Calculate induced emf and induced current for a changing magnetic field using Faraday's law: emf = -N (delta phi / delta t)"
+            ]
+          },
+          {
+            "topic": "Electric Circuits: Energy and Power (Electricity and Magnetism)",
+            "objectives": [
+              "State Ohm's law in words and interpret data and graphs of the relationship between current, potential difference and resistance at constant temperature",
+              "State the difference between ohmic and non-ohmic conductors and give an example of each",
+              "Solve problems using R = V/I for circuits with resistors in series and/or parallel (maximum four resistors)",
+              "Define power and solve problems using P = W/(delta t), P = VI, P = I^2 R and P = V^2/R",
+              "Use the energy relationships W = VQ, W = VI(delta t), W = I^2 R (delta t) and W = V^2 (delta t)/R",
+              "Deduce that the kilowatt-hour (kWh) is the use of 1 kilowatt of electricity for 1 hour (one unit of electricity) and calculate the cost of electricity usage"
+            ]
+          },
+          {
+            "topic": "Atomic Combinations: Molecular Structure (Matter and Materials)",
+            "objectives": [
+              "Define a chemical bond, a covalent bond, a molecule, a bonding pair and a lone pair",
+              "Draw Lewis dot diagrams of elements and Lewis diagrams for simple molecules (e.g. H2, F2, H2O, NH3, CH4, HF) and molecules with multiple bonds (e.g. N2, O2, HCN)",
+              "Explain, in terms of electrostatic forces and energy, why two H atoms form an H2 molecule and why He does not form He2; interpret the potential energy versus distance graph for two approaching hydrogen atoms",
+              "Discuss molecular shapes: H2 (linear), H2O (angular), NH3 (pyramidal), CO2 (linear), CH4 (tetrahedral)",
+              "Describe the formation of the dative covalent bond",
+              "Define electronegativity; describe polar and non-polar covalent bonds with examples and show polarity using partial charges",
+              "Explain that bond character varies from non-polar covalent (delta EN = 0) to polar covalent (0 < delta EN <= 1,7) to ionic (delta EN > 1,7), and that polar bonds do not always lead to polar molecules",
+              "Define bond energy and bond length and explain the relationship between bond strength, bond length, size of bonded atoms and number of bonds"
+            ]
+          },
+          {
+            "topic": "Intermolecular Forces (Matter and Materials)",
+            "objectives": [
+              "Describe the difference between intermolecular forces and interatomic (intramolecular) forces using diagrams and in words",
+              "Name and explain the different intermolecular forces (Van der Waals forces): mutually induced dipole (London) forces, dipole-dipole forces, dipole-induced dipole forces and hydrogen bonding",
+              "Describe ion-dipole forces between ions and polar molecules",
+              "State the relationship between intermolecular forces and molecular mass",
+              "Explain the effect of intermolecular forces on boiling point, melting point, vapour pressure and solubility",
+              "Relate the macroscopic properties of the three phases of water to its sub-microscopic structure (CAPS)"
+            ]
+          },
+          {
+            "topic": "Ideal Gases and Thermal Properties (Matter and Materials)",
+            "objectives": [
+              "Describe the motion of individual gas molecules: collisions with each other and the container walls, and the range of molecular speeds",
+              "Explain the idea of average speeds in the context of gas molecules",
+              "Describe an ideal gas in terms of the motion of molecules, explain how a real gas differs from an ideal gas, and state the conditions under which a real gas approaches ideal behaviour",
+              "Describe the relationship between volume and pressure for a fixed amount of gas at constant temperature (Boyle's law): practically, by interpreting results, using graphs and by writing a relevant equation",
+              "Explain the temperature of a gas in terms of the average kinetic energy of its molecules",
+              "Explain the pressure exerted by a gas in terms of collisions of the molecules with the container walls"
+            ]
+          },
+          {
+            "topic": "Quantitative Aspects of Chemical Change / Stoichiometry (Chemical Change)",
+            "objectives": [
+              "Describe the mole as the SI unit for amount of substance, define one mole, and describe Avogadro's number as the number of particles in one mole",
+              "Define molar mass and calculate the molar mass of a substance given its formula",
+              "State Avogadro's law and know that the molar gas volume at STP is 22,4 dm3 per mol",
+              "Do calculations using n = m/M, n = V/Vm and n = N/NA, and interpret balanced equations in terms of volume relationships for gases",
+              "Define concentration and calculate it in mol per dm3 using c = n/V",
+              "Determine percentage composition, empirical formula and molecular formula of compounds",
+              "Do stoichiometric calculations including limiting reagents, percentage yield and percentage purity"
+            ]
+          },
+          {
+            "topic": "Energy and Chemical Change (Chemical Change)",
+            "objectives": [
+              "Define heat of reaction (delta H), exothermic reactions and endothermic reactions",
+              "Classify reactions, with reasons, as exothermic or endothermic and state the sign of delta H for each",
+              "Define activation energy and activated complex",
+              "Draw or interpret fully labelled sketch graphs (potential energy versus course of reaction) of catalysed and uncatalysed endothermic and exothermic reactions"
+            ]
+          },
+          {
+            "topic": "Types of Reactions: Acid-Base and Redox (Chemical Change)",
+            "objectives": [
+              "Write names and formulae of common acids (hydrochloric, nitric, sulphuric, ethanoic acid) and common bases (ammonia, sodium carbonate, sodium hydrogen carbonate, sodium hydroxide, potassium hydroxide)",
+              "Define acids and bases according to the Arrhenius and Bronsted-Lowry theories and identify conjugate acid-base pairs",
+              "Describe amphiprotic substances (ampholytes) and write equations showing how they act as acid or base",
+              "Write overall equations for reactions of acids with metal hydroxides, metal oxides and metal carbonates, and neutralisation reactions of common laboratory acids and bases",
+              "Describe acid-base indicators and know the colours of litmus, methyl orange, phenolphthalein and bromothymol blue in acids and bases",
+              "Explain the meaning of oxidation number and assign oxidation numbers to atoms in ions and molecules",
+              "Describe a redox reaction as involving electron transfer and changes in oxidation numbers, using the terms oxidation, reduction, reducing agent and oxidising agent",
+              "Balance redox reactions using half-reactions from the Table of Standard Reduction Potentials"
+            ]
+          },
+          {
+            "topic": "The Lithosphere (Chemical Systems)",
+            "objectives": [
+              "The lithosphere: mining and mineral processing in South Africa",
+              "Energy resources and their uses"
+            ],
+            "gap": "Detailed CAPS content statements for this topic could not be extracted (PDF text truncation); objectives reflect the CAPS overview of topics wording ('Lithosphere (mining; energy resources), 8 hours'). This topic was also trimmed from the recovery ATPs."
+          }
+        ],
+        "12": [
+          {
+            "topic": "Momentum and Impulse (Mechanics)",
+            "objectives": [
+              "Define and calculate the momentum of a moving object (p = mv) and describe its vector nature",
+              "State Newton's second law of motion in terms of momentum (Fnet = delta p / delta t) and calculate the change in momentum when a resultant force acts on an object",
+              "Define impulse and use the impulse-momentum theorem (Fnet delta t = m delta v) in one-dimensional calculations",
+              "Discuss impulse in relation to safety considerations (e.g. airbags, crumple zones)",
+              "State the principle of conservation of linear momentum; explain isolated system, internal and external forces",
+              "Apply conservation of momentum to collisions of two objects in one dimension",
+              "Distinguish between elastic and inelastic collisions by calculation"
+            ]
+          },
+          {
+            "topic": "Vertical Projectile Motion in One Dimension (Mechanics)",
+            "objectives": [
+              "Explain what is meant by a projectile",
+              "Use equations of motion to determine the position, velocity and displacement of a projectile at any given time",
+              "Sketch position-time, velocity-time and acceleration-time graphs for free-falling objects, objects thrown vertically upwards or downwards, and bouncing objects",
+              "Determine position, displacement, velocity or acceleration at any time from given graphs, and describe the motion of an object from its graphs"
+            ]
+          },
+          {
+            "topic": "Work, Energy and Power (Mechanics)",
+            "objectives": [
+              "Define the work done on an object and calculate the net work done, drawing force and free-body diagrams",
+              "Distinguish between positive and negative net work done on a system",
+              "State and apply the work-energy theorem on horizontal, vertical and inclined planes",
+              "Define conservative and non-conservative forces with examples",
+              "State the principle of conservation of mechanical energy and solve problems using Wnc = delta Ek + delta Ep",
+              "Define power, calculate power when work is done, and use Pave = F v(ave) for constant speed on rough horizontal or inclined planes"
+            ]
+          },
+          {
+            "topic": "Doppler Effect (Waves, Sound and Light)",
+            "objectives": [
+              "State the Doppler effect and explain, with illustrations, the change in pitch observed when a source moves towards or away from a listener (sound and ultrasound)",
+              "State applications of the Doppler effect with ultrasound in medicine, e.g. measuring the rate of blood flow or the heartbeat of a foetus",
+              "Solve problems using the Doppler equation fL = (v +/- vL)/(v +/- vs) fs when either the source or the listener moves",
+              "With light, explain red shifts and use the Doppler effect to explain why we conclude that the universe is expanding"
+            ]
+          },
+          {
+            "topic": "Electric Circuits: Internal Resistance and Series-Parallel Networks (Electricity and Magnetism)",
+            "objectives": [
+              "Solve problems involving current, voltage and resistance for circuits containing resistors in series and in parallel (maximum four resistors)",
+              "Explain the term internal resistance",
+              "Solve circuit problems using emf = I R(ext) + I r, or emf = V(load) + V(internal resistance)",
+              "Solve problems with internal resistance for circuits containing series and parallel arrangements of resistors"
+            ]
+          },
+          {
+            "topic": "Electrodynamics: Electrical Machines and Alternating Current (Electricity and Magnetism)",
+            "objectives": [
+              "State the energy conversion in generators and use the principle of electromagnetic induction to explain how generators work",
+              "Give examples of the uses of AC and DC generators and the functions of their components",
+              "State the energy conversion in motors and use the motor effect to explain how motors work; give examples of uses of motors",
+              "State the advantages of alternating current over direct current",
+              "Draw and interpret sketch graphs of voltage versus time and current versus time for an AC circuit",
+              "Define rms values for alternating voltage and current, and solve problems using Irms = Imax/sqrt(2), Vrms = Vmax/sqrt(2) and the average power relationships for a purely resistive circuit"
+            ]
+          },
+          {
+            "topic": "Optical Phenomena and Properties of Materials (Matter and Materials)",
+            "objectives": [
+              "Describe the photoelectric effect and state its significance (it demonstrates the particle nature of light)",
+              "Define threshold frequency (f0) and work function (W0)",
+              "Perform calculations using the photoelectric equation E = W0 + Kmax, where E = hf and W0 = h f0 and Kmax = 1/2 m v(max)^2",
+              "Explain the effect of intensity and frequency on the photoelectric effect",
+              "Explain the formation of atomic spectra by referring to energy transitions and the difference between atomic absorption and atomic emission spectra"
+            ]
+          },
+          {
+            "topic": "Organic Chemistry: Organic Molecules (Matter and Materials)",
+            "objectives": [
+              "Define organic molecules, functional group, hydrocarbon, homologous series, saturated, unsaturated and structural isomer",
+              "Write condensed, structural and molecular formulae (maximum 8 carbon atoms, one functional group per molecule) for alkanes, alkenes, alkynes, alcohols, haloalkanes, carboxylic acids, aldehydes, ketones and esters",
+              "Write IUPAC names from structural or condensed structural formulae and vice versa, identifying alkyl substituents (methyl and ethyl, maximum three)",
+              "Identify compounds that are saturated, unsaturated or structural isomers (chain, positional and functional isomers)",
+              "Relate physical properties (boiling point, melting point, vapour pressure) to the strength of intermolecular forces, type of functional group, chain length and branching",
+              "Describe the combustion of alkanes in excess oxygen and their use as fuels",
+              "Write the equation and reaction conditions for the formation of an ester and name the reactants and products",
+              "Classify organic reactions as elimination, addition or substitution, and write equations with reaction conditions for addition reactions of alkenes, elimination reactions (dehydrohalogenation, cracking, dehydration of alcohols) and substitution reactions (hydrolysis of haloalkanes, halogenation of alkanes)"
+            ]
+          },
+          {
+            "topic": "Organic Macromolecules (Matter and Materials)",
+            "objectives": [
+              "Plastics and polymers"
+            ],
+            "gap": "Detailed CAPS content statements for this topic could not be extracted (PDF text truncation) and the topic was trimmed from the 2023/24 recovery ATP; the objective reflects the CAPS overview of topics wording ('Organic macromolecules (plastics and polymers)')."
+          },
+          {
+            "topic": "Rate and Extent of Reaction (Chemical Change)",
+            "objectives": [
+              "Define reaction rate and calculate reaction rate from given data",
+              "List the factors that affect the rate of chemical reactions",
+              "Explain in terms of the collision theory how the various factors affect the rate of chemical reactions",
+              "Answer questions and interpret data (tables or graphs) on different experimental techniques for measuring the rate of a given reaction",
+              "Define the term positive catalyst",
+              "Interpret graphs of the distribution of molecular energies to explain how a catalyst, temperature and concentration affect rate"
+            ]
+          },
+          {
+            "topic": "Chemical Equilibrium (Chemical Change)",
+            "objectives": [
+              "Explain open and closed systems, reversible reactions and dynamic equilibrium",
+              "List the factors which influence the position of an equilibrium",
+              "State Le Chatelier's principle and use it to explain changes in equilibria",
+              "Interpret simple graphs of equilibrium",
+              "List the factors which influence the value of the equilibrium constant Kc, and write an expression for Kc from a given equation",
+              "Perform calculations based on Kc values and explain the significance of high and low values of the equilibrium constant"
+            ]
+          },
+          {
+            "topic": "Acids and Bases (Chemical Change)",
+            "objectives": [
+              "Define acids and bases according to Arrhenius and Lowry-Bronsted, and identify conjugate acid-base pairs",
+              "Distinguish between strong and weak acids/bases and between concentrated and dilute acids/bases",
+              "Write neutralisation reactions of common laboratory acids and bases, perform titration calculations and motivate the choice of an indicator",
+              "Determine the approximate pH of salts in salt hydrolysis",
+              "Explain the pH scale and calculate pH values of strong acids and strong bases",
+              "Define Kw and explain the auto-ionisation of water",
+              "Compare Ka and Kb values of strong and weak acids and bases, and compare strong and weak acids by pH, conductivity and reaction rate"
+            ]
+          },
+          {
+            "topic": "Electrochemical Reactions (Chemical Change)",
+            "objectives": [
+              "Define oxidation and reduction in terms of electron transfer and oxidation numbers, and oxidising and reducing agents",
+              "Define anode, cathode and electrolyte",
+              "Define a galvanic cell, state the function of the salt bridge, and predict ion movement and the direction of electron flow in the external circuit",
+              "Write half-reactions at each electrode and the overall cell reaction, use cell notation, and calculate the emf of a galvanic cell",
+              "State standard conditions for electrode potentials, describe the standard hydrogen electrode as reference, and explain how standard electrode potentials are determined",
+              "Define an electrolytic cell, describe ion movement and electron flow, and write half-reactions and overall reactions",
+              "Describe electrolytic processes: the decomposition of copper(II) chloride, electroplating, refining of copper and the electrolysis of a concentrated sodium chloride solution"
+            ]
+          },
+          {
+            "topic": "Chemical Industry: The Fertiliser Industry (Chemical Systems)",
+            "objectives": [
+              "The chemical industry: the fertiliser industry"
+            ],
+            "gap": "Detailed CAPS content statements for this topic could not be extracted (PDF text truncation) and the topic was trimmed from the 2023/24 recovery ATP; the objective reflects the CAPS overview of topics wording ('Chemical industry (fertilizer industry), 6 hours')."
+          }
+        ]
+      }
+    },
+    "Business Studies": {
+      "grades": {
+        "11": [
+          {
+            "topic": "Influences on Business Environments",
+            "term": 1,
+            "objectives": [
+              "Examine control factors: more control over the micro environment, less control over the market environment and even less control over the macro environment",
+              "Describe the micro environment: the business mission and objectives, its management structure, its resources and its culture, primarily controlled by the enterprise's management",
+              "Describe the market environment: customers, suppliers, competitors, regulators, strategic allies and unions give rise to particular opportunities and threats over which business has no control",
+              "Describe the macro environment: the enterprise in relation to the economic, technological and political environments",
+              "Identify ways to be involved in the macro environment if beneficial to the business"
+            ]
+          },
+          {
+            "topic": "Challenges of the Business Environment",
+            "term": 1,
+            "objectives": [
+              "Identify challenges of the micro (internal) environment, e.g. difficult employees, lack of vision and mission, lack of adequate management skills, unions, strikes and go-slows",
+              "Identify challenges of the market environment, e.g. competition, shortages of supply, changes in consumer behaviour, demographics and psychographics, socio-cultural factors",
+              "Identify challenges of the macro environment, e.g. changes in income levels, political changes, contemporary legislation, labour restrictions, micro-lending, globalisation and international challenges, social values, demographics and socioeconomic issues"
+            ]
+          },
+          {
+            "topic": "Adapting to Challenges of the Business Environments",
+            "term": 1,
+            "objectives": [
+              "Explain how a business constantly needs to adapt to the challenges of the micro, market and macro business environments",
+              "Describe ways in which a business can adapt to challenges of the macro environment: information management, strategic responses, mergers, takeovers, acquisitions and alliances, organisation design and flexibility, direct influence of the environment and social responsibility",
+              "Explain lobbying, e.g. hedging against inflation, bargaining sessions between management and unions, and influencing supervisory bodies/regulators",
+              "Explain networking, e.g. finding new customers",
+              "Explain power relationships, e.g. strategic alliance agreements, persuasion of large investors and company representatives' influence"
+            ]
+          },
+          {
+            "topic": "Contemporary Socio-economic Issues",
+            "term": 1,
+            "objectives": [
+              "Assess the impact of contemporary socio-economic issues on business operations and productivity, e.g. income, inflation, social, cultural and demographic issues, economic crime, ethical misconduct, population growth, illiteracy, lack of skills, unavailability and exhaustion of natural resources, dumping, piracy and strikes",
+              "Propose possible business solutions/contributions to deal with socioeconomic issues",
+              "Explain the nature and definition of each intellectual property right: copyright, patent and trade mark",
+              "Investigate developments in industrial relations relating to contemporary business practice: labour strikes, go-slows and lockouts",
+              "Explain the nature and purpose of the Labour Relations Act",
+              "Describe trade unions: definition, history, roles and functions"
+            ]
+          },
+          {
+            "topic": "Business Sectors",
+            "term": 1,
+            "objectives": [
+              "Examine the links between primary, secondary and tertiary enterprises"
+            ],
+            "gap": "The CAPS entry for this topic is a single content statement (one hour of teaching time); no further content statements are specified in the document."
+          },
+          {
+            "topic": "Benefits of a Company versus Other Forms of Ownership",
+            "term": 1,
+            "objectives": [
+              "Recap the characteristics, advantages and disadvantages of the forms of ownership",
+              "Evaluate the benefits and challenges of establishing a company versus other forms of ownership, i.e. sole trader, partnership, close corporation and co-operatives, including taxation issues",
+              "Describe the formation of companies: the company's charter (Memorandum of Incorporation), name of the company, incorporation and commencement, and the prospectus"
+            ]
+          },
+          {
+            "topic": "Avenues of Acquiring a Business",
+            "term": 1,
+            "objectives": [
+              "Describe avenues of acquiring businesses, e.g. franchising, outsourcing and leasing",
+              "Discuss their advantages and disadvantages",
+              "Discuss their contractual implications, e.g. royalties and legalities"
+            ]
+          },
+          {
+            "topic": "Creative Thinking and Problem Solving",
+            "term": 2,
+            "objectives": [
+              "Apply creative thinking to address business problems and improve business practice",
+              "Develop problem-solving skills in a business context, distinguishing routine from creative thinking, and identify mental blocks to creativity and idea generation",
+              "Use more complex problem-solving techniques, e.g. the Delphi technique and force-field analysis",
+              "Work with others to solve problems and generate ideas",
+              "Compare conventional and non-conventional solutions, including indigenous approaches and solutions",
+              "Assess creative solutions to business problems against the reality of the business environment"
+            ]
+          },
+          {
+            "topic": "Stress, Crisis and Change Management",
+            "term": 2,
+            "objectives": [
+              "Explain concepts relating to stress and how to manage stress in pressurised work environments",
+              "Explain crisis and change management and dealing with business-related crises, e.g. tight deadlines, loss of property and illness",
+              "Describe theories of change management",
+              "Discuss dealing with and adapting to change, e.g. unemployment, retrenchment, globalisation and affirmative action"
+            ]
+          },
+          {
+            "topic": "Transformation of a Business Plan into an Action Plan and Starting a Business Venture",
+            "term": 2,
+            "objectives": [
+              "Transform a business plan into an action plan, collaboratively or independently, using planning tools such as Gantt charts or a Work Breakdown Structure (WBS) with timelines and responsibilities",
+              "Initiate and set up a business venture to generate income, based on an action plan",
+              "Acquire funding if needed: equity capital, loans/debt, and other sources of funding/capital"
+            ]
+          },
+          {
+            "topic": "Professionalism and Ethics",
+            "term": 2,
+            "objectives": [
+              "Explain the definitions of and differences between professionalism and ethics",
+              "Explore the theories and principles of professionalism and ethics and how they relate to the business environment",
+              "Distinguish between good and bad decisions",
+              "Apply the principles and skills of professional, responsible, ethical and effective business practice",
+              "Explain the concept of ethics, different perspectives on ethics, and ethical business ventures"
+            ]
+          },
+          {
+            "topic": "Presentation of Business Information",
+            "term": 2,
+            "objectives": [
+              "Present and validate business-related information accurately and concisely in verbal and non-verbal formats, including tables, graphs, diagrams, illustrations, posters and handouts",
+              "Design the layout of a presentation using different visual aids, e.g. transparencies/slides, posters and handouts",
+              "Produce written information: reports, business plans, business information and analysis, e.g. steps in report-writing and composing a flyer",
+              "Respond in a non-aggressive and professional manner to questions about work and presentations"
+            ]
+          },
+          {
+            "topic": "Entrepreneurial Qualities and Success Factors",
+            "term": 3,
+            "objectives": [
+              "Identify and assess a business against entrepreneurial qualities, e.g. risk taking, perseverance and good management",
+              "Reflect critically on a business venture and identify its success factors and areas for improvement",
+              "Explore key success factors, e.g. sustainability, profitability and customer base"
+            ]
+          },
+          {
+            "topic": "Citizenship Roles and Responsibilities",
+            "term": 3,
+            "objectives": [
+              "Describe the citizenship roles and responsibilities that business practitioners need to perform within a business environment",
+              "Explain the role of citizens and how they can, through business, contribute to the social and economic development of their communities",
+              "Explain the concept of the business community and how the individual can play a role within it, e.g. as HIV/Aids counsellor or by contributing time and effort to an identified cause",
+              "Describe the role that business, civil society, NGOs and community-based organisations (CBOs) and individual business practitioners can play in the social and economic development of communities"
+            ]
+          },
+          {
+            "topic": "Marketing Function",
+            "term": 3,
+            "objectives": [
+              "Describe marketing activities: locating the consumer, standardisation and grading, storage, transport, financing, risk-bearing, and buying and selling",
+              "Explain product policy: product development, design, packaging and trademarks",
+              "Explain distribution policy: channels of distribution, intermediaries, direct and indirect distribution",
+              "Explain communication policy: sales promotion, advertising, publicity and personal selling",
+              "Explain pricing policy: the importance of pricing, pricing techniques, price determination, factors influencing pricing and price adjustments",
+              "Compare marketing in the formal and informal sectors",
+              "Describe the use of technology for marketing, e.g. electronic marketing",
+              "Explain foreign marketing (imports and exports) and the alignment of foreign marketing with the production function (systems, planning, safety, quality and costing)"
+            ]
+          },
+          {
+            "topic": "Production Function",
+            "term": 3,
+            "objectives": [
+              "Describe production systems: mass, batch and job production",
+              "Explain production planning: planning, routing, scheduling and loading",
+              "Explain production control: dispatching, following up, inspection and corrective action",
+              "Describe safety management: factory safety, machinery, the Occupational Health and Safety Act and a workplace safety policy",
+              "Describe quality control: quality management systems (SABS), quality control bodies and policies",
+              "Perform production cost calculations: total cost of production, unit cost of production, selling price, calculation of profit and break-even analysis"
+            ]
+          },
+          {
+            "topic": "Team Dynamics and Conflict Management",
+            "term": 4,
+            "objectives": [
+              "Describe the stages of team development: forming, storming, norming and performing",
+              "Use team dynamics theories to analyse business-based case studies: Belbin role theory (action-oriented, people-oriented and cerebral roles), insights based on Jungian theory, the MTR-i approach, Margerison-McCann profiles and group consensus",
+              "Define conflict and identify causes of conflict in the business",
+              "Define conflict management and apply conflict management theories to individual and group scenarios, including workplace forums, strikes and trade unions",
+              "Apply conflict management skills to resolve differences in business situations",
+              "Explain the function of workplace forums"
+            ]
+          },
+          {
+            "topic": "Introduction to Human Resources",
+            "term": 4,
+            "objectives": [
+              "Describe human resources activities, e.g. recruitment and selection, contracts, induction, salaries and other benefits",
+              "Explain procedures related to recruitment, selection and interviewing",
+              "Discuss relevant legislation: Labour Relations Act (LRA) No. 66 of 1995, Basic Conditions of Employment Act (BCEA) No. 75 of 1997, Employment Equity Act (EEA) No. 55 of 1998 and Compensation for Occupational Injuries and Diseases Act (COIDA) No. 61 of 1997",
+              "Explain the legalities of employment contracts and the procedures of induction and placement",
+              "Explain salary determination (piecemeal and time-related), including personal tax, linked to basic conditions of employment",
+              "Describe employee benefits: pension, medical and other"
+            ]
+          }
+        ],
+        "12": [
+          {
+            "topic": "Macro Environment: Impact of Recent Legislation on Business",
+            "term": 1,
+            "objectives": [
+              "Assess the impact of recent legislation, developed in response to demands for redress and equity, on small and large business operations",
+              "Discuss the Skills Development Act No. 97 of 1998, e.g. skills levies and their implications, and the National Skills Development Strategy and Human Resources Development Strategy (Sector Education and Training Authorities)",
+              "Discuss the Labour Relations Act No. 66 of 1995, the Employment Equity Act No. 55 of 1998, the Basic Conditions of Employment Act No. 75 of 1997 and the Compensation for Occupational Injuries and Diseases Act No. 61 of 1997",
+              "Discuss Black Economic Empowerment and Broad-Based Black Economic Empowerment",
+              "Discuss human rights as defined in the Constitution (equality, respect and dignity, and other economic, social and cultural rights), inclusivity (diversity such as poverty, inequality, race, gender, language, age and disability) and environmental issues (protection of the environment and human health)",
+              "Discuss the National Credit Act No. 34 of 2005 and the Consumer Protection Act No. 68 of 2009",
+              "For each Act, focus on its nature, purpose, advantages and disadvantages, the rights of the business and consumers, and compliance and penalties"
+            ]
+          },
+          {
+            "topic": "Human Resources Function",
+            "term": 1,
+            "objectives": [
+              "Analyse human resources activities, e.g. recruitment and selection, contracts, induction, salaries and other benefits",
+              "Explain procedures related to recruitment, selection and interviewing, and the procedures of screening and placement",
+              "Recap the relevant legislation: LRA No. 66 of 1995, BCEA No. 75 of 1997, EEA No. 55 of 1998 and COIDA No. 61 of 1997",
+              "Explain the legalities of employment contracts, and interviewing, selection and induction",
+              "Explain salary determination (piecemeal and time-related), including personal tax, linked to basic conditions of employment, and employee benefits (pension, medical, other)",
+              "Explain the Skills Development Act No. 97 of 1998 and its link with SETAs, learnerships, skills programmes, qualifications, the National Qualifications Framework and SAQA"
+            ]
+          },
+          {
+            "topic": "Ethics and Professionalism",
+            "term": 1,
+            "objectives": [
+              "Explain how professional, responsible, ethical and effective business practice should be conducted in changing and challenging business environments",
+              "Explain the meaning of ethical behaviour and business practice, with practical examples of ethical and unethical practice (e.g. fair and unfair advertisements)",
+              "Give practical examples of professional and unprofessional business practices, e.g. good use of work time versus abusing work time",
+              "Explain the relationship between ethical and professional behaviour",
+              "Describe ways in which professional, responsible, ethical and effective business practice should be conducted, e.g. payment of fair wages and regular payment of tax",
+              "Reflect on issues that could challenge ethical and professional behaviour (e.g. taxation, sexual harassment, pricing of goods in rural areas, unfair advertising, unauthorised use of funds, abusing work time) and strategies to address these issues"
+            ]
+          },
+          {
+            "topic": "Creative Thinking",
+            "term": 1,
+            "objectives": [
+              "Apply creative thinking to respond to challenges in dynamic and complex business contexts",
+              "Acquire advanced problem-solving skills",
+              "Apply creative thinking to solve complex business problems in case studies and given scenarios (recap Grade 11 content)"
+            ]
+          },
+          {
+            "topic": "Macro Environment: Business Strategies",
+            "term": 1,
+            "objectives": [
+              "Devise and formulate strategies a business could use in response to challenges of the macro business environment; critically evaluate such strategies and make recommendations",
+              "Use creative thinking techniques and industry analysis tools in strategy formulation: SWOT analysis (including PESTLE) and Porter's Five Forces (exclude the Balanced Scorecard)",
+              "Describe the development of strategies: SWOT analysis of the business environments, formulation, implementation and evaluation of strategies",
+              "Describe integration strategies: forward integration, backward integration and horizontal integration",
+              "Describe intensive strategies: market penetration, market development and product development",
+              "Describe diversification strategies: concentric, horizontal and conglomerate diversification",
+              "Describe defensive strategies: retrenchment, divestiture and liquidation",
+              "Describe other strategies, e.g. repositioning by replacing individuals, revising a business mission, establishing or revising objectives, devising new policies, issuing stock to raise capital and developing new performance incentives",
+              "Explain strategic evaluation: examining the underlying bases of a business strategy, comparing expected performance (measuring business performance) and taking corrective action where necessary"
+            ]
+          },
+          {
+            "topic": "Social Responsibility and Corporate Citizenship (CSR/CSI)",
+            "term": 2,
+            "objectives": [
+              "Explain the concept of social responsibility and its implications for both business and communities",
+              "Describe meaningful contribution of time and effort to advancing the well-being of others in a business context, and ways in which a business project can contribute towards the community",
+              "Explain Corporate Social Responsibility: definition, nature and process, benefits to business and community, problems/challenges, and components (e.g. environment, ethical corporate social investment, health and safety)",
+              "Explain Corporate Social Investment: definition, nature, projects (including human rights issues) and responsible business practice",
+              "Discuss challenges to the business, including meeting the longer-term needs of society and legislative requirements, e.g. the Employment Equity Act, Skills Development Act, BEE and compliance, and the National Skills Development Strategy and Human Resources Development Strategy"
+            ]
+          },
+          {
+            "topic": "Human Rights, Inclusivity and Environmental Issues",
+            "term": 2,
+            "objectives": [
+              "Assess the extent to which a business venture addresses human rights, inclusivity and environmental issues against criteria",
+              "Explain human rights issues as defined in the Constitution of the Republic of South Africa, including issues of equality, respect and dignity and other economic, social and cultural rights",
+              "Describe diversity in the business: issues such as poverty, inequality, race, gender, language, age, disability and other factors",
+              "Discuss environmental protection and human health"
+            ]
+          },
+          {
+            "topic": "Team Performance Assessment, Conflict Management and Problem Solving",
+            "term": 2,
+            "objectives": [
+              "Collaborate with others to contribute towards the achievement of specific objectives",
+              "Apply criteria for successful team performance, including self-assessment and team performance assessment (e.g. interpersonal attitudes and behaviour, shared values, communication)",
+              "Explain how to effectively perform a specific role within a team",
+              "Manage problems that arise from working with others or in teams, including the steps in resolving conflict",
+              "Apply correct procedures to deal with grievances",
+              "Describe different ways of dealing with difficult people (personalities), examining workplace scenarios"
+            ]
+          },
+          {
+            "topic": "Business Sectors and Their Environments",
+            "term": 2,
+            "objectives": [
+              "Select a business from each economic sector and describe the three business environments related to these sectors",
+              "Assess the extent to which a business can control these environments"
+            ]
+          },
+          {
+            "topic": "Management and Leadership",
+            "term": 2,
+            "objectives": [
+              "Differentiate between management and leadership styles and approaches",
+              "Explain the difference between leadership and management",
+              "Describe leadership styles, e.g. democratic and autocratic",
+              "Describe theories of management and leadership, e.g. leaders and followers, situational leadership, transitional and transformational leadership",
+              "Explain the role of personal attitude in success and leadership"
+            ]
+          },
+          {
+            "topic": "Quality of Performance",
+            "term": 2,
+            "objectives": [
+              "Explain how the quality of performance within the business functions can influence the success or failure of a business",
+              "Define the concept of quality (recap Grade 10 content)",
+              "Explain the relation between quality and the various business functions",
+              "Assess the impact of quality on different business structures (e.g. sole traders versus large businesses), taking into account the elements of Total Quality Management (TQM): continuous skills development, total client satisfaction and continuous improvements to processes and systems"
+            ]
+          },
+          {
+            "topic": "Investment: Securities",
+            "term": 3,
+            "objectives": [
+              "Describe a range of available business investment opportunities and discuss their viability and relevance to individuals and businesses",
+              "Describe types of investments: business investments, the Johannesburg Stock/Securities Exchange, types of shares, unit trusts and government retail bonds",
+              "Explain returns, e.g. dividends and interest, and perform related calculations",
+              "Explain the difference between compound interest and simple interest"
+            ]
+          },
+          {
+            "topic": "Investment: Insurance",
+            "term": 3,
+            "objectives": [
+              "Distinguish between compulsory and non-compulsory insurance, and between assurance and insurance",
+              "Explain life insurance and retirement annuities",
+              "Explain insurance of goods (compulsory and non-compulsory)",
+              "Calculate over-insurance and under-insurance",
+              "Describe the Unemployment Insurance Fund (UIF) and the Road Accident Fund (RAF)"
+            ]
+          },
+          {
+            "topic": "Forms of Ownership",
+            "term": 3,
+            "objectives": [
+              "Determine the extent to which a particular form of ownership can contribute to the success or failure of a business",
+              "Recap the characteristics, advantages, disadvantages and comparison of forms of ownership: sole trader, partnership, close corporation, private company and public company",
+              "Focus on issues of capacity, taxation, management, capital, division of profits and legislation",
+              "Evaluate forms of ownership and their impact on the success of a business"
+            ]
+          },
+          {
+            "topic": "Presentation and Data Response",
+            "term": 3,
+            "objectives": [
+              "Present business-related information accurately and concisely in verbal and non-verbal format, including tables, graphs, diagrams and illustrations, with support materials (audio-visuals, handouts, slides, posters)",
+              "Describe the criteria for a logical and effective presentation of information, e.g. know your audience, put the most important information first, and use tables, graphs, charts, suitable titles, headings and bullets",
+              "Apply an effective process and style of presentation using visual aids",
+              "Respond in a non-aggressive and professional manner to questions about work and presentations",
+              "Handle feedback, amend plans and documents accordingly, integrate feedback into future plans and activities, and identify areas for improvement"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
 <script src="./k12plus-bridge.js"></script>
+<script src="./k12plus-syllabus.js"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#7C3AED">
 </head>
@@ -1647,7 +1648,25 @@ class Component extends DCLogic {
         const tutorGrade = (this.state.loggedIn && this.state.grade) ? ('Grade ' + this.state.grade + (this.state.classLetter ? ' ' + this.state.classLetter : '') + ' ') : '';
         const tutorWho = tutorFirst ? ('chatting with ' + tutorFirst + ', a ' + tutorGrade + 'learner in Namibia') : 'chatting with a learner in Namibia';
         reply = await window.claude.complete({
-          system: (this.state.subject ? 'Focus subject for this chat: ' + this.state.subject + '. ' : '') + 'You are the k12plus tutor ' + tutorWho + ', following the NSSCO/NSSCAS curriculum (subjects include Mathematics, Biology, Physical Science and Business Studies). Talk like a patient, warm teacher who never shames a learner for asking. Explain step by step in simple everyday language. Keep answers under 150 words. Plain text only, no markdown headings, no em dashes.',
+          system: (function (st) {
+            var subj = st.subject || 'Mathematics';
+            var country = 'Namibia';
+            var grade = '12';
+            try {
+              country = localStorage.getItem('k12plus-country') || 'Namibia';
+              grade = localStorage.getItem('k12plus-grade') || '12';
+            } catch (e) {}
+            var digest = '';
+            try {
+              var S = window.K12_SYLLABUS || {};
+              digest = ((S[country] || {})[subj] || {})[grade] || ((S['Namibia'] || {})[subj] || {})['12'] || '';
+            } catch (e) {}
+            return (st.subject ? 'Focus subject for this chat: ' + st.subject + '. ' : '') +
+              'You are the k12plus tutor ' + tutorWho + ', following the official ' +
+              (country === 'South Africa' ? 'South African CAPS (NSC)' : 'Namibian NSSCO/NSSCAS (NIED)') +
+              ' curriculum for Grade ' + grade + '. Teach strictly to syllabus depth. Talk like a patient, warm teacher who never shames a learner for asking. Explain step by step in simple everyday language. Keep answers under 150 words. Plain text only, no markdown headings, no em dashes.' +
+              (digest ? '\nOfficial syllabus reference for ' + subj + ':\n' + digest : '');
+          })(this.state),
           messages: msgs.map(m => ({ role: m.role, content: m.text })),
           image: img || undefined
         });
