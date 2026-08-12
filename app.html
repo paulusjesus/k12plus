@@ -1945,11 +1945,21 @@ class Component extends DCLogic {
     if (!asks[key]) return;
     this.setState({ planSecBusy: key, plansErr: '' });
     try {
-      const raw = await window.claude.complete({
-        system: base,
-        messages: [{ role: 'user', content: (current ? 'Current content:\n' + current + '\n\n' : '') + asks[key] }]
-      });
-      let text = this.prettifyPlanText(String(raw || '').trim());
+      let raw = '';
+      for (let attempt = 0; attempt < 2; attempt++) {
+        raw = await window.claude.complete({
+          system: base,
+          messages: [{ role: 'user', content: (current ? 'Current content:\n' + current + '\n\n' : '') + asks[key] }]
+        });
+        raw = String(raw || '').trim();
+        if (raw && !/^(sorry|i could not|you are offline)/i.test(raw)) break;
+        raw = '';
+      }
+      if (!raw) {
+        this.setState({ planSecBusy: '', plansErr: 'Could not rewrite that section right now. Please try again in a moment.' });
+        return;
+      }
+      let text = this.prettifyPlanText(raw);
       text = text.split('\n').map((l) => l.replace(/^[-*•]\s*/, '').trim()).filter(Boolean).join('\n');
       this.planPatch((pp) => {
         const lines = text.split('\n');
