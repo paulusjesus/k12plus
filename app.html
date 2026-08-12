@@ -363,6 +363,12 @@ button { font-family:'Poppins',sans-serif; }
               </div>
             </div>
           </sc-if>
+          <sc-if value="{{ chatFollowOn }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; padding:2px 0 4px;">
+              <button onClick="{{ chatGameGo }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="border-color:var(--primary); color:var(--primary);">🎮 Turn this into a game</button>
+              <button onClick="{{ chatRwGo }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="border-color:var(--primary); color:var(--primary);">🌍 See it in real life</button>
+            </div>
+          </sc-if>
         </div>
       </div>
       <div style="padding:12px 24px 20px;">
@@ -1088,6 +1094,99 @@ button { font-family:'Poppins',sans-serif; }
                 <button onClick="{{ spl.del }}" title="Delete plan" style="border:none; background:none; color:var(--muted); cursor:pointer; padding:2px; font-size:13px; line-height:1;" style-hover="color:#E0653A;">&#10005;</button>
               </div>
             </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isGames }}" hint-placeholder-val="{{ false }}">
+      <div class="k12dd" style="flex:1; overflow-y:auto; padding:4px 24px 28px;">
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:4px;">
+          <h1 style="font-size:19px; font-weight:600; margin:0;">Game Arcade</h1>
+          <span style="margin-left:auto; display:inline-flex; align-items:center; gap:7px; background:#FFF6DC; border:1px solid #F2E2AE; color:#7A5B00; border-radius:999px; padding:7px 16px; font-size:12.5px; font-weight:700;">🏆 {{ gamePointsLabel }}</span>
+          <sc-if value="{{ hasGameStreak }}" hint-placeholder-val="{{ false }}">
+            <span style="display:inline-flex; align-items:center; background:#FDE7EE; border:1px solid #F5C6D8; color:#B4256E; border-radius:999px; padding:7px 14px; font-size:12px; font-weight:700;">{{ gameStreakLabel }}</span>
+          </sc-if>
+        </div>
+        <p style="font-size:12px; color:var(--muted); margin:0 0 16px;">Every syllabus topic is a game and a real-world story. Play, earn points, and learn for real instead of memorising.</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
+          <sc-for list="{{ gamesSubjTabs }}" as="gs" hint-placeholder-count="4"><button onClick="{{ gs.pick }}" style="{{ gs.style }}">{{ gs.icon }}{{ gs.label }}</button></sc-for>
+        </div>
+        <sc-if value="{{ hasGamesErr }}" hint-placeholder-val="{{ false }}">
+          <p style="background:#FDEEE7; border:1px solid #F3CDBB; color:#B44A1F; border-radius:12px; padding:11px 15px; font-size:12.5px; line-height:1.6; margin:0 0 16px;">{{ gamesErr2 }}</p>
+        </sc-if>
+        <sc-if value="{{ gamesPicking }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ hasGameTopics }}" hint-placeholder-val="{{ true }}">
+            <div class="k12cards" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <sc-for list="{{ gameTopics }}" as="gt" hint-placeholder-count="8">
+                <div style="background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                  <span style="flex:1; min-width:140px; font-size:13px; font-weight:600; line-height:1.5;">{{ gt.name }}</span>
+                  <button onClick="{{ gt.play }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12px; font-weight:600; cursor:pointer;" style-hover="opacity:.9;">🎮 Play</button>
+                  <button onClick="{{ gt.rw }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:8px 16px; font-size:12px; font-weight:600; cursor:pointer;" style-hover="border-color:var(--primary); color:var(--primary);">🌍 Real world</button>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </sc-if>
+        <sc-if value="{{ gamesBusy }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:22px 24px; display:flex; align-items:center; gap:13px;">
+            <span style="font-size:20px;">🎮</span>
+            <span style="font-size:13px; color:var(--muted);">Building your challenge round for {{ gameTopicLabel }}…</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ rwBusy }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:22px 24px; display:flex; align-items:center; gap:13px;">
+            <span style="font-size:20px;">🌍</span>
+            <span style="font-size:13px; color:var(--muted);">Finding {{ gameTopicLabel }} out in the real world…</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ gamePlaying }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff; border:1px solid var(--line); border-left:4px solid {{ gameEdge }}; border-radius:16px; padding:22px 26px; max-width:680px;">
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+              <span style="font-size:12px; font-weight:700; color:{{ gameEdge }};">{{ gameTopicLabel }}</span>
+              <span style="margin-left:auto; font-size:11.5px; color:var(--muted); font-weight:600;">{{ gameProgress }}</span>
+            </div>
+            <p style="font-size:15px; font-weight:500; line-height:1.7; margin:0 0 14px; white-space:pre-wrap;">{{ gameQText }}</p>
+            <div style="display:flex; gap:9px; flex-wrap:wrap;">
+              <input value="{{ gameAnswer }}" onChange="{{ onGameAnswer }}" onKeyDown="{{ onGameKey }}" placeholder="Your answer…" style="flex:1; min-width:170px; border:1px solid var(--line); border-radius:999px; padding:10px 17px; font-size:13.5px; font-family:'Poppins',sans-serif; outline:none; background:var(--chip); color:var(--ink);">
+              <button onClick="{{ checkGameNow }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:10px 24px; font-size:13px; font-weight:700; cursor:pointer;" style-hover="opacity:.9;">Score! ⚽</button>
+            </div>
+            <sc-if value="{{ gameRight }}" hint-placeholder-val="{{ false }}">
+              <p style="font-size:15px; font-weight:700; color:#17915B; margin:14px 0 0;">{{ gameAwarded }}</p>
+            </sc-if>
+            <sc-if value="{{ gameWrong }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:14px;">
+                <p style="font-size:13px; font-weight:700; color:#C2470A; margin:0 0 6px;">So close! The answer was: {{ gameAnswerText }}</p>
+                <sc-if value="{{ hasGameSteps }}" hint-placeholder-val="{{ false }}">
+                  <div style="background:var(--chip); border-radius:12px; padding:12px 15px;">
+                    <span style="display:block; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin-bottom:5px;">See the working</span>
+                    <sc-for list="{{ gameSteps }}" as="gst" hint-placeholder-count="3">
+                      <p style="font-size:12.5px; line-height:1.65; margin:0 0 4px;">{{ gst.text }}</p>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:16px;">
+              <button onClick="{{ showGameHint }}" style="border:none; background:none; color:var(--primary); font-size:12.5px; font-weight:600; cursor:pointer; padding:4px 0;">Need a hint? 💡</button>
+              <span style="flex:1;"></span>
+              <sc-if value="{{ hasGameResult }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ nextGameQ }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:9px 20px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="opacity:.9;">{{ nextGameLabel }}</button>
+              </sc-if>
+              <button onClick="{{ backToTopics }}" style="border:1px solid var(--line); background:#fff; color:var(--muted); border-radius:999px; padding:9px 18px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="background:var(--chip);">Topics</button>
+            </div>
+            <sc-if value="{{ gameHintOn }}" hint-placeholder-val="{{ false }}">
+              <p style="font-size:12.5px; color:var(--muted); margin:10px 0 0;">💡 {{ gameHint }}</p>
+            </sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{ rwOn }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff; border:1px solid var(--line); border-left:4px solid {{ gameEdge }}; border-radius:16px; padding:22px 26px; max-width:680px;">
+            <p style="font-size:13px; font-weight:700; color:{{ gameEdge }}; margin:0 0 10px;">🌍 {{ gameTopicLabel }} in the real world</p>
+            <p style="font-size:14px; font-weight:500; line-height:1.75; margin:0 0 16px; white-space:pre-wrap;">{{ rwText2 }}</p>
+            <div style="display:flex; gap:9px; flex-wrap:wrap;">
+              <button onClick="{{ rwPlayGame }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:9px 20px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="opacity:.9;">🎮 Now play the game</button>
+              <button onClick="{{ backToTopics }}" style="border:1px solid var(--line); background:#fff; color:var(--muted); border-radius:999px; padding:9px 18px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="background:var(--chip);">Topics</button>
+            </div>
           </div>
         </sc-if>
       </div>
@@ -1847,6 +1946,93 @@ class Component extends DCLogic {
     };
   }
 
+  syllabusTopics(subject) {
+    const grade = String(this.state.grade || '') === '11' ? '11' : '12';
+    const info = this.plansDigest(subject, grade);
+    return (info.digest || '').split('\n')
+      .filter((l) => l.trim().indexOf('-') === 0)
+      .map((l) => {
+        let t = l.replace(/^\s*-\s*/, '').replace(/^Topic \d+:\s*/i, '');
+        return t.split(':')[0].trim();
+      })
+      .filter((t) => t && t.length < 70)
+      .slice(0, 14);
+  }
+
+  async startGame(subject, topic) {
+    if (this.state.gameBusy) return;
+    const grade = String(this.state.grade || '') === '11' ? '11' : '12';
+    const info = this.plansDigest(subject, grade);
+    this.setState({
+      view: 'games', gamesMode: 'play', gamesSubject: subject, gamesTopic: topic,
+      gameBusy: true, gamesErr: '', gameQs: [], gameIdx: 0, gameAnswer: '',
+      gameResult: null, gameHintOn: false, gameAwarded: '', rwText: ''
+    });
+    try {
+      const out = await window.k12plan({
+        action: 'generate_questions', grade: parseInt(grade, 10), syllabus: grade === '11' ? '6131' : '8227',
+        topic: subject + ' - ' + topic, count: 5, difficulty: 'mixed',
+        objectives: 'IMPORTANT: the subject is ' + subject.toUpperCase() + ' (only use mathematics where this subject needs it). ' +
+          'Frame EVERY question as a fun real-life game scenario for a teenager in Namibia or South Africa: scoring a netball or football goal, a taxi fare in N$, cornering a car safely on a gravel road, a kapana stall business, phone data bundles, a garden, farm or kitchen. ' +
+          'Start each question with one emoji and the mini scenario, then ask for ONE exact calculable answer. Use real unicode notation (x², √, ½, H₂O, →). Keep each question under 60 words. UK English, no em dashes.\n' +
+          (info.digest || '').slice(0, 1500)
+      });
+      if (out && out.questions && out.questions.length) {
+        this.setState({ gameQs: out.questions, gameBusy: false });
+      } else {
+        this.setState({ gameBusy: false, gamesErr: out && out.error === 'offline' ? 'You are offline. Games need a connection the first time you load a topic.' : 'Could not load the game right now. Try again in a moment.' });
+      }
+    } catch (e) {
+      this.setState({ gameBusy: false, gamesErr: 'Could not load the game right now. Try again in a moment.' });
+    }
+  }
+
+  checkGame() {
+    const st = this.state;
+    const q = (st.gameQs || [])[st.gameIdx || 0];
+    if (!q || st.gameResult || !(st.gameAnswer || '').trim()) return;
+    const norm = (x) => String(x).toLowerCase().replace(/\s+/g, '').replace(/,/g, '.').replace(/\*\*/g, '^');
+    const accepted = [q.answer].concat(q.acceptedForms || []).map(norm);
+    const right = accepted.indexOf(norm(st.gameAnswer)) > -1;
+    const ptsMap = { easy: 10, medium: 20, hard: 30 };
+    const gain = right ? (ptsMap[q.difficulty] || 20) : 0;
+    const total = (parseInt(localStorage.getItem('k12plus-points') || '0', 10) || 0) + gain;
+    try { localStorage.setItem('k12plus-points', String(total)); } catch (e) {}
+    if (!right) {
+      try {
+        const stuck = JSON.parse(localStorage.getItem('k12plus-stuck') || '[]');
+        stuck.push({ subject: st.gamesSubject, topic: st.gamesTopic, at: Date.now() });
+        localStorage.setItem('k12plus-stuck', JSON.stringify(stuck.slice(-100)));
+      } catch (e) {}
+    }
+    try { if (window.k12data && window.k12data.recordQuiz) window.k12data.recordQuiz(st.gamesSubject || 'Games', right ? 1 : 0, 1); } catch (e) {}
+    this.setState({
+      gameResult: right ? 'right' : 'wrong',
+      gamePoints: total,
+      gameStreak: right ? (st.gameStreak || 0) + 1 : 0,
+      gameAwarded: right ? '+' + gain + ' points! 🎉' : ''
+    });
+  }
+
+  async realWorld(subject, topic) {
+    if (this.state.rwBusy) return;
+    this.setState({ view: 'games', gamesMode: 'rw', gamesSubject: subject, gamesTopic: topic, rwBusy: true, gamesErr: '', rwText: '', gameQs: [] });
+    try {
+      const raw = await window.claude.complete({
+        system: 'You show teenagers how school topics live in the real world around them in Namibia and South Africa. Plain text, UK English, no em dashes, real unicode notation (x², √, ½, H₂O, →). Under 170 words total.',
+        messages: [{
+          role: 'user',
+          content: 'Topic: ' + topic + ' (' + subject + ', Grade 11-12). Give 3 vivid real-life mini scenarios where this topic is at work: one from engineering or nature, one from money or business (use N$), one from sport or home life. For each: start with one emoji, 2 short sentences, and one tiny worked example with real numbers. End with one sentence on why mastering this gives them power in real life.'
+        }]
+      });
+      const t = String(raw || '').trim();
+      if (t && !/^(sorry|wow, a lot)/i.test(t)) this.setState({ rwBusy: false, rwText: this.prettifyPlanText(t) });
+      else this.setState({ rwBusy: false, gamesErr: 'Could not load it right now. Try again in a moment.' });
+    } catch (e) {
+      this.setState({ rwBusy: false, gamesErr: 'Could not load it right now. Try again in a moment.' });
+    }
+  }
+
   prettifyPlanText(t) {
     if (!t) return t;
     const SUP = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', 'n': 'ⁿ', '+': '⁺', '-': '⁻' };
@@ -2465,8 +2651,8 @@ class Component extends DCLogic {
       text: m.text,
       rowStyle: 'display:flex;' + (m.role === 'user' ? 'justify-content:flex-end;' : ''),
       bubbleStyle: m.role === 'user'
-        ? 'background:var(--chip);color:var(--ink);border:1px solid var(--line);border-radius:14px 14px 4px 14px;padding:10px 14px;font-size:13px;line-height:1.6;max-width:82%;white-space:pre-wrap;'
-        : 'background:#fff;color:var(--ink);border:1px solid var(--line);border-left:3px solid ' + chatEdge + ';border-radius:4px 14px 14px 14px;padding:10px 14px;font-size:13px;line-height:1.6;max-width:82%;white-space:pre-wrap;box-shadow:0 2px 10px rgba(31,32,51,.05);'
+        ? 'background:var(--chip);color:var(--ink);border:1px solid var(--line);border-radius:14px 14px 4px 14px;padding:10px 15px;font-size:14.5px;font-weight:500;line-height:1.65;max-width:82%;white-space:pre-wrap;'
+        : 'background:#fff;color:var(--ink);border:1px solid var(--line);border-left:3px solid ' + chatEdge + ';border-radius:4px 14px 14px 14px;padding:11px 15px;font-size:14.5px;font-weight:500;line-height:1.65;max-width:82%;white-space:pre-wrap;box-shadow:0 2px 10px rgba(31,32,51,.05);'
     }));
     const THINK_PHRASES = ['Thinking 🤔', 'Brainstorming 💭', 'Working it out ✍️', 'Almost there ✨'];
     const sideIco = (paths) => h('svg', { width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round', style: { flexShrink: 0 } }, ...paths.map((d, i) => h('path', { key: i, d })));
@@ -2556,7 +2742,7 @@ class Component extends DCLogic {
       })) },
       { label: 'Syllabus', icon: fbSyllabus, pick: () => this.setState({ view: 'syllabus' }), hasSubs: false, subsOpen: false },
       { label: 'Real-Life Lab', icon: fbLab, pick: () => this.setState({ view: 'lab' }), hasSubs: false, subsOpen: false },
-      { label: 'Games', icon: fbGames, pick: () => this.setState({ view: 'chat', chatInput: 'Play a learning game with me: quiz battle on ' + (s.subject || 'my subjects') }), hasSubs: false, subsOpen: false },
+      { label: 'Games', icon: fbGames, pick: () => this.setState({ view: 'games' }), hasSubs: false, subsOpen: false },
       { label: 'Timetable', icon: fbTimetable, pick: () => this.setState({ view: 'timetable' }), hasSubs: false, subsOpen: false },
       { label: 'Calendar', icon: fbCalendar, pick: () => this.setState({ view: 'calendar' }), hasSubs: false, subsOpen: false },
     ];
@@ -2739,7 +2925,7 @@ class Component extends DCLogic {
         { icon: '\uD83D\uDCAC', bg: '#E7F6EE', text: 'Ms Amukoto replied to your question about Lesson 4', when: 'Yesterday' }
       ],
       toggleSide: () => this.setState({ sideCollapsed: !s.sideCollapsed }),
-      shellTitle: ({ dashboard: 'Dashboard', lab: 'Real-Life Lab', timetable: 'Timetable', calendar: 'Calendar', quiz: 'Assessments', syllabus: 'Syllabus', plans: 'Plan Studio' })[s.view] || (s.subject ? 'Tutor \u00b7 ' + s.subject : 'Tutor'),
+      shellTitle: ({ dashboard: 'Dashboard', lab: 'Real-Life Lab', timetable: 'Timetable', calendar: 'Calendar', quiz: 'Assessments', syllabus: 'Syllabus', plans: 'Plan Studio', games: 'Game Arcade' })[s.view] || (s.subject ? 'Tutor \u00b7 ' + s.subject : 'Tutor'),
       notChat: s.view !== 'chat',
       isOffline: !!s.offline,
       isGuest: !s.loggedIn, isAuthed: !!s.loggedIn,
@@ -2845,6 +3031,78 @@ class Component extends DCLogic {
           perfTealFill: tealLine + ' L940,230 L60,230 Z',
           perfMarkerY: (230 - v26[9] * 2).toFixed(1),
           perfMarkerColor: lines[0].color
+        };
+      })(),
+      ...(() => {
+        const SUBJ_TINTS = [
+          { name: 'Mathematics', c: '#4A56C4', bg: '#EAEDFF', bd: '#D4DAF8' },
+          { name: 'Biology', c: '#1F7A4D', bg: '#E2F6EC', bd: '#C4E8D6' },
+          { name: 'Physical Science', c: '#B07508', bg: '#FFF4D6', bd: '#F2E2AC' },
+          { name: 'Business Studies', c: '#9A12B5', bg: '#F9E9FD', bd: '#EECBF7' }
+        ];
+        const gSubj = s.gamesSubject || s.subject || 'Mathematics';
+        const gMode = s.gamesMode || 'pick';
+        const gPoints = s.gamePoints != null ? s.gamePoints : (parseInt(localStorage.getItem('k12plus-points') || '0', 10) || 0);
+        const gTopics = s.view === 'games' ? this.syllabusTopics(gSubj) : [];
+        const gq = (s.gameQs || [])[s.gameIdx || 0];
+        const gTint = SUBJ_TINTS.filter(x => x.name === gSubj)[0] || SUBJ_TINTS[0];
+        return {
+          isGames: s.view === 'games',
+          gamePointsLabel: gPoints + ' pts',
+          gameStreakLabel: (s.gameStreak || 0) > 1 ? s.gameStreak + ' in a row 🔥' : '',
+          hasGameStreak: (s.gameStreak || 0) > 1,
+          gamesSubjTabs: SUBJ_TINTS.map(x => ({
+            label: x.name,
+            icon: subGlyph(x.name, gSubj === x.name ? '#fff' : x.c),
+            style: 'display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:7px 15px;font-size:12px;font-weight:600;cursor:pointer;' +
+              (gSubj === x.name ? 'background:' + x.c + ';color:#fff;border:1px solid ' + x.c + ';' : 'background:' + x.bg + ';color:' + x.c + ';border:1px solid ' + x.bd + ';'),
+            pick: () => this.setState({ gamesSubject: x.name, gamesMode: 'pick', gameQs: [], rwText: '', gamesErr: '' })
+          })),
+          gameTopics: gTopics.map(t => ({
+            name: t,
+            play: () => this.startGame(gSubj, t),
+            rw: () => this.realWorld(gSubj, t)
+          })),
+          gamesPicking: gMode === 'pick' && !s.gameBusy && !s.rwBusy,
+          hasGameTopics: gTopics.length > 0,
+          gamesBusy: !!s.gameBusy,
+          rwBusy: !!s.rwBusy,
+          gamesErr2: s.gamesErr || '', hasGamesErr: !!s.gamesErr,
+          gamePlaying: gMode === 'play' && !!gq && !s.gameBusy,
+          gameTopicLabel: s.gamesTopic || '',
+          gameEdge: gTint.c,
+          gameProgress: gq ? 'Challenge ' + ((s.gameIdx || 0) + 1) + ' of ' + (s.gameQs || []).length : '',
+          gameQText: gq ? gq.q : '',
+          gameAnswer: s.gameAnswer || '',
+          onGameAnswer: (e) => this.setState({ gameAnswer: e.target.value }),
+          onGameKey: (e) => { if (e.key === 'Enter') { e.preventDefault(); this.checkGame(); } },
+          checkGameNow: () => this.checkGame(),
+          gameRight: s.gameResult === 'right',
+          gameWrong: s.gameResult === 'wrong',
+          hasGameResult: !!s.gameResult,
+          gameAwarded: s.gameAwarded || '',
+          gameAnswerText: gq ? String(gq.answer) : '',
+          gameSteps: ((gq && gq.steps) || []).map(x => ({ text: x })),
+          hasGameSteps: !!(gq && gq.steps && gq.steps.length) && s.gameResult === 'wrong',
+          gameHintOn: !!s.gameHintOn,
+          gameHint: (gq && gq.hint) || '',
+          showGameHint: () => this.setState({ gameHintOn: true }),
+          nextGameQ: () => {
+            const n = (s.gameIdx || 0) + 1;
+            if (n < (s.gameQs || []).length) this.setState({ gameIdx: n, gameAnswer: '', gameResult: null, gameHintOn: false, gameAwarded: '' });
+            else this.startGame(gSubj, s.gamesTopic);
+          },
+          nextGameLabel: ((s.gameIdx || 0) >= (s.gameQs || []).length - 1) ? 'New round 🎮' : 'Next challenge',
+          backToTopics: () => this.setState({ gamesMode: 'pick', gameQs: [], gameResult: null, gameAnswer: '', rwText: '', gamesErr: '' }),
+          rwOn: gMode === 'rw' && !!s.rwText && !s.rwBusy,
+          rwText2: s.rwText || '',
+          rwPlayGame: () => this.startGame(gSubj, s.gamesTopic),
+          chatFollowOn: s.view === 'chat' && !s.chatBusy && s.chatMsgs.length > 0 && s.chatMsgs[s.chatMsgs.length - 1].role === 'assistant',
+          chatGameGo: () => {
+            const lastQ = s.chatMsgs.slice().reverse().filter(m => m.role === 'user')[0];
+            this.startGame(s.subject || 'Mathematics', ((lastQ && lastQ.text) || 'what we just discussed').replace(/\[image attached\]/g, '').slice(0, 80));
+          },
+          chatRwGo: () => this.sendChat('Show me how this exact concept appears in real everyday life around me, with one small worked example 🌍')
         };
       })(),
       ...(() => {
