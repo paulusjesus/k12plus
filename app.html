@@ -1840,7 +1840,11 @@ class Component extends DCLogic {
     if (!topic) { this.setState({ plansErr: 'Type a topic, tap Give me ideas, or use Auto generate.' }); return; }
     const used = s.plansUsed || 0;
     if (used >= 10) {
-      this.setState({ plansErr: 'You have used your 10 free plans. Upgrade to Individual (N$15 / R15 per month) or ask your school about the School plan for unlimited plans.' });
+      this.setState({
+        plansErr: this.state.loggedIn
+          ? 'You have used your 10 free plans. Upgrade to Individual (N$15 / R15 per month) or ask your school about the School plan for unlimited plans.'
+          : 'You have used your 10 free plans. Create a free account, then upgrade to Individual (N$15 / R15 per month) for unlimited plans.'
+      });
       return;
     }
     const subject = s.plansSubject || 'Mathematics';
@@ -2244,7 +2248,7 @@ class Component extends DCLogic {
     const s = this.state;
     const h = React.createElement;
     const brandK12 = !s.loggedIn || !s.school;
-    const LOCKED_VIEWS = { dashboard: 'dashboard', quiz: 'assessments', syllabus: 'syllabus', timetable: 'timetable', calendar: 'calendar', plans: 'lesson plans' };
+    const LOCKED_VIEWS = { dashboard: 'dashboard', quiz: 'assessments', syllabus: 'syllabus', timetable: 'timetable', calendar: 'calendar' };
     const lockNoun = !s.loggedIn ? (LOCKED_VIEWS[s.view] || '') : '';
     const ico = (paths, filled) => h('svg', { width: 20, height: 20, viewBox: '0 0 24 24', fill: filled ? 'currentColor' : 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, ...paths.map((d, i) => h('path', { key: i, d })));
     const railBtn = (active) => 'border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0;width:76px;border-radius:12px;' + (active ? 'color:var(--blue);' : 'color:var(--muted);');
