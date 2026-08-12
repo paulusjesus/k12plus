@@ -911,6 +911,141 @@ button { font-family:'Poppins',sans-serif; }
         </div>
       </div>
     </sc-if>
+    <sc-if value="{{ isPlans }}" hint-placeholder-val="{{ false }}">
+      <div class="k12dd" style="flex:1; overflow-y:auto; padding:4px 24px 28px;">
+        <h1 style="font-size:19px; font-weight:600; margin:0 0 4px;">Lesson plan studio</h1>
+        <p style="font-size:12px; color:var(--muted); margin:0 0 16px;">{{ plansNote }}</p>
+        <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-bottom:18px;">
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px;">
+            <sc-for list="{{ plansKindTabs }}" as="pk" hint-placeholder-count="2"><button onClick="{{ pk.pick }}" style="{{ pk.style }}">{{ pk.label }}</button></sc-for>
+            <sc-if value="{{ planIsLessonKind }}" hint-placeholder-val="{{ true }}">
+              <span style="width:1px; align-self:stretch; background:var(--line); margin:2px 5px;"></span>
+              <sc-for list="{{ plansTplTabs }}" as="pt" hint-placeholder-count="3"><button onClick="{{ pt.pick }}" style="{{ pt.style }}">{{ pt.label }}</button></sc-for>
+            </sc-if>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px;">
+            <sc-for list="{{ plansSubjTabs }}" as="ps" hint-placeholder-count="4"><button onClick="{{ ps.pick }}" style="{{ ps.style }}">{{ ps.label }}</button></sc-for>
+            <span style="width:1px; align-self:stretch; background:var(--line); margin:2px 5px;"></span>
+            <sc-for list="{{ plansGradeTabs }}" as="pgr" hint-placeholder-count="2"><button onClick="{{ pgr.pick }}" style="{{ pgr.style }}">{{ pgr.label }}</button></sc-for>
+            <sc-if value="{{ planIsLessonKind }}" hint-placeholder-val="{{ true }}">
+              <span style="width:1px; align-self:stretch; background:var(--line); margin:2px 5px;"></span>
+              <sc-for list="{{ plansDurTabs }}" as="pdu" hint-placeholder-count="3"><button onClick="{{ pdu.pick }}" style="{{ pdu.style }}">{{ pdu.label }}</button></sc-for>
+            </sc-if>
+          </div>
+          <div style="display:flex; gap:9px; flex-wrap:wrap; align-items:center;">
+            <input value="{{ plansTopic }}" onChange="{{ onPlansTopic }}" onKeyDown="{{ onPlansTopicKey }}" placeholder="Type a topic, e.g. Photosynthesis, Break-even analysis, Quadratic functions…" style="flex:1; min-width:220px; border:1px solid var(--line); border-radius:999px; padding:10px 17px; font-size:13px; font-family:'Poppins',sans-serif; outline:none; background:var(--chip); color:var(--ink);">
+            <button onClick="{{ genIdeasNow }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:9px 18px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="background:var(--chip);">Give me ideas</button>
+            <button onClick="{{ genPlanAuto }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:9px 18px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="background:var(--chip);">Auto generate</button>
+            <button onClick="{{ genPlanNow }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:10px 22px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="opacity:.9;">Generate</button>
+          </div>
+          <sc-if value="{{ plansIdeasBusy }}" hint-placeholder-val="{{ false }}">
+            <p style="font-size:12px; color:var(--muted); margin:12px 0 0;">Gathering syllabus ideas for you…</p>
+          </sc-if>
+          <sc-if value="{{ plansIdeasOn }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:13px;">
+              <sc-for list="{{ plansIdeas }}" as="pi" hint-placeholder-count="8">
+                <button onClick="{{ pi.pick }}" title="{{ pi.angle }}" style="border:1px solid var(--line); background:var(--chip); color:var(--ink); border-radius:999px; padding:7px 15px; font-size:12px; font-weight:500; cursor:pointer; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" style-hover="border-color:var(--primary); color:var(--primary);">{{ pi.label }}</button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+        <sc-if value="{{ plansBusy }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:22px 24px; margin-bottom:18px; display:flex; align-items:center; gap:13px;">
+            <div style="display:flex; gap:4px;">
+              <span style="width:6px;height:6px;border-radius:50%;background:#8A8DA3;animation:k12pulse 1s infinite;"></span>
+              <span style="width:6px;height:6px;border-radius:50%;background:#8A8DA3;animation:k12pulse 1s .2s infinite;"></span>
+              <span style="width:6px;height:6px;border-radius:50%;background:#8A8DA3;animation:k12pulse 1s .4s infinite;"></span>
+            </div>
+            <span style="font-size:13px; color:var(--muted);">{{ plansBusyLabel }}</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasPlansErr }}" hint-placeholder-val="{{ false }}">
+          <p style="background:#FDEEE7; border:1px solid #F3CDBB; color:#B44A1F; border-radius:12px; padding:11px 15px; font-size:12.5px; line-height:1.6; margin:0 0 18px;">{{ plansErr }}</p>
+        </sc-if>
+        <sc-if value="{{ hasPlanDoc }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:24px 28px; margin-bottom:18px;">
+            <div style="display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap;">
+              <div style="min-width:0;">
+                <h2 style="font-size:16.5px; font-weight:700; margin:0 0 3px;">{{ planTitle }}</h2>
+                <span style="font-size:12px; color:var(--muted);">{{ planMeta }}</span>
+              </div>
+              <div style="margin-left:auto; display:flex; gap:8px; flex-wrap:wrap;">
+                <button onClick="{{ printPlanNow }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:9px 18px; font-size:12px; font-weight:600; cursor:pointer;" style-hover="opacity:.9;">Print / Save as PDF</button>
+                <button onClick="{{ wordPlanNow }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:9px 18px; font-size:12px; font-weight:600; cursor:pointer;" style-hover="background:var(--chip);">Download for Word</button>
+                <button onClick="{{ newPlanNow }}" style="border:1px solid var(--line); background:#fff; color:var(--muted); border-radius:999px; padding:9px 18px; font-size:12px; font-weight:600; cursor:pointer;" style-hover="background:var(--chip);">New</button>
+              </div>
+            </div>
+            <sc-if value="{{ planIsLesson }}" hint-placeholder-val="{{ false }}">
+              <div style="border-top:1px solid var(--line); margin-top:14px; padding-top:16px; display:grid; gap:13px;">
+                <sc-for list="{{ planBlocks }}" as="pb" hint-placeholder-count="6">
+                  <div>
+                    <span style="display:block; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin-bottom:3px;">{{ pb.label }}</span>
+                    <p style="font-size:13px; line-height:1.7; margin:0; white-space:pre-wrap;">{{ pb.text }}</p>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ hasPlanSteps }}" hint-placeholder-val="{{ false }}">
+                  <div>
+                    <span style="display:block; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin-bottom:3px;">Lesson development</span>
+                    <sc-for list="{{ planSteps }}" as="pst" hint-placeholder-count="4">
+                      <div style="display:flex; gap:10px; align-items:flex-start; padding:7px 0; border-bottom:1px dashed var(--line);">
+                        <p style="flex:1; font-size:13px; line-height:1.65; margin:0;">{{ pst.label }}</p>
+                        <span style="font-size:11px; font-weight:700; color:var(--primary); flex-shrink:0;">{{ pst.mins }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-for list="{{ planTail }}" as="pt2" hint-placeholder-count="4">
+                  <div>
+                    <span style="display:block; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin-bottom:3px;">{{ pt2.label }}</span>
+                    <p style="font-size:13px; line-height:1.7; margin:0; white-space:pre-wrap;">{{ pt2.text }}</p>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ planIsScheme }}" hint-placeholder-val="{{ false }}">
+              <div style="border-top:1px solid var(--line); margin-top:14px; padding-top:16px; overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
+                  <thead>
+                    <tr>
+                      <th style="text-align:left; padding:8px 10px; border-bottom:2px solid var(--line); font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); white-space:nowrap;">Week</th>
+                      <th style="text-align:left; padding:8px 10px; border-bottom:2px solid var(--line); font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted);">Focus</th>
+                      <th style="text-align:left; padding:8px 10px; border-bottom:2px solid var(--line); font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted);">Objectives</th>
+                      <th style="text-align:left; padding:8px 10px; border-bottom:2px solid var(--line); font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted);">Activities</th>
+                      <th style="text-align:left; padding:8px 10px; border-bottom:2px solid var(--line); font-size:11px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted);">Assessment</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <sc-for list="{{ schemeRows }}" as="sw" hint-placeholder-count="10">
+                      <tr>
+                        <td style="padding:9px 10px; border-bottom:1px solid var(--line); font-weight:700; vertical-align:top;">{{ sw.week }}</td>
+                        <td style="padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.6;">{{ sw.focus }}</td>
+                        <td style="padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.6; color:var(--muted);">{{ sw.objectives }}</td>
+                        <td style="padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.6;">{{ sw.activities }}</td>
+                        <td style="padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.6; color:var(--muted);">{{ sw.assessment }}</td>
+                      </tr>
+                    </sc-for>
+                  </tbody>
+                </table>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasSavedPlans }}" hint-placeholder-val="{{ false }}">
+          <h3 style="font-size:14px; font-weight:700; margin:0 0 10px;">Saved plans <span style="font-weight:500; color:var(--muted); font-size:12px;">(open and print offline)</span></h3>
+          <div class="k12cards" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;">
+            <sc-for list="{{ savedPlans }}" as="spl" hint-placeholder-count="3">
+              <div onClick="{{ spl.open }}" style="background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 16px; cursor:pointer; display:flex; align-items:flex-start; gap:10px;" style-hover="border-color:var(--primary);">
+                <span style="flex:1; min-width:0;">
+                  <span style="display:block; font-size:13px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ spl.title }}</span>
+                  <span style="display:block; font-size:11.5px; color:var(--muted); margin-top:2px;">{{ spl.meta }}</span>
+                </span>
+                <button onClick="{{ spl.del }}" title="Delete plan" style="border:none; background:none; color:var(--muted); cursor:pointer; padding:2px; font-size:13px; line-height:1;" style-hover="color:#E0653A;">&#10005;</button>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
   </div>
   <sc-if value="{{ tourOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed; inset:0; z-index:140; background:rgba(31,32,51,.55); backdrop-filter:blur(3px); display:flex; align-items:center; justify-content:center; padding:24px;">
@@ -1272,9 +1407,12 @@ class Component extends DCLogic {
       const guestUsed = parseInt(localStorage.getItem('k12plus-free-used') || '0', 10) || 0;
       const quizHistory = JSON.parse(localStorage.getItem('k12plus-quiz-history') || '[]');
       const tourDone = localStorage.getItem('k12plus-tour-done') === '1';
+      const savedPlans = JSON.parse(localStorage.getItem('k12plus-plans') || '[]');
+      const plansUsed = parseInt(localStorage.getItem('k12plus-plans-used') || '0', 10) || 0;
       this.setState({
         chatMsgs: Array.isArray(saved) ? saved : [], recents: Array.isArray(recents) ? recents : [],
         subject, school, avatar, userName, nameDraft: userName, role, loggedIn, guestUsed, grade, classLetter,
+        savedPlans: Array.isArray(savedPlans) ? savedPlans : [], plansUsed,
         quizHistory: Array.isArray(quizHistory) ? quizHistory : [],
         view: (loggedIn && role !== 'Learner') ? 'dashboard' : (this.state.view || 'chat'),
         tourStep: (!tourDone && loggedIn && role === 'Learner') ? 1 : 0,
@@ -1628,6 +1766,174 @@ class Component extends DCLogic {
     };
   }
 
+  plansDigest(subject, grade) {
+    var country = 'Namibia';
+    try { country = localStorage.getItem('k12plus-country') || 'Namibia'; } catch (e) {}
+    var digest = '';
+    try {
+      var S = window.K12_SYLLABUS || {};
+      digest = ((S[country] || {})[subject] || {})[grade] || ((S['Namibia'] || {})[subject] || {})[grade] || '';
+    } catch (e) {}
+    return { country: country, digest: digest };
+  }
+
+  async genPlan(autoPick) {
+    const s = this.state;
+    if (s.plansBusy) return;
+    const typed = (s.plansTopic || '').trim();
+    const topic = autoPick ? 'choose one high-value topic from the official syllabus yourself and plan it' : typed;
+    if (!topic) { this.setState({ plansErr: 'Type a topic, tap Give me ideas, or use Auto generate.' }); return; }
+    const used = s.plansUsed || 0;
+    if (used >= 10) {
+      this.setState({ plansErr: 'You have used your 10 free plans. Upgrade to Individual (N$15 / R15 per month) or ask your school about the School plan for unlimited plans.' });
+      return;
+    }
+    const subject = s.plansSubject || 'Mathematics';
+    const grade = s.plansGrade || '12';
+    const kind = s.plansKind === 'scheme' ? 'scheme_of_work' : 'lesson_plan';
+    const info = this.plansDigest(subject, grade);
+    const curName = info.country === 'South Africa' ? 'South African CAPS (NSC)' : 'Namibian NSSCO/NSSCAS (NIED)';
+    const tplNote = s.plansTemplate === 'compact'
+      ? 'Keep every field brief, one sentence each where possible, maximum 4 development steps. '
+      : (s.plansTemplate === 'detailed'
+        ? 'Be thorough: inside each development step mention the educator activity, the learner activity, and one common misconception to watch for. '
+        : 'Follow the classic Namibian lesson preparation book style: clear numbered progression from introduction to homework. ');
+    const objectives =
+      'IMPORTANT: This plan is for the subject ' + subject.toUpperCase() + ' (if this is not Mathematics, ignore every mention of Mathematics elsewhere and plan strictly for ' + subject + '). ' +
+      'Curriculum: ' + curName + ', Grade ' + grade + '. ' +
+      (kind === 'lesson_plan' ? 'Lesson length: ' + (s.plansDuration || '40') + ' minutes. ' + tplNote : 'Cover a full school term of 10 to 12 weeks, one row per week. ') +
+      'In the JSON, ALSO include these extra top-level fields: "theme" (the official syllabus theme this topic falls under) and "competencies" (3 to 5 statements each starting with an action verb, completing "Learners should be able to..."). ' +
+      'Use "learners" not "students". UK English. No em dashes anywhere.' +
+      (info.digest ? '\nOfficial syllabus reference for ' + subject + ':\n' + info.digest : '');
+    this.setState({ plansBusy: true, plansErr: '', planDoc: null, plansIdeas: [] });
+    let out = null;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        out = await window.k12plan({
+          action: 'lesson_plan', kind: kind,
+          grade: parseInt(grade, 10) || 12,
+          syllabus: grade === '11' ? '6131' : '8227',
+          topic: subject + ' - ' + topic,
+          objectives: objectives
+        });
+      } catch (e) { out = { error: 'network' }; }
+      if (out && out.plan) break;
+      if (out && out.error === 'offline') break;
+    }
+    if (out && out.plan) {
+      const doc = {
+        plan: out.plan, subject: subject, grade: grade, country: info.country,
+        kind: kind, template: s.plansTemplate || 'classic',
+        duration: (s.plansDuration || '40') + ' minutes', at: Date.now()
+      };
+      const savedPlans = [doc, ...(this.state.savedPlans || [])].slice(0, 30);
+      try {
+        localStorage.setItem('k12plus-plans', JSON.stringify(savedPlans));
+        localStorage.setItem('k12plus-plans-used', String(used + 1));
+      } catch (e) {}
+      this.setState({ planDoc: doc, savedPlans: savedPlans, plansUsed: used + 1, plansBusy: false });
+    } else {
+      this.setState({
+        plansBusy: false,
+        plansErr: (out && out.error === 'offline')
+          ? 'You are offline. Generating a new plan needs a connection, but your saved plans below still open and print.'
+          : 'The planner had trouble with that one. Please try again in a moment.'
+      });
+    }
+  }
+
+  async genIdeas() {
+    const s = this.state;
+    if (s.plansIdeasBusy) return;
+    const subject = s.plansSubject || 'Mathematics';
+    const grade = s.plansGrade || '12';
+    const info = this.plansDigest(subject, grade);
+    this.setState({ plansIdeasBusy: true, plansErr: '' });
+    try {
+      const raw = await window.claude.complete({
+        system: 'You suggest lesson topics for a Grade ' + grade + ' ' + subject + ' educator following the official ' +
+          (info.country === 'South Africa' ? 'South African CAPS' : 'Namibian NIED') + ' curriculum. ' +
+          'Return a STRICT JSON array only, no markdown fences, exactly this shape: [{"topic":"","angle":""}] with 8 items. ' +
+          '"topic" is a real syllabus topic, "angle" is one short engaging teaching angle for it. UK English, no em dashes.' +
+          (info.digest ? '\nOfficial syllabus topics:\n' + info.digest : ''),
+        messages: [{ role: 'user', content: 'Give me 8 lesson ideas now.' }]
+      });
+      const ideas = JSON.parse(String(raw).replace(/^```json?\s*/i, '').replace(/```\s*$/, '').trim());
+      this.setState({ plansIdeasBusy: false, plansIdeas: Array.isArray(ideas) ? ideas.slice(0, 8) : [] });
+    } catch (e) {
+      this.setState({ plansIdeasBusy: false, plansErr: 'Could not fetch ideas right now. Try again in a moment.' });
+    }
+  }
+
+  planFileHtml(doc) {
+    const p = doc.plan || {};
+    const esc = (t) => String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const li = (arr) => (arr || []).map(x => '<li>' + esc(x) + '</li>').join('');
+    let body = '';
+    if (doc.kind === 'scheme_of_work') {
+      body = '<h2>SCHEME OF WORK</h2>' +
+        '<table class="hdr"><tr><td><b>Teacher:</b> ______________________</td><td><b>Subject:</b> ' + esc(doc.subject) + '</td><td><b>Grade:</b> ' + esc(doc.grade) + '</td><td><b>Term:</b> ' + esc(p.term || '__________') + '</td></tr></table>' +
+        '<p style="text-align:center"><b>' + esc(p.title || '') + '</b></p>' +
+        '<table class="wk"><tr><th>Week</th><th>Focus</th><th>Objectives</th><th>Activities</th><th>Assessment</th></tr>' +
+        (p.weeks || []).map(w => '<tr><td>' + esc(w.week) + '</td><td>' + esc(w.focus) + '</td><td><ul>' + li(w.objectives) + '</ul></td><td><ul>' + li(w.activities) + '</ul></td><td>' + esc(w.assessment) + '</td></tr>').join('') +
+        '</table>';
+    } else {
+      const steps = (p.development || []).map((d, i) => '<p><b>' + (i + 3) + '.</b> ' + esc(d.step) + (d.minutes ? ' <i>(' + esc(d.minutes) + ' min)</i>' : '') + '</p>').join('');
+      body = '<h2>LESSON PLAN</h2>' +
+        '<table class="hdr"><tr><td><b>Teacher:</b> ________________</td><td><b>Subject:</b> ' + esc(doc.subject) + '</td><td><b>Grade:</b> ' + esc(doc.grade) + '</td><td><b>Date:</b> __________</td><td><b>Time:</b> ' + esc(doc.duration) + '</td></tr></table>' +
+        '<p><b>Theme:</b> ' + esc(p.theme || doc.subject) + ' &nbsp;&nbsp;&nbsp; <b>Topic:</b> ' + esc(p.title || '') + '</p>' +
+        '<p><b>Teaching aids and resources to be used:</b> ' + esc((p.materials || []).join(', ')) + '</p>' +
+        '<p><b>Learning Objective(s):</b> Learners will:</p><ul>' + li(p.objectives) + '</ul>' +
+        '<p><b>Basic Competencies:</b> Learners should be able to:</p><ul>' + li(p.competencies || p.objectives) + '</ul>' +
+        '<h3>Presentation of the lesson</h3>' +
+        '<p><b>1.</b> Monitoring of homework done: check the previous homework, readiness of books and pens, and attendance.</p>' +
+        '<p><b>2.</b> An appropriate short introduction: ' + esc(p.introduction || '') + '</p>' +
+        steps +
+        '<p><b>Classwork / guided practice:</b> ' + esc(p.practice || '') + '</p>' +
+        '<p><b>Assessment:</b> ' + esc(p.assessment || '') + '</p>' +
+        '<p><b>Homework:</b> ' + esc(p.homework || '') + '</p>' +
+        (p.differentiation ? '<p><b>Differentiation:</b> Support: ' + esc(p.differentiation.support) + ' &nbsp;|&nbsp; Extension: ' + esc(p.differentiation.extension) + '</p>' : '') +
+        '<p><b>Reflection / self-evaluation:</b> ________________________________________________________________</p>';
+    }
+    return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + esc(p.title || 'K12Plus plan') + '</title><style>' +
+      'body{font-family:Calibri,Arial,sans-serif;font-size:12pt;color:#111;margin:2cm;line-height:1.55}' +
+      'h2{text-align:center;letter-spacing:1.5px;margin:0 0 10pt}h3{margin:14pt 0 6pt}' +
+      'table{width:100%;border-collapse:collapse;margin:8pt 0}td,th{padding:4pt 6pt;vertical-align:top;text-align:left}' +
+      '.hdr td{border:none;padding:2pt 10pt 2pt 0;white-space:nowrap}' +
+      '.wk td,.wk th{border:1px solid #444;font-size:10.5pt}.wk th{background:#f0f0f0}' +
+      'ul{margin:2pt 0 8pt 18pt;padding:0}p{margin:5pt 0}' +
+      'footer{margin-top:16pt;font-size:9pt;color:#666;text-align:center}' +
+      '</style></head><body>' + body +
+      '<footer>Generated with K12Plus (k12plus.app), aligned to the official ' + (doc.country === 'South Africa' ? 'CAPS (DBE)' : 'NIED') + ' curriculum</footer></body></html>';
+  }
+
+  printPlan() {
+    const doc = this.state.planDoc;
+    if (!doc) return;
+    const f = document.createElement('iframe');
+    f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;';
+    document.body.appendChild(f);
+    f.contentDocument.open();
+    f.contentDocument.write(this.planFileHtml(doc));
+    f.contentDocument.close();
+    setTimeout(() => {
+      try { f.contentWindow.focus(); f.contentWindow.print(); } catch (e) {}
+      setTimeout(() => { try { f.remove(); } catch (e) {} }, 4000);
+    }, 300);
+  }
+
+  wordPlan() {
+    const doc = this.state.planDoc;
+    if (!doc) return;
+    const blob = new Blob(['﻿' + this.planFileHtml(doc)], { type: 'application/msword' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (((doc.plan && doc.plan.title) || 'k12plus-plan').replace(/[^\w\- ]/g, '').trim().replace(/\s+/g, '-').toLowerCase() || 'k12plus-plan') + '.doc';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { try { URL.revokeObjectURL(a.href); a.remove(); } catch (e) {} }, 800);
+  }
+
   async sendChat(overrideText) {
     let q = ((typeof overrideText === 'string' ? overrideText : this.state.chatInput) || '').trim();
     const img = this.state.pendingImage || null;
@@ -1875,7 +2181,7 @@ class Component extends DCLogic {
     const s = this.state;
     const h = React.createElement;
     const brandK12 = !s.loggedIn || !s.school;
-    const LOCKED_VIEWS = { dashboard: 'dashboard', quiz: 'assessments', syllabus: 'syllabus', timetable: 'timetable', calendar: 'calendar' };
+    const LOCKED_VIEWS = { dashboard: 'dashboard', quiz: 'assessments', syllabus: 'syllabus', timetable: 'timetable', calendar: 'calendar', plans: 'lesson plans' };
     const lockNoun = !s.loggedIn ? (LOCKED_VIEWS[s.view] || '') : '';
     const ico = (paths, filled) => h('svg', { width: 20, height: 20, viewBox: '0 0 24 24', fill: filled ? 'currentColor' : 'none', stroke: 'currentColor', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' }, ...paths.map((d, i) => h('path', { key: i, d })));
     const railBtn = (active) => 'border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0;width:76px;border-radius:12px;' + (active ? 'color:var(--blue);' : 'color:var(--muted);');
@@ -2019,10 +2325,10 @@ class Component extends DCLogic {
       const teachChev = (open) => h('svg', { width: 12, height: 12, viewBox: '0 0 24 24', fill: 'none', stroke: 'var(--muted)', strokeWidth: 2.4, strokeLinecap: 'round', strokeLinejoin: 'round', style: { transform: open ? 'rotate(180deg)' : 'none', transition: 'transform .15s' } }, h('path', { d: 'M6 9l6 6 6-6' }));
       sideItems.splice(0, sideItems.length,
         sideItems[0], // My dashboard
-        { label: 'Lesson plans', icon: fbPlans, pick: () => this.setState({ lessonOpen: !s.lessonOpen }), hasSubs: true, chev: teachChev(!!s.lessonOpen), subsOpen: !!s.lessonOpen, subs: [
-          teachSub('Draft a lesson plan', ['M12 20h9', 'M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z'], 'Draft a 40-minute Grade 12 Mathematics lesson plan on quadratic functions, aligned to the NSSCO syllabus'),
-          teachSub('This week\u2019s plans', ['M4 5h16v16H4z', 'M4 9h16M9 3v4M15 3v4'], 'Show me my lesson plans for this week and what still needs preparing'),
-          teachSub('Scheme of work', ['M4 19.5A2.5 2.5 0 016.5 17H20V2H6.5A2.5 2.5 0 004 4.5z'], 'Help me update my Term 3 scheme of work for Grade 12 Mathematics')
+        { label: 'Lesson plans', icon: fbPlans, pick: () => this.setState({ lessonOpen: !s.lessonOpen, view: 'plans' }), hasSubs: true, chev: teachChev(!!s.lessonOpen), subsOpen: !!s.lessonOpen, subs: [
+          { label: 'New lesson plan', icon: line(['M12 20h9', 'M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z']), style: 'display:flex;align-items:center;gap:9px;border:none;border-radius:9px;padding:6px 8px 6px 12px;font-size:12.5px;font-weight:500;cursor:pointer;text-align:left;background:none;color:#3A3D52;', pick: () => this.setState({ view: 'plans', plansKind: 'lesson', planDoc: null }), hasChats: false, chatsOpen: false },
+          { label: 'Scheme of work', icon: line(['M4 19.5A2.5 2.5 0 016.5 17H20V2H6.5A2.5 2.5 0 004 4.5z']), style: 'display:flex;align-items:center;gap:9px;border:none;border-radius:9px;padding:6px 8px 6px 12px;font-size:12.5px;font-weight:500;cursor:pointer;text-align:left;background:none;color:#3A3D52;', pick: () => this.setState({ view: 'plans', plansKind: 'scheme', planDoc: null }), hasChats: false, chatsOpen: false },
+          { label: 'Saved plans', icon: line(['M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z']), style: 'display:flex;align-items:center;gap:9px;border:none;border-radius:9px;padding:6px 8px 6px 12px;font-size:12.5px;font-weight:500;cursor:pointer;text-align:left;background:none;color:#3A3D52;', pick: () => this.setState({ view: 'plans', planDoc: null }), hasChats: false, chatsOpen: false }
         ] },
         { label: 'My classes', icon: fbSubjects, pick: () => this.setState({ view: 'chat', chatInput: 'Give me an overview of Grade 12 C: attendance, progress and who needs attention' }), hasSubs: false, subsOpen: false },
         { label: 'Marking', icon: fbAssess, pick: () => this.setState({ markOpen: !s.markOpen }), hasSubs: true, chev: teachChev(!!s.markOpen), subsOpen: !!s.markOpen, subs: [
@@ -2185,7 +2491,7 @@ class Component extends DCLogic {
         { icon: '\uD83D\uDCAC', bg: '#E7F6EE', text: 'Ms Amukoto replied to your question about Lesson 4', when: 'Yesterday' }
       ],
       toggleSide: () => this.setState({ sideCollapsed: !s.sideCollapsed }),
-      shellTitle: ({ dashboard: 'Dashboard', lab: 'Real-Life Lab', timetable: 'Timetable', calendar: 'Calendar', quiz: 'Assessments', syllabus: 'Syllabus' })[s.view] || (s.subject ? 'Tutor \u00b7 ' + s.subject : 'Tutor'),
+      shellTitle: ({ dashboard: 'Dashboard', lab: 'Real-Life Lab', timetable: 'Timetable', calendar: 'Calendar', quiz: 'Assessments', syllabus: 'Syllabus', plans: 'Plan Studio' })[s.view] || (s.subject ? 'Tutor \u00b7 ' + s.subject : 'Tutor'),
       notChat: s.view !== 'chat',
       isOffline: !!s.offline,
       isGuest: !s.loggedIn, isAuthed: !!s.loggedIn,
@@ -2290,6 +2596,80 @@ class Component extends DCLogic {
           perfTealFill: tealLine + ' L940,230 L60,230 Z',
           perfMarkerY: (230 - v26[9] * 2).toFixed(1),
           perfMarkerColor: lines[0].color
+        };
+      })(),
+      ...(() => {
+        const pchip = (on) => 'border-radius:999px;padding:7px 15px;font-size:12px;font-weight:600;cursor:pointer;' + (on ? 'background:var(--primary);color:#fff;border:1px solid var(--primary);' : 'background:#fff;color:var(--ink);border:1px solid var(--line);');
+        const kind = s.plansKind || 'lesson';
+        const tpl = s.plansTemplate || 'classic';
+        const psubj = s.plansSubject || 'Mathematics';
+        const pg = s.plansGrade || (s.grade === '11' ? '11' : '12');
+        const dur = s.plansDuration || '40';
+        const pd = s.planDoc;
+        const plan = (pd && pd.plan) || {};
+        const used = s.plansUsed || 0;
+        const isScheme = !!pd && pd.kind === 'scheme_of_work';
+        const planBlocks = [];
+        if (pd && !isScheme) {
+          planBlocks.push({ label: 'Theme', text: plan.theme || pd.subject });
+          planBlocks.push({ label: 'Teaching aids and resources to be used', text: (plan.materials || []).join(', ') });
+          planBlocks.push({ label: 'Learning objectives - learners will', text: (plan.objectives || []).join('\n') });
+          planBlocks.push({ label: 'Basic competencies - learners should be able to', text: (plan.competencies || plan.objectives || []).join('\n') });
+          planBlocks.push({ label: '1. Monitoring of homework done', text: 'Check the previous homework, readiness of books and pens, and attendance.' });
+          planBlocks.push({ label: '2. An appropriate short introduction', text: plan.introduction || '' });
+        }
+        const planSteps = (pd && !isScheme) ? (plan.development || []).map((d, i) => ({ label: (i + 3) + '. ' + (d.step || ''), mins: d.minutes ? d.minutes + ' min' : '' })) : [];
+        const planTail = [];
+        if (pd && !isScheme) {
+          planTail.push({ label: 'Classwork and guided practice', text: plan.practice || '' });
+          planTail.push({ label: 'Assessment', text: plan.assessment || '' });
+          planTail.push({ label: 'Homework', text: plan.homework || '' });
+          if (plan.differentiation) planTail.push({ label: 'Differentiation', text: 'Support: ' + (plan.differentiation.support || '') + '\nExtension: ' + (plan.differentiation.extension || '') });
+        }
+        return {
+          isPlans: !lockNoun && s.view === 'plans',
+          plansKindTabs: [{ id: 'lesson', label: 'Lesson plan' }, { id: 'scheme', label: 'Scheme of work' }].map(k => ({ label: k.label, style: pchip(kind === k.id), pick: () => this.setState({ plansKind: k.id, plansErr: '' }) })),
+          plansTplTabs: [{ id: 'classic', label: 'NIED classic' }, { id: 'detailed', label: 'Detailed' }, { id: 'compact', label: 'Compact' }].map(t => ({ label: t.label, style: pchip(tpl === t.id), pick: () => this.setState({ plansTemplate: t.id }) })),
+          plansSubjTabs: ['Mathematics', 'Biology', 'Physical Science', 'Business Studies'].map(x => ({ label: x, style: pchip(psubj === x), pick: () => this.setState({ plansSubject: x, plansIdeas: [] }) })),
+          plansGradeTabs: ['11', '12'].map(g => ({ label: 'Grade ' + g, style: pchip(pg === g), pick: () => this.setState({ plansGrade: g, plansIdeas: [] }) })),
+          plansDurTabs: ['40', '60', '80'].map(d => ({ label: d + ' min', style: pchip(dur === d), pick: () => this.setState({ plansDuration: d }) })),
+          planIsLessonKind: kind === 'lesson',
+          plansTopic: s.plansTopic || '',
+          onPlansTopic: (e) => this.setState({ plansTopic: e.target.value }),
+          onPlansTopicKey: (e) => { if (e.key === 'Enter') { e.preventDefault(); this.genPlan(false); } },
+          genPlanNow: () => this.genPlan(false),
+          genPlanAuto: () => this.genPlan(true),
+          genIdeasNow: () => this.genIdeas(),
+          plansBusy: !!s.plansBusy,
+          plansBusyLabel: kind === 'scheme' ? 'Building your term scheme of work, week by week…' : 'Writing your ' + dur + '-minute lesson plan…',
+          plansIdeasBusy: !!s.plansIdeasBusy,
+          plansErr: s.plansErr || '', hasPlansErr: !!s.plansErr,
+          plansIdeasOn: (s.plansIdeas || []).length > 0,
+          plansIdeas: (s.plansIdeas || []).map(i => ({ label: i.topic || '', angle: i.angle || '', pick: () => this.setState({ plansTopic: i.topic || '', plansIdeas: [] }) })),
+          plansNote: 'Aligned to the official ' + (this.plansDigest(psubj, pg).country === 'South Africa' ? 'CAPS (DBE)' : 'NIED') + ' curriculum · generate, print or download for Word · ' + Math.max(0, 10 - used) + ' of 10 free plans left',
+          hasPlanDoc: !!pd,
+          planTitle: plan.title || (isScheme ? 'Scheme of work' : 'Lesson plan'),
+          planMeta: pd ? (pd.subject + ' · Grade ' + pd.grade + ' · ' + (isScheme ? (plan.term || 'Term plan') : pd.duration) + ' · ' + (pd.country === 'South Africa' ? 'CAPS' : 'NIED') + ' aligned') : '',
+          planIsScheme: isScheme,
+          planIsLesson: !!pd && !isScheme,
+          planBlocks, planSteps, planTail,
+          hasPlanSteps: planSteps.length > 0,
+          schemeRows: isScheme ? (plan.weeks || []).map(w => ({ week: String(w.week || ''), focus: w.focus || '', objectives: (w.objectives || []).join('; '), activities: (w.activities || []).join('; '), assessment: w.assessment || '' })) : [],
+          printPlanNow: () => this.printPlan(),
+          wordPlanNow: () => this.wordPlan(),
+          newPlanNow: () => this.setState({ planDoc: null, plansTopic: '', plansErr: '', plansIdeas: [] }),
+          hasSavedPlans: (s.savedPlans || []).length > 0,
+          savedPlans: (s.savedPlans || []).map((sp, i) => ({
+            title: (sp.plan && sp.plan.title) || 'Plan',
+            meta: sp.subject + ' · Grade ' + sp.grade + ' · ' + (sp.kind === 'scheme_of_work' ? 'Scheme of work' : 'Lesson plan'),
+            open: () => this.setState({ planDoc: sp, view: 'plans', plansKind: sp.kind === 'scheme_of_work' ? 'scheme' : 'lesson', plansSubject: sp.subject, plansGrade: sp.grade }),
+            del: (e) => {
+              e.stopPropagation();
+              const rest = (this.state.savedPlans || []).filter((x, xi) => xi !== i);
+              try { localStorage.setItem('k12plus-plans', JSON.stringify(rest)); } catch (e2) {}
+              this.setState({ savedPlans: rest, planDoc: this.state.planDoc === sp ? null : this.state.planDoc });
+            }
+          }))
         };
       })(),
       railItems, navItems, utilItems, topLearners,

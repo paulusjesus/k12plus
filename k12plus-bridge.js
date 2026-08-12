@@ -237,6 +237,24 @@
     },
   };
 
+  // ---- Lesson planner (Cloud Run lesson_plan action, 4096-token budget) ----
+  window.k12plan = async function (payload) {
+    if (!navigator.onLine) return { error: 'offline' };
+    try {
+      var res = await fetch(PROXY, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      var data = null;
+      try { data = await res.json(); } catch (e) {}
+      if (!res.ok) return { error: (data && data.error) || ('server ' + res.status) };
+      return data || { error: 'empty reply' };
+    } catch (e) {
+      return { error: 'network' };
+    }
+  };
+
   // ---- PWA ----
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
