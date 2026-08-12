@@ -989,8 +989,8 @@ button { font-family:'Poppins',sans-serif; }
           <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:24px 28px; margin-bottom:18px;">
             <div style="display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap;">
               <div style="min-width:0;">
-                <h2 style="font-size:16.5px; font-weight:700; margin:0 0 3px;">{{ planTitle }}</h2>
-                <span style="font-size:12px; color:var(--muted);">{{ planMeta }}</span>
+                <h2 contenteditable="true" onBlur="{{ planTitleEdit }}" title="Click to edit the title" style="font-size:16.5px; font-weight:700; margin:0 0 3px; outline:none; border-radius:8px; cursor:text;">{{ planTitle }}</h2>
+                <span style="font-size:12px; color:var(--muted);">{{ planMeta }} · click any text to edit it before printing</span>
               </div>
               <div style="margin-left:auto; display:flex; gap:8px; flex-wrap:wrap;">
                 <button onClick="{{ printPlanNow }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:9px 18px; font-size:12px; font-weight:600; cursor:pointer;" style-hover="opacity:.9;">Print / Save as PDF</button>
@@ -1002,16 +1002,30 @@ button { font-family:'Poppins',sans-serif; }
               <div style="border-top:1px solid var(--line); margin-top:14px; padding-top:16px; display:grid; gap:13px;">
                 <sc-for list="{{ planBlocks }}" as="pb" hint-placeholder-count="6">
                   <div>
-                    <span style="display:block; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin-bottom:3px;">{{ pb.label }}</span>
-                    <p style="font-size:13px; line-height:1.7; margin:0; white-space:pre-wrap;">{{ pb.text }}</p>
+                    <div style="display:flex; align-items:center; gap:7px; margin-bottom:3px;">
+                      <span style="font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--muted);">{{ pb.label }}</span>
+                      <span style="flex:1;"></span>
+                      <sc-if value="{{ pb.busy }}" hint-placeholder-val="{{ false }}"><span style="font-size:10.5px; font-weight:600; color:var(--primary); animation:k12pulse 1s infinite;">Rewriting…</span></sc-if>
+                      <button onClick="{{ pb.regenGo }}" title="Let AI rewrite this section" style="border:1px solid var(--line); background:#fff; color:var(--muted); border-radius:999px; width:24px; height:24px; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; flex-shrink:0;" style-hover="color:var(--primary); border-color:var(--primary);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"></path></svg></button>
+                      <sc-if value="{{ pb.canAdd }}" hint-placeholder-val="{{ false }}">
+                        <button onClick="{{ pb.addGo }}" title="Let AI add ideas to this section" style="border:1px solid var(--line); background:#fff; color:var(--muted); border-radius:999px; width:24px; height:24px; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; flex-shrink:0;" style-hover="color:var(--primary); border-color:var(--primary);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></button>
+                      </sc-if>
+                    </div>
+                    <p contenteditable="true" onBlur="{{ pb.onEdit }}" title="Click to edit" style="font-size:13px; line-height:1.7; margin:0 0 0 -6px; white-space:pre-wrap; outline:none; border-radius:8px; padding:2px 6px; cursor:text;" style-hover="background:var(--chip);">{{ pb.text }}</p>
                   </div>
                 </sc-for>
                 <sc-if value="{{ hasPlanSteps }}" hint-placeholder-val="{{ false }}">
                   <div>
-                    <span style="display:block; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin-bottom:3px;">Lesson development</span>
+                    <div style="display:flex; align-items:center; gap:7px; margin-bottom:3px;">
+                      <span style="font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--muted);">Lesson development</span>
+                      <span style="flex:1;"></span>
+                      <sc-if value="{{ stepsBusy }}" hint-placeholder-val="{{ false }}"><span style="font-size:10.5px; font-weight:600; color:var(--primary); animation:k12pulse 1s infinite;">Rewriting…</span></sc-if>
+                      <button onClick="{{ regenSteps }}" title="Let AI rewrite all the steps" style="border:1px solid var(--line); background:#fff; color:var(--muted); border-radius:999px; width:24px; height:24px; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; flex-shrink:0;" style-hover="color:var(--primary); border-color:var(--primary);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"></path></svg></button>
+                      <button onClick="{{ addStep }}" title="Let AI add a step" style="border:1px solid var(--line); background:#fff; color:var(--muted); border-radius:999px; width:24px; height:24px; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; flex-shrink:0;" style-hover="color:var(--primary); border-color:var(--primary);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></button>
+                    </div>
                     <sc-for list="{{ planSteps }}" as="pst" hint-placeholder-count="4">
                       <div style="display:flex; gap:10px; align-items:flex-start; padding:7px 0; border-bottom:1px dashed var(--line);">
-                        <p style="flex:1; font-size:13px; line-height:1.65; margin:0;">{{ pst.label }}</p>
+                        <p contenteditable="true" onBlur="{{ pst.onEdit }}" title="Click to edit" style="flex:1; font-size:13px; line-height:1.65; margin:0 0 0 -6px; outline:none; border-radius:8px; padding:2px 6px; cursor:text; white-space:pre-wrap;" style-hover="background:var(--chip);">{{ pst.label }}</p>
                         <span style="font-size:11px; font-weight:700; color:var(--primary); flex-shrink:0;">{{ pst.mins }}</span>
                       </div>
                     </sc-for>
@@ -1019,8 +1033,16 @@ button { font-family:'Poppins',sans-serif; }
                 </sc-if>
                 <sc-for list="{{ planTail }}" as="pt2" hint-placeholder-count="4">
                   <div>
-                    <span style="display:block; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); margin-bottom:3px;">{{ pt2.label }}</span>
-                    <p style="font-size:13px; line-height:1.7; margin:0; white-space:pre-wrap;">{{ pt2.text }}</p>
+                    <div style="display:flex; align-items:center; gap:7px; margin-bottom:3px;">
+                      <span style="font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--muted);">{{ pt2.label }}</span>
+                      <span style="flex:1;"></span>
+                      <sc-if value="{{ pt2.busy }}" hint-placeholder-val="{{ false }}"><span style="font-size:10.5px; font-weight:600; color:var(--primary); animation:k12pulse 1s infinite;">Rewriting…</span></sc-if>
+                      <button onClick="{{ pt2.regenGo }}" title="Let AI rewrite this section" style="border:1px solid var(--line); background:#fff; color:var(--muted); border-radius:999px; width:24px; height:24px; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; flex-shrink:0;" style-hover="color:var(--primary); border-color:var(--primary);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"></path></svg></button>
+                      <sc-if value="{{ pt2.canAdd }}" hint-placeholder-val="{{ false }}">
+                        <button onClick="{{ pt2.addGo }}" title="Let AI add ideas to this section" style="border:1px solid var(--line); background:#fff; color:var(--muted); border-radius:999px; width:24px; height:24px; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; flex-shrink:0;" style-hover="color:var(--primary); border-color:var(--primary);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></button>
+                      </sc-if>
+                    </div>
+                    <p contenteditable="true" onBlur="{{ pt2.onEdit }}" title="Click to edit" style="font-size:13px; line-height:1.7; margin:0 0 0 -6px; white-space:pre-wrap; outline:none; border-radius:8px; padding:2px 6px; cursor:text;" style-hover="background:var(--chip);">{{ pt2.text }}</p>
                   </div>
                 </sc-for>
               </div>
@@ -1041,10 +1063,10 @@ button { font-family:'Poppins',sans-serif; }
                     <sc-for list="{{ schemeRows }}" as="sw" hint-placeholder-count="10">
                       <tr>
                         <td style="padding:9px 10px; border-bottom:1px solid var(--line); font-weight:700; vertical-align:top;">{{ sw.week }}</td>
-                        <td style="padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.6;">{{ sw.focus }}</td>
-                        <td style="padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.6; color:var(--muted);">{{ sw.objectives }}</td>
-                        <td style="padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.6;">{{ sw.activities }}</td>
-                        <td style="padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.6; color:var(--muted);">{{ sw.assessment }}</td>
+                        <td contenteditable="true" onBlur="{{ sw.editFocus }}" title="Click to edit" style="padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.6; outline:none; cursor:text;" style-hover="background:var(--chip);">{{ sw.focus }}</td>
+                        <td contenteditable="true" onBlur="{{ sw.editObjectives }}" title="Click to edit" style="padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.6; color:var(--muted); outline:none; cursor:text;" style-hover="background:var(--chip);">{{ sw.objectives }}</td>
+                        <td contenteditable="true" onBlur="{{ sw.editActivities }}" title="Click to edit" style="padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.6; outline:none; cursor:text;" style-hover="background:var(--chip);">{{ sw.activities }}</td>
+                        <td contenteditable="true" onBlur="{{ sw.editAssessment }}" title="Click to edit" style="padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; line-height:1.6; color:var(--muted); outline:none; cursor:text;" style-hover="background:var(--chip);">{{ sw.assessment }}</td>
                       </tr>
                     </sc-for>
                   </tbody>
@@ -1822,6 +1844,141 @@ class Component extends DCLogic {
     };
   }
 
+  prettifyPlanText(t) {
+    if (!t) return t;
+    const SUP = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', 'n': 'ⁿ', '+': '⁺', '-': '⁻' };
+    const SUB = { '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄', '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉' };
+    const ELEMENTS = { H: 1, He: 1, Li: 1, Be: 1, B: 1, C: 1, N: 1, O: 1, F: 1, Ne: 1, Na: 1, Mg: 1, Al: 1, Si: 1, P: 1, S: 1, Cl: 1, Ar: 1, K: 1, Ca: 1, Fe: 1, Cu: 1, Zn: 1, Br: 1, Ag: 1, I: 1, Ba: 1, Au: 1, Hg: 1, Pb: 1, Mn: 1, Ni: 1, Sn: 1 };
+    let str = String(t);
+    str = str.replace(/\^\{?([0-9n+\-])\}?/g, (m, c) => SUP[c] || m);
+    str = str.replace(/_\{?([0-9])\}?/g, (m, c) => SUB[c] || m);
+    str = str.replace(/<->|<=>/g, '⇌').replace(/([^-<])->/g, '$1→');
+    str = str.replace(/\bsqrt\(/gi, '√(');
+    // chemical formulas: subscript digits inside real element tokens (H2O, CO2, C6H12O6)
+    str = str.replace(/\b((?:[A-Z][a-z]?\d*){1,8})\b/g, (tok) => {
+      if (!/\d/.test(tok)) return tok;
+      let valid = true, m2, re = /([A-Z][a-z]?)(\d*)/g, count = 0;
+      while ((m2 = re.exec(tok))) { count++; if (!ELEMENTS[m2[1]]) { valid = false; break; } }
+      if (!valid || count === 0) return tok;
+      return tok.replace(/\d/g, (d) => SUB[d]);
+    });
+    return str;
+  }
+
+  prettifyPlan(o) {
+    if (typeof o === 'string') return this.prettifyPlanText(o);
+    if (Array.isArray(o)) return o.map((x) => this.prettifyPlan(x));
+    if (o && typeof o === 'object') { const r = {}; for (const k in o) r[k] = this.prettifyPlan(o[k]); return r; }
+    return o;
+  }
+
+  planPatch(fn) {
+    const doc = this.state.planDoc;
+    if (!doc || !doc.plan) return;
+    fn(doc.plan);
+    const savedPlans = (this.state.savedPlans || []).map((sp) => (sp.at === doc.at ? doc : sp));
+    try { localStorage.setItem('k12plus-plans', JSON.stringify(savedPlans)); } catch (e) {}
+    this.setState({ planDoc: Object.assign({}, doc), savedPlans });
+  }
+
+  editPlanField(key, raw) {
+    const text = String(raw || '').trim();
+    this.planPatch((p) => {
+      if (key === 'title') p.title = text || p.title;
+      else if (key === 'theme') p.theme = text;
+      else if (key === 'materials') p.materials = text.split(/\n|,\s*/).map((x) => x.trim()).filter(Boolean);
+      else if (key === 'objectives') p.objectives = text.split('\n').map((x) => x.trim()).filter(Boolean);
+      else if (key === 'competencies') p.competencies = text.split('\n').map((x) => x.trim()).filter(Boolean);
+      else if (key === 'differentiation') {
+        const ls = text.split('\n');
+        p.differentiation = {
+          support: (ls[0] || '').replace(/^Support:\s*/i, '').trim(),
+          extension: (ls[1] || '').replace(/^Extension:\s*/i, '').trim()
+        };
+      } else if (key.indexOf('step-') === 0) {
+        const i = parseInt(key.slice(5), 10);
+        if (p.development && p.development[i]) p.development[i].step = text.replace(/^\d+\.\s*/, '');
+      } else {
+        p[key] = text;
+      }
+    });
+  }
+
+  editSchemeCell(i, field, raw) {
+    const text = String(raw || '').trim();
+    this.planPatch((p) => {
+      const w = (p.weeks || [])[i];
+      if (!w) return;
+      if (field === 'focus' || field === 'assessment') w[field] = text;
+      else w[field] = text.split(/;\s*|\n/).map((x) => x.trim()).filter(Boolean);
+    });
+  }
+
+  async regenSection(key, add) {
+    const doc = this.state.planDoc;
+    if (!doc || !doc.plan || this.state.planSecBusy) return;
+    const p = doc.plan;
+    const curName = doc.country === 'South Africa' ? 'South African CAPS (NSC)' : 'Namibian NSSCO/NSSCAS (NIED)';
+    const base = 'You improve one section of a Grade ' + doc.grade + ' ' + doc.subject + ' lesson plan on "' + (p.title || '') + '" (' + curName + ' curriculum, under-resourced classroom: chalkboard, shared textbooks). ' +
+      'Write every formula with real unicode notation (d²y/dx², x², √x, ½, H₂O, CO₂, →, ⇌, θ, π), never ^ or _ or LaTeX. ' +
+      'Use "learners" not "students". UK English. No em dashes. Plain text only, no markdown bullets, no preamble, no explanations.';
+    const current = {
+      theme: p.theme, materials: (p.materials || []).join(', '), objectives: (p.objectives || []).join('\n'),
+      competencies: (p.competencies || []).join('\n'), homeworkCheck: p.homeworkCheck, introduction: p.introduction,
+      development: (p.development || []).map((d, i) => (i + 1) + '. ' + d.step + ' (' + (d.minutes || 0) + ' min)').join('\n'),
+      practice: p.practice, assessment: p.assessment, homework: p.homework,
+      differentiation: 'Support: ' + ((p.differentiation && p.differentiation.support) || '') + '\nExtension: ' + ((p.differentiation && p.differentiation.extension) || '')
+    }[key] || '';
+    const asks = {
+      theme: 'Reply with only the official syllabus theme this topic belongs to, one line.',
+      materials: add ? 'Suggest 3 additional low-cost teaching aids, one per line.' : 'List 5 practical teaching aids for this lesson, one per line.',
+      objectives: add ? 'Write 2 additional learning objectives for this lesson, one per line.' : 'Write 3 learning objectives, one per line, completing "Learners will...".',
+      competencies: add ? 'Write 2 additional basic competencies, one per line, each starting with an action verb.' : 'Write 4 basic competencies, one per line, each starting with an action verb, completing "Learners should be able to...".',
+      homeworkCheck: 'Write one or two sentences for "Monitoring of homework done" at the start of this lesson.',
+      introduction: add ? 'Write one additional engaging hook sentence to extend this introduction.' : 'Write a short engaging introduction, 2 to 3 sentences, using a real everyday Namibian or South African example.',
+      development: add ? 'Write ONE additional teaching step for this lesson. Reply exactly in this format: minutes|step text' : 'Rewrite the lesson development as 4 or 5 concrete steps with worked examples where fitting. One step per line, each exactly in this format: minutes|step text',
+      practice: add ? 'Add one extra classwork question or activity, 1 to 2 sentences, with an actual example.' : 'Rewrite the classwork and guided practice, 2 to 3 sentences including an actual example question with real notation.',
+      assessment: 'Rewrite the assessment, 1 to 2 sentences, specific and checkable.',
+      homework: add ? 'Add one more homework task, one sentence, with an actual question or exercise.' : 'Rewrite the homework, 1 to 2 sentences, with actual questions.',
+      differentiation: 'Reply with exactly two lines: "Support: ..." for learners who struggle and "Extension: ..." for fast finishers.'
+    };
+    if (!asks[key]) return;
+    this.setState({ planSecBusy: key, plansErr: '' });
+    try {
+      const raw = await window.claude.complete({
+        system: base,
+        messages: [{ role: 'user', content: (current ? 'Current content:\n' + current + '\n\n' : '') + asks[key] }]
+      });
+      let text = this.prettifyPlanText(String(raw || '').trim());
+      text = text.split('\n').map((l) => l.replace(/^[-*•]\s*/, '').trim()).filter(Boolean).join('\n');
+      this.planPatch((pp) => {
+        const lines = text.split('\n');
+        if (key === 'development') {
+          const items = lines.map((l) => {
+            const m = l.match(/^(\d+)\s*\|\s*(.+)$/);
+            return m ? { step: m[2].trim(), minutes: parseInt(m[1], 10) || 0 } : { step: l.replace(/^\d+\.\s*/, ''), minutes: 0 };
+          });
+          pp.development = add ? (pp.development || []).concat(items) : items;
+        } else if (key === 'materials') pp.materials = add ? (pp.materials || []).concat(lines) : lines;
+        else if (key === 'objectives') pp.objectives = add ? (pp.objectives || []).concat(lines) : lines;
+        else if (key === 'competencies') pp.competencies = add ? (pp.competencies || []).concat(lines) : lines;
+        else if (key === 'differentiation') {
+          pp.differentiation = {
+            support: (lines[0] || '').replace(/^Support:\s*/i, '').trim(),
+            extension: (lines[1] || '').replace(/^Extension:\s*/i, '').trim()
+          };
+        } else if (add && (key === 'introduction' || key === 'practice' || key === 'homework')) {
+          pp[key] = ((pp[key] || '') + ' ' + text).trim();
+        } else {
+          pp[key] = text;
+        }
+      });
+      this.setState({ planSecBusy: '' });
+    } catch (e) {
+      this.setState({ planSecBusy: '', plansErr: 'Could not rewrite that section right now. Please try again.' });
+    }
+  }
+
   plansDigest(subject, grade) {
     var country = 'Namibia';
     try { country = localStorage.getItem('k12plus-country') || 'Namibia'; } catch (e) {}
@@ -1863,7 +2020,8 @@ class Component extends DCLogic {
       'Curriculum: ' + curName + ', Grade ' + grade + '. ' +
       (kind === 'lesson_plan' ? 'Lesson length: ' + (s.plansDuration || '40') + ' minutes. ' + tplNote : 'Cover exactly 10 weeks, one row per week. KEEP IT CONCISE so the JSON stays short: focus max 8 words, exactly 2 short objectives and 2 short activities per week, assessment max 6 words. ') +
       'In the JSON, ALSO include these extra top-level fields: "theme" (the official syllabus theme this topic falls under) and "competencies" (3 to 5 statements each starting with an action verb, completing "Learners should be able to..."). ' +
-      'Use "learners" not "students". UK English. No em dashes anywhere.' +
+      'Use "learners" not "students". UK English. No em dashes anywhere. ' +
+      'Write every formula and scientific expression with REAL unicode notation, for example d²y/dx², x², √x, ½, H₂O, CO₂, 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂, ⇌, θ, π, Ω. Never write ^ or _ or LaTeX or plain ASCII like d^2y/dx^2. Include at least one worked example with real notation in the development steps.' +
       (info.digest ? '\nOfficial syllabus reference for ' + subject + ':\n' + info.digest : '');
     this.setState({ plansBusy: true, plansErr: '', planDoc: null, plansIdeas: [] });
     let out = null;
@@ -1882,7 +2040,7 @@ class Component extends DCLogic {
     }
     if (out && out.plan) {
       const doc = {
-        plan: out.plan, subject: subject, grade: grade, country: info.country,
+        plan: this.prettifyPlan(out.plan), subject: subject, grade: grade, country: info.country,
         kind: kind, template: s.plansTemplate || 'classic',
         duration: (s.plansDuration || '40') + ' minutes', at: Date.now()
       };
@@ -1954,7 +2112,7 @@ class Component extends DCLogic {
         '<p><b>Learning Objective(s):</b> Learners will:</p><ul>' + li(p.objectives) + '</ul>' +
         '<p><b>Basic Competencies:</b> Learners should be able to:</p><ul>' + li(p.competencies || p.objectives) + '</ul>' +
         '<h3>Presentation of the lesson</h3>' +
-        '<p><b>1.</b> Monitoring of homework done: check the previous homework, readiness of books and pens, and attendance.</p>' +
+        '<p><b>1.</b> Monitoring of homework done: ' + esc(p.homeworkCheck || 'check the previous homework, readiness of books and pens, and attendance.') + '</p>' +
         '<p><b>2.</b> An appropriate short introduction: ' + esc(p.introduction || '') + '</p>' +
         steps +
         '<p><b>Classwork / guided practice:</b> ' + esc(p.practice || '') + '</p>' +
@@ -2681,22 +2839,34 @@ class Component extends DCLogic {
         const plan = (pd && pd.plan) || {};
         const used = s.plansUsed || 0;
         const isScheme = !!pd && pd.kind === 'scheme_of_work';
+        const busyKey = s.planSecBusy || '';
+        const sec = (key, label, text, canAdd) => ({
+          key: key, label: label, text: text, canAdd: !!canAdd,
+          busy: busyKey === key,
+          regenGo: () => this.regenSection(key, false),
+          addGo: () => this.regenSection(key, true),
+          onEdit: (e) => this.editPlanField(key, e.target.innerText)
+        });
         const planBlocks = [];
         if (pd && !isScheme) {
-          planBlocks.push({ label: 'Theme', text: plan.theme || pd.subject });
-          planBlocks.push({ label: 'Teaching aids and resources to be used', text: (plan.materials || []).join(', ') });
-          planBlocks.push({ label: 'Learning objectives - learners will', text: (plan.objectives || []).join('\n') });
-          planBlocks.push({ label: 'Basic competencies - learners should be able to', text: (plan.competencies || plan.objectives || []).join('\n') });
-          planBlocks.push({ label: '1. Monitoring of homework done', text: 'Check the previous homework, readiness of books and pens, and attendance.' });
-          planBlocks.push({ label: '2. An appropriate short introduction', text: plan.introduction || '' });
+          planBlocks.push(sec('theme', 'Theme', plan.theme || pd.subject, false));
+          planBlocks.push(sec('materials', 'Teaching aids and resources to be used', (plan.materials || []).join(', '), true));
+          planBlocks.push(sec('objectives', 'Learning objectives - learners will', (plan.objectives || []).join('\n'), true));
+          planBlocks.push(sec('competencies', 'Basic competencies - learners should be able to', (plan.competencies || plan.objectives || []).join('\n'), true));
+          planBlocks.push(sec('homeworkCheck', '1. Monitoring of homework done', plan.homeworkCheck || 'Check the previous homework, readiness of books and pens, and attendance.', false));
+          planBlocks.push(sec('introduction', '2. An appropriate short introduction', plan.introduction || '', true));
         }
-        const planSteps = (pd && !isScheme) ? (plan.development || []).map((d, i) => ({ label: (i + 3) + '. ' + (d.step || ''), mins: d.minutes ? d.minutes + ' min' : '' })) : [];
+        const planSteps = (pd && !isScheme) ? (plan.development || []).map((d, i) => ({
+          label: (i + 3) + '. ' + (d.step || ''),
+          mins: d.minutes ? d.minutes + ' min' : '',
+          onEdit: (e) => this.editPlanField('step-' + i, e.target.innerText)
+        })) : [];
         const planTail = [];
         if (pd && !isScheme) {
-          planTail.push({ label: 'Classwork and guided practice', text: plan.practice || '' });
-          planTail.push({ label: 'Assessment', text: plan.assessment || '' });
-          planTail.push({ label: 'Homework', text: plan.homework || '' });
-          if (plan.differentiation) planTail.push({ label: 'Differentiation', text: 'Support: ' + (plan.differentiation.support || '') + '\nExtension: ' + (plan.differentiation.extension || '') });
+          planTail.push(sec('practice', 'Classwork and guided practice', plan.practice || '', true));
+          planTail.push(sec('assessment', 'Assessment', plan.assessment || '', false));
+          planTail.push(sec('homework', 'Homework', plan.homework || '', true));
+          planTail.push(sec('differentiation', 'Differentiation', 'Support: ' + ((plan.differentiation && plan.differentiation.support) || '') + '\nExtension: ' + ((plan.differentiation && plan.differentiation.extension) || ''), false));
         }
         return {
           isPlans: !lockNoun && s.view === 'plans',
@@ -2726,7 +2896,18 @@ class Component extends DCLogic {
           planIsLesson: !!pd && !isScheme,
           planBlocks, planSteps, planTail,
           hasPlanSteps: planSteps.length > 0,
-          schemeRows: isScheme ? (plan.weeks || []).map(w => ({ week: String(w.week || ''), focus: w.focus || '', objectives: (w.objectives || []).join('; '), activities: (w.activities || []).join('; '), assessment: w.assessment || '' })) : [],
+          stepsBusy: busyKey === 'development',
+          regenSteps: () => this.regenSection('development', false),
+          addStep: () => this.regenSection('development', true),
+          planTitleEdit: (e) => this.editPlanField('title', e.target.innerText),
+          schemeRows: isScheme ? (plan.weeks || []).map((w, wi) => ({
+            week: String(w.week || ''), focus: w.focus || '',
+            objectives: (w.objectives || []).join('; '), activities: (w.activities || []).join('; '), assessment: w.assessment || '',
+            editFocus: (e) => this.editSchemeCell(wi, 'focus', e.target.innerText),
+            editObjectives: (e) => this.editSchemeCell(wi, 'objectives', e.target.innerText),
+            editActivities: (e) => this.editSchemeCell(wi, 'activities', e.target.innerText),
+            editAssessment: (e) => this.editSchemeCell(wi, 'assessment', e.target.innerText)
+          })) : [],
           printPlanNow: () => this.printPlan(),
           wordPlanNow: () => this.wordPlan(),
           newPlanNow: () => this.setState({ planDoc: null, plansTopic: '', plansErr: '', plansIdeas: [] }),
