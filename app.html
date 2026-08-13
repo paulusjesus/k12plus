@@ -1180,7 +1180,8 @@ button { font-family:'Poppins',sans-serif; }
               <span style="font-size:12px; font-weight:700; color:{{ gameEdge }};">{{ gameTopicLabel }}</span>
               <span style="margin-left:auto; font-size:11.5px; color:var(--muted); font-weight:600;">{{ gameProgress }}</span>
             </div>
-            <p style="font-size:15px; font-weight:500; line-height:1.7; margin:0 0 14px; white-space:pre-wrap;">{{ gameQText }}</p>
+            <p style="font-size:15px; font-weight:500; line-height:1.7; margin:0 0 8px; white-space:pre-wrap;">{{ gameQText }}</p>
+            <p style="font-size:11.5px; font-weight:700; color:#B4256E; margin:0 0 12px;">{{ gameStakes }}</p>
             <div style="display:flex; gap:9px; flex-wrap:wrap;">
               <input value="{{ gameAnswer }}" onChange="{{ onGameAnswer }}" onKeyDown="{{ onGameKey }}" placeholder="Your answer…" style="flex:1; min-width:170px; border:1px solid var(--line); border-radius:999px; padding:10px 17px; font-size:13.5px; font-family:'Poppins',sans-serif; outline:none; background:var(--chip); color:var(--ink);">
               <button onClick="{{ checkGameNow }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:10px 24px; font-size:13px; font-weight:700; cursor:pointer;" style-hover="opacity:.9;">Score! ⚽</button>
@@ -1995,7 +1996,10 @@ class Component extends DCLogic {
       if (!c || !c.isConnected) { this._sceneRAF = null; return; }
       try {
         if (window.K12_SCENES) {
-          window.K12_SCENES.draw(c, this.state.gamesTopic || '', this.state.gamesSubject || this.state.subject || 'Mathematics', performance.now() / 1000);
+          const st = this.state;
+          const mode = st.gameResult === 'right' ? 'win' : (st.gameResult === 'wrong' ? 'lose' : 'idle');
+          const mt = st.gameOutcomeAt ? (performance.now() - st.gameOutcomeAt) / 1000 : 0;
+          window.K12_SCENES.draw(c, st.gamesTopic || '', st.gamesSubject || st.subject || 'Mathematics', performance.now() / 1000, mode, mt);
         }
       } catch (e) {}
       this._sceneRAF = requestAnimationFrame(loop);
@@ -2069,7 +2073,7 @@ class Component extends DCLogic {
         view: 'games', gamesMode: 'play', gamesSubject: subject, gamesTopic: packTopic.name,
         gameBusy: false, gamesErr: '', gameQs: this.packToQuestions(packTopic), gameIdx: 0,
         gameAnswer: '', gameResult: null, gameHintOn: false, gameAwarded: '', rwText: '',
-        gameFact: packTopic.fact || ''
+        gameFact: packTopic.fact || '', gameOutcomeAt: 0
       });
       return;
     }
@@ -2146,7 +2150,8 @@ class Component extends DCLogic {
       gameResult: right ? 'right' : 'wrong',
       gamePoints: total,
       gameStreak: right ? (st.gameStreak || 0) + 1 : 0,
-      gameAwarded: right ? '+' + gain + ' points! 🎉' : ''
+      gameAwarded: right ? '+' + gain + ' points! 🎉' : '',
+      gameOutcomeAt: performance.now()
     });
   }
 
@@ -3255,11 +3260,17 @@ class Component extends DCLogic {
           showGameHint: () => this.setState({ gameHintOn: true }),
           nextGameQ: () => {
             const n = (s.gameIdx || 0) + 1;
-            if (n < (s.gameQs || []).length) this.setState({ gameIdx: n, gameAnswer: '', gameResult: null, gameHintOn: false, gameAwarded: '' });
+            if (n < (s.gameQs || []).length) this.setState({ gameIdx: n, gameAnswer: '', gameResult: null, gameHintOn: false, gameAwarded: '', gameOutcomeAt: 0 });
             else this.startGame(gSubj, s.gamesTopic);
           },
+          gameStakes: (() => {
+            if (!gq) return '';
+            const pts = ({ easy: 10, medium: 20, hard: 30 })[gq.difficulty] || 20;
+            const streakBit = (s.gameStreak || 0) >= 2 ? ' · keep the ' + s.gameStreak + '-streak alive 🔥' : '';
+            return '🏆 ' + pts + ' points on the line' + streakBit;
+          })(),
           nextGameLabel: ((s.gameIdx || 0) >= (s.gameQs || []).length - 1) ? 'New round 🎮' : 'Next challenge',
-          backToTopics: () => this.setState({ gamesMode: 'pick', gameQs: [], gameResult: null, gameAnswer: '', rwText: '', gamesErr: '' }),
+          backToTopics: () => this.setState({ gamesMode: 'pick', gameQs: [], gameResult: null, gameAnswer: '', rwText: '', gamesErr: '', gameOutcomeAt: 0 }),
           rwOn: gMode === 'rw' && !!s.rwText && !s.rwBusy,
           rwText2: s.rwText || '',
           rwPlayGame: () => this.startGame(gSubj, s.gamesTopic),

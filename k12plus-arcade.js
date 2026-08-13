@@ -14,8 +14,8 @@ window.K12_ARCADE = {
       fact: 'Every satellite dish and car headlight is a parabola: the shape of y = x² reflects all signals to one focus point.',
       real: '⚙️ Bridge engineers shape arches as parabolas because y = ax² spreads weight evenly. The arch y = 16 − x² stands 16 m tall and 8 m wide at the base.\n💰 A kapana seller\'s profit P = −q² + 20q − 64 rises, peaks, then falls: sell too little or too much and you lose. The peak at q = 10 plates is the sweet spot.\n⚽ A striker\'s shot follows h = −x² + 6x. The keeper knows the ball peaks at x = 3 m, so she positions for the drop.\nMaster parabolas and you can find the best point of almost anything.',
       game: [
-        { e: '⚽', q: 'A striker\'s shot follows h = −x² + 6x metres. At what distance x (in metres) does the ball reach its highest point before dropping into the net?', a: '3', f: ['3', '3m', 'x=3'], h: 'The turning point is at x = −b ÷ 2a.', s: ['a = −1, b = 6', 'x = −6 ÷ (2 × −1) = 3'], d: 'easy' },
-        { e: '🚗', q: 'A rally car must pass under an arch shaped y = 16 − x². How wide is the arch at ground level (y = 0), in metres?', a: '8', f: ['8', '8m'], h: 'Solve 16 − x² = 0, then find the distance between the two roots.', s: ['x² = 16 so x = 4 or x = −4', 'Width = 4 − (−4) = 8 m'], d: 'medium' },
+        { e: '⚽', q: 'Final seconds of the match, the crowd is on its feet! Your shot flies along h = −x² + 6x metres. At what distance x does the ball peak before dropping into the net?', a: '3', f: ['3', '3m', 'x=3'], h: 'The turning point is at x = −b ÷ 2a.', s: ['a = −1, b = 6', 'x = −6 ÷ (2 × −1) = 3'], d: 'easy' },
+        { e: '🚗', q: 'Rally stage! A stone arch shaped y = 16 − x² looms ahead and one wrong call ends the race. How wide is the gap at ground level (y = 0), in metres?', a: '8', f: ['8', '8m'], h: 'Solve 16 − x² = 0, then find the distance between the two roots.', s: ['x² = 16 so x = 4 or x = −4', 'Width = 4 − (−4) = 8 m'], d: 'medium' },
         { e: '💰', q: 'A kapana stall\'s profit is P = −q² + 20q − 64 (N$) for q plates sold. What is the SMALLER number of plates where profit is exactly zero (break-even)?', a: '4', f: ['4', 'q=4', '4plates'], h: 'Set P = 0 and factorise q² − 20q + 64 = 0.', s: ['q² − 20q + 64 = 0', '(q − 4)(q − 16) = 0, so q = 4 or 16'], d: 'medium' },
         { e: '🎯', q: 'For the shot x² − 6x + k = 0 to touch the goal line exactly once (equal roots), what must k be?', a: '9', f: ['9', 'k=9'], h: 'Equal roots means the discriminant b² − 4ac = 0.', s: ['36 − 4k = 0', 'k = 9'], d: 'hard' }
       ]
@@ -29,7 +29,7 @@ window.K12_ARCADE = {
         { e: '📱', q: 'Your data bundle halves each day: 64 MB, 32, 16, … How many MB are left on day 6?', a: '2', f: ['2', '2mb'], h: 'Keep dividing by 2: it is a geometric sequence with r = ½.', s: ['64, 32, 16, 8, 4, 2', 'Day 6 = 2 MB'], d: 'easy' },
         { e: '🌱', q: 'A mahangu plant is 5 cm tall in week 1 and grows 3 cm every week. How tall (cm) is it in week 10?', a: '32', f: ['32', '32cm'], h: 'Arithmetic: Tₙ = a + (n − 1)d.', s: ['T₁₀ = 5 + 9 × 3', '= 5 + 27 = 32 cm'], d: 'medium' },
         { e: '🏟️', q: 'A stadium\'s first row has 20 seats and every row adds 4 more. How many seats are in row 12?', a: '64', f: ['64', '64seats'], h: 'Tₙ = a + (n − 1)d with a = 20, d = 4.', s: ['T₁₂ = 20 + 11 × 4', '= 20 + 44 = 64'], d: 'medium' },
-        { e: '💰', q: 'Your kapana profit doubles every day starting at N$50: 50, 100, 200, … What is your TOTAL profit after 5 days (N$)?', a: '1550', f: ['1550', 'n$1550', '1550n$'], h: 'Add the geometric series 50 + 100 + 200 + 400 + 800.', s: ['Sum = 50(2⁵ − 1)/(2 − 1)', '= 50 × 31 = N$1550'], d: 'hard' }
+        { e: '💰', q: 'Word about your kapana is spreading FAST: profit doubles every day from N$50: 50, 100, 200, … Count your little empire\'s TOTAL after 5 days (N$).', a: '1550', f: ['1550', 'n$1550', '1550n$'], h: 'Add the geometric series 50 + 100 + 200 + 400 + 800.', s: ['Sum = 50(2⁵ − 1)/(2 − 1)', '= 50 × 31 = N$1550'], d: 'hard' }
       ]
     },
     {
@@ -41,7 +41,7 @@ window.K12_ARCADE = {
         { e: '💰', q: 'You invest N$1000 at 8% simple interest per year. How much INTEREST (N$) do you earn after 3 years?', a: '240', f: ['240', 'n$240', '240n$'], h: 'Simple interest = P × i × n.', s: ['I = 1000 × 0.08 × 3', '= N$240'], d: 'easy' },
         { e: '📱', q: 'A phone costs N$4800 and the shop wants a 25% deposit. How much is the deposit (N$)?', a: '1200', f: ['1200', 'n$1200'], h: '25% is a quarter.', s: ['4800 × 0.25 = 1200'], d: 'easy' },
         { e: '🏦', q: 'N$2000 is saved at 10% COMPOUND interest per year. What is the total amount (N$) after 2 years?', a: '2420', f: ['2420', 'n$2420'], h: 'A = P(1 + i)ⁿ.', s: ['A = 2000 × 1.1²', '= 2000 × 1.21 = N$2420'], d: 'medium' },
-        { e: '🚗', q: 'A bakkie worth N$60 000 depreciates at 20% per year on reducing balance. What is it worth (N$) after 2 years?', a: '38400', f: ['38400', 'n$38400', '38400n$'], h: 'Multiply by 0.8 each year.', s: ['60000 × 0.8 = 48000', '48000 × 0.8 = N$38 400'], d: 'hard' }
+        { e: '🚗', q: 'The dealer is smiling a bit too much. That N$60 000 bakkie loses 20% a year on reducing balance. Outsmart him: what is it really worth (N$) after 2 years?', a: '38400', f: ['38400', 'n$38400', '38400n$'], h: 'Multiply by 0.8 each year.', s: ['60000 × 0.8 = 48000', '48000 × 0.8 = N$38 400'], d: 'hard' }
       ]
     },
     {
@@ -162,7 +162,7 @@ window.K12_ARCADE = {
       fact: 'A falling raindrop would hit you at 340 km/h without air resistance: friction with air is the umbrella you never see.',
       real: '🚗 Speed cameras use v = distance ÷ time over marked road sections: the same formula in your exam catches real speeders.\n⚽ A penalty kick is F = ma live: the harder the boot force on the 0.4 kg ball, the greater its acceleration off the spot.\n🛑 Braking distance grows with the SQUARE of speed: at double the speed a taxi needs four times the road to stop. That is why speed limits exist.\nMotion maths is the physics of staying alive on the road.',
       game: [
-        { e: '🚗', q: 'A taxi covers 60 km in half an hour on the B1. What is its average speed in km/h?', a: '120', f: ['120', '120km/h', '120kmh'], h: 'Speed = distance ÷ time.', s: ['60 ÷ 0.5', '= 120 km/h'], d: 'easy' },
+        { e: '🚗', q: 'Race against the sunset! Your taxi must make town before dark and just covered 60 km in half an hour flat on the B1. What is its average speed in km/h?', a: '120', f: ['120', '120km/h', '120kmh'], h: 'Speed = distance ÷ time.', s: ['60 ÷ 0.5', '= 120 km/h'], d: 'easy' },
         { e: '⚽', q: 'Your boot gives a 0.4 kg football an acceleration of 25 m/s². What force (N) did you kick with? (F = ma)', a: '10', f: ['10', '10n'], h: 'Multiply mass by acceleration.', s: ['F = 0.4 × 25', '= 10 N'], d: 'medium' },
         { e: '🛞', q: 'A car travelling at 20 m/s brakes and stops in 4 s. What is the size of its deceleration (m/s²)?', a: '5', f: ['5', '5m/s²', '5m/s2', '-5'], h: 'a = change in speed ÷ time.', s: ['20 ÷ 4', '= 5 m/s²'], d: 'medium' },
         { e: '🚚', q: 'A 1500 kg bakkie travels at 20 m/s. Calculate its momentum (kg·m/s).', a: '30000', f: ['30000', '30000kgm/s', '30000kg·m/s'], h: 'Momentum = mass × velocity.', s: ['p = 1500 × 20', '= 30 000 kg·m/s'], d: 'hard' }
@@ -174,7 +174,7 @@ window.K12_ARCADE = {
       fact: 'Lightning is a current of about 30 000 amps, two million times more than the 0.015 A that can already stop a human heart.',
       real: '💡 Prepaid electricity is P = VI in action: a 2000 W kettle eats your units ten times faster than a 200 W TV.\n🔋 A solar home system is sized with V = IR: get the resistance wrong and your battery drains before the evening study session ends.\n⚡ Fuses melt on purpose: they are thin wires that sacrifice themselves when current climbs too high, saving the house.\nUnderstand circuits and you can wire a solar panel, save units and stay safe.',
       game: [
-        { e: '🔌', q: 'A 12 V battery pushes 2 A through a resistor. What is the resistance in ohms? (V = IR)', a: '6', f: ['6', '6ω', '6ohm', '6ohms'], h: 'R = V ÷ I.', s: ['R = 12 ÷ 2', '= 6 Ω'], d: 'easy' },
+        { e: '🔌', q: 'Blackout in the village, but your 12 V solar battery still pushes 2 A through the radio. Quick, before the news starts: what is the resistance in ohms? (V = IR)', a: '6', f: ['6', '6ω', '6ohm', '6ohms'], h: 'R = V ÷ I.', s: ['R = 12 ÷ 2', '= 6 Ω'], d: 'easy' },
         { e: '💡', q: 'A bulb runs on 220 V drawing 0.5 A. What is its power in watts? (P = VI)', a: '110', f: ['110', '110w'], h: 'Multiply voltage by current.', s: ['P = 220 × 0.5', '= 110 W'], d: 'medium' },
         { e: '🔋', q: 'In a SERIES circuit with three bulbs, how does the current at each bulb compare? (One word.)', a: 'same', f: ['same', 'thesame', 'equal', 'identical'], h: 'There is only one path for the charge.', s: ['Series = one loop', 'Current is the same everywhere'], d: 'medium' },
         { e: '⚡', q: 'A 2000 W kettle runs for 3 minutes. How much energy does it use in kilojoules? (E = Pt)', a: '360', f: ['360', '360kj'], h: 'Convert minutes to seconds first.', s: ['E = 2000 × 180 = 360 000 J', '= 360 kJ'], d: 'hard' }
@@ -189,7 +189,7 @@ window.K12_ARCADE = {
         { e: '📻', q: 'Sound travels at 340 m/s. A note has frequency 170 Hz. What is its wavelength in metres? (v = fλ)', a: '2', f: ['2', '2m'], h: 'λ = v ÷ f.', s: ['340 ÷ 170', '= 2 m'], d: 'easy' },
         { e: '🪞', q: 'A light ray hits a mirror at 30° to the normal. At what angle (degrees) does it reflect?', a: '30', f: ['30', '30°', '30degrees'], h: 'Angle of incidence = angle of reflection.', s: ['Law of reflection: i = r = 30°'], d: 'easy' },
         { e: '🌈', q: 'A straw in a glass of water looks bent because light changes speed and direction entering water. Name this effect.', a: 'refraction', f: ['refraction'], h: 'Not reflection: the light passes THROUGH.', s: ['Light bends at the boundary', 'That is refraction'], d: 'medium' },
-        { e: '⛈️', q: 'Thunder arrives 3 s after the lightning flash. Sound travels at 340 m/s. How far away (m) is the storm?', a: '1020', f: ['1020', '1020m', '1.02km'], h: 'Distance = speed × time.', s: ['340 × 3', '= 1020 m'], d: 'hard' }
+        { e: '⛈️', q: 'The sky splits and the washing is still on the line! Thunder lands 3 s after the flash, and sound travels at 340 m/s. How far away (m) is the strike?', a: '1020', f: ['1020', '1020m', '1.02km'], h: 'Distance = speed × time.', s: ['340 × 3', '= 1020 m'], d: 'hard' }
       ]
     },
     {
@@ -237,7 +237,7 @@ window.K12_ARCADE = {
       real: '💡 The kapana seller who moved her grill next to the taxi rank doubled sales: entrepreneurship is spotting where the customers already are.\n📊 Before borrowing a cent, smart founders run a SWOT: strengths, weaknesses, opportunities, threats, one page that saves thousands.\n🚀 MTC, Namib Mills and every big brand started as one person taking a calculated risk that others avoided.\nEntrepreneurs do not wait for jobs; they build them.',
       game: [
         { e: '💡', q: 'What do we call a person who spots an opportunity, takes the risk and starts a business?', a: 'entrepreneur', f: ['entrepreneur', 'anentrepreneur'], h: 'The subject of this whole topic.', s: ['Risk-taker + opportunity-spotter = entrepreneur'], d: 'easy' },
-        { e: '🛒', q: 'A kapana seller spends N$300 on meat and spices and sells everything for N$480. What is her profit (N$)?', a: '180', f: ['180', 'n$180'], h: 'Profit = revenue − costs.', s: ['480 − 300', '= N$180'], d: 'easy' },
+        { e: '🛒', q: 'Friday rush at the kapana stall, the queue is growing! You spent N$300 on meat and spices and sold OUT at N$480. Quick, before the next customer: what is your profit (N$)?', a: '180', f: ['180', 'n$180'], h: 'Profit = revenue − costs.', s: ['480 − 300', '= N$180'], d: 'easy' },
         { e: '📊', q: 'In a SWOT analysis, S, W and O stand for strengths, weaknesses and opportunities. What does T stand for?', a: 'threats', f: ['threats', 'threat'], h: 'The dangers coming from outside the business.', s: ['SWOT = Strengths, Weaknesses, Opportunities, Threats'], d: 'medium' },
         { e: '🚀', q: 'A trader buys stock for N$400 and makes N$100 profit. What is her percentage profit on cost?', a: '25', f: ['25', '25%'], h: 'Profit ÷ cost × 100.', s: ['100 ÷ 400 × 100', '= 25%'], d: 'hard' }
       ]
@@ -274,7 +274,7 @@ window.K12_ARCADE = {
       game: [
         { e: '🏭', q: 'Rent stays N$1000 a month whether you sell 10 loaves or 1000. What TYPE of cost is rent? (One word.)', a: 'fixed', f: ['fixed', 'fixedcost', 'afixedcost'], h: 'It does not change with output.', s: ['Costs that stay constant = fixed costs'], d: 'easy' },
         { e: '📉', q: 'At the break-even point, total revenue is exactly equal to total …? (One word.)', a: 'costs', f: ['costs', 'cost', 'totalcosts', 'expenses'], h: 'No profit, no loss.', s: ['Break-even: revenue = total costs'], d: 'easy' },
-        { e: '🍞', q: 'A bakery has fixed costs of N$1000. Each loaf sells for N$10 and costs N$6 to make. How many loaves to break even?', a: '250', f: ['250', '250loaves'], h: 'Fixed costs ÷ (price − variable cost).', s: ['Contribution = 10 − 6 = N$4', '1000 ÷ 4 = 250 loaves'], d: 'medium' },
+        { e: '🍞', q: 'This is the bakery\'s survival number. Rent is N$1000, each loaf sells at N$10 and costs N$6 to bake. How many loaves keep the doors open (break even)?', a: '250', f: ['250', '250loaves'], h: 'Fixed costs ÷ (price − variable cost).', s: ['Contribution = 10 − 6 = N$4', '1000 ÷ 4 = 250 loaves'], d: 'medium' },
         { e: '🧮', q: 'The bakery sells 300 loaves at N$10 each and total costs are N$2400. What is the profit (N$)?', a: '600', f: ['600', 'n$600'], h: 'Revenue minus total costs.', s: ['Revenue = 300 × 10 = 3000', '3000 − 2400 = N$600'], d: 'hard' }
       ]
     },
