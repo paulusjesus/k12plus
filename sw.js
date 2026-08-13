@@ -1,8 +1,9 @@
 /* K12Plus service worker - offline-first PWA */
-var VERSION = 'k12plus-v2';
+var VERSION = 'k12plus-v3';
 var PRECACHE = [
   '/', '/index.html', '/about.html', '/pricing.html', '/contact.html',
   '/signup.html', '/app.html', '/support.js', '/k12plus-bridge.js',
+  '/k12plus-syllabus.js', '/k12plus-arcade.js',
   '/manifest.webmanifest', '/assets/k12plus-logo.png',
   '/icons/icon-192.png', '/icons/icon-512.png',
 ];

@@ -6,6 +6,7 @@
 <script src="./support.js?v=2"></script>
 <script src="./k12plus-bridge.js?v=2"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
+<script src="./k12plus-arcade.js?v=1"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#7C3AED">
 </head>
@@ -365,8 +366,34 @@ button { font-family:'Poppins',sans-serif; }
           </sc-if>
           <sc-if value="{{ chatFollowOn }}" hint-placeholder-val="{{ false }}">
             <div style="display:flex; gap:8px; flex-wrap:wrap; padding:2px 0 4px;">
-              <button onClick="{{ chatGameGo }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="border-color:var(--primary); color:var(--primary);">🎮 Turn this into a game</button>
-              <button onClick="{{ chatRwGo }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="border-color:var(--primary); color:var(--primary);">🌍 See it in real life</button>
+              <button onClick="{{ chatGameGo }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="border-color:var(--primary); color:var(--primary);">{{ chatGameLabel }}</button>
+              <button onClick="{{ chatRwGo }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="border-color:var(--primary); color:var(--primary);">{{ chatRwLabel }}</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ surpriseOn }}" hint-placeholder-val="{{ false }}">
+            <div style="background:linear-gradient(135deg,#FFF6DC,#FDF0E4); border:1px solid #F2E2AE; border-radius:16px; padding:16px 19px; max-width:560px; animation:k12pop .18s ease;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:2px;">
+                <span style="font-size:12px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; color:#B4256E;">⚡ Surprise challenge · double points</span>
+                <span style="flex:1;"></span>
+                <button onClick="{{ dismissSurprise }}" title="Skip" style="border:none; background:none; color:#8A6400; cursor:pointer; padding:2px; font-size:13px; line-height:1;">&#10005;</button>
+              </div>
+              <p style="font-size:11.5px; font-weight:600; color:#8A6400; margin:0 0 9px;">{{ surpriseTopic }}</p>
+              <p style="font-size:14px; font-weight:500; line-height:1.65; margin:0 0 12px; white-space:pre-wrap;">{{ surpriseQText }}</p>
+              <sc-if value="{{ showSurpriseInput }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <input value="{{ surpriseAnswer }}" onChange="{{ onSurpriseAnswer }}" onKeyDown="{{ onSurpriseKey }}" placeholder="Your answer for double points…" style="flex:1; min-width:160px; border:1px solid #F2E2AE; border-radius:999px; padding:9px 16px; font-size:13px; font-family:'Poppins',sans-serif; outline:none; background:#fff; color:var(--ink);">
+                  <button onClick="{{ checkSurpriseNow }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:9px 20px; font-size:12.5px; font-weight:700; cursor:pointer;" style-hover="opacity:.9;">Score! ⚡</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ surpriseRight }}" hint-placeholder-val="{{ false }}">
+                <p style="font-size:14.5px; font-weight:700; color:#17915B; margin:4px 0 0;">{{ surpriseAwarded }}</p>
+              </sc-if>
+              <sc-if value="{{ surpriseWrong }}" hint-placeholder-val="{{ false }}">
+                <p style="font-size:13px; font-weight:700; color:#C2470A; margin:4px 0 0;">So close! {{ surpriseAwarded }}</p>
+              </sc-if>
+              <sc-if value="{{ hasSurpriseResult }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ dismissSurprise }}" style="margin-top:10px; border:1px solid #F2E2AE; background:#fff; color:#8A6400; border-radius:999px; padding:7px 16px; font-size:12px; font-weight:600; cursor:pointer;">Back to the chat</button>
+              </sc-if>
             </div>
           </sc-if>
         </div>
@@ -1114,6 +1141,12 @@ button { font-family:'Poppins',sans-serif; }
         <sc-if value="{{ hasGamesErr }}" hint-placeholder-val="{{ false }}">
           <p style="background:#FDEEE7; border:1px solid #F3CDBB; color:#B44A1F; border-radius:12px; padding:11px 15px; font-size:12.5px; line-height:1.6; margin:0 0 16px;">{{ gamesErr2 }}</p>
         </sc-if>
+        <sc-if value="{{ hasGamesFact }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; align-items:flex-start; gap:10px; background:linear-gradient(90deg,#EEF0FE,#F6F0FE); border:1px solid #D4DAF8; border-radius:14px; padding:12px 17px; margin-bottom:16px;">
+            <span style="font-size:17px;">🧠</span>
+            <p style="font-size:12.5px; line-height:1.65; color:#3A3D52; margin:0;"><b>Did you know?</b> {{ gamesFact }}</p>
+          </div>
+        </sc-if>
         <sc-if value="{{ gamesPicking }}" hint-placeholder-val="{{ false }}">
           <sc-if value="{{ hasGameTopics }}" hint-placeholder-val="{{ true }}">
             <div class="k12cards" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
@@ -1152,6 +1185,9 @@ button { font-family:'Poppins',sans-serif; }
             </div>
             <sc-if value="{{ gameRight }}" hint-placeholder-val="{{ false }}">
               <p style="font-size:15px; font-weight:700; color:#17915B; margin:14px 0 0;">{{ gameAwarded }}</p>
+              <sc-if value="{{ hasGameFact }}" hint-placeholder-val="{{ false }}">
+                <p style="font-size:12px; line-height:1.65; color:var(--muted); margin:8px 0 0;">🧠 <b>Did you know?</b> {{ gameFactText }}</p>
+              </sc-if>
             </sc-if>
             <sc-if value="{{ gameWrong }}" hint-placeholder-val="{{ false }}">
               <div style="margin-top:14px;">
@@ -1946,7 +1982,51 @@ class Component extends DCLogic {
     };
   }
 
+  arcadePack(subject) {
+    return (window.K12_ARCADE || {})[subject] || null;
+  }
+
+  arcadeTopic(subject, name) {
+    const pack = this.arcadePack(subject);
+    if (!pack || !name) return null;
+    const target = String(name).toLowerCase();
+    for (let i = 0; i < pack.length; i++) {
+      if (pack[i].name.toLowerCase() === target) return pack[i];
+    }
+    return null;
+  }
+
+  classifyTopic(subject, text) {
+    const pack = this.arcadePack(subject);
+    if (!pack || !text) return null;
+    const t = String(text).toLowerCase();
+    let best = null, bestScore = 0;
+    for (let i = 0; i < pack.length; i++) {
+      let score = 0;
+      const words = pack[i].keywords.concat(pack[i].name.toLowerCase().split(/\s+and\s+|\s*,\s*/));
+      for (let k = 0; k < words.length; k++) {
+        if (words[k] && words[k].length > 2 && t.indexOf(words[k].toLowerCase()) > -1) score++;
+      }
+      if (score > bestScore) { bestScore = score; best = pack[i]; }
+    }
+    return bestScore > 0 ? best : null;
+  }
+
+  packToQuestions(topic) {
+    const qs = topic.game.map((g) => ({
+      q: g.e + ' ' + g.q, answer: g.a, acceptedForms: g.f || [],
+      hint: g.h || '', steps: g.s || [], difficulty: g.d || 'medium'
+    }));
+    for (let i = qs.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = qs[i]; qs[i] = qs[j]; qs[j] = tmp;
+    }
+    return qs;
+  }
+
   syllabusTopics(subject) {
+    const pack = this.arcadePack(subject);
+    if (pack) return pack.map((t) => t.name);
     const grade = String(this.state.grade || '') === '11' ? '11' : '12';
     const info = this.plansDigest(subject, grade);
     return (info.digest || '').split('\n')
@@ -1961,12 +2041,23 @@ class Component extends DCLogic {
 
   async startGame(subject, topic) {
     if (this.state.gameBusy) return;
+    // built-in arcade first: instant, offline, no AI needed
+    const packTopic = this.arcadeTopic(subject, topic) || this.classifyTopic(subject, topic);
+    if (packTopic) {
+      this.setState({
+        view: 'games', gamesMode: 'play', gamesSubject: subject, gamesTopic: packTopic.name,
+        gameBusy: false, gamesErr: '', gameQs: this.packToQuestions(packTopic), gameIdx: 0,
+        gameAnswer: '', gameResult: null, gameHintOn: false, gameAwarded: '', rwText: '',
+        gameFact: packTopic.fact || ''
+      });
+      return;
+    }
     const grade = String(this.state.grade || '') === '11' ? '11' : '12';
     const info = this.plansDigest(subject, grade);
     this.setState({
       view: 'games', gamesMode: 'play', gamesSubject: subject, gamesTopic: topic,
       gameBusy: true, gamesErr: '', gameQs: [], gameIdx: 0, gameAnswer: '',
-      gameResult: null, gameHintOn: false, gameAwarded: '', rwText: ''
+      gameResult: null, gameHintOn: false, gameAwarded: '', rwText: '', gameFact: ''
     });
     try {
       const out = await window.k12plan({
@@ -1985,6 +2076,30 @@ class Component extends DCLogic {
     } catch (e) {
       this.setState({ gameBusy: false, gamesErr: 'Could not load the game right now. Try again in a moment.' });
     }
+  }
+
+  checkSurprise() {
+    const st = this.state, sp = st.surprise;
+    if (!sp || st.surpriseResult || !(st.surpriseAnswer || '').trim()) return;
+    const norm = (x) => String(x).toLowerCase().replace(/\s+/g, '').replace(/,/g, '.').replace(/\*\*/g, '^');
+    const ok = [sp.a].concat(sp.f || []).map(norm).indexOf(norm(st.surpriseAnswer)) > -1;
+    const ptsMap = { easy: 10, medium: 20, hard: 30 };
+    const gain = ok ? 2 * (ptsMap[sp.d] || 20) : 0;
+    const total = (parseInt(localStorage.getItem('k12plus-points') || '0', 10) || 0) + gain;
+    try { localStorage.setItem('k12plus-points', String(total)); } catch (e) {}
+    try { if (window.k12data && window.k12data.recordQuiz) window.k12data.recordQuiz(st.subject || 'Games', ok ? 1 : 0, 1); } catch (e) {}
+    if (!ok) {
+      try {
+        const stuck = JSON.parse(localStorage.getItem('k12plus-stuck') || '[]');
+        stuck.push({ subject: st.subject || '', topic: sp.topic, at: Date.now() });
+        localStorage.setItem('k12plus-stuck', JSON.stringify(stuck.slice(-100)));
+      } catch (e) {}
+    }
+    this.setState({
+      surpriseResult: ok ? 'right' : 'wrong',
+      gamePoints: total,
+      surpriseAwarded: ok ? '+' + gain + ' points, double scored! ⚡🎉' : 'The answer was: ' + sp.a
+    });
   }
 
   checkGame() {
@@ -2016,6 +2131,16 @@ class Component extends DCLogic {
 
   async realWorld(subject, topic) {
     if (this.state.rwBusy) return;
+    // built-in real-world story first: instant and offline
+    const packTopic = this.arcadeTopic(subject, topic) || this.classifyTopic(subject, topic);
+    if (packTopic && packTopic.real) {
+      this.setState({
+        view: 'games', gamesMode: 'rw', gamesSubject: subject, gamesTopic: packTopic.name,
+        rwBusy: false, gamesErr: '', gameQs: [],
+        rwText: packTopic.real + (packTopic.fact ? '\n\n🧠 Did you know? ' + packTopic.fact : '')
+      });
+      return;
+    }
     this.setState({ view: 'games', gamesMode: 'rw', gamesSubject: subject, gamesTopic: topic, rwBusy: true, gamesErr: '', rwText: '', gameQs: [] });
     try {
       const raw = await window.claude.complete({
@@ -2412,6 +2537,26 @@ class Component extends DCLogic {
     clearInterval(this._thinkT);
     const finalMsgs = [...this.state.chatMsgs, { role: 'assistant', text: reply }];
     this.setState({ chatMsgs: finalMsgs, chatBusy: false });
+    // personalisation: classify the question to a syllabus topic + surprise challenges
+    try {
+      const subjNow = this.state.subject || 'Mathematics';
+      const det = this.classifyTopic(subjNow, q);
+      const answered = (parseInt(localStorage.getItem('k12plus-answered') || '0', 10) || 0) + 1;
+      try { localStorage.setItem('k12plus-answered', String(answered)); } catch (e2) {}
+      const upd = { chatTopic: det ? det.name : '' };
+      if (answered % 3 === 0 && !this.state.surprise) {
+        const pack = this.arcadePack(subjNow);
+        const topicPick = det || (pack ? pack[Math.floor(Math.random() * pack.length)] : null);
+        if (topicPick && topicPick.game && topicPick.game.length) {
+          const g = topicPick.game[Math.floor(Math.random() * topicPick.game.length)];
+          upd.surprise = { topic: topicPick.name, q: g.e + ' ' + g.q, a: g.a, f: g.f || [], h: g.h || '', d: g.d || 'medium' };
+          upd.surpriseAnswer = '';
+          upd.surpriseResult = null;
+          upd.surpriseAwarded = '';
+        }
+      }
+      this.setState(upd);
+    } catch (e) {}
     try { localStorage.setItem('k12plus-tutor-chat', JSON.stringify(finalMsgs.slice(-40))); } catch (e) {}
   }
 
@@ -3098,11 +3243,38 @@ class Component extends DCLogic {
           rwText2: s.rwText || '',
           rwPlayGame: () => this.startGame(gSubj, s.gamesTopic),
           chatFollowOn: s.view === 'chat' && !s.chatBusy && s.chatMsgs.length > 0 && s.chatMsgs[s.chatMsgs.length - 1].role === 'assistant',
+          chatGameLabel: s.chatTopic ? '🎮 Play: ' + s.chatTopic : '🎮 Turn this into a game',
+          chatRwLabel: s.chatTopic ? '🌍 ' + s.chatTopic + ' in real life' : '🌍 See it in real life',
           chatGameGo: () => {
+            if (s.chatTopic) return this.startGame(s.subject || 'Mathematics', s.chatTopic);
             const lastQ = s.chatMsgs.slice().reverse().filter(m => m.role === 'user')[0];
             this.startGame(s.subject || 'Mathematics', ((lastQ && lastQ.text) || 'what we just discussed').replace(/\[image attached\]/g, '').slice(0, 80));
           },
-          chatRwGo: () => this.sendChat('Show me how this exact concept appears in real everyday life around me, with one small worked example 🌍')
+          chatRwGo: () => {
+            if (s.chatTopic) return this.realWorld(s.subject || 'Mathematics', s.chatTopic);
+            this.sendChat('Show me how this exact concept appears in real everyday life around me, with one small worked example 🌍');
+          },
+          surpriseOn: s.view === 'chat' && !!s.surprise && !s.chatBusy,
+          surpriseTopic: (s.surprise && s.surprise.topic) || '',
+          surpriseQText: (s.surprise && s.surprise.q) || '',
+          surpriseAnswer: s.surpriseAnswer || '',
+          onSurpriseAnswer: (e) => this.setState({ surpriseAnswer: e.target.value }),
+          onSurpriseKey: (e) => { if (e.key === 'Enter') { e.preventDefault(); this.checkSurprise(); } },
+          checkSurpriseNow: () => this.checkSurprise(),
+          showSurpriseInput: !s.surpriseResult,
+          surpriseRight: s.surpriseResult === 'right',
+          surpriseWrong: s.surpriseResult === 'wrong',
+          hasSurpriseResult: !!s.surpriseResult,
+          surpriseAwarded: s.surpriseAwarded || '',
+          dismissSurprise: () => this.setState({ surprise: null, surpriseResult: null, surpriseAnswer: '', surpriseAwarded: '' }),
+          gamesFact: (() => {
+            const pack = this.arcadePack(gSubj);
+            if (!pack || !pack.length) return '';
+            return pack[new Date().getDate() % pack.length].fact || '';
+          })(),
+          hasGamesFact: (() => { const p = this.arcadePack(gSubj); return !!(p && p.length) && gMode === 'pick' && !s.gameBusy && !s.rwBusy; })(),
+          hasGameFact: !!s.gameFact && s.gameResult === 'right',
+          gameFactText: s.gameFact || ''
         };
       })(),
       ...(() => {
