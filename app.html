@@ -583,7 +583,7 @@ button { font-family:'Poppins',sans-serif; }
           <span style="background:var(--pink); color:#fff; font-size:10.5px; font-weight:700; letter-spacing:1px; text-transform:uppercase; border-radius:6px; padding:3px 9px;">Real-Life Lab</span>
           <h1 style="font-size:19px; font-weight:600; margin:0;">See your subjects in the real world - one click</h1>
         </div>
-        <p style="font-size:13px; line-height:1.7; color:var(--muted); max-width:760px; margin:0 0 16px;">Explore real-life and everyday applications of what you are learning through AI-generated images and videos - see how each equation powers engineering, physics, finance and daily life.</p>
+        <p style="font-size:13px; line-height:1.7; color:var(--muted); max-width:760px; margin:0 0 16px;">Explore real-life and everyday applications of what you are learning through animated visualisations and AI-powered scenarios - see how each equation powers engineering, physics, finance and daily life.</p>
         <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;">
           <sc-for list="{{ labSubjTabs }}" as="t" hint-placeholder-count="4">
             <button onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.label }}</button>
@@ -603,7 +603,7 @@ button { font-family:'Poppins',sans-serif; }
             </button>
           </sc-for>
         </div>
-        <p style="font-size:11.5px; color:var(--muted); margin:14px 0 0;">Tap a card to explore it with your tutor - images and videos generate as you chat.</p>
+        <p style="font-size:11.5px; color:var(--muted); margin:14px 0 0;">Tap a card to watch its story come alive - then play the game on that exact topic. Works offline too.</p>
       </div>
     </sc-if>
     <sc-if value="{{ isTimetable }}" hint-placeholder-val="{{ false }}">
@@ -1722,29 +1722,29 @@ class Component extends DCLogic {
     // Real-Life Lab
     const LAB = {
       'Mathematics': [
-        { field: 'Engineering', formula: 'y = ax\u00B2 + bx + c', desc: 'Bridge arches and satellite dishes are parabolas', bg: 'linear-gradient(135deg,#5563E0,#7C3AED)' },
-        { field: 'Physics', formula: 's = ut + \u00BDat\u00B2', desc: 'A netball\u2019s flight path is a quadratic', bg: 'linear-gradient(135deg,#E8A13A,#E0653A)' },
-        { field: 'Finance', formula: 'A = P(1 + i)\u207F', desc: 'Watch N$500 grow with compound interest', bg: 'linear-gradient(135deg,#3BB273,#1F8A57)' },
-        { field: 'Everyday life', formula: 'ratio 2 : 3', desc: 'Scaling a recipe for the whole family', bg: 'linear-gradient(135deg,#B400D9,#7C3AED)' }],
+        { field: 'Engineering', formula: 'y = ax\u00B2 + bx + c', desc: 'Bridge arches and satellite dishes are parabolas', bg: 'linear-gradient(135deg,#5563E0,#7C3AED)', topic: 'Quadratic functions' },
+        { field: 'Sport', formula: 's = ut + \u00BDat\u00B2', desc: 'A netball\u2019s flight path is a quadratic', bg: 'linear-gradient(135deg,#E8A13A,#E0653A)', topic: 'Quadratic functions' },
+        { field: 'Finance', formula: 'A = P(1 + i)\u207F', desc: 'Watch N$2000 grow with compound interest', bg: 'linear-gradient(135deg,#3BB273,#1F8A57)', topic: 'Financial mathematics' },
+        { field: 'Everyday life', formula: 'P = 1/6', desc: 'Chance, averages and family game night', bg: 'linear-gradient(135deg,#B400D9,#7C3AED)', topic: 'Probability and statistics' }],
       'Biology': [
-        { field: 'Agriculture', formula: '6CO\u2082 + 6H\u2082O \u2192', desc: 'Why mahangu grows faster in the sun', bg: 'linear-gradient(135deg,#3BB273,#1F8A57)' },
-        { field: 'Medicine', formula: 'ATP', desc: 'How your muscles fuel a netball sprint', bg: 'linear-gradient(135deg,#5563E0,#7C3AED)' },
-        { field: 'Environment', formula: 'O\u2082 \u2194 CO\u2082', desc: 'Forests as the planet\u2019s lungs', bg: 'linear-gradient(135deg,#E8A13A,#E0653A)' },
-        { field: 'Everyday life', formula: 'C\u2086H\u2081\u2082O\u2086', desc: 'What happens to the sugar in your oshikundu', bg: 'linear-gradient(135deg,#B400D9,#7C3AED)' }],
+        { field: 'Agriculture', formula: '6CO\u2082 + 6H\u2082O \u2192', desc: 'Why mahangu grows faster in the sun', bg: 'linear-gradient(135deg,#3BB273,#1F8A57)', topic: 'Photosynthesis' },
+        { field: 'Medicine', formula: 'ATP', desc: 'How your muscles fuel a netball sprint', bg: 'linear-gradient(135deg,#5563E0,#7C3AED)', topic: 'Cells and transport' },
+        { field: 'Environment', formula: 'O\u2082 \u2194 CO\u2082', desc: 'Forests as the planet\u2019s lungs', bg: 'linear-gradient(135deg,#E8A13A,#E0653A)', topic: 'Ecology and ecosystems' },
+        { field: 'Everyday life', formula: 'C\u2086H\u2081\u2082O\u2086', desc: 'What happens to the sugar in your oshikundu', bg: 'linear-gradient(135deg,#B400D9,#7C3AED)', topic: 'Enzymes' }],
       'Physical Science': [
-        { field: 'Engineering', formula: 'V = IR', desc: 'Sizing the wiring for a solar home kit', bg: 'linear-gradient(135deg,#E8A13A,#E0653A)' },
-        { field: 'Energy', formula: 'P = VI', desc: 'How many panels power a borehole pump?', bg: 'linear-gradient(135deg,#3BB273,#1F8A57)' },
-        { field: 'Technology', formula: 'F = ma', desc: 'Why bakkies need longer braking distances', bg: 'linear-gradient(135deg,#5563E0,#7C3AED)' },
-        { field: 'Everyday life', formula: 'kWh \u00D7 tariff', desc: 'Reading your family\u2019s electricity bill', bg: 'linear-gradient(135deg,#B400D9,#7C3AED)' }],
+        { field: 'Engineering', formula: 'V = IR', desc: 'Sizing the wiring for a solar home kit', bg: 'linear-gradient(135deg,#E8A13A,#E0653A)', topic: 'Electricity' },
+        { field: 'Energy', formula: 'P = VI', desc: 'How many panels power a borehole pump?', bg: 'linear-gradient(135deg,#3BB273,#1F8A57)', topic: 'Energy' },
+        { field: 'Technology', formula: 'F = ma', desc: 'Why bakkies need longer braking distances', bg: 'linear-gradient(135deg,#5563E0,#7C3AED)', topic: 'Motion and forces' },
+        { field: 'Everyday life', formula: 'kWh \u00D7 tariff', desc: 'Reading your family\u2019s electricity bill', bg: 'linear-gradient(135deg,#B400D9,#7C3AED)', topic: 'Electricity' }],
       'Business Studies': [
-        { field: 'Entrepreneurship', formula: 'Profit = R \u2212 C', desc: 'Pricing kapana to actually make money', bg: 'linear-gradient(135deg,#B400D9,#7C3AED)' },
-        { field: 'Finance', formula: 'A = P(1 + i)\u207F', desc: 'Why saving early beats saving more', bg: 'linear-gradient(135deg,#3BB273,#1F8A57)' },
-        { field: 'Economics', formula: 'N$ \u00D7 15%', desc: 'What VAT does to a shop\u2019s till slip', bg: 'linear-gradient(135deg,#5563E0,#7C3AED)' },
-        { field: 'Everyday life', formula: 'budget', desc: 'Stretching a monthly allowance', bg: 'linear-gradient(135deg,#E8A13A,#E0653A)' }]
+        { field: 'Entrepreneurship', formula: 'Profit = R \u2212 C', desc: 'Pricing kapana to actually make money', bg: 'linear-gradient(135deg,#B400D9,#7C3AED)', topic: 'Entrepreneurship' },
+        { field: 'Finance', formula: 'A = P(1 + i)\u207F', desc: 'Why saving early beats saving more', bg: 'linear-gradient(135deg,#3BB273,#1F8A57)', topic: 'Financial literacy' },
+        { field: 'Economics', formula: 'N$ \u00D7 15%', desc: 'What VAT does to a shop\u2019s till slip', bg: 'linear-gradient(135deg,#5563E0,#7C3AED)', topic: 'Financial literacy' },
+        { field: 'Everyday life', formula: 'budget', desc: 'Stretching a monthly allowance', bg: 'linear-gradient(135deg,#E8A13A,#E0653A)', topic: 'Break-even and costs' }]
     };
     const labSubj = s.labSubj || 'Mathematics';
     const labSubjTabs = Object.keys(LAB).map(n => ({ label: n, pick: () => this.setState({ labSubj: n }), style: chipTab(labSubj === n) }));
-    const labTiles = LAB[labSubj].map(t => ({ ...t, pick: () => this.setState({ view: 'chat', subject: labSubj, chatInput: 'Show me how ' + t.formula + ' works in ' + t.field.toLowerCase() + ': ' + t.desc }) }));
+    const labTiles = LAB[labSubj].map(t => ({ ...t, pick: () => this.realWorld(labSubj, t.topic) }));
     // Timetable
     const SUBJC = { 'Mathematics': ['#EEF0FE', '#3D48B8'], 'Biology': ['#E7F6EE', '#1F6B43'], 'Physical Science': ['#FFF6DC', '#8A6400'], 'Business Studies': ['#F8E8FC', '#7A0994'], 'English': ['#E8F4FD', '#1A6FA8'], 'Life Skills': ['#F1F1F6', '#5A5D75'], 'Study period': ['#FAFAFC', '#8A8DA3'] };
     const tt = [
