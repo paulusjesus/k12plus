@@ -7,6 +7,7 @@
 <script src="./k12plus-bridge.js?v=2"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
 <script src="./k12plus-arcade.js?v=1"></script>
+<script src="./k12plus-scenes.js?v=1"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#7C3AED">
 </head>
@@ -1174,6 +1175,7 @@ button { font-family:'Poppins',sans-serif; }
         </sc-if>
         <sc-if value="{{ gamePlaying }}" hint-placeholder-val="{{ false }}">
           <div style="background:#fff; border:1px solid var(--line); border-left:4px solid {{ gameEdge }}; border-radius:16px; padding:22px 26px; max-width:680px;">
+            <canvas ref="{{ sceneRef }}" width="640" height="240" style="width:100%; height:auto; display:block; border-radius:12px; margin-bottom:14px; background:#EAF2FB;"></canvas>
             <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
               <span style="font-size:12px; font-weight:700; color:{{ gameEdge }};">{{ gameTopicLabel }}</span>
               <span style="margin-left:auto; font-size:11.5px; color:var(--muted); font-weight:600;">{{ gameProgress }}</span>
@@ -1217,6 +1219,7 @@ button { font-family:'Poppins',sans-serif; }
         </sc-if>
         <sc-if value="{{ rwOn }}" hint-placeholder-val="{{ false }}">
           <div style="background:#fff; border:1px solid var(--line); border-left:4px solid {{ gameEdge }}; border-radius:16px; padding:22px 26px; max-width:680px;">
+            <canvas ref="{{ sceneRef }}" width="640" height="240" style="width:100%; height:auto; display:block; border-radius:12px; margin-bottom:14px; background:#EAF2FB;"></canvas>
             <p style="font-size:13px; font-weight:700; color:{{ gameEdge }}; margin:0 0 10px;">🌍 {{ gameTopicLabel }} in the real world</p>
             <p style="font-size:14px; font-weight:500; line-height:1.75; margin:0 0 16px; white-space:pre-wrap;">{{ rwText2 }}</p>
             <div style="display:flex; gap:9px; flex-wrap:wrap;">
@@ -1699,6 +1702,7 @@ class Component extends DCLogic {
   componentWillUnmount() {
     if (this._timer) clearInterval(this._timer);
     if (this._thinkT) clearInterval(this._thinkT);
+    if (this._sceneRAF) cancelAnimationFrame(this._sceneRAF);
     if (this._onNet) { window.removeEventListener('online', this._onNet); window.removeEventListener('offline', this._onNet); }
     if (this._recog) { try { this._recog.stop(); } catch (e) {} }
     if (this._voiceNoteT) clearTimeout(this._voiceNoteT);
@@ -1980,6 +1984,23 @@ class Component extends DCLogic {
         { q: 'A budget is:', o: ['A type of tax', 'A plan for income and spending', 'A bank account', 'A loan'], a: 1 }
       ]
     };
+  }
+
+  mountScene(el) {
+    this._sceneEl = el;
+    if (!el) return;
+    if (this._sceneRAF) return;
+    const loop = () => {
+      const c = this._sceneEl;
+      if (!c || !c.isConnected) { this._sceneRAF = null; return; }
+      try {
+        if (window.K12_SCENES) {
+          window.K12_SCENES.draw(c, this.state.gamesTopic || '', this.state.gamesSubject || this.state.subject || 'Mathematics', performance.now() / 1000);
+        }
+      } catch (e) {}
+      this._sceneRAF = requestAnimationFrame(loop);
+    };
+    this._sceneRAF = requestAnimationFrame(loop);
   }
 
   arcadePack(subject) {
@@ -3274,7 +3295,8 @@ class Component extends DCLogic {
           })(),
           hasGamesFact: (() => { const p = this.arcadePack(gSubj); return !!(p && p.length) && gMode === 'pick' && !s.gameBusy && !s.rwBusy; })(),
           hasGameFact: !!s.gameFact && s.gameResult === 'right',
-          gameFactText: s.gameFact || ''
+          gameFactText: s.gameFact || '',
+          sceneRef: (el) => this.mountScene(el)
         };
       })(),
       ...(() => {
