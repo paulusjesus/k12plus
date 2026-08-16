@@ -40,12 +40,29 @@ function agentDecidePayout(points) {
 
 async function main() {
   const [cmd, arg1, arg2] = process.argv.slice(2);
+
+  if (cmd === 'gen-secret') {
+    // generates and prints a new 32-byte entity secret; save it securely
+    const { generateEntitySecret } = require('@circle-fin/developer-controlled-wallets');
+    generateEntitySecret();
+    return;
+  }
+
   const apiKey = process.env.CIRCLE_API_KEY;
   const entitySecret = process.env.CIRCLE_ENTITY_SECRET;
   if (!apiKey || !entitySecret) {
     console.error('Set CIRCLE_API_KEY and CIRCLE_ENTITY_SECRET first.');
     process.exit(1);
   }
+
+  if (cmd === 'register') {
+    // registers the entity secret ciphertext with Circle and saves a recovery file
+    const { registerEntitySecretCiphertext } = require('@circle-fin/developer-controlled-wallets');
+    await registerEntitySecretCiphertext({ apiKey, entitySecret, recoveryFileDownloadPath: '.' });
+    console.log('Entity secret registered. A recovery file was saved in this folder; keep it safe.');
+    return;
+  }
+
   const client = initiateDeveloperControlledWalletsClient({ apiKey, entitySecret });
 
   if (cmd === 'setup') {
@@ -120,7 +137,7 @@ async function main() {
     return;
   }
 
-  console.error('Unknown command. Use: setup | pay <points> <recipient-address>');
+  console.error('Unknown command. Use: gen-secret | register | setup | pay <points> <recipient-address>');
 }
 
 main().catch(e => { console.error(e.response ? JSON.stringify(e.response.data, null, 2) : e); process.exit(1); });
