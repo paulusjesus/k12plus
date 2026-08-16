@@ -1,0 +1,9 @@
+{
+  "name": "k12plus-scholarship-agent",
+  "version": "1.0.0",
+  "description": "K12Plus autonomous scholarship agent: pays learner micro-scholarships in USDC via Circle developer-controlled wallets.",
+  "main": "scholarship-agent.js",
+  "dependencies": {
+    "@circle-fin/developer-controlled-wallets": "^8.3.0"
+  }
+}
