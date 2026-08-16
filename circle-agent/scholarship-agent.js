@@ -87,7 +87,7 @@ async function main() {
 
   if (cmd === 'pay') {
     const points = arg1;
-    const recipient = arg2;
+    let recipient = arg2;
     if (!points || !recipient) {
       console.error('Usage: node scholarship-agent.js pay <points> <recipient-address>');
       process.exit(1);
@@ -99,15 +99,24 @@ async function main() {
     }
     console.log('Agent decision: ' + points + ' points earns a ' + amount + ' USDC micro-scholarship.');
 
-    // find the agent's wallet
+    // find the agent's funded wallet (the one holding USDC)
     const wallets = await client.listWallets({ blockchain: BLOCKCHAIN });
-    const wallet = wallets.data.wallets[0];
-    if (!wallet) { console.error('No agent wallet found. Run setup first.'); process.exit(1); }
+    let wallet = null, usdc = null;
+    for (const w of (wallets.data.wallets || [])) {
+      const bal = await client.getWalletTokenBalance({ id: w.id });
+      const tok = (bal.data.tokenBalances || []).find(t => (t.token.symbol || '').includes(USDC_TOKEN_ID_HINT) && parseFloat(t.amount) > 0);
+      if (tok) { wallet = w; usdc = tok; break; }
+    }
+    if (!wallet) { console.error('No wallet with USDC found. Run setup, then fund the agent wallet at https://faucet.circle.com'); process.exit(1); }
 
-    // find the USDC balance/token on the wallet
-    const bal = await client.getWalletTokenBalance({ id: wallet.id });
-    const usdc = (bal.data.tokenBalances || []).find(t => (t.token.symbol || '').includes(USDC_TOKEN_ID_HINT));
-    if (!usdc) { console.error('No USDC on the agent wallet yet. Fund it at https://faucet.circle.com'); process.exit(1); }
+    // 'demo' recipient: create a learner demo wallet to receive the scholarship
+    if (recipient === 'demo') {
+      const wsets = await client.listWalletSets();
+      const wsId = wsets.data.walletSets[0].id;
+      const lw = await client.createWallets({ walletSetId: wsId, blockchains: [BLOCKCHAIN], count: 1, accountType: 'SCA' });
+      recipient = lw.data.wallets[0].address;
+      console.log('Created learner demo wallet: ' + recipient);
+    }
 
     const tx = await client.createTransaction({
       walletId: wallet.id,
