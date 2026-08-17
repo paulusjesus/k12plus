@@ -12,8 +12,9 @@
 
 const functions = require('@google-cloud/functions-framework');
 
-const GEMINI_URL =
-  'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent';
+const GEMINI_MODELS = ['gemini-flash-latest', 'gemini-flash-lite-latest'];
+const geminiUrl = (model) =>
+  `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
 const clip = (s, n) => String(s || '').slice(0, n);
 
@@ -22,20 +23,28 @@ async function callGemini(systemText, messages, maxTokens = 1024) {
     role: m.role === 'assistant' ? 'model' : 'user',
     parts: [{ text: m.content }],
   }));
-  const res = await fetch(`${GEMINI_URL}?key=${process.env.GEMINI_API_KEY}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: systemText }] },
-      contents,
-      generationConfig: { maxOutputTokens: maxTokens, temperature: 0.7 },
-    }),
-  });
-  if (!res.ok) throw new Error(`Gemini ${res.status}: ${await res.text()}`);
-  const data = await res.json();
-  const text = data.candidates?.[0]?.content?.parts?.map((p) => p.text).join('') || '';
-  const u = data.usageMetadata || {};
-  return { text, tokensIn: u.promptTokenCount, tokensOut: u.candidatesTokenCount };
+  let lastErr = null;
+  for (const model of GEMINI_MODELS) {
+    const res = await fetch(`${geminiUrl(model)}?key=${process.env.GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: systemText }] },
+        contents,
+        generationConfig: { maxOutputTokens: maxTokens, temperature: 0.7 },
+      }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const text = data.candidates?.[0]?.content?.parts?.map((p) => p.text).join('') || '';
+      const u = data.usageMetadata || {};
+      return { text, tokensIn: u.promptTokenCount, tokensOut: u.candidatesTokenCount };
+    }
+    lastErr = `Gemini ${res.status}: ${await res.text()}`;
+    // fall through to the next model on overload or rate errors
+    if (res.status !== 503 && res.status !== 429 && res.status !== 500) break;
+  }
+  throw new Error(lastErr || 'Gemini unavailable');
 }
 
 async function logAgent(entry) {
