@@ -176,8 +176,8 @@ textarea::placeholder { color:var(--muted); }
     </div>
 
     <sc-if value="{{ ussdOpen }}" hint-placeholder-val="{{ false }}">
-      <div style="position:fixed; inset:0; background:rgba(20,17,40,.55); display:flex; align-items:center; justify-content:center; z-index:100; padding:20px;">
-        <div style="width:300px; max-width:100%; background:#0F1115; border-radius:34px; border:10px solid #1C1E24; box-shadow:0 30px 70px rgba(0,0,0,.45); overflow:hidden; position:relative;">
+      <div style="position:fixed; inset:0; background:rgba(20,17,40,.55); display:flex; align-items:flex-start; justify-content:center; z-index:100; padding:20px; overflow-y:auto;">
+        <div style="width:300px; max-width:100%; background:#0F1115; border-radius:34px; border:10px solid #1C1E24; box-shadow:0 30px 70px rgba(0,0,0,.45); overflow:hidden; position:relative; margin:auto;">
           <button onClick="{{ closeUssd }}" title="Close" style="position:absolute; top:10px; right:10px; z-index:5; width:26px; height:26px; border-radius:50%; border:none; background:rgba(255,255,255,.12); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
           <div style="background:#FFF6DC; color:#8A6D00; font-size:11px; font-weight:700; text-align:center; padding:8px 34px 7px 14px; letter-spacing:.2px;">SIMULATION &middot; not a live USSD connection</div>
           <div style="background:#000; color:#D8FFDD; font-family:'Courier New',monospace; font-size:14.5px; line-height:1.55; white-space:pre-line; padding:22px 18px; min-height:220px;">{{ ussdScreenText }}</div>
