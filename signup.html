@@ -103,9 +103,9 @@ input::placeholder { color:var(--muted); opacity:.75; }
           <sc-if value="{{ showGrade }}" hint-placeholder-val="{{ true }}">
             <div style="margin-bottom:16px;">
               <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:8px;">{{ gradeLabel }} <span style="color:#C0392B;">*</span></label>
-              <div style="display:flex; gap:8px; align-items:flex-start;">
+              <div style="display:flex; gap:8px; align-items:flex-start; flex-wrap:wrap;">
                 <sc-for list="{{ gradeTabs }}" as="g" hint-placeholder-count="2">
-                  <div style="flex:1; position:relative;">
+                  <div style="flex:1 1 90px; min-width:90px; position:relative;">
                     <button onClick="{{ g.toggle }}" style="{{ g.style }}">
                       <span>{{ g.display }}</span>
                       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:.6;"><path d="M6 9l6 6 6-6"></path></svg>
@@ -220,9 +220,9 @@ input::placeholder { color:var(--muted); opacity:.75; }
                     </sc-if>
                   </div>
                   <input value="{{ ch.id }}" onChange="{{ ch.onId }}" placeholder="k12plus ID, e.g. K12-NA-8F3K92" style="width:100%; border:1px solid var(--line); background:var(--chip2); color:var(--ink); border-radius:8px; padding:10px 13px; font-size:14px; outline:none; text-transform:uppercase;">
-                  <div style="display:flex; gap:8px; margin-top:8px; align-items:flex-start;">
+                  <div style="display:flex; gap:8px; margin-top:8px; align-items:flex-start; flex-wrap:wrap;">
                     <sc-for list="{{ ch.grades }}" as="g" hint-placeholder-count="2">
-                      <div style="flex:1; position:relative;">
+                      <div style="flex:1 1 90px; min-width:90px; position:relative;">
                         <button onClick="{{ g.toggle }}" style="{{ g.style }}">
                           <span>{{ g.display }}</span>
                           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="opacity:.6;"><path d="M6 9l6 6 6-6"></path></svg>
@@ -404,7 +404,7 @@ input::placeholder { color:var(--muted); opacity:.75; }
         <p style="margin:0 0 18px;">These Terms of Use are an agreement between you and K-Twelve Educational Technologies CC ("k12plus", "we", "our" or "us"). They govern your use of the k12plus platform: the AI tutor, USSD access, learner, parent and educator dashboards, class and school features, and related services. By creating an account or using k12plus, you accept these terms together with our Privacy Policy.</p>
         <h3 style="font-size:14.5px; font-weight:600; margin:0 0 8px;">2. Who may use k12plus</h3>
         <ul style="margin:0 0 18px; padding-left:20px;">
-          <li style="margin-bottom:4px;"><strong>Learners</strong> in Grade 11 or 12 may register with parental or institutional consent where under 18.</li>
+          <li style="margin-bottom:4px;"><strong>Learners</strong> in Grade 8 to 12 may register with parental or institutional consent where under 18.</li>
           <li style="margin-bottom:4px;"><strong>Educators</strong> may register to manage their classes, set assignments and track performance.</li>
           <li><strong>Parents and guardians</strong> may register and link to their children's accounts using each learner's unique k12plus ID.</li>
         </ul>
@@ -1052,7 +1052,10 @@ class Component extends DCLogic {
     const gradeChip = (on) => 'width:100%;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:7px;padding:9px 6px;font-family:Poppins,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;' + (on ? 'background:#E4E1FB;color:#5348C7;border:1px solid #C9C2F5;' : 'background:var(--surface);color:var(--ink);border:1px solid var(--line);');
     const letterChip = (on) => 'border-radius:8px;padding:8px 0;font-family:Poppins,sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .12s;text-align:center;border:none;' + (on ? 'background:var(--primary);color:#fff;' : 'background:var(--chip);color:var(--ink);');
     const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    const gradeOpts = s.role === 'Educator' ? ['Grade 11', 'Grade 12', 'Both grades'] : ['Grade 11', 'Grade 12'];
+    const naGrades = ['Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'];
+    const saGrades = ['Grade 11', 'Grade 12'];
+    const countryGrades = s.country === 'South Africa' ? saGrades : naGrades;
+    const gradeOpts = s.role === 'Educator' ? countryGrades.concat(['Both grades']) : countryGrades;
     const gradeTabs = gradeOpts.map(g => ({
       display: s.grade === g && s.cls ? g + ' ' + s.cls : g,
       hint: s.role === 'Educator' ? 'Choose your class' : 'Choose your class letter',
@@ -1075,7 +1078,7 @@ class Component extends DCLogic {
         next[i] = { ...next[i], id: e.target.value };
         this.setState({ children: next, error: '' });
       },
-      grades: ['Grade 11', 'Grade 12'].map(g => ({
+      grades: countryGrades.map(g => ({
         display: ch.grade === g && ch.cls ? g + ' ' + ch.cls : g,
         hint: 'Choose their class letter',
         open: s.openGrade === 'ch' + i + g,

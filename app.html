@@ -2052,7 +2052,7 @@ class Component extends DCLogic {
   syllabusTopics(subject) {
     const pack = this.arcadePack(subject);
     if (pack) return pack.map((t) => t.name);
-    const grade = String(this.state.grade || '') === '11' ? '11' : '12';
+    const grade = this.validGrade(this.state.grade);
     const info = this.plansDigest(subject, grade);
     return (info.digest || '').split('\n')
       .filter((l) => l.trim().indexOf('-') === 0)
@@ -2077,7 +2077,7 @@ class Component extends DCLogic {
       });
       return;
     }
-    const grade = String(this.state.grade || '') === '11' ? '11' : '12';
+    const grade = this.validGrade(this.state.grade);
     const info = this.plansDigest(subject, grade);
     this.setState({
       view: 'games', gamesMode: 'play', gamesSubject: subject, gamesTopic: topic,
@@ -2086,7 +2086,7 @@ class Component extends DCLogic {
     });
     try {
       const out = await window.k12plan({
-        action: 'generate_questions', grade: parseInt(grade, 10), syllabus: grade === '11' ? '6131' : '8227',
+        action: 'generate_questions', grade: parseInt(grade, 10), syllabus: (grade === '10' || grade === '11') ? '6131' : (grade === '12' ? '8227' : 'JS'),
         topic: subject + ' - ' + topic, count: 5, difficulty: 'mixed',
         objectives: 'IMPORTANT: the subject is ' + subject.toUpperCase() + ' (only use mathematics where this subject needs it). ' +
           'Frame EVERY question as a fun real-life game scenario for a teenager in Namibia or South Africa: scoring a netball or football goal, a taxi fare in N$, cornering a car safely on a gravel road, a kapana stall business, phone data bundles, a garden, farm or kitchen. ' +
@@ -2173,7 +2173,7 @@ class Component extends DCLogic {
         system: 'You show teenagers how school topics live in the real world around them in Namibia and South Africa. Plain text, UK English, no em dashes, real unicode notation (x², √, ½, H₂O, →). Under 170 words total.',
         messages: [{
           role: 'user',
-          content: 'Topic: ' + topic + ' (' + subject + ', Grade 11-12). Give 3 vivid real-life mini scenarios where this topic is at work: one from engineering or nature, one from money or business (use N$), one from sport or home life. For each: start with one emoji, 2 short sentences, and one tiny worked example with real numbers. End with one sentence on why mastering this gives them power in real life.'
+          content: 'Topic: ' + topic + ' (' + subject + ', Grade ' + this.validGrade(this.state.grade) + '). Give 3 vivid real-life mini scenarios where this topic is at work: one from engineering or nature, one from money or business (use N$), one from sport or home life. For each: start with one emoji, 2 short sentences, and one tiny worked example with real numbers. End with one sentence on why mastering this gives them power in real life.'
         }]
       });
       const t = String(raw || '').trim();
@@ -2329,6 +2329,11 @@ class Component extends DCLogic {
     }
   }
 
+  validGrade(g) {
+    g = String(g || '').replace(/\D/g, '');
+    return ['8', '9', '10', '11', '12'].indexOf(g) > -1 ? g : '12';
+  }
+
   plansDigest(subject, grade) {
     var country = 'Namibia';
     try { country = localStorage.getItem('k12plus-country') || 'Namibia'; } catch (e) {}
@@ -2380,7 +2385,7 @@ class Component extends DCLogic {
         out = await window.k12plan({
           action: 'lesson_plan', kind: kind,
           grade: parseInt(grade, 10) || 12,
-          syllabus: grade === '11' ? '6131' : '8227',
+          syllabus: (grade === '10' || grade === '11') ? '6131' : (grade === '12' ? '8227' : 'JS'),
           topic: subject + ' - ' + topic,
           objectives: objectives
         });
@@ -3315,7 +3320,7 @@ class Component extends DCLogic {
         const kind = s.plansKind || 'lesson';
         const tpl = s.plansTemplate || 'classic';
         const psubj = s.plansSubject || 'Mathematics';
-        const pg = s.plansGrade || (s.grade === '11' ? '11' : '12');
+        const pg = s.plansGrade || this.validGrade(s.grade);
         const dur = s.plansDuration || '40';
         const pd = s.planDoc;
         const plan = (pd && pd.plan) || {};
@@ -3368,7 +3373,7 @@ class Component extends DCLogic {
                 : 'background:' + x.bg + ';color:' + x.c + ';border:1px solid ' + x.bd + ';'),
             pick: () => this.setState({ plansSubject: x.name, plansIdeas: [] })
           })),
-          plansGradeTabs: ['11', '12'].map(g => ({ label: 'Grade ' + g, style: pchip(pg === g), pick: () => this.setState({ plansGrade: g, plansIdeas: [] }) })),
+          plansGradeTabs: (this.plansDigest(psubj, pg).country === 'South Africa' ? ['11', '12'] : ['8', '9', '10', '11', '12']).map(g => ({ label: 'Grade ' + g, style: pchip(pg === g), pick: () => this.setState({ plansGrade: g, plansIdeas: [] }) })),
           plansDurTabs: ['40', '60', '80'].map(d => ({ label: d + ' min', style: pchip(dur === d), pick: () => this.setState({ plansDuration: d }) })),
           planIsLessonKind: kind === 'lesson',
           plansTopic: s.plansTopic || '',

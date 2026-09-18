@@ -1,4 +1,4 @@
-# K12Plus - AI tutoring for Grade 11-12 learners in Namibia and South Africa
+# K12Plus - AI tutoring for Grades 8-12 in Namibia and Grades 11-12 in South Africa
 
 Live at https://k12plus.app (mirror: https://k12edu.io)
 
@@ -15,8 +15,9 @@ Voice input, photo upload and handwritten input all reach the tutor through Gemi
   rate limiting, origin allowlisting, and agent execution logging
 - Data: Supabase (Postgres) - accounts, profiles, 562-school directory, quiz attempts,
   agent logs, hash-chained trust records (backend/schema.sql)
-- Curricula: backend/curriculum.json (NSSCO 6131 + NSSCAS 8227, extracted verbatim from
-  official NIED syllabi) and backend/caps_curriculum.json (CAPS Grades 11-12, DBE)
+- Curricula: k12plus-syllabus.js (NIED Junior Secondary Grades 8-9, NSSCO 6131 for Grades
+  10-11, and NSSCAS 8227 for Grade 12, all extracted verbatim from official NIED syllabi
+  for Namibia) plus backend/caps_curriculum.json (CAPS Grades 11-12, DBE, for South Africa)
 
 No secrets live in this repository. All keys are injected as environment variables in
 Google Cloud Run.
