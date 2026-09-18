@@ -167,19 +167,35 @@ textarea::placeholder { color:var(--muted); }
 
     <div style="text-align:center; margin:0;">
       <sc-if value="{{ showUssd }}" hint-placeholder-val="{{ true }}">
-        <button style="background:var(--surface); border:1px solid var(--line); color:var(--primary); padding:12px 26px; border-radius:999px; font-family:'Poppins',sans-serif; font-size:15px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:9px;" style-hover="border-color:var(--primary);">
+        <button onClick="{{ openUssd }}" style="background:var(--surface); border:1px solid var(--line); color:var(--primary); padding:12px 26px; border-radius:999px; font-family:'Poppins',sans-serif; font-size:15px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:9px;" style-hover="border-color:var(--primary);">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"></rect><line x1="12" y1="18" x2="12" y2="18"></line></svg>
-          No smartphone? Dial *120*512#
+          No smartphone? Dial *141*12#
         </button>
+        <p style="font-size:12px; color:var(--muted); margin:8px 0 0;">Tap to see how it works, a simulation you can try right here</p>
       </sc-if>
     </div>
+
+    <sc-if value="{{ ussdOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:fixed; inset:0; background:rgba(20,17,40,.55); display:flex; align-items:center; justify-content:center; z-index:100; padding:20px;">
+        <div style="width:300px; max-width:100%; background:#0F1115; border-radius:34px; border:10px solid #1C1E24; box-shadow:0 30px 70px rgba(0,0,0,.45); overflow:hidden; position:relative;">
+          <button onClick="{{ closeUssd }}" title="Close" style="position:absolute; top:10px; right:10px; z-index:5; width:26px; height:26px; border-radius:50%; border:none; background:rgba(255,255,255,.12); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+          <div style="background:#FFF6DC; color:#8A6D00; font-size:11px; font-weight:700; text-align:center; padding:8px 34px 7px 14px; letter-spacing:.2px;">SIMULATION &middot; not a live USSD connection</div>
+          <div style="background:#000; color:#D8FFDD; font-family:'Courier New',monospace; font-size:14.5px; line-height:1.55; white-space:pre-line; padding:22px 18px; min-height:220px;">{{ ussdScreenText }}</div>
+          <div style="background:#15171D; padding:10px; display:flex; flex-direction:column; gap:6px;">
+            <sc-for list="{{ ussdOptions }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.pick }}" style="width:100%; text-align:left; background:#20232B; color:#EDEDF2; border:1px solid #2C2F3A; border-radius:8px; padding:9px 12px; font-family:'Courier New',monospace; font-size:13.5px; cursor:pointer;" style-hover="border-color:#7C3AED;">{{ o.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
 
   </main>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;showUssd&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
 class Component extends DCLogic {
-  state = { dark: false, subject: 'Mathematics', audience: 'For Learners', input: '', messages: [], busy: false, showEq: false, showPen: false };
+  state = { dark: false, subject: 'Mathematics', audience: 'For Learners', input: '', messages: [], busy: false, showEq: false, showPen: false, ussdOpen: false, ussdScreen: 'start' };
 
   insertSym(sym) {
     this.setState(s => ({ input: s.input + sym }));
@@ -311,6 +327,25 @@ class Component extends DCLogic {
 
   renderVals() {
     const { dark, subject, audience, input, messages, busy } = this.state;
+    const ussdTree = {
+      start: { text: 'Welcome to K12Plus\n\n1. Ask a question\n2. Practice quiz\n3. My results\n0. Exit', options: [['1. Ask a question', 'subjects'], ['2. Practice quiz', 'quizSubjects'], ['3. My results', 'results'], ['0. Exit', 'end']] },
+      subjects: { text: 'Choose a subject\n\n1. Mathematics\n2. Physical Science\n3. Biology\n4. Business Studies\n0. Back', options: [['1. Mathematics', 'mathTopics'], ['2. Physical Science', 'comingSoon'], ['3. Biology', 'comingSoon'], ['4. Business Studies', 'comingSoon'], ['0. Back', 'start']] },
+      mathTopics: { text: 'Mathematics, Grade 10/11\n\n1. Squares, cubes and roots\n2. Directed numbers\n3. Fractions and percentages\n0. Back', options: [['1. Squares, cubes and roots', 'askSquares'], ['2. Directed numbers', 'comingSoon'], ['3. Fractions and percentages', 'comingSoon'], ['0. Back', 'subjects']] },
+      askSquares: { text: 'Example question:\n"What is the square root of 144?"\n\n1. See the answer\n0. Back', options: [['1. See the answer', 'answerSquares'], ['0. Back', 'mathTopics']] },
+      answerSquares: { text: '12, because 12 x 12 = 144.\n\nThat is how the tutor answers on any basic phone. No app, no data needed.\n\n0. Back to topics', options: [['0. Back to topics', 'mathTopics']] },
+      quizSubjects: { text: 'Practice quiz, choose a subject\n\n1. Mathematics\n0. Back', options: [['1. Mathematics', 'quizQuestion'], ['0. Back', 'start']] },
+      quizQuestion: { text: 'Q: What is 7 x 8?\n\n1. 54\n2. 56\n3. 64\n0. Back', options: [['1. 54', 'quizWrong'], ['2. 56', 'quizCorrect'], ['3. 64', 'quizWrong'], ['0. Back', 'quizSubjects']] },
+      quizCorrect: { text: 'Correct! 7 x 8 = 56.\n\n0. Back to quiz menu', options: [['0. Back to quiz menu', 'quizSubjects']] },
+      quizWrong: { text: 'Not quite. 7 x 8 = 56. Try another question any time.\n\n0. Back to quiz menu', options: [['0. Back to quiz menu', 'quizSubjects']] },
+      results: { text: 'My results (example)\n\nMathematics: 3 topics practised this week\nLast quiz score: 8/10\n\n0. Back', options: [['0. Back', 'start']] },
+      comingSoon: { text: 'This subject\'s USSD menu is coming soon in this simulation.\n\n0. Back', options: [['0. Back', 'subjects']] },
+      end: { text: 'Thank you for using K12Plus.\nGoodbye.\n\n(Simulation ended)', options: [['Restart the simulation', 'start']] }
+    };
+    const ussdNode = ussdTree[this.state.ussdScreen] || ussdTree.start;
+    const ussdOptions = (ussdNode.options || []).map(([label, to]) => ({
+      label,
+      pick: () => this.setState({ ussdScreen: to })
+    }));
     const h = React.createElement;
     const icoSvg = (children) => h('svg', { width: 18, height: 18, viewBox: '0 0 24 24', style: { flexShrink: 0 } }, ...children);
     const mathIcon = h('span', { style: { color: '#5563E0', fontWeight: 800, fontSize: 18, lineHeight: 1, flexShrink: 0, textShadow: '0 1px 0 rgba(85,99,224,.35)', fontFamily: 'Georgia,serif' } }, 'Σ');
@@ -526,7 +561,12 @@ class Component extends DCLogic {
       onInput: e => this.setState({ input: e.target.value }),
       onKey: e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.doSend(this.state.input); } },
       send: () => this.doSend(this.state.input),
-      showUssd: this.props.showUssd ?? true
+      showUssd: this.props.showUssd ?? true,
+      ussdOpen: !!this.state.ussdOpen,
+      ussdScreenText: ussdNode.text,
+      ussdOptions,
+      openUssd: () => this.setState({ ussdOpen: true, ussdScreen: 'start' }),
+      closeUssd: () => this.setState({ ussdOpen: false })
     };
   }
 }
