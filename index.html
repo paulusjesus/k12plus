@@ -177,7 +177,7 @@ textarea::placeholder { color:var(--muted); }
 
     <sc-if value="{{ ussdOpen }}" hint-placeholder-val="{{ false }}">
       <div style="position:fixed; inset:0; background:rgba(20,17,40,.55); display:flex; align-items:flex-start; justify-content:center; z-index:100; padding:20px; overflow-y:auto;">
-        <div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap; justify-content:center; max-width:560px; margin:auto;">
+        <div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap; justify-content:center; max-width:620px; margin:auto;">
           <div style="width:300px; max-width:100%; background:#0F1115; border-radius:34px; border:10px solid #1C1E24; box-shadow:0 30px 70px rgba(0,0,0,.45); overflow:hidden; position:relative; margin:auto;">
             <div style="{{ ussdAccentBarStyle }}"></div>
             <button onClick="{{ closeUssd }}" title="Close" style="position:absolute; top:10px; right:10px; z-index:5; width:26px; height:26px; border-radius:50%; border:none; background:rgba(255,255,255,.12); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
@@ -220,13 +220,13 @@ textarea::placeholder { color:var(--muted); }
               <button onClick="{{ closeUssd }}" style="width:100%; text-align:center; background:transparent; color:#9AA0B4; border:none; border-top:1px solid #262A33; margin-top:4px; padding:12px 4px 2px; font-family:'Poppins',sans-serif; font-size:12.5px; cursor:pointer;" style-hover="color:#fff;">&larr; Close simulation and return to the website</button>
             </div>
           </div>
-          <div style="width:220px; max-width:100%; background:linear-gradient(160deg,#7C3AED,#4C1D95); border-radius:20px; padding:16px; color:#fff; font-family:'Poppins',sans-serif; box-shadow:0 20px 50px rgba(76,29,149,.35);">
-            <p style="margin:0 0 4px; font-size:13px; font-weight:700;">⚡ Quick-dial shortcuts</p>
-            <p style="margin:0 0 12px; font-size:11px; opacity:.8; line-height:1.4;">Skip the menu next time, dial these straight from your phone.</p>
+          <div style="width:260px; max-width:100%; background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:18px; font-family:'Poppins',sans-serif; box-shadow:var(--shadow);">
+            <p style="margin:0 0 4px; font-size:15px; font-weight:700; color:var(--ink);">⚡ Quick-dial shortcuts</p>
+            <p style="margin:0 0 14px; font-size:12.5px; color:var(--muted); line-height:1.45;">Skip the menu next time, dial these straight from your phone.</p>
             <sc-for list="{{ ussdShortcuts }}" as="s" hint-placeholder-count="9">
-              <div style="background:rgba(255,255,255,.14); border-radius:10px; padding:8px 10px; margin-bottom:8px;">
-                <p style="margin:0; font-size:12.5px; font-weight:700;">{{ s.emoji }} {{ s.label }}</p>
-                <p style="margin:2px 0 0; font-size:11.5px; font-family:'Courier New',monospace; opacity:.9;">Dial this: {{ s.code }}</p>
+              <div style="background:var(--chip); border-left:4px solid {{ s.color }}; border-radius:10px; padding:9px 12px; margin-bottom:8px;">
+                <p style="margin:0; font-size:14px; font-weight:700; color:var(--ink);">{{ s.emoji }} {{ s.label }}</p>
+                <p style="margin:3px 0 0; font-size:15px; font-weight:700; font-family:'Courier New',monospace; letter-spacing:.3px; color:{{ s.color }};">{{ s.code }}</p>
               </div>
             </sc-for>
           </div>
@@ -389,9 +389,9 @@ class Component extends DCLogic {
     };
     const ussdAccentMap = {
       dial: '#7C3AED', start: '#7C3AED', subjects: '#7C3AED', end: '#7C3AED',
-      mathTopics: '#5563E0', askSquares: '#5563E0', answerSquares: '#5563E0',
-      quizSubjects: '#3BB273', quizQuestion: '#3BB273', quizCorrect: '#3BB273', quizWrong: '#3BB273',
-      results: '#E89B00', games: '#D96BE8', practical: '#00B8A9', comingSoon: '#6B7280'
+      mathTopics: '#2563EB', askSquares: '#2563EB', answerSquares: '#2563EB',
+      quizSubjects: '#0D9488', quizQuestion: '#0D9488', quizCorrect: '#0D9488', quizWrong: '#0D9488',
+      results: '#E11D48', games: '#DB2777', practical: '#0891B2', comingSoon: '#6B7280'
     };
     const ussdAccent = ussdAccentMap[this.state.ussdScreen] || '#7C3AED';
     const ussdNode = ussdTree[this.state.ussdScreen] || ussdTree.start;
@@ -431,15 +431,15 @@ class Component extends DCLogic {
       }
     };
     const ussdShortcuts = [
-      { emoji: '\ud83d\udcf1', label: 'Main menu', code: '*141*12#' },
-      { emoji: '\ud83d\udcd0', label: 'Mathematics', code: '*141*12*1#' },
-      { emoji: '\u2697\ufe0f', label: 'Physical Science', code: '*141*12*2#' },
-      { emoji: '\ud83e\uddec', label: 'Biology', code: '*141*12*3#' },
-      { emoji: '\ud83d\udcbc', label: 'Business Studies', code: '*141*12*4#' },
-      { emoji: '\ud83e\uddee', label: 'Practice quiz', code: '*141*12*5#' },
-      { emoji: '\ud83d\udcca', label: 'My results', code: '*141*12*6#' },
-      { emoji: '\ud83c\udfae', label: 'Games', code: '*141*12*7#' },
-      { emoji: '\ud83d\udd2c', label: 'Real-Life Lab', code: '*141*12*8#' }
+      { emoji: '\ud83d\udcf1', label: 'Main menu', code: '*141*12#', color: '#7C3AED' },
+      { emoji: '\ud83d\udcd0', label: 'Mathematics', code: '*141*12*1#', color: '#2563EB' },
+      { emoji: '\u2697\ufe0f', label: 'Physical Science', code: '*141*12*2#', color: '#D97706' },
+      { emoji: '\ud83e\uddec', label: 'Biology', code: '*141*12*3#', color: '#16A34A' },
+      { emoji: '\ud83d\udcbc', label: 'Business Studies', code: '*141*12*4#', color: '#C026D3' },
+      { emoji: '\ud83e\uddee', label: 'Practice quiz', code: '*141*12*5#', color: '#0D9488' },
+      { emoji: '\ud83d\udcca', label: 'My results', code: '*141*12*6#', color: '#E11D48' },
+      { emoji: '\ud83c\udfae', label: 'Games', code: '*141*12*7#', color: '#DB2777' },
+      { emoji: '\ud83d\udd2c', label: 'Real-Life Lab', code: '*141*12*8#', color: '#0891B2' }
     ];
     const h = React.createElement;
     const icoSvg = (children) => h('svg', { width: 18, height: 18, viewBox: '0 0 24 24', style: { flexShrink: 0 } }, ...children);
