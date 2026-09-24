@@ -1,6 +1,6 @@
 /**
  * K12Plus bridge - connects the design prototype to the real backend.
- * - window.claude.complete(...) -> Google Cloud Run proxy (Gemini, XPRIZE compliant)
+ * - window.claude.complete(...) -> Google Cloud Run proxy (Claude API)
  * - Offline queue: questions asked offline are answered on reconnect
  * - PWA service worker registration
  */
