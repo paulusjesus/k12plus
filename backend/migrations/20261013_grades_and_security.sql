@@ -3,6 +3,7 @@
 -- 2. Stop self-promotion: users cannot give themselves a privileged role or a paid plan
 -- 3. Payments created by users always start as pending
 -- 4. Lock down SECURITY DEFINER functions and views flagged by the Supabase advisor
+-- 5. Fix quiz saving: the trust chain could not find digest() (pgcrypto lives in the extensions schema)
 
 -- 1. Grades
 alter table public.profiles drop constraint if exists profiles_grade_check;
@@ -74,3 +75,7 @@ alter function public.generate_learner_uid(text) set search_path = public;
 alter view public.school_stats set (security_invoker = true);
 alter view public.topic_heatmap set (security_invoker = true);
 revoke select on public.school_stats, public.topic_heatmap from anon;
+
+-- 5. Quiz results were never saved: append_trust_record failed with
+--    'function digest(text, unknown) does not exist' because pgcrypto is in extensions
+alter function public.append_trust_record(text, text, jsonb) set search_path = public, extensions;
