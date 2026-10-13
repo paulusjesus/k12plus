@@ -99,6 +99,61 @@
     } catch (e) {}
   }
 
+  // ---- keep learners signed in: renew the access token with the refresh token ----
+  function readSession() {
+    try { return JSON.parse(localStorage.getItem('k12plus-session') || 'null'); } catch (e) { return null; }
+  }
+  function tokenExpiry(token) {
+    try {
+      var part = String(token).split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      while (part.length % 4) part += '=';
+      return (JSON.parse(atob(part)).exp || 0) * 1000;
+    } catch (e) { return 0; }
+  }
+  var refreshing = null;
+  // Returns a session with a valid access token, renewing it when it is within
+  // two minutes of expiry. Returns null when signed out or the refresh token was revoked.
+  async function freshSession() {
+    var sess = readSession();
+    if (!sess || !sess.access_token || !sess.user_id) return null;
+    if (tokenExpiry(sess.access_token) - Date.now() > 120000) return sess;
+    if (!sess.refresh_token) return null;
+    if (!navigator.onLine) return null;
+    if (!refreshing) {
+      refreshing = (async function () {
+        try {
+          var res = await fetch(SUPA + '/auth/v1/token?grant_type=refresh_token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY },
+            body: JSON.stringify({ refresh_token: sess.refresh_token }),
+          });
+          var data = null;
+          try { data = await res.json(); } catch (e) {}
+          if (res.ok && data && data.access_token) {
+            var next = { access_token: data.access_token, refresh_token: data.refresh_token || sess.refresh_token, user_id: sess.user_id };
+            localStorage.setItem('k12plus-session', JSON.stringify(next));
+            return next;
+          }
+          if (res.status === 400 || res.status === 401) {
+            // refresh token used up or revoked: sign out cleanly so the app asks to log in again
+            localStorage.removeItem('k12plus-session');
+            localStorage.removeItem('k12plus-loggedin');
+          }
+          return null;
+        } catch (e) {
+          return null;
+        } finally {
+          refreshing = null;
+        }
+      })();
+    }
+    return refreshing;
+  }
+  window.k12session = freshSession;
+  // renew on page load and whenever the learner comes back to the tab
+  freshSession();
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) freshSession(); });
+
   window.k12auth = {
     signup: async function (opts) {
       opts = opts || {};
@@ -203,9 +258,8 @@
 
   window.k12data = {
     recordQuiz: async function (subject, score, total) {
-      var sess = null;
-      try { sess = JSON.parse(localStorage.getItem('k12plus-session') || 'null'); } catch (e) {}
-      if (!sess || !sess.access_token || !sess.user_id) return;
+      var sess = await freshSession();
+      if (!sess) return;
       try {
         await fetch(SUPA + '/rest/v1/quiz_attempts', {
           method: 'POST',
@@ -215,9 +269,8 @@
       } catch (e) {}
     },
     myQuizStats: async function () {
-      var sess = null;
-      try { sess = JSON.parse(localStorage.getItem('k12plus-session') || 'null'); } catch (e) {}
-      if (!sess || !sess.access_token || !sess.user_id) return null;
+      var sess = await freshSession();
+      if (!sess) return null;
       try {
         var res = await fetch(SUPA + '/rest/v1/quiz_attempts?user_id=eq.' + encodeURIComponent(sess.user_id) + '&select=subject,score,total,created_at&order=created_at.desc&limit=100', {
           headers: { apikey: SUPA_KEY, Authorization: 'Bearer ' + sess.access_token },

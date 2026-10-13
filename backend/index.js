@@ -14,85 +14,82 @@
 const functions = require('@google-cloud/functions-framework');
 
 // Primary model favours answer quality (this is a tutor, quality matters most);
-// the fallback is used only if the primary is rate-limited or overloaded.
-const CLAUDE_MODELS = ['claude-sonnet-5', 'claude-haiku-4-5-20251001'];
+// the fallback is used if the primary errors, is rate-limited or overloaded.
+// Note: current Claude models reject non-default temperature/top_p/top_k (400),
+// and adaptive thinking is on by default and counts toward max_tokens, so we
+// keep effort low for speed and leave generous max_tokens headroom.
+const CLAUDE_MODELS = ['claude-sonnet-5-5', 'claude-haiku-5-5'];
 const CLAUDE_URL = 'https://api.anthropic.com/v1/messages';
 const CLAUDE_VERSION = '2023-06-01';
+// statuses where trying the next model may help (400/404: model-specific rejection)
+const RETRYABLE = [400, 404, 408, 429, 500, 502, 503, 504, 529];
 
 const clip = (s, n) => String(s || '').slice(0, n);
 
+// Claude needs non-empty turns that start with the learner, so drop blank
+// turns and any leading tutor greeting the app keeps in its chat history.
 function toClaudeMessages(messages) {
-  return messages.map((m) => ({
-    role: m.role === 'assistant' ? 'assistant' : 'user',
-    content: m.content,
-  }));
+  const out = (messages || [])
+    .map((m) => ({ role: m.role === 'assistant' ? 'assistant' : 'user', content: String(m.content || '').trim() }))
+    .filter((m) => m.content);
+  while (out.length && out[0].role === 'assistant') out.shift();
+  if (!out.length) out.push({ role: 'user', content: 'Hello' });
+  return out;
 }
 
-async function callClaude(systemText, messages, maxTokens = 1024) {
-  const claudeMessages = toClaudeMessages(messages);
+// Single entry point for every Claude call. Returns text, token usage and the model used.
+async function claudeRequest(systemText, claudeMessages, { maxTokens = 4096, effort = 'low' } = {}) {
   let lastErr = null;
   for (const model of CLAUDE_MODELS) {
-    const res = await fetch(CLAUDE_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': CLAUDE_VERSION,
-      },
-      body: JSON.stringify({
-        model,
-        max_tokens: maxTokens,
-        temperature: 0.7,
-        system: systemText,
-        messages: claudeMessages,
-      }),
-    });
+    let res;
+    try {
+      res = await fetch(CLAUDE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': process.env.ANTHROPIC_API_KEY,
+          'anthropic-version': CLAUDE_VERSION,
+        },
+        body: JSON.stringify({
+          model,
+          max_tokens: maxTokens,
+          output_config: { effort },
+          system: systemText,
+          messages: claudeMessages,
+        }),
+      });
+    } catch (e) {
+      lastErr = `Claude network error (${model}): ${e.message}`;
+      continue;
+    }
     if (res.ok) {
       const data = await res.json();
-      const text = (data.content || []).map((b) => b.text || '').join('');
+      const text = (data.content || []).filter((b) => b.type === 'text').map((b) => b.text || '').join('').trim();
+      if (!text) {
+        lastErr = `Claude ${model} returned no text (stop_reason ${data.stop_reason})`;
+        continue;
+      }
       const u = data.usage || {};
-      return { text, tokensIn: u.input_tokens, tokensOut: u.output_tokens };
+      return { text, tokensIn: u.input_tokens, tokensOut: u.output_tokens, model, truncated: data.stop_reason === 'max_tokens' };
     }
-    lastErr = `Claude ${res.status}: ${await res.text()}`;
-    // fall through to the fallback model on overload or rate errors
-    if (res.status !== 529 && res.status !== 429 && res.status !== 500 && res.status !== 503) break;
+    lastErr = `Claude ${model} ${res.status}: ${clip(await res.text(), 300)}`;
+    console.error(lastErr);
+    if (!RETRYABLE.includes(res.status)) break; // 401/403: key problem, the next model will not help
   }
   throw new Error(lastErr || 'Claude unavailable');
 }
 
+function callClaude(systemText, messages, maxTokens = 4096, effort = 'low') {
+  return claudeRequest(systemText, toClaudeMessages(messages), { maxTokens, effort });
+}
+
 // For image questions: a single-turn call with the learner's photo attached.
-async function callClaudeWithImage(systemText, promptText, imageMime, imageBase64, maxTokens = 1024) {
+function callClaudeWithImage(systemText, promptText, imageMime, imageBase64, maxTokens = 4096) {
   const content = [
     { type: 'image', source: { type: 'base64', media_type: imageMime || 'image/png', data: imageBase64 } },
     { type: 'text', text: promptText || 'Please help me with this.' },
   ];
-  let lastErr = null;
-  for (const model of CLAUDE_MODELS) {
-    const res = await fetch(CLAUDE_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': CLAUDE_VERSION,
-      },
-      body: JSON.stringify({
-        model,
-        max_tokens: maxTokens,
-        temperature: 0.7,
-        system: systemText,
-        messages: [{ role: 'user', content }],
-      }),
-    });
-    if (res.ok) {
-      const data = await res.json();
-      const text = (data.content || []).map((b) => b.text || '').join('');
-      const u = data.usage || {};
-      return { text, tokensIn: u.input_tokens, tokensOut: u.output_tokens };
-    }
-    lastErr = `Claude ${res.status}: ${await res.text()}`;
-    if (res.status !== 529 && res.status !== 429 && res.status !== 500 && res.status !== 503) break;
-  }
-  throw new Error(lastErr || 'Claude unavailable');
+  return claudeRequest(systemText, [{ role: 'user', content }], { maxTokens, effort: 'low' });
 }
 
 async function logAgent(entry) {
@@ -152,12 +149,12 @@ Rules:
 - Keep responses concise and mobile-friendly.
 - If asked beyond syllabus depth, answer briefly and steer back to syllabus level.
 - If the learner is stuck three times, break the problem into the smallest possible step.`;
-      const out = await callClaude(sys, messages.slice(-12));
+      const out = await callClaude(sys, messages.slice(-12), 4096);
       await logAgent({
         agent: 'tutor', action: `answer grade ${grade} ${topic || 'general'}`,
         input_summary: clip(messages.at(-1)?.content, 200),
         output_summary: clip(out.text, 200),
-        tokens_in: out.tokensIn, tokens_out: out.tokensOut,
+        tokens_in: out.tokensIn, tokens_out: out.tokensOut, model: out.model,
       });
       return res.json({ reply: out.text });
     }
@@ -173,12 +170,12 @@ Official NIED syllabus objectives (align every element to these):
 ${obj}
 Return STRICT JSON only, no markdown fences, exactly this shape: ${shape}
 Use "learners" not "students". Namibian context. Practical for under-resourced classrooms (chalkboard, shared textbooks, no projector).`;
-      const out = await callClaude(sys, [{ role: 'user', content: `Generate the ${kind} now.` }], 4096);
+      const out = await callClaude(sys, [{ role: 'user', content: `Generate the ${kind} now.` }], 16000);
       let plan;
       try { plan = parseJson(out.text) } catch { return res.status(502).json({ error: 'generation format error, retry' }) }
       await logAgent({
         agent: 'lesson_planner', action: `${kind} grade ${grade} ${topic}`,
-        output_summary: clip(plan.title, 200), tokens_in: out.tokensIn, tokens_out: out.tokensOut,
+        output_summary: clip(plan.title, 200), tokens_in: out.tokensIn, tokens_out: out.tokensOut, model: out.model,
       });
       return res.json({ plan });
     }
@@ -189,12 +186,12 @@ Use "learners" not "students". Namibian context. Practical for under-resourced c
 ${obj}
 Return STRICT JSON array only: [{"q":"","answer":"","acceptedForms":[""],"hint":"","steps":[""],"difficulty":"easy|medium|hard"}]
 Answers must be exact, checkable strings (numbers or simple expressions).`;
-      const out = await callClaude(sys, [{ role: 'user', content: 'Generate now.' }], 4096);
+      const out = await callClaude(sys, [{ role: 'user', content: 'Generate now.' }], 12000);
       let questions;
       try { questions = parseJson(out.text) } catch { return res.status(502).json({ error: 'generation format error, retry' }) }
       await logAgent({
         agent: 'content_generator', action: `questions grade ${grade} ${topic} x${count}`,
-        output_summary: `${questions.length} questions`, tokens_in: out.tokensIn, tokens_out: out.tokensOut,
+        output_summary: `${questions.length} questions`, tokens_in: out.tokensIn, tokens_out: out.tokensOut, model: out.model,
       });
       return res.json({ questions });
     }
@@ -202,12 +199,12 @@ Answers must be exact, checkable strings (numbers or simple expressions).`;
     if (action === 'ministry_brief') {
       const sys = `You are the AIM Ministry Brief agent. Write a weekly briefing for the Namibian Ministry of Education, Arts and Culture based on real platform statistics. Be factual, concise, actionable. Never invent numbers not present in the data.
 Return STRICT JSON: {"headline":"","highlights":[""],"risks":[""],"recommendations":[""]}`;
-      const out = await callClaude(sys, [{ role: 'user', content: clip(JSON.stringify(stats), 8000) }], 2048);
+      const out = await callClaude(sys, [{ role: 'user', content: clip(JSON.stringify(stats), 8000) }], 8000);
       let brief;
       try { brief = parseJson(out.text) } catch { return res.status(502).json({ error: 'generation format error, retry' }) }
       await logAgent({
         agent: 'ministry_brief', action: `weekly brief ${region || 'national'}`,
-        output_summary: clip(brief.headline, 200), tokens_in: out.tokensIn, tokens_out: out.tokensOut,
+        output_summary: clip(brief.headline, 200), tokens_in: out.tokensIn, tokens_out: out.tokensOut, model: out.model,
       });
       return res.json({ brief });
     }
@@ -217,12 +214,12 @@ Return STRICT JSON: {"headline":"","highlights":[""],"risks":[""],"recommendatio
       // (subject focus, curriculum context, tone). Still logged either way.
       const sys = clip(req.body.system, 4000) ||
         'You are the k12plus tutor for learners in Namibia and South Africa. Be a patient, warm teacher.';
-      const out = await callClaude(sys, (messages || []).slice(-16), 1024);
+      const out = await callClaude(sys, (messages || []).slice(-16), 4096);
       await logAgent({
         agent: 'tutor', action: 'k12plus chat',
         input_summary: clip(messages.at(-1)?.content, 200),
         output_summary: clip(out.text, 200),
-        tokens_in: out.tokensIn, tokens_out: out.tokensOut,
+        tokens_in: out.tokensIn, tokens_out: out.tokensOut, model: out.model,
       });
       return res.json({ reply: out.text });
     }
@@ -233,12 +230,12 @@ Return STRICT JSON: {"headline":"","highlights":[""],"risks":[""],"recommendatio
       const sys = clip(req.body.system, 4000) ||
         'You are the k12plus tutor for learners in Namibia and South Africa. Be a patient, warm teacher.';
       const lastUserText = (messages || []).slice(-1)[0]?.content || 'Please help me with this.';
-      const out = await callClaudeWithImage(sys, lastUserText, image.mime, image.data, 1024);
+      const out = await callClaudeWithImage(sys, lastUserText, image.mime, image.data, 4096);
       await logAgent({
         agent: 'tutor', action: 'k12plus chat with image',
         input_summary: clip(lastUserText, 200),
         output_summary: clip(out.text, 200),
-        tokens_in: out.tokensIn, tokens_out: out.tokensOut,
+        tokens_in: out.tokensIn, tokens_out: out.tokensOut, model: out.model,
       });
       return res.json({ reply: out.text });
     }
@@ -246,6 +243,12 @@ Return STRICT JSON: {"headline":"","highlights":[""],"risks":[""],"recommendatio
     return res.status(400).json({ error: 'unknown action' });
   } catch (e) {
     console.error(e);
+    const agentFor = { tutor: 'tutor', chat: 'tutor', chatimg: 'tutor', lesson_plan: 'lesson_planner',
+      generate_questions: 'content_generator', ministry_brief: 'ministry_brief' };
+    await logAgent({
+      agent: agentFor[action] || 'triage', action: `${action || 'unknown'} failed`,
+      output_summary: clip(e.message, 200), success: false, model: null,
+    });
     return res.status(500).json({ error: 'server error', detail: clip(e.message, 200) });
   }
 });
