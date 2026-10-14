@@ -1,5 +1,5 @@
 /* K12Plus service worker - offline-first PWA */
-var VERSION = 'k12plus-v5';
+var VERSION = 'k12plus-v6';
 var PRECACHE = [
   '/', '/index.html', '/about.html', '/pricing.html', '/contact.html',
   '/signup.html', '/app.html', '/support.js', '/k12plus-bridge.js',
@@ -25,8 +25,8 @@ self.addEventListener('activate', function (e) {
 self.addEventListener('fetch', function (e) {
   var url = new URL(e.request.url);
   if (e.request.method !== 'GET') return;
-  // never cache the AI proxy
-  if (url.hostname.indexOf('run.app') !== -1) return;
+  // never cache the AI proxy or Supabase API calls
+  if (url.hostname.indexOf('run.app') !== -1 || url.hostname.indexOf('supabase.co') !== -1) return;
 
   // CDN scripts (React, Babel) and Google Fonts: cache-first, they are versioned
   var isCdn = url.hostname.indexOf('unpkg.com') !== -1 ||

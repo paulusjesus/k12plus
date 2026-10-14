@@ -1,11 +1,18 @@
 /**
  * K12Plus bridge - connects the design prototype to the real backend.
- * - window.claude.complete(...) -> Google Cloud Run proxy (Claude API)
+ * - window.claude.complete(...) -> Supabase Edge Function `aim` (Claude API)
  * - Offline queue: questions asked offline are answered on reconnect
  * - PWA service worker registration
  */
 (function () {
-  var PROXY = 'https://aim-269148997291.europe-west1.run.app';
+  // AI proxy: Supabase Edge Function (moved from Google Cloud Run on 14 Oct 2026).
+  // The public anon key below is the same one used for auth; it lets the
+  // Supabase gateway accept the call. The Claude key lives only on the server.
+  var PROXY = 'https://uwqbjjzjdnjlbicxrwnp.supabase.co/functions/v1/aim';
+  var PROXY_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3cWJqanpqZG5qbGJpY3hyd25wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4MzIyNzMsImV4cCI6MjEwMTQwODI3M30.A-YBoeeBGi8XD9tZsm3Yllj0TzfKsl9TKsUSySlWd88';
+  function proxyHeaders() {
+    return { 'Content-Type': 'application/json', apikey: PROXY_ANON, Authorization: 'Bearer ' + PROXY_ANON };
+  }
 
   // ---- AI bridge ----
   window.claude = window.claude || {};
@@ -35,13 +42,16 @@
     }
     var res = await fetch(PROXY, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: proxyHeaders(),
       body: JSON.stringify(payload),
     });
     var data = null;
     try { data = await res.json(); } catch (e) {}
     if (!res.ok) {
       var detail = (data && (data.detail || data.error)) || '';
+      if (res.status === 503 && /not configured/i.test(String(data && data.error))) {
+        return 'The tutor is getting a small upgrade and will be back very soon 🛠️ Your question is not lost, please send it again in a little while.';
+      }
       if (res.status === 429 || String(detail).indexOf('429') > -1 || /quota/i.test(String(detail))) {
         return 'Wow, a lot of learners are studying right now and the tutor is at full capacity 😅 Please try again in a little while. Your question is not lost, just send it again later.';
       }
@@ -60,7 +70,7 @@
       try {
         var res = await fetch(PROXY, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: proxyHeaders(),
           body: JSON.stringify(q[i].payload),
         });
         if (!res.ok) continue;
@@ -297,13 +307,13 @@
     },
   };
 
-  // ---- Lesson planner (Cloud Run lesson_plan action, 4096-token budget) ----
+  // ---- Lesson planner (lesson_plan action on the aim Edge Function) ----
   window.k12plan = async function (payload) {
     if (!navigator.onLine) return { error: 'offline' };
     try {
       var res = await fetch(PROXY, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: proxyHeaders(),
         body: JSON.stringify(payload),
       });
       var data = null;

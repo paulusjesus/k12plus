@@ -1,14 +1,14 @@
 /**
- * K12Plus AI Proxy - Google Cloud Function (2nd gen)
- * Runs on Google Cloud (Cloud Run function); all LLM calls go through the
- * Anthropic Claude API.
+ * K12Plus AI Proxy. Runs as the Supabase Edge Function `aim` (generated from
+ * this file by backend/build-edge.py) and can still run as a Google Cloud Run
+ * function. All LLM calls go through the Anthropic Claude API.
  *
  * Actions: tutor | lesson_plan | generate_questions | ministry_brief | chat | chatimg
  * The frontend sends the relevant NIED syllabus objectives with each request
  * (single curriculum source of truth lives in the app bundle).
  *
  * Env vars (set at deploy, never in the repo):
- *  ANTHROPIC_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY, ALLOWED_ORIGIN
+ *  ANTHROPIC_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY (on Supabase: SUPABASE_SERVICE_ROLE_KEY)
  */
 
 const functions = require('@google-cloud/functions-framework');
@@ -122,10 +122,13 @@ functions.http('aim', async (req, res) => {
   if (!_rec || _now - _rec.t > 60000) { _rec = { t: _now, n: 0 }; globalThis._rl[_ip] = _rec; }
   _rec.n++;
   if (_rec.n > 30) return res.status(429).json({ error: 'Too many requests, slow down.' });
-  res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, apikey, x-client-info');
   res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(204).send('');
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return res.status(503).json({ error: 'tutor not configured', detail: 'ANTHROPIC_API_KEY is not set' });
+  }
 
   const {
     action, grade = 12, syllabus = '8227', topic = null,
