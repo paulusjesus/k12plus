@@ -28,7 +28,7 @@ const functions = { http: (_name: string, h: any) => { handler = h; } };
  * (single curriculum source of truth lives in the app bundle).
  *
  * Env vars (set at deploy, never in the repo):
- *  ANTHROPIC_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY (on Supabase: SUPABASE_SERVICE_ROLE_KEY)
+ *  ANTHROPIC_API_KEY, ANTHROPIC_WORKSPACE_ID (only for keys not scoped to a workspace), SUPABASE_URL, SUPABASE_SERVICE_KEY (on Supabase: SUPABASE_SERVICE_ROLE_KEY)
  */
 
 
@@ -56,6 +56,18 @@ function toClaudeMessages(messages) {
   return out;
 }
 
+// Keys created at organisation level (not inside a workspace) must name the
+// workspace on every request, so ANTHROPIC_WORKSPACE_ID is sent when it is set.
+function claudeHeaders() {
+  const h = {
+    'Content-Type': 'application/json',
+    'x-api-key': process.env.ANTHROPIC_API_KEY,
+    'anthropic-version': CLAUDE_VERSION,
+  };
+  if (process.env.ANTHROPIC_WORKSPACE_ID) h['anthropic-workspace-id'] = process.env.ANTHROPIC_WORKSPACE_ID;
+  return h;
+}
+
 // Single entry point for every Claude call. Returns text, token usage and the model used.
 async function claudeRequest(systemText, claudeMessages, { maxTokens = 4096, effort = 'low' } = {}) {
   let lastErr = null;
@@ -64,11 +76,7 @@ async function claudeRequest(systemText, claudeMessages, { maxTokens = 4096, eff
     try {
       res = await fetch(CLAUDE_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': process.env.ANTHROPIC_API_KEY,
-          'anthropic-version': CLAUDE_VERSION,
-        },
+        headers: claudeHeaders(),
         body: JSON.stringify({
           model,
           max_tokens: maxTokens,
