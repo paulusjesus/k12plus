@@ -279,6 +279,97 @@
     },
   };
 
+  // ---- Password reset ----
+  // Email accounts: Supabase emails a link; it comes back to the site with a
+  // recovery token in the address, which we hand to the "new password" screen.
+  (function catchRecoveryLink() {
+    try {
+      var h = String(window.location.hash || '');
+      if (h.indexOf('type=recovery') < 0 || h.indexOf('access_token=') < 0) return;
+      var params = {};
+      h.replace(/^#/, '').split('&').forEach(function (kv) {
+        var i = kv.indexOf('=');
+        if (i > 0) params[kv.slice(0, i)] = decodeURIComponent(kv.slice(i + 1));
+      });
+      localStorage.setItem('k12plus-recovery', JSON.stringify({ access_token: params.access_token, refresh_token: params.refresh_token || '', at: Date.now() }));
+      window.location.replace('/signup.html#newpass');
+    } catch (e) {}
+  })();
+
+  window.k12auth.requestReset = async function (email) {
+    try {
+      var res = await fetch(SUPA + '/auth/v1/recover?redirect_to=' + encodeURIComponent('https://k12plus.app/signup.html'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY },
+        body: JSON.stringify({ email: String(email || '').trim() }),
+      });
+      if (res.status === 429) return { ok: false, error: 'Too many reset emails were requested. Please wait an hour and try again.' };
+      return { ok: true }; // same answer whether or not the email has an account
+    } catch (e) {
+      return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
+    }
+  };
+
+  window.k12auth.hasRecovery = function () {
+    try {
+      var r = JSON.parse(localStorage.getItem('k12plus-recovery') || 'null');
+      return !!(r && r.access_token && Date.now() - r.at < 3600000);
+    } catch (e) { return false; }
+  };
+
+  window.k12auth.setNewPassword = async function (password) {
+    var r = null;
+    try { r = JSON.parse(localStorage.getItem('k12plus-recovery') || 'null'); } catch (e) {}
+    if (!r || !r.access_token) return { ok: false, error: 'This reset link has expired. Please ask for a new one.' };
+    try {
+      var res = await fetch(SUPA + '/auth/v1/user', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + r.access_token },
+        body: JSON.stringify({ password: password }),
+      });
+      var data = null;
+      try { data = await res.json(); } catch (e) {}
+      if (!res.ok) return { ok: false, error: supaErr(data, 'This reset link has expired. Please ask for a new one.') };
+      localStorage.removeItem('k12plus-recovery');
+      saveSession(r.access_token, r.refresh_token, data && data.id, data && data.email, '', '', null, null);
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
+    }
+  };
+
+  // Learners without email: a parent or verified teacher creates a one-time code.
+  window.k12reset = {
+    issue: async function (learnerId) {
+      var sess = await freshSession();
+      if (!sess) return { ok: false, error: 'Please log in again, then create the code.' };
+      try {
+        var res = await fetch(SUPA + '/functions/v1/learner-reset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + sess.access_token },
+          body: JSON.stringify({ action: 'issue', learnerId: String(learnerId || '').trim() }),
+        });
+        var data = await res.json();
+        return res.ok ? { ok: true, code: data.code, learnerName: data.learnerName, minutes: data.expiresInMinutes } : { ok: false, error: data.error };
+      } catch (e) {
+        return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
+      }
+    },
+    redeem: async function (identifier, code, password) {
+      try {
+        var res = await fetch(SUPA + '/functions/v1/learner-reset', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY },
+          body: JSON.stringify({ action: 'redeem', identifier: identifier, code: code, password: password }),
+        });
+        var data = await res.json();
+        return res.ok ? { ok: true } : { ok: false, error: data.error };
+      } catch (e) {
+        return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
+      }
+    },
+  };
+
   window.k12data = {
     recordQuiz: async function (subject, score, total) {
       var sess = await freshSession();

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=5"></script>
+<script src="./k12plus-bridge.js?v=6"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#7C3AED">
 </head>
@@ -138,10 +138,12 @@ input::placeholder { color:var(--muted); opacity:.75; }
           </div>
         </sc-if>
         <div style="{{ emailWrapStyle }}">
+        <sc-if value="{{ showEmailField }}" hint-placeholder-val="{{ true }}">
         <div style="margin-bottom:14px;">
           <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:6px; white-space:nowrap;">{{ emailLabel }}</label>
           <input value="{{ email }}" onChange="{{ onEmail }}" placeholder="{{ emailPlaceholder }}" style="width:100%; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; padding:11px 13px; font-size:14px; outline:none;">
         </div>
+        </sc-if>
         <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ true }}">
         <div style="margin-bottom:14px;">
           <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:6px; white-space:nowrap;">Mobile number <span style="font-weight:400; color:var(--muted);">(optional)</span></label>
@@ -152,10 +154,17 @@ input::placeholder { color:var(--muted); opacity:.75; }
         <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ true }}">
           <p style="font-size:12px; line-height:1.6; color:var(--muted); margin:-8px 0 14px;">Give us an email address or a mobile number (or both) so you can recover your account.</p>
         </sc-if>
+        <sc-if value="{{ isCode }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-bottom:14px;">
+          <label style="display:block; font-size:12.5px; font-weight:600; margin-bottom:6px;">Reset code <span style="color:#C0392B;">*</span></label>
+          <input value="{{ code }}" onChange="{{ onCode }}" placeholder="e.g. K7P2QX" autocomplete="one-time-code" style="width:100%; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; padding:11px 13px; font-size:16px; letter-spacing:3px; text-transform:uppercase; outline:none;">
+          <p style="font-size:12px; line-height:1.6; color:var(--muted); margin:6px 0 0;">Your parent or teacher can create this code in their k12plus dashboard. It works once, for 30 minutes.</p>
+        </div>
+        </sc-if>
         <sc-if value="{{ showPassword }}" hint-placeholder-val="{{ true }}">
         <div style="margin-bottom:14px;">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
-            <label style="font-size:12.5px; font-weight:600;">Password <span style="color:#C0392B;">*</span></label>
+            <label style="font-size:12.5px; font-weight:600;">{{ pwLabel }} <span style="color:#C0392B;">*</span></label>
             <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ false }}">
               <a href="#" onClick="{{ goReset }}" style="font-size:12.5px; font-weight:500;">Forgot password?</a>
             </sc-if>
@@ -167,6 +176,12 @@ input::placeholder { color:var(--muted); opacity:.75; }
             </button>
           </div>
         </div>
+        </sc-if>
+        <sc-if value="{{ isReset }}" hint-placeholder-val="{{ false }}">
+          <p style="font-size:12.5px; line-height:1.6; color:var(--muted); margin:-4px 0 14px;">No email address? <a href="#" onClick="{{ goCode }}" style="font-weight:600;">Use a reset code from your parent or teacher</a></p>
+        </sc-if>
+        <sc-if value="{{ isCode }}" hint-placeholder-val="{{ false }}">
+          <p style="font-size:12.5px; line-height:1.6; color:var(--muted); margin:-4px 0 14px;">Signed up with an email address? <a href="#" onClick="{{ goReset }}" style="font-weight:600;">Get a reset link by email instead</a></p>
         </sc-if>
         <sc-if value="{{ showSchool }}" hint-placeholder-val="{{ true }}">
           <div style="margin-bottom:6px;">
@@ -441,10 +456,21 @@ input::placeholder { color:var(--muted); opacity:.75; }
 </sc-if></x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { dark: false, mode: 'signup', role: 'Learner', country: 'Namibia', first: '', last: '', email: '', mobile: '', password: '', showPw: false, school: '', schoolQuery: '', schoolOpen: false, updates: false, agree: false, done: false, error: '', uid: '', grade: '', cls: '', children: [{ id: '', grade: '', cls: '' }] };
+  state = { dark: false, mode: 'signup', role: 'Learner', country: 'Namibia', first: '', last: '', email: '', mobile: '', password: '', showPw: false, code: '', school: '', schoolQuery: '', schoolOpen: false, updates: false, agree: false, done: false, error: '', uid: '', grade: '', cls: '', children: [{ id: '', grade: '', cls: '' }] };
 
   componentDidMount() {
     try { if (window.location.hash === '#login') this.setState({ mode: 'login' }); } catch (e) {}
+    try {
+      const h = window.location.hash || '';
+      if (h === '#newpass') {
+        if (window.k12auth && window.k12auth.hasRecovery()) this.setState({ mode: 'newpass' });
+        else this.setState({ mode: 'reset', error: 'That reset link has expired or was already used. Ask for a new one below.' });
+      } else if (/error_code=otp_expired|error=access_denied/.test(h)) {
+        this.setState({ mode: 'reset', error: 'That reset link has expired or was already used. Ask for a new one below.' });
+      } else if (h === '#reset-code') {
+        this.setState({ mode: 'code' });
+      }
+    } catch (e) {}
     let saved = null;
     try { saved = localStorage.getItem('k12plus-theme'); } catch (e) {}
     const dark = saved === 'dark';
@@ -1107,10 +1133,36 @@ class Component extends DCLogic {
       pick: () => this.setState({ school: s.schoolQuery.trim() ? s.schoolQuery.trim() + ' (new school)' : 'School to be added', schoolOpen: false, schoolQuery: '' })
     }]);
     const isReset = s.mode === 'reset';
+    const isCode = s.mode === 'code';
+    const isNewPass = s.mode === 'newpass';
     const submit = async () => {
       if (isReset) {
         if (!/^\S+@\S+\.\S+$/.test(s.email)) return this.setState({ error: 'Please enter the email you signed up with.' });
+        if (window.k12auth) {
+          const r = await window.k12auth.requestReset(s.email.trim());
+          if (!r.ok) return this.setState({ error: r.error });
+        }
         return this.setState({ done: true, error: '' });
+      }
+      if (isCode) {
+        if (!s.email.trim()) return this.setState({ error: 'Enter your mobile number or k12plus ID.' });
+        if (s.code.replace(/[^a-zA-Z0-9]/g, '').length !== 6) return this.setState({ error: 'The reset code has 6 letters and numbers.' });
+        if (s.password.length < 6) return this.setState({ error: 'Your new password needs at least 6 characters.' });
+        const r = await window.k12reset.redeem(s.email.trim(), s.code, s.password);
+        if (!r.ok) return this.setState({ error: r.error || 'That did not work. Please try again.' });
+        const li = await window.k12auth.login(s.email.trim(), s.password);
+        if (!li.ok) return this.setState({ mode: 'login', code: '', error: 'Your password was changed. Please log in with your new password.' });
+        try { localStorage.setItem('k12plus-loggedin', '1'); } catch (e) {}
+        window.location.href = 'app.html';
+        return;
+      }
+      if (isNewPass) {
+        if (s.password.length < 6) return this.setState({ error: 'Your new password needs at least 6 characters.' });
+        const r = await window.k12auth.setNewPassword(s.password);
+        if (!r.ok) return this.setState({ mode: 'reset', error: r.error });
+        try { localStorage.setItem('k12plus-loggedin', '1'); } catch (e) {}
+        window.location.href = 'app.html';
+        return;
       }
       if (isSignup) {
         if (!s.first.trim() || !s.last.trim()) return this.setState({ error: 'Please fill in your first and last name.' });
@@ -1198,6 +1250,10 @@ class Component extends DCLogic {
       isLogin: s.mode === 'login',
       showPassword: !isReset,
       goReset: (e) => { e.preventDefault(); this.setState({ mode: 'reset', error: '' }); },
+      goCode: (e) => { e.preventDefault(); this.setState({ mode: 'code', error: '' }); },
+      isCode, showEmailField: !isNewPass,
+      code: s.code, onCode: set('code'),
+      pwLabel: (isCode || isNewPass) ? 'New password' : 'Password',
       policyOpen: !!s.policyOpen,
       openPolicy: (e) => { e.preventDefault(); this.setState({ policyOpen: true }); },
       closePolicy: () => this.setState({ policyOpen: false }),
@@ -1206,14 +1262,14 @@ class Component extends DCLogic {
       closeTerms: () => this.setState({ termsOpen: false }),
       stopClick: (e) => e.stopPropagation(),
       notDone: !s.done, done: s.done,
-      heading: isSignup ? 'Create your account' : (isReset ? 'Reset your password' : 'Welcome back'),
-      subheading: isSignup ? 'Free to start. Works offline, on any phone.' : (isReset ? 'Enter your email and we will send you a reset link.' : 'Log in to pick up where you left off.'),
+      heading: isSignup ? 'Create your account' : (isReset ? 'Reset your password' : (isCode ? 'Reset with a code' : (isNewPass ? 'Choose a new password' : 'Welcome back'))),
+      subheading: isSignup ? 'Free to start. Works offline, on any phone.' : (isReset ? 'Enter your email and we will send you a reset link.' : (isCode ? 'Ask your parent or teacher for a reset code, then choose a new password.' : (isNewPass ? 'Pick a password you will remember, at least 6 characters.' : 'Log in to pick up where you left off.'))),
       roleTabs, countryTabs, schoolResults,
       first: s.first, last: s.last, email: s.email, mobile: s.mobile, password: s.password,
       onFirst: set('first'), onLast: set('last'), onEmail: set('email'), onMobile: set('mobile'), onPassword: set('password'),
       emailWrapStyle: isSignup ? 'display:grid; grid-template-columns:1fr 1fr; gap:12px;' : '',
-      emailLabel: isSignup ? 'Email address (optional)' : (isReset ? 'Email address' : 'Email, mobile number or k12plus ID'),
-      emailPlaceholder: isSignup ? 'name@email.com' : (isReset ? 'name@email.com' : 'name@email.com, 081 234 5678 or K12-NA-…'),
+      emailLabel: isSignup ? 'Email address (optional)' : (isReset ? 'Email address' : (isCode ? 'Mobile number or k12plus ID' : 'Email, mobile number or k12plus ID')),
+      emailPlaceholder: isSignup ? 'name@email.com' : (isReset ? 'name@email.com' : (isCode ? '081 234 5678 or K12-NA-…' : 'name@email.com, 081 234 5678 or K12-NA-…')),
       pwType: s.showPw ? 'text' : 'password',
       togglePw: () => this.setState({ showPw: !s.showPw }),
       school: s.school, hasSchool: !!s.school, noSchool: !s.school,
@@ -1228,10 +1284,10 @@ class Component extends DCLogic {
       onAgree: (e) => this.setState({ agree: e.target.checked }),
       hasError: !!s.error, error: s.error,
       submit,
-      submitLabel: isSignup ? 'Create account' : (isReset ? 'Send reset link' : 'Log in'),
-      switchPrompt: isSignup ? 'Already have an account?' : (isReset ? 'Remembered it after all?' : 'New to k12plus?'),
-      switchLabel: isSignup ? 'Log in' : (isReset ? 'Back to log in' : 'Create an account'),
-      switchMode: (e) => { e.preventDefault(); this.setState({ mode: isSignup ? 'login' : (isReset ? 'login' : 'signup'), error: '' }); },
+      submitLabel: isSignup ? 'Create account' : (isReset ? 'Send reset link' : (isCode ? 'Set new password' : (isNewPass ? 'Save new password' : 'Log in'))),
+      switchPrompt: isSignup ? 'Already have an account?' : ((isReset || isCode || isNewPass) ? 'Remembered it after all?' : 'New to k12plus?'),
+      switchLabel: isSignup ? 'Log in' : ((isReset || isCode || isNewPass) ? 'Back to log in' : 'Create an account'),
+      switchMode: (e) => { e.preventDefault(); this.setState({ mode: isSignup ? 'login' : ((isReset || isCode || isNewPass) ? 'login' : 'signup'), error: '' }); },
       showDashLink: !isReset,
       backToLogin: (e) => { e.preventDefault(); this.setState({ mode: 'login', done: false, error: '' }); },
       doneTitle: isSignup ? 'Welcome to k12plus!' : (isReset ? 'Check your inbox' : 'Welcome back!'),
