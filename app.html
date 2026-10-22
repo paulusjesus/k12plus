@@ -28,6 +28,17 @@ button { font-family:'Poppins',sans-serif; }
 .k12dd{scrollbar-width:thin; scrollbar-color:#C9C2F5 transparent;}
 .k12dd::-webkit-scrollbar{width:6px;}
 .k12dd::-webkit-scrollbar-thumb{background:#C9C2F5; border-radius:99px;}
+@keyframes k12slide { from{transform:translateX(-100%);} to{transform:none;} }
+.k12burger{display:none !important;}
+/* Phones: the side menu becomes a slide-out drawer opened from the header */
+@media (max-width:760px){
+  .k12side{position:fixed !important; left:0; top:0; bottom:0; z-index:60; height:100dvh !important; max-width:86vw; box-shadow:0 18px 48px rgba(31,32,51,.28); animation:k12slide .18s ease-out;}
+  .k12burger{display:flex !important;}
+  .k12top{padding:10px 12px !important; gap:6px !important;}
+  .k12dd{padding-left:12px !important; padding-right:12px !important;}
+  .k12hide-sm{display:none !important;}
+  .k12pill{padding:8px 14px !important;}
+}
 @media (max-width:1100px){
   .k12rail{display:none !important;}
   .k12main{grid-template-columns:1fr !important;}
@@ -38,7 +49,7 @@ button { font-family:'Poppins',sans-serif; }
 <sc-if value="{{ shellOn }}" hint-placeholder-val="{{ true }}">
 <div style="min-height:100vh; display:flex; background:#FCFBF8;">
   <sc-if value="{{ sideOpen }}" hint-placeholder-val="{{ true }}">
-  <aside style="width:264px; flex-shrink:0; background:#fff; border-right:1px solid var(--line); display:flex; flex-direction:column; padding:16px 12px; height:100vh; position:sticky; top:0;">
+  <aside class="k12side" style="width:264px; flex-shrink:0; background:#fff; border-right:1px solid var(--line); display:flex; flex-direction:column; padding:16px 12px; height:100vh; position:sticky; top:0;">
     <div style="display:flex; align-items:center; gap:4px; padding:4px 8px 14px;">
       <a href="index.html" title="{{ schoolName }}" style="display:flex; align-items:center; gap:10px; text-decoration:none; min-width:0;">
         <sc-if value="{{ brandIsK12 }}" hint-placeholder-val="{{ false }}">
@@ -137,6 +148,9 @@ button { font-family:'Poppins',sans-serif; }
     </sc-if>
   </aside>
   </sc-if>
+  <sc-if value="{{ mobileNavOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeMobileNav }}" style="position:fixed; inset:0; background:rgba(20,20,40,.38); z-index:55;"></div>
+  </sc-if>
   <sc-if value="{{ sideClosed }}" hint-placeholder-val="{{ false }}">
   <aside style="width:64px; flex-shrink:0; background:#fff; border-right:1px solid var(--line); display:flex; flex-direction:column; align-items:center; gap:4px; padding:16px 0; height:100vh; position:sticky; top:0;">
     <a href="index.html" title="{{ schoolName }}" style="position:relative; width:36px; height:36px; display:flex; align-items:center; justify-content:center; margin-bottom:6px; text-decoration:none;">
@@ -167,16 +181,19 @@ button { font-family:'Poppins',sans-serif; }
   </aside>
   </sc-if>
   <div style="flex:1; min-width:0; display:flex; flex-direction:column; height:100vh;">
-    <div style="display:flex; align-items:center; gap:10px; padding:14px 22px;">
-      <span style="font-size:14.5px; font-weight:600;">{{ shellTitle }}</span>
+    <div class="k12top" style="display:flex; align-items:center; gap:10px; padding:14px 22px;">
+      <button class="k12burger" onClick="{{ openMobileNav }}" title="Menu" aria-label="Open menu" style="border:none; background:none; color:var(--ink); cursor:pointer; padding:6px; margin-left:-4px; border-radius:9px; align-items:center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6.5h16M4 12h16M4 17.5h16"></path></svg>
+      </button>
+      <span style="font-size:14.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ shellTitle }}</span>
       <sc-if value="{{ isChat }}" hint-placeholder-val="{{ true }}">
-        <span style="font-size:11.5px; font-weight:600; color:#17915B; background:#E3F7EE; border-radius:6px; padding:2px 8px;">Online</span>
+        <span class="k12hide-sm" style="font-size:11.5px; font-weight:600; color:#17915B; background:#E3F7EE; border-radius:6px; padding:2px 8px;">Online</span>
       </sc-if>
       <span style="flex:1;"></span>
       <sc-if value="{{ isChat }}" hint-placeholder-val="{{ true }}">
         <button onClick="{{ goDash }}" style="display:flex; align-items:center; gap:8px; border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:9px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="background:var(--chip);">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"></path></svg>
-          My dashboard
+          <span class="k12hide-sm">My dashboard</span>
         </button>
       </sc-if>
       <sc-if value="{{ isOffline }}" hint-placeholder-val="{{ false }}">
@@ -185,12 +202,12 @@ button { font-family:'Poppins',sans-serif; }
       <sc-if value="{{ notChat }}" hint-placeholder-val="{{ false }}">
         <button onClick="{{ goChat }}" style="display:flex; align-items:center; gap:8px; border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:9px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="background:var(--chip);">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-9 8.4 8.5 8.5 0 01-3.4-.7L3 21l1.8-5.6a8.38 8.38 0 01-.8-3.9 8.5 8.5 0 018.5-8.5 8.38 8.38 0 018.5 8.5z"></path></svg>
-          Back to tutor
+          <span class="k12hide-sm">Back to tutor</span>
         </button>
       </sc-if>
       <sc-if value="{{ isGuest }}" hint-placeholder-val="{{ false }}">
-        <a href="signup.html#login" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:8px 18px; font-size:12.5px; font-weight:600; text-decoration:none;" style-hover="background:var(--chip); color:var(--ink);">Log in</a>
-        <a href="signup.html" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:9px 18px; font-size:12.5px; font-weight:600; text-decoration:none;" style-hover="opacity:.9; color:#fff;">Sign up for free</a>
+        <a class="k12pill" href="signup.html#login" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:8px 18px; font-size:12.5px; font-weight:600; text-decoration:none; white-space:nowrap;" style-hover="background:var(--chip); color:var(--ink);">Log in</a>
+        <a class="k12pill" href="signup.html" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:9px 18px; font-size:12.5px; font-weight:600; text-decoration:none; white-space:nowrap;" style-hover="opacity:.9; color:#fff;">Sign up<span class="k12hide-sm"> for free</span></a>
       </sc-if>
       <sc-if value="{{ isAuthed }}" hint-placeholder-val="{{ true }}">
       <div style="position:relative;">
@@ -1652,7 +1669,22 @@ button { font-family:'Poppins',sans-serif; }
 class Component extends DCLogic {
   state = { view: 'chat', chatOpen: false, chatInput: '', chatMsgs: [], recents: [], chatBusy: false, countdown: 27 * 3600 + 45 * 60 + 40, loggedIn: (() => { try { return localStorage.getItem('k12plus-loggedin') === '1'; } catch (e) { return false; } })() };
 
+  // On phones, close the menu drawer as soon as the learner moves to another page or chat
+  setState(update, cb) {
+    if (update && typeof update === 'object' && this.state && this.state.isMobile && this.state.mobileNav
+        && !('mobileNav' in update) && ('view' in update || 'chatMsgs' in update || 'subject' in update || 'gamesTopic' in update)) {
+      update = Object.assign({}, update, { mobileNav: false });
+    }
+    return super.setState(update, cb);
+  }
   componentDidMount() {
+    // Phones: the side menu becomes a drawer
+    try {
+      const mq = window.matchMedia('(max-width: 760px)');
+      const apply = () => this.setState({ isMobile: mq.matches, mobileNav: false });
+      apply();
+      if (mq.addEventListener) mq.addEventListener('change', apply); else mq.addListener(apply);
+    } catch (e) {}
     try {
       const saved = JSON.parse(localStorage.getItem('k12plus-tutor-chat') || 'null');
       const recents = JSON.parse(localStorage.getItem('k12plus-tutor-recents') || '[]');
@@ -3057,7 +3089,11 @@ class Component extends DCLogic {
       schoolName: brandK12 ? 'K12Plus' : s.school,
       schoolShort: brandK12 ? 'K12Plus' : this.shortSchool(s.school),
       schoolMonogram: brandK12 ? 'K' : this.monogram(s.school),
-      sideOpen: !s.sideCollapsed, sideClosed: !!s.sideCollapsed,
+      sideOpen: s.isMobile ? !!s.mobileNav : !s.sideCollapsed,
+      sideClosed: s.isMobile ? false : !!s.sideCollapsed,
+      mobileNavOpen: !!(s.isMobile && s.mobileNav),
+      openMobileNav: () => this.setState({ mobileNav: true }),
+      closeMobileNav: () => this.setState({ mobileNav: false }),
       roleOpts: ['Learner', 'Educator', 'Parent', 'Principal & HOD', 'Ministry'].map(r => ({
         label: r,
         style: 'border-radius:999px;padding:6px 13px;font-size:11px;font-weight:600;cursor:pointer;' + ((s.role || 'Learner') === r ? 'background:var(--primary);color:#fff;border:1px solid var(--primary);' : 'background:#fff;color:var(--ink);border:1px solid var(--line);'),
@@ -3154,7 +3190,7 @@ class Component extends DCLogic {
         { icon: '\uD83D\uDCC5', bg: '#FDE7EE', text: 'Term 3 exam timetable published - exams start in 6 weeks', when: 'Yesterday' },
         { icon: '\uD83D\uDCAC', bg: '#E7F6EE', text: 'Ms Amukoto replied to your question about Lesson 4', when: 'Yesterday' }
       ],
-      toggleSide: () => this.setState({ sideCollapsed: !s.sideCollapsed }),
+      toggleSide: () => (s.isMobile ? this.setState({ mobileNav: false }) : this.setState({ sideCollapsed: !s.sideCollapsed })),
       shellTitle: ({ dashboard: 'Dashboard', lab: 'Real-Life Lab', timetable: 'Timetable', calendar: 'Calendar', quiz: 'Assessments', syllabus: 'Syllabus', plans: 'Plan Studio', games: 'Game Arcade' })[s.view] || (s.subject ? 'Tutor \u00b7 ' + s.subject : 'Tutor'),
       notChat: s.view !== 'chat',
       isOffline: !!s.offline,

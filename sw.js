@@ -1,5 +1,5 @@
 /* K12Plus service worker - offline-first PWA */
-var VERSION = 'k12plus-v8';
+var VERSION = 'k12plus-v9';
 var PRECACHE = [
   '/', '/index.html', '/about.html', '/pricing.html', '/contact.html',
   '/signup.html', '/app.html', '/support.js', '/k12plus-bridge.js',
