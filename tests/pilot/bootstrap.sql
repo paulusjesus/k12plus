@@ -117,3 +117,7 @@ create policy profiles_ministry_read on public.profiles for select to authentica
 create policy qa_own on public.quiz_attempts for all to authenticated using (user_id = auth.uid()) with check (user_id = auth.uid());
 
 grant all on all tables in schema public to anon, authenticated, service_role;
+
+-- Supabase Storage (only the buckets table is needed by the migrations)
+create schema if not exists storage;
+create table if not exists storage.buckets (id text primary key, name text, public boolean, file_size_limit bigint, allowed_mime_types text[]);

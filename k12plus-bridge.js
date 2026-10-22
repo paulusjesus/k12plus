@@ -464,25 +464,66 @@
     addLearner: function (classId, ident) { return pilotRpc('pilot_add_learner', { p_class: classId, p_identifier: ident }); },
     removeLearner: function (classId, learnerId) { return pilotRpc('pilot_remove_learner', { p_class: classId, p_learner: learnerId }); },
     // learner with a basic phone and no account yet: the server creates the account
-    newLearner: async function (classId, name, phone) {
-      if (!navigator.onLine) return { ok: false, error: 'You are offline. Adding learners needs a connection.' };
-      var sess = await freshSession();
-      if (!sess) return { ok: false, error: 'Please log in again.' };
-      try {
-        var res = await fetch(SUPA + '/functions/v1/pilot-admin', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + sess.access_token },
-          body: JSON.stringify({ action: 'new_learner', classId: classId, name: name, phone: phone }),
-        });
-        var data = null;
-        try { data = await res.json(); } catch (e) {}
-        if (!res.ok) return { ok: false, error: (data && data.error) || 'Something went wrong. Please try again.' };
-        return { ok: true, data: data };
-      } catch (e) {
-        return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
-      }
+    newLearner: function (classId, name, phone) {
+      return pilotFn({ action: 'new_learner', classId: classId, name: name, phone: phone });
+    },
+    // consent: opts = { kind: 'guardian'|'school', learnerId|schoolId, givenByName, relation, signedOn, file (base64) }
+    recordConsent: function (opts) { return pilotFn(Object.assign({ action: 'record_consent' }, opts)); },
+    consentFormUrl: function (consentId) { return pilotFn({ action: 'consent_form_url', consentId: consentId }); },
+    withdrawGuardian: function (learnerId, reason) { return pilotRpc('pilot_withdraw_guardian_consent', { p_learner: learnerId, p_reason: reason || '' }); },
+    withdrawSchool: function (schoolId, reason) { return pilotRpc('pilot_withdraw_school_consent', { p_school: schoolId, p_reason: reason || '' }); },
+    pendingRemovals: function () { return pilotRpc('pilot_pending_removals'); },
+    removeData: function (removalId) { return pilotRpc('pilot_remove_data', { p_removal: removalId }); },
+    // Photos of forms are shrunk on the phone (longest side 1600 px, JPEG) so uploads stay
+    // small on mobile data. PDFs are sent as they are. Resolves to { b64, kb } or { error }.
+    prepareForm: function (file) {
+      return new Promise(function (resolve) {
+        if (!file) return resolve({ error: 'Choose a photo of the signed form.' });
+        var reader = new FileReader();
+        if (file.type === 'application/pdf') {
+          if (file.size > 3 * 1024 * 1024) return resolve({ error: 'The PDF is too large (over 3 MB).' });
+          reader.onload = function () { var b = String(reader.result).split(',')[1]; resolve({ b64: b, kb: Math.round(file.size / 1024) }); };
+          reader.onerror = function () { resolve({ error: 'Could not read the file.' }); };
+          return reader.readAsDataURL(file);
+        }
+        if (!/^image\//.test(file.type)) return resolve({ error: 'Choose a photo or a PDF of the signed form.' });
+        reader.onload = function () {
+          var img = new Image();
+          img.onload = function () {
+            var max = 1600, w = img.width, h = img.height, k = Math.min(1, max / Math.max(w, h));
+            var c = document.createElement('canvas');
+            c.width = Math.round(w * k); c.height = Math.round(h * k);
+            c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+            var url = c.toDataURL('image/jpeg', 0.72);
+            var b = url.split(',')[1];
+            resolve({ b64: b, kb: Math.round(b.length * 0.75 / 1024) });
+          };
+          img.onerror = function () { resolve({ error: 'That photo could not be opened. Try taking it again.' }); };
+          img.src = reader.result;
+        };
+        reader.onerror = function () { resolve({ error: 'Could not read the photo.' }); };
+        reader.readAsDataURL(file);
+      });
     },
   };
+  async function pilotFn(body) {
+    if (!navigator.onLine) return { ok: false, error: 'You are offline. This needs a connection.' };
+    var sess = await freshSession();
+    if (!sess) return { ok: false, error: 'Please log in again.' };
+    try {
+      var res = await fetch(SUPA + '/functions/v1/pilot-admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + sess.access_token },
+        body: JSON.stringify(body),
+      });
+      var data = null;
+      try { data = await res.json(); } catch (e) {}
+      if (!res.ok) return { ok: false, error: (data && data.error) || 'Something went wrong. Please try again.' };
+      return { ok: true, data: data };
+    } catch (e) {
+      return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
+    }
+  }
 
   // ---- PWA ----
   if ('serviceWorker' in navigator) {
