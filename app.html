@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=8"></script>
+<script src="./k12plus-bridge.js?v=9"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
 <script src="./k12plus-arcade.js?v=1"></script>
 <script src="./k12plus-scenes.js?v=1"></script>
@@ -464,6 +464,18 @@ button { font-family:'Poppins',sans-serif; }
           <h1 style="font-size:17px; font-weight:500; margin:0;">Welcome to class{{ welcomeName }}!<sc-if value="{{ hasGradeChip }}" hint-placeholder-val="{{ false }}"><strong style="font-weight:700; margin-left:7px;">{{ gradeChip }}</strong></sc-if></h1>
           <button style="margin-left:auto; display:flex; align-items:center; gap:7px; border:1px solid var(--line); background:var(--chip); color:var(--muted); border-radius:9px; padding:7px 14px; font-size:12.5px; font-weight:500; cursor:pointer;">Term 3 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button>
         </div>
+        <sc-if value="{{ showAgentMsgs }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 18px; margin-bottom:18px;">
+            <h2 style="font-size:14px; font-weight:600; margin:0 0 8px;">Messages from your AI Math Agent</h2>
+            <sc-for list="{{ agentMsgs }}" as="am" hint-placeholder-count="1">
+              <div style="display:flex; gap:10px; align-items:flex-start; padding:7px 0; border-top:1px solid var(--line); font-size:13px; line-height:1.55;">
+                <span style="{{ am.dot }}"></span>
+                <span style="flex:1;">{{ am.body }}</span>
+                <span style="font-size:11px; color:var(--muted); white-space:nowrap;">{{ am.when }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
         <sc-if value="{{ showJoinCard }}" hint-placeholder-val="{{ false }}">
           <div style="background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 18px; margin-bottom:18px;">
             <sc-if value="{{ inPilotClass }}" hint-placeholder-val="{{ false }}">
@@ -1115,6 +1127,52 @@ button { font-family:'Poppins',sans-serif; }
             </table>
           </div>
           <p style="font-size:11.5px; color:var(--muted); margin:10px 0 0;">Each region needs one rural and one urban school, a Grade 11 and a Grade 12 mathematics class in each, a teacher for every class and a regional champion.</p>
+          <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-top:16px;">
+            <div style="display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;">
+              <h2 style="font-size:14.5px; font-weight:600; margin:0;">Agent messages</h2>
+              <span style="font-size:12px; color:var(--muted);">{{ msgStatsLine }}</span>
+            </div>
+            <p style="font-size:12.5px; line-height:1.6; color:var(--muted); margin:6px 0 10px;">Every message passes these rules before it is sent: consent, not paused by a teacher, {{ msgRulesLine }}, and a content check. Every attempt is logged, sent or blocked.</p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+              <button onClick="{{ msgSample }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer;">Random sample of 20</button>
+              <button onClick="{{ msgBlocked }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer;">Blocked messages</button>
+              <button onClick="{{ msgLatest }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer;">Latest</button>
+              <button onClick="{{ msgToggleRules }}" style="border:none; background:none; color:var(--primary); cursor:pointer; font-size:12px; text-decoration:underline;">Change rules</button>
+              <button onClick="{{ msgToggleCheck }}" style="border:none; background:none; color:var(--primary); cursor:pointer; font-size:12px; text-decoration:underline;">Test wording</button>
+            </div>
+            <sc-if value="{{ msgRulesOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="background:var(--chip); border-radius:10px; padding:12px; margin-bottom:10px; display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; font-size:12px; color:var(--muted);">
+                <label>Weekdays from<br><input type="time" value="{{ msgIn.weekday_start }}" onChange="{{ msgOn.weekday_start }}" style="border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;"></label>
+                <label>to<br><input type="time" value="{{ msgIn.weekday_end }}" onChange="{{ msgOn.weekday_end }}" style="border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;"></label>
+                <label>Weekends from<br><input type="time" value="{{ msgIn.weekend_start }}" onChange="{{ msgOn.weekend_start }}" style="border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;"></label>
+                <label>to<br><input type="time" value="{{ msgIn.weekend_end }}" onChange="{{ msgOn.weekend_end }}" style="border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;"></label>
+                <label>Messages a week<br><input type="number" min="0" max="14" value="{{ msgIn.weekly_limit }}" onChange="{{ msgOn.weekly_limit }}" style="width:70px; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;"></label>
+                <label>of which by text<br><input type="number" min="0" max="14" value="{{ msgIn.weekly_sms_limit }}" onChange="{{ msgOn.weekly_sms_limit }}" style="width:70px; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;"></label>
+                <button onClick="{{ msgSaveRules }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">Save rules</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ msgCheckOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="background:var(--chip); border-radius:10px; padding:12px; margin-bottom:10px; display:flex; flex-direction:column; gap:8px;">
+                <textarea value="{{ msgDraft }}" onChange="{{ onMsgDraft }}" rows="3" placeholder="Type a message the agent might send to a learner" style="border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none; resize:vertical; font-family:inherit;"></textarea>
+                <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                  <button onClick="{{ msgRunCheck }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer;">Check</button>
+                  <span style="{{ msgCheckStyle }}">{{ msgCheckResult }}</span>
+                </div>
+                <span style="font-size:11.5px; color:var(--muted);">Nothing is sent or logged when you test wording.</span>
+              </div>
+            </sc-if>
+            <sc-for list="{{ msgList }}" as="m" hint-placeholder-count="0">
+              <div style="border-top:1px solid var(--line); padding:9px 0; font-size:12.5px;">
+                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                  <span style="{{ m.statusStyle }}">{{ m.statusLabel }}</span>
+                  <span style="font-family:monospace; font-size:11.5px;">{{ m.who }}</span>
+                  <span style="color:var(--muted); font-size:11.5px;">{{ m.meta }}</span>
+                </div>
+                <div style="margin-top:4px; line-height:1.55;">{{ m.body }}</div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ msgListEmpty }}" hint-placeholder-val="{{ false }}"><p style="font-size:12.5px; color:var(--muted); margin:6px 0 0;">{{ msgListEmptyText }}</p></sc-if>
+          </div>
         </sc-if>
 
         <sc-if value="{{ pilotShowSetup }}" hint-placeholder-val="{{ false }}">
@@ -2010,6 +2068,13 @@ class Component extends DCLogic {
     this.setState(goPilot ? { pilot: p, view: 'pilot' } : { pilot: p }, () => {
       if (this.state.view === 'pilot') this.loadPilot();
     });
+    if (p.class) {
+      const m = await window.k12pilot.myMessages();
+      if (m.ok && (m.data || []).length) {
+        this.setState({ agentMsgList: m.data });
+        if (m.data.some((x) => !x.read)) window.k12pilot.markMessagesRead();
+      }
+    }
   }
 
   pilotRoleOf(p) {
@@ -2035,6 +2100,9 @@ class Component extends DCLogic {
       if (r.ok) this.setState({ pilotOverview: r.data || [] }); else err = r.error;
       const rm = await P.pendingRemovals();
       if (rm.ok) this.setState({ pilotRemovalsList: rm.data || [] });
+      const [ru, ms] = await Promise.all([P.messagingRules(), P.messageStats(7)]);
+      if (ru.ok) this.setState((st) => ({ msgRules: ru.data, msgRulesIn: st.msgRulesIn || ru.data }));
+      if (ms.ok) this.setState({ msgStats: ms.data });
     } else if (role === 'admin' || role === 'champion') {
       const rid = role === 'admin' ? this.state.pilotRegionId : this.state.pilot.champion_region_id;
       const r = await P.regionDetail(rid);
@@ -2258,6 +2326,65 @@ class Component extends DCLogic {
       };
     });
 
+    // agent messages (administrators)
+    const REASONS = { no_consent: 'No consent', paused: 'Paused by teacher', outside_hours: 'Outside allowed hours', weekly_limit: 'Weekly limit reached',
+      weekly_sms_limit: 'Weekly text limit reached', content: 'Failed content check', sms_not_connected: 'Text service not connected yet', email_not_connected: 'Email service not connected yet', delivery_failed: 'Delivery failed' };
+    const STAT = { sent: ['Sent', '#E7F6EE', '#1F6B43'], approved: ['Approved', '#EEF0FE', '#3D48B8'], blocked: ['Blocked', '#FDECEC', '#B42318'], failed: ['Not delivered', '#FFF6DC', '#8A6400'] };
+    const mr = s.msgRules || {};
+    const mst = s.msgStats || {};
+    const bs = mst.by_status || {};
+    const mi = s.msgRulesIn || mr;
+    const setRule = (k) => (e) => { const val = e.target.value; this.setState((st) => ({ msgRulesIn: Object.assign({}, st.msgRulesIn || st.msgRules || {}, { [k]: val }) })); };
+    const loadMsgs = (status, random, label) => {
+      this.setState({ msgListLabel: label, msgListLoading: true });
+      P.messageSample(random ? 20 : 50, status, random).then((r) => this.setState(r.ok ? { msgList: r.data || [], msgListLoading: false } : { pilotErr: r.error, msgListLoading: false }));
+    };
+    const fmtTime = (iso) => { try { return new Date(iso).toLocaleString('en-GB', { timeZone: 'Africa/Windhoek', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (e) { return iso; } };
+    const msgList = (s.msgList || []).map((m) => {
+      const st = STAT[m.status] || [m.status, '#eee', '#333'];
+      return {
+        statusLabel: st[0] + (m.reason ? ': ' + (REASONS[m.reason] || m.reason) : ''), statusStyle: pill(st[1], st[2]),
+        who: m.recipient === 'teacher' ? 'Teacher' : m.who,
+        meta: [m.channel === 'in_app' ? 'In the app' : m.channel === 'sms' ? 'Text message' : m.channel === 'email' ? 'Email' : m.channel,
+               m.purpose.replace(/_/g, ' '), fmtTime(m.created_at),
+               m.checks && m.checks.content_reason ? 'content check: ' + m.checks.content_reason : ''].filter(Boolean).join(' \u00b7 '),
+        body: m.body
+      };
+    });
+    const msgVals = {
+      msgStatsLine: s.msgStats ? 'Last 7 days: ' + (mst.total || 0) + ' attempts \u00b7 ' + (bs.sent || 0) + ' sent \u00b7 ' + (bs.blocked || 0) + ' blocked' + (bs.failed ? ' \u00b7 ' + bs.failed + ' not delivered' : '') : '',
+      msgRulesLine: mr.weekday_start ? 'weekdays ' + mr.weekday_start + ' to ' + mr.weekday_end + ', weekends ' + mr.weekend_start + ' to ' + mr.weekend_end + ' (Namibian time), at most ' + mr.weekly_limit + ' messages a week of which ' + mr.weekly_sms_limit + ' by text' : 'the allowed hours and the weekly limit',
+      msgSample: () => loadMsgs(null, true, 'sample'),
+      msgBlocked: () => loadMsgs('blocked', false, 'blocked'),
+      msgLatest: () => loadMsgs(null, false, 'latest'),
+      msgRulesOpen: s.pilotOpen === 'rules', msgToggleRules: () => toggle('rules'),
+      msgCheckOpen: s.pilotOpen === 'check', msgToggleCheck: () => toggle('check'),
+      msgIn: { weekday_start: mi.weekday_start || '', weekday_end: mi.weekday_end || '', weekend_start: mi.weekend_start || '', weekend_end: mi.weekend_end || '', weekly_limit: mi.weekly_limit === undefined ? '' : mi.weekly_limit, weekly_sms_limit: mi.weekly_sms_limit === undefined ? '' : mi.weekly_sms_limit },
+      msgOn: { weekday_start: setRule('weekday_start'), weekday_end: setRule('weekday_end'), weekend_start: setRule('weekend_start'), weekend_end: setRule('weekend_end'), weekly_limit: setRule('weekly_limit'), weekly_sms_limit: setRule('weekly_sms_limit') },
+      msgSaveRules: () => {
+        const x = s.msgRulesIn || {};
+        this.pilotAct(P.setMessagingRules({ weekday_start: x.weekday_start, weekday_end: x.weekday_end, weekend_start: x.weekend_start, weekend_end: x.weekend_end,
+          weekly_limit: parseInt(x.weekly_limit, 10), weekly_sms_limit: parseInt(x.weekly_sms_limit, 10) }), 'Messaging rules saved. They apply to the next message.')
+          .then((done) => { if (done) this.setState({ pilotOpen: '', msgRulesIn: null }); });
+      },
+      msgDraft: s.msgDraft || '', onMsgDraft: (e) => this.setState({ msgDraft: e.target.value, msgCheck: null }),
+      msgRunCheck: () => {
+        const text = (s.msgDraft || '').trim();
+        if (!text) return this.setState({ msgCheck: { ok: false, reason: 'Type a message first.' } });
+        this.setState({ msgCheck: { busy: true } });
+        P.checkWording(text).then((r) => this.setState({ msgCheck: r.ok ? r.data : { ok: false, reason: r.error } }));
+      },
+      msgCheckResult: !s.msgCheck ? '' : s.msgCheck.busy ? 'Checking\u2026' : s.msgCheck.ok ? 'This message would pass the content check.' : 'This message would be blocked: ' + s.msgCheck.reason,
+      msgCheckStyle: 'font-size:12.5px;color:' + (s.msgCheck && s.msgCheck.ok ? '#1F6B43' : '#B42318') + ';',
+      msgList,
+      msgListEmpty: !!s.msgListLabel && !s.msgListLoading && !msgList.length,
+      msgListEmptyText: s.msgListLabel === 'blocked' ? 'No blocked messages.' : 'No messages logged yet.'
+    };
+    const agentMsgs = (s.agentMsgList || []).slice(0, 5).map((m) => ({
+      body: m.body, when: fmtTime(m.at),
+      dot: 'width:8px;height:8px;border-radius:50%;margin-top:7px;flex-shrink:0;background:' + (m.read ? 'var(--line)' : 'var(--primary)') + ';'
+    }));
+
     const title = role === 'admin'
       ? (s.pilotRegionId ? ((reg.region || 'Region') + ' region') : 'Pilot: all regions')
       : role === 'champion' ? ((reg.region || p.champion_region || '') + ' region') : 'My pilot classes';
@@ -2267,6 +2394,9 @@ class Component extends DCLogic {
     const cls = p.class;
 
     return {
+      ...msgVals,
+      showAgentMsgs: !!s.loggedIn && (s.role || 'Learner') === 'Learner' && agentMsgs.length > 0,
+      agentMsgs,
       isPilot: s.view === 'pilot' && !!s.loggedIn && !!role,
       pilotTitle: title, pilotSub: sub,
       pilotShowBack: role === 'admin' && !!s.pilotRegionId,

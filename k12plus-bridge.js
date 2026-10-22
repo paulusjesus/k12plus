@@ -473,6 +473,30 @@
     withdrawGuardian: function (learnerId, reason) { return pilotRpc('pilot_withdraw_guardian_consent', { p_learner: learnerId, p_reason: reason || '' }); },
     withdrawSchool: function (schoolId, reason) { return pilotRpc('pilot_withdraw_school_consent', { p_school: schoolId, p_reason: reason || '' }); },
     pendingRemovals: function () { return pilotRpc('pilot_pending_removals'); },
+    messagingRules: function () { return pilotRpc('pilot_messaging_rules'); },
+    setMessagingRules: function (rules) { return pilotRpc('pilot_set_messaging_rules', { p: rules }); },
+    messageStats: function (days) { return pilotRpc('pilot_message_stats', { p_days: days || 7 }); },
+    messageSample: function (size, status, random) { return pilotRpc('pilot_message_sample', { p_size: size || 20, p_status: status || null, p_random: random !== false }); },
+    myMessages: function () { return pilotRpc('pilot_my_messages'); },
+    markMessagesRead: function () { return pilotRpc('pilot_mark_messages_read'); },
+    checkWording: async function (text) {
+      if (!navigator.onLine) return { ok: false, error: 'You are offline.' };
+      var sess = await freshSession();
+      if (!sess) return { ok: false, error: 'Please log in again.' };
+      try {
+        var res = await fetch(SUPA + '/functions/v1/agent-messenger', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + sess.access_token },
+          body: JSON.stringify({ action: 'check', text: text }),
+        });
+        var data = null;
+        try { data = await res.json(); } catch (e) {}
+        if (!res.ok) return { ok: false, error: (data && data.error) || 'Something went wrong. Please try again.' };
+        return { ok: true, data: data };
+      } catch (e) {
+        return { ok: false, error: 'Could not reach the server.' };
+      }
+    },
     removeData: function (removalId) { return pilotRpc('pilot_remove_data', { p_removal: removalId }); },
     // Photos of forms are shrunk on the phone (longest side 1600 px, JPEG) so uploads stay
     // small on mobile data. PDFs are sent as they are. Resolves to { b64, kb } or { error }.

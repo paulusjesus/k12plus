@@ -1,0 +1,25 @@
+// Unit tests for the fixed content rules (no network needed)
+import { contentRules, parseVerdict } from '../../supabase/functions/agent-messenger/index.ts';
+let pass = 0, fail = 0;
+const ok = (c: boolean, n: string, x?: unknown) => { if (c) { pass++; console.log('  PASS', n); } else { fail++; console.log('  FAIL', n, JSON.stringify(x ?? '')); } };
+const L = (t: string) => contentRules(t, 'learner');
+console.log('\nFixed content rules');
+ok(L('Hi Ndapewa! Quick one: if x = 4, what is 3x + 2? Your netball team would score that many!').ok, 'a normal maths nudge passes');
+ok(L('Roll a die twice. What is the chance of two sixes?').ok, 'probability words like "die" are fine');
+ok(L('Try 12 × 3 = ? and 45 - 17 = ?').ok, 'sums with numbers are not mistaken for phone numbers');
+ok(!L('Visit www.freeanswers.com for help').ok, 'outside links are blocked');
+ok(L('Open k12plus.app to try the next step').ok, 'a link to k12plus.app is allowed');
+ok(!L('Call 081 234 5678 if you are stuck').ok, 'phone numbers are blocked');
+ok(!L('Email me at teacher@gmail.com').ok, 'email addresses are blocked');
+ok(!L('Are you being lazy? Do your work.').ok, 'shaming words are blocked');
+ok(!L('Send me a photo of yourself').ok && !L('Where do you live?').ok, 'asking for personal information is blocked');
+ok(!L('Hey babe, how was school?').ok, 'romantic wording is blocked');
+ok(!L('x'.repeat(321)).ok && L('x'.repeat(320)).ok, 'learner messages are at most 320 characters');
+ok(contentRules('x'.repeat(900), 'teacher').ok, 'teacher summaries may be longer');
+ok(!L('   ').ok, 'empty messages are blocked');
+console.log('\nReading the AI review');
+ok(parseVerdict('{"ok": true, "reason": "fine"}')?.ok === true, 'reads an approval');
+ok(parseVerdict('Sure! {"ok": false, "reason": "off topic"}')?.ok === false, 'reads a refusal inside extra text');
+ok(parseVerdict('looks fine to me') === null && parseVerdict('{"ok": "yes"}') === null, 'an unclear answer is not treated as approval');
+console.log(`\n${pass} passed, ${fail} failed`);
+Deno.exit(fail ? 1 : 0);

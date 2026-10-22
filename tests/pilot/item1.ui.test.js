@@ -68,7 +68,7 @@ const TYPES = { p_region: 'smallint', p_schools: 'jsonb', p_class: 'uuid', p_tea
         const keys = Object.keys(args);
         const sql = `select ${m[1]}(${keys.map((k, i) => `${k} => $${i + 1}::${TYPES[k] || 'text'}`).join(', ')}) as v`;
         try {
-          const rows = await asUser(uid, (tx) => tx.query(sql, keys.map((k) => (typeof args[k] === 'object' ? JSON.stringify(args[k]) : args[k]))));
+          const rows = await asUser(uid, (tx) => tx.query(sql, keys.map((k) => (args[k] === null ? null : typeof args[k] === 'object' ? JSON.stringify(args[k]) : args[k]))));
           return r.fulfill({ json: rows.rows[0].v });
         } catch (e) { return r.fulfill({ status: 400, json: { message: e.message } }); }
       }
