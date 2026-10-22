@@ -484,6 +484,8 @@
     withdrawGuardian: function (learnerId, reason) { return pilotRpc('pilot_withdraw_guardian_consent', { p_learner: learnerId, p_reason: reason || '' }); },
     withdrawSchool: function (schoolId, reason) { return pilotRpc('pilot_withdraw_school_consent', { p_school: schoolId, p_reason: reason || '' }); },
     pendingRemovals: function () { return pilotRpc('pilot_pending_removals'); },
+    pauseLearner: function (learnerId, reason) { return pilotRpc('pilot_pause_learner', { p_learner: learnerId, p_reason: reason || '' }); },
+    resumeLearner: function (learnerId) { return pilotRpc('pilot_resume_learner', { p_learner: learnerId }); },
     messagingRules: function () { return pilotRpc('pilot_messaging_rules'); },
     setMessagingRules: function (rules) { return pilotRpc('pilot_set_messaging_rules', { p: rules }); },
     messageStats: function (days) { return pilotRpc('pilot_message_stats', { p_days: days || 7 }); },

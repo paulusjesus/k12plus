@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=10"></script>
+<script src="./k12plus-bridge.js?v=11"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
 <script src="./k12plus-arcade.js?v=1"></script>
 <script src="./k12plus-scenes.js?v=1"></script>
@@ -1285,6 +1285,12 @@ button { font-family:'Poppins',sans-serif; }
                       <sc-if value="{{ l.canRecord }}" hint-placeholder-val="{{ false }}">
                         <button onClick="{{ l.toggleRecord }}" style="border:1px solid var(--primary); background:#fff; color:var(--primary); border-radius:999px; padding:4px 11px; font-size:11.5px; font-weight:600; cursor:pointer;">Record consent</button>
                       </sc-if>
+                      <sc-if value="{{ l.canPause }}" hint-placeholder-val="{{ false }}">
+                        <button onClick="{{ l.togglePause }}" style="border:none; background:none; color:var(--muted); cursor:pointer; font-size:11.5px; text-decoration:underline;">Pause agent</button>
+                      </sc-if>
+                      <sc-if value="{{ l.isPaused }}" hint-placeholder-val="{{ false }}">
+                        <button onClick="{{ l.resume }}" style="border:1px solid var(--primary); background:#fff; color:var(--primary); border-radius:999px; padding:4px 11px; font-size:11.5px; font-weight:600; cursor:pointer;">Resume agent</button>
+                      </sc-if>
                       <sc-if value="{{ l.canWithdraw }}" hint-placeholder-val="{{ false }}">
                         <button onClick="{{ l.toggleWithdraw }}" style="border:none; background:none; color:var(--muted); cursor:pointer; font-size:11.5px; text-decoration:underline;">Withdraw consent</button>
                       </sc-if>
@@ -1292,6 +1298,16 @@ button { font-family:'Poppins',sans-serif; }
                     </div>
                     <sc-if value="{{ l.hasConsentLine }}" hint-placeholder-val="{{ false }}">
                       <div style="font-size:11.5px; color:var(--muted); margin-top:3px;">{{ l.consentLine }}</div>
+                    </sc-if>
+                    <sc-if value="{{ l.isPaused }}" hint-placeholder-val="{{ false }}">
+                      <div style="font-size:11.5px; color:#3D48B8; margin-top:3px;">{{ l.pauseLine }}</div>
+                    </sc-if>
+                    <sc-if value="{{ l.pauseOpen }}" hint-placeholder-val="{{ false }}">
+                      <div style="background:#EEF0FE; border-radius:10px; padding:12px; margin-top:8px; display:flex; flex-direction:column; gap:8px;">
+                        <span style="font-size:12px; line-height:1.6;">While paused, the agent sends {{ l.name }} no messages at all, including any already prepared. {{ l.name }} can still use K12Plus and ask the agent questions.</span>
+                        <input value="{{ l.pReason }}" onChange="{{ l.onPReason }}" placeholder="Reason (optional), for example: exams next week" style="border:1px solid var(--line); border-radius:8px; padding:9px 12px; font-size:12.5px; outline:none;">
+                        <div><button onClick="{{ l.confirmPause }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">Pause agent</button></div>
+                      </div>
                     </sc-if>
                     <sc-if value="{{ l.recordOpen }}" hint-placeholder-val="{{ false }}">
                       <div style="background:var(--chip); border-radius:10px; padding:12px; margin-top:8px; display:flex; flex-direction:column; gap:8px;">
@@ -2284,6 +2300,13 @@ class Component extends DCLogic {
             hasConsentLine: !!g,
             consentLine: g ? 'Consent from ' + g.name + ' (' + g.relation + '), signed ' + fmtDate(g.signed_on) : '',
             canRecord: !g, canWithdraw: !!g,
+            isPaused: !!l.pause, canPause: !l.pause,
+            pauseLine: l.pause ? 'Agent paused by ' + (l.pause.by || 'a teacher') + ' on ' + fmtDate(String(l.pause.at).slice(0, 10)) + (l.pause.reason ? ': ' + l.pause.reason : '') : '',
+            pauseOpen: s.pilotOpen === 'gp:' + l.id, togglePause: () => toggle('gp:' + l.id),
+            pReason: inputs['gpr:' + l.id] || '', onPReason: setIn('gpr:' + l.id),
+            confirmPause: () => this.pilotAct(P.pauseLearner(l.id, inputs['gpr:' + l.id] || ''), 'The agent is paused for ' + l.name + '. No messages will be sent until you resume it.')
+              .then((done) => { if (done) { this.setState({ pilotOpen: '' }); setIn('gpr:' + l.id)(''); } }),
+            resume: () => this.pilotAct(P.resumeLearner(l.id), 'The agent is active again for ' + l.name + '.'),
             recordOpen: s.pilotOpen === 'gr:' + l.id, toggleRecord: () => toggle('gr:' + l.id),
             withdrawOpen: s.pilotOpen === 'gw:' + l.id, toggleWithdraw: () => toggle('gw:' + l.id),
             gName: inputs['gn:' + l.id] || '', onGName: setIn('gn:' + l.id),
