@@ -278,6 +278,8 @@
       try {
         localStorage.removeItem('k12plus-session');
         localStorage.removeItem('k12plus-loggedin');
+        localStorage.removeItem('k12plus-pilot-taking-part');
+        localStorage.removeItem('k12plus-events');
       } catch (e) {}
       if (sess && sess.access_token && navigator.onLine) {
         try {
@@ -484,6 +486,8 @@
     withdrawGuardian: function (learnerId, reason) { return pilotRpc('pilot_withdraw_guardian_consent', { p_learner: learnerId, p_reason: reason || '' }); },
     withdrawSchool: function (schoolId, reason) { return pilotRpc('pilot_withdraw_school_consent', { p_school: schoolId, p_reason: reason || '' }); },
     pendingRemovals: function () { return pilotRpc('pilot_pending_removals'); },
+    mySummaries: function () { return pilotRpc('pilot_my_summaries'); },
+    summaryStatus: function () { return pilotRpc('pilot_summary_status'); },
     pauseLearner: function (learnerId, reason) { return pilotRpc('pilot_pause_learner', { p_learner: learnerId, p_reason: reason || '' }); },
     resumeLearner: function (learnerId) { return pilotRpc('pilot_resume_learner', { p_learner: learnerId }); },
     messagingRules: function () { return pilotRpc('pilot_messaging_rules'); },
@@ -561,6 +565,88 @@
       return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
     }
   }
+
+  // ---- Learning record (2027 pilot) ----
+  // Only for learners the server has confirmed take part in the pilot (enrolled, with
+  // school and parent or guardian consent): the app then keeps a small queue of
+  // records on the phone and sends them in batches when there is a connection.
+  // Nothing is recorded for anyone else. Each record has its own reference, so a
+  // record that is sent twice is stored once.
+  var EVQ = 'k12plus-events';
+  var PILOT_FLAG = 'k12plus-pilot-taking-part';
+  function learnOn() { try { return localStorage.getItem(PILOT_FLAG) === '1'; } catch (e) { return false; } }
+  function readQ() { try { return JSON.parse(localStorage.getItem(EVQ) || '[]'); } catch (e) { return []; } }
+  function writeQ(q) { try { localStorage.setItem(EVQ, JSON.stringify(q.slice(-500))); } catch (e) {} }
+  var flushing = false, flushTimer = null;
+  window.k12learn = {
+    setTakingPart: function (yes) {
+      try {
+        if (yes) localStorage.setItem(PILOT_FLAG, '1');
+        else { localStorage.removeItem(PILOT_FLAG); localStorage.removeItem(EVQ); }
+      } catch (e) {}
+      if (yes) window.k12learn.flush();
+    },
+    record: function (ev) {
+      if (!learnOn() || !ev || !ev.kind) return;
+      var q = readQ();
+      q.push({
+        client_ref: Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10),
+        occurred_at: new Date().toISOString(), offline: !navigator.onLine,
+        kind: ev.kind, subject: ev.subject || null, topic: ev.topic || null,
+        correct: ev.correct == null ? null : ev.correct, attempted: ev.attempted == null ? null : ev.attempted,
+        duration_seconds: ev.duration_seconds == null ? null : ev.duration_seconds,
+      });
+      writeQ(q);
+      clearTimeout(flushTimer);
+      flushTimer = setTimeout(function () { window.k12learn.flush(); }, 15000);
+    },
+    flush: async function () {
+      if (flushing || !learnOn() || !navigator.onLine) return;
+      var q = readQ();
+      if (!q.length) return;
+      var sess = await freshSession();
+      if (!sess) return;
+      flushing = true;
+      try {
+        var batch = q.slice(0, 50);
+        var res = await fetch(SUPA + '/rest/v1/rpc/pilot_record_events', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + sess.access_token },
+          body: JSON.stringify({ p_events: batch }),
+        });
+        if (!res.ok) return;
+        var data = await res.json();
+        if (data && data.taking_part === false) { window.k12learn.setTakingPart(false); return; }
+        var sent = {};
+        batch.forEach(function (e) { sent[e.client_ref] = 1; });
+        var rest = readQ().filter(function (e) { return !sent[e.client_ref]; });
+        writeQ(rest);
+        if (rest.length) setTimeout(function () { window.k12learn.flush(); }, 1000);
+      } catch (e) {
+      } finally {
+        flushing = false;
+      }
+    },
+  };
+  // minutes of real use: counted only while the page is visible and the learner has
+  // touched, typed or scrolled in the last minute; sent in blocks of about 5 minutes
+  (function () {
+    var lastInput = 0, activeSec = 0;
+    ['click', 'keydown', 'touchstart', 'scroll'].forEach(function (t) {
+      window.addEventListener(t, function () { lastInput = Date.now(); }, { passive: true, capture: true });
+    });
+    function bank(min) {
+      if (activeSec >= min) { window.k12learn.record({ kind: 'active', duration_seconds: activeSec }); activeSec = 0; }
+    }
+    setInterval(function () {
+      if (!learnOn() || document.hidden) return;
+      if (Date.now() - lastInput < 60000) activeSec += 30;
+      bank(300);
+    }, 30000);
+    document.addEventListener('visibilitychange', function () { if (document.hidden) bank(30); });
+    window.addEventListener('online', function () { window.k12learn.flush(); });
+    setTimeout(function () { window.k12learn.flush(); }, 4000);
+  })();
 
   // ---- PWA ----
   if ('serviceWorker' in navigator) {

@@ -15,6 +15,8 @@ Each pilot item has tests that prove its "Done when" check from the Pilot Readin
 | `item5.test.js` | Item 5 pause: who may pause or resume, a paused learner gets nothing (including messages prepared before), the log shows who paused, full history | `node item5.test.js` |
 | `item5.ui.test.js` | Pause and resume from the teacher's class list | as for `item1.ui.test.js` |
 | `../signout.ui.test.js` | Sign out removes the session from the phone and cancels it on the server | as for `item1.ui.test.js` |
+| `item4.test.js` | Item 4: learning record (consent first, no duplicates, bad records ignored) and three Mondays of summaries with exact figures, logged without names, withdrawal | `node item4.test.js` |
+| `item4.ui.test.js` | Activity from the real chat box, offline then synced once, nothing for unconsented learners, sign-out clears the queue, the teacher's summary card | as for `item1.ui.test.js` |
 | `item1.ui.test.js` | The pilot screens in app.html in headless Chromium, with every click running the real SQL in PGlite | serve the site on 127.0.0.1:8765, set `VENDOR_DIR` to a folder with React and Babel in `node_modules`, then `node item1.ui.test.js` |
 
 This folder is not served by the website (`tests/.htaccess`).

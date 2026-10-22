@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=11"></script>
+<script src="./k12plus-bridge.js?v=12"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
 <script src="./k12plus-arcade.js?v=1"></script>
 <script src="./k12plus-scenes.js?v=1"></script>
@@ -1132,6 +1132,7 @@ button { font-family:'Poppins',sans-serif; }
               <h2 style="font-size:14.5px; font-weight:600; margin:0;">Agent messages</h2>
               <span style="font-size:12px; color:var(--muted);">{{ msgStatsLine }}</span>
             </div>
+            <div style="font-size:12px; color:var(--muted); margin-top:4px;">{{ sumStatusLine }}</div>
             <p style="font-size:12.5px; line-height:1.6; color:var(--muted); margin:6px 0 10px;">Every message passes these rules before it is sent: consent, not paused by a teacher, {{ msgRulesLine }}, and a content check. Every attempt is logged, sent or blocked.</p>
             <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
               <button onClick="{{ msgSample }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer;">Random sample of 20</button>
@@ -1274,6 +1275,22 @@ button { font-family:'Poppins',sans-serif; }
                   <div style="font-family:Georgia,serif; font-size:22px; font-weight:700; letter-spacing:4px; color:var(--primary);">{{ c.code }}</div>
                 </div>
               </div>
+              <sc-if value="{{ c.hasSummary }}" hint-placeholder-val="{{ false }}">
+                <div style="background:#F5F3FF; border:1px solid #E4DEFF; border-radius:12px; padding:12px 14px; margin-bottom:12px; font-size:12.5px; line-height:1.6;">
+                  <strong style="font-size:13px;">{{ c.sumTitle }}</strong>
+                  <div>{{ c.sumLine }}</div>
+                  <div>{{ c.sumNotActive }}</div>
+                  <div>{{ c.sumTopics }}</div>
+                  <sc-if value="{{ c.hasEarlier }}" hint-placeholder-val="{{ false }}">
+                    <details style="margin-top:4px;"><summary style="cursor:pointer; color:var(--primary); font-weight:600;">Earlier weeks</summary>
+                      <sc-for list="{{ c.sumEarlier }}" as="ew" hint-placeholder-count="1"><div style="color:var(--muted); margin-top:4px;">{{ ew.text }}</div></sc-for>
+                    </details>
+                  </sc-if>
+                </div>
+              </sc-if>
+              <sc-if value="{{ c.noSummary }}" hint-placeholder-val="{{ false }}">
+                <p style="font-size:12px; color:var(--muted); margin:0 0 12px;">Your first Monday summary arrives on the Monday after learners start, at 06:00.</p>
+              </sc-if>
               <p style="font-size:12px; line-height:1.6; color:var(--muted); margin:0 0 12px;">Learners with a smartphone log in at k12plus.app, open My dashboard and type this code under "Join your class". On a shared phone, each learner logs in with their own account first.</p>
               <h3 style="font-size:12.5px; font-weight:600; margin:0 0 6px;">{{ c.countLabel }}</h3>
               <div style="border:1px solid var(--line); border-radius:10px; max-height:300px; overflow-y:auto; margin-bottom:12px;">
@@ -2084,6 +2101,7 @@ class Component extends DCLogic {
     this.setState(goPilot ? { pilot: p, view: 'pilot' } : { pilot: p }, () => {
       if (this.state.view === 'pilot') this.loadPilot();
     });
+    try { if (window.k12learn) window.k12learn.setTakingPart(!!(p.class && p.class.taking_part)); } catch (e) {}
     if (p.class) {
       const m = await window.k12pilot.myMessages();
       if (m.ok && (m.data || []).length) {
@@ -2116,7 +2134,8 @@ class Component extends DCLogic {
       if (r.ok) this.setState({ pilotOverview: r.data || [] }); else err = r.error;
       const rm = await P.pendingRemovals();
       if (rm.ok) this.setState({ pilotRemovalsList: rm.data || [] });
-      const [ru, ms] = await Promise.all([P.messagingRules(), P.messageStats(7)]);
+      const [ru, ms, ss] = await Promise.all([P.messagingRules(), P.messageStats(7), P.summaryStatus()]);
+      if (ss.ok) this.setState({ summaryStatus: ss.data });
       if (ru.ok) this.setState((st) => ({ msgRules: ru.data, msgRulesIn: st.msgRulesIn || ru.data }));
       if (ms.ok) this.setState({ msgStats: ms.data });
     } else if (role === 'admin' || role === 'champion') {
@@ -2131,8 +2150,9 @@ class Component extends DCLogic {
       } else err = r.error;
     }
     if (role !== 'admin' && this.state.pilot && this.state.pilot.teaches > 0) {
-      const t = await P.myClasses();
+      const [t, sm] = await Promise.all([P.myClasses(), P.mySummaries()]);
       if (t.ok) this.setState({ pilotClasses: t.data || [] }); else err = err || t.error;
+      if (sm.ok) this.setState({ pilotSummaries: sm.data || [] });
     }
     this.setState(err ? { pilotLoading: false, pilotErr: err } : { pilotLoading: false });
   }
@@ -2287,6 +2307,22 @@ class Component extends DCLogic {
         where: [c.school, c.region, settingName(c.setting)].filter(Boolean).join(' · '),
         countLabel: plural(ls.length, 'learner', 'learners') + ' \u00b7 ' + ls.filter((l) => l.taking_part).length + ' taking part',
         empty: !ls.length,
+        ...(() => {
+          const sum = ((s.pilotSummaries || []).find((x) => x.class_id === c.id) || {}).summaries || [];
+          const wk = (x) => 'Week of ' + fmtDate(String(x.week_start).slice(0, 10));
+          const line = (x) => x.taking_part === 0 ? 'No learner takes part yet: consent is still needed.'
+            : x.active + ' of ' + x.taking_part + ' learners active \u00b7 ' + plural(x.questions, 'question', 'questions') + ' \u00b7 ' + plural(x.practice, 'practice answer', 'practice answers') + ' \u00b7 ' + plural(x.minutes, 'minute', 'minutes');
+          const latest = sum[0];
+          return {
+            hasSummary: !!latest, noSummary: !latest,
+            sumTitle: latest ? 'Monday summary \u00b7 ' + wk(latest) : '',
+            sumLine: latest ? line(latest) : '',
+            sumNotActive: latest && latest.not_active.length ? 'Not active last week: ' + latest.not_active.join(', ') : (latest && latest.taking_part ? 'Everyone taking part was active last week.' : ''),
+            sumTopics: latest && latest.topics.length ? 'Topics to revisit: ' + latest.topics.map((tp) => tp.topic + ' (' + tp.correct + ' of ' + tp.attempted + ' right)').join(', ') : (latest && latest.taking_part ? 'No topic stood out as weak.' : ''),
+            sumEarlier: sum.slice(1).map((x) => ({ text: wk(x) + ': ' + line(x) + (x.not_active.length ? '. Not active: ' + x.not_active.join(', ') : '') })),
+            hasEarlier: sum.length > 1
+          };
+        })(),
         schoolConsentLine: c.school_consent ? 'School consent received' : 'School consent not received yet. K-12 EdTech or your regional champion records it.',
         schoolConsentStyle: 'font-size:11.5px;margin-top:4px;color:' + (c.school_consent ? '#1F6B43' : '#8A6400') + ';',
         learners: ls.map((l) => {
@@ -2375,6 +2411,13 @@ class Component extends DCLogic {
       };
     });
     const msgVals = {
+      sumStatusLine: (() => {
+        const st = s.summaryStatus;
+        if (!st) return '';
+        const w = (st.weeks || [])[0];
+        return w ? 'Last Monday summary: week of ' + fmtDate(String(w.week_start).slice(0, 10)) + ', ' + w.classes + ' of ' + st.classes_with_teacher + ' classes'
+                 : 'Monday summaries start on the first Monday after a class has a teacher (06:00 Namibian time).';
+      })(),
       msgStatsLine: s.msgStats ? 'Last 7 days: ' + (mst.total || 0) + ' attempts \u00b7 ' + (bs.sent || 0) + ' sent \u00b7 ' + (bs.blocked || 0) + ' blocked' + (bs.failed ? ' \u00b7 ' + bs.failed + ' not delivered' : '') : '',
       msgRulesLine: mr.weekday_start ? 'weekdays ' + mr.weekday_start + ' to ' + mr.weekday_end + ', weekends ' + mr.weekend_start + ' to ' + mr.weekend_end + ' (Namibian time), at most ' + mr.weekly_limit + ' messages a week of which ' + mr.weekly_sms_limit + ' by text' : 'the allowed hours and the weekly limit',
       msgSample: () => loadMsgs(null, true, 'sample'),
@@ -2741,6 +2784,7 @@ class Component extends DCLogic {
         const hist = [{ subject: quizSubject, score, date: 'Today' }, ...(this.state.quizHistory || [])].slice(0, 10);
         try { localStorage.setItem('k12plus-quiz-history', JSON.stringify(hist)); } catch (e) {}
         if (window.k12data) window.k12data.recordQuiz(quizSubject, score, 5);
+        try { if (window.k12learn) window.k12learn.record({ kind: 'quiz', subject: quizSubject, correct: score, attempted: 5 }); } catch (e) {}
         this.setState({ quizDone: true, quizHistory: hist });
       },
       quizRetry: () => this.setState({ quizAnswers: {}, quizDone: false }),
@@ -2915,6 +2959,7 @@ class Component extends DCLogic {
     const total = (parseInt(localStorage.getItem('k12plus-points') || '0', 10) || 0) + gain;
     try { localStorage.setItem('k12plus-points', String(total)); } catch (e) {}
     try { if (window.k12data && window.k12data.recordQuiz) window.k12data.recordQuiz(st.subject || 'Games', ok ? 1 : 0, 1); } catch (e) {}
+    try { if (window.k12learn) window.k12learn.record({ kind: 'practice', subject: st.subject || 'Mathematics', topic: (sp && (sp.topic || sp.t)) || null, correct: ok ? 1 : 0, attempted: 1 }); } catch (e) {}
     if (!ok) {
       try {
         const stuck = JSON.parse(localStorage.getItem('k12plus-stuck') || '[]');
@@ -2948,6 +2993,7 @@ class Component extends DCLogic {
       } catch (e) {}
     }
     try { if (window.k12data && window.k12data.recordQuiz) window.k12data.recordQuiz(st.gamesSubject || 'Games', right ? 1 : 0, 1); } catch (e) {}
+    try { if (window.k12learn) window.k12learn.record({ kind: 'game', subject: st.gamesSubject || 'Mathematics', topic: st.gamesTopic || null, correct: right ? 1 : 0, attempted: 1 }); } catch (e) {}
     this.setState({
       gameResult: right ? 'right' : 'wrong',
       gamePoints: total,
@@ -3330,6 +3376,7 @@ class Component extends DCLogic {
     }
     const msgs = [...this.state.chatMsgs, { role: 'user', text: q + (img ? ' [image attached]' : '') }];
     this.setState({ chatMsgs: msgs, chatInput: '', chatBusy: true, pendingImage: null, pendingImageSrc: '', thinkIdx: 0 });
+    try { if (window.k12learn) window.k12learn.record({ kind: 'question', subject: this.state.subject || 'Mathematics' }); } catch (e) {}
     clearInterval(this._thinkT);
     this._thinkT = setInterval(() => this.setState(st => ({ thinkIdx: (st.thinkIdx || 0) + 1 })), 1700);
     let reply;
