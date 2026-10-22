@@ -429,6 +429,61 @@
     }
   };
 
+  // ---- Pilot (2027 pilot: regions, schools, classes, champions) ----
+  // Every call goes to a pilot_* database function, which checks the caller's role.
+  // Results: { ok: true, data } or { ok: false, error } with a message to show.
+  async function pilotRpc(name, args) {
+    if (!navigator.onLine) return { ok: false, error: 'You are offline. Pilot pages need a connection.' };
+    var sess = await freshSession();
+    if (!sess) return { ok: false, error: 'Please log in again.' };
+    try {
+      var res = await fetch(SUPA + '/rest/v1/rpc/' + name, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + sess.access_token },
+        body: JSON.stringify(args || {}),
+      });
+      var data = null;
+      try { data = await res.json(); } catch (e) {}
+      if (!res.ok) return { ok: false, error: (data && data.message) || 'Something went wrong. Please try again.' };
+      return { ok: true, data: data };
+    } catch (e) {
+      return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
+    }
+  }
+  window.k12pilot = {
+    whoami: function () { return pilotRpc('pilot_whoami'); },
+    overview: function () { return pilotRpc('pilot_overview'); },
+    regionSchools: function (regionId) { return pilotRpc('pilot_region_schools', { p_region: regionId }); },
+    regionDetail: function (regionId) { return pilotRpc('pilot_region_detail', { p_region: regionId }); },
+    setupRegion: function (regionId, schools) { return pilotRpc('pilot_setup_region', { p_region: regionId, p_schools: schools }); },
+    assignTeacher: function (classId, ident) { return pilotRpc('pilot_assign_teacher', { p_class: classId, p_identifier: ident }); },
+    removeTeacher: function (classId, teacherId) { return pilotRpc('pilot_remove_teacher', { p_class: classId, p_teacher: teacherId }); },
+    setChampion: function (regionId, ident) { return pilotRpc('pilot_set_champion', { p_region: regionId, p_identifier: ident }); },
+    myClasses: function () { return pilotRpc('pilot_my_classes'); },
+    joinClass: function (code) { return pilotRpc('pilot_join_class', { p_code: code }); },
+    addLearner: function (classId, ident) { return pilotRpc('pilot_add_learner', { p_class: classId, p_identifier: ident }); },
+    removeLearner: function (classId, learnerId) { return pilotRpc('pilot_remove_learner', { p_class: classId, p_learner: learnerId }); },
+    // learner with a basic phone and no account yet: the server creates the account
+    newLearner: async function (classId, name, phone) {
+      if (!navigator.onLine) return { ok: false, error: 'You are offline. Adding learners needs a connection.' };
+      var sess = await freshSession();
+      if (!sess) return { ok: false, error: 'Please log in again.' };
+      try {
+        var res = await fetch(SUPA + '/functions/v1/pilot-admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + sess.access_token },
+          body: JSON.stringify({ action: 'new_learner', classId: classId, name: name, phone: phone }),
+        });
+        var data = null;
+        try { data = await res.json(); } catch (e) {}
+        if (!res.ok) return { ok: false, error: (data && data.error) || 'Something went wrong. Please try again.' };
+        return { ok: true, data: data };
+      } catch (e) {
+        return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
+      }
+    },
+  };
+
   // ---- PWA ----
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {

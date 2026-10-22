@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=6"></script>
+<script src="./k12plus-bridge.js?v=7"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
 <script src="./k12plus-arcade.js?v=1"></script>
 <script src="./k12plus-scenes.js?v=1"></script>
@@ -464,6 +464,24 @@ button { font-family:'Poppins',sans-serif; }
           <h1 style="font-size:17px; font-weight:500; margin:0;">Welcome to class{{ welcomeName }}!<sc-if value="{{ hasGradeChip }}" hint-placeholder-val="{{ false }}"><strong style="font-weight:700; margin-left:7px;">{{ gradeChip }}</strong></sc-if></h1>
           <button style="margin-left:auto; display:flex; align-items:center; gap:7px; border:1px solid var(--line); background:var(--chip); color:var(--muted); border-radius:9px; padding:7px 14px; font-size:12.5px; font-weight:500; cursor:pointer;">Term 3 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></button>
         </div>
+        <sc-if value="{{ showJoinCard }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 18px; margin-bottom:18px;">
+            <sc-if value="{{ inPilotClass }}" hint-placeholder-val="{{ false }}">
+              <p style="font-size:13px; margin:0;"><strong>Your class:</strong> {{ pilotClassLine }}</p>
+            </sc-if>
+            <sc-if value="{{ notInPilotClass }}" hint-placeholder-val="{{ false }}">
+              <h2 style="font-size:14px; font-weight:600; margin:0 0 4px;">Join your class</h2>
+              <p style="font-size:12.5px; color:var(--muted); margin:0 0 10px;">If your teacher gave you a class code, type it here.</p>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <input value="{{ joinCode }}" onChange="{{ onJoinCode }}" placeholder="Class code, e.g. K7P2QX" style="flex:1 1 160px; min-width:0; border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-size:13.5px; text-transform:uppercase; letter-spacing:2px; outline:none;">
+                <button onClick="{{ joinClass }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:10px 18px; font-size:13px; font-weight:600; cursor:pointer;">{{ joinBtnLabel }}</button>
+              </div>
+              <sc-if value="{{ hasJoinErr }}" hint-placeholder-val="{{ false }}">
+                <p style="font-size:12.5px; color:#B42318; margin:8px 0 0;">{{ joinErr }}</p>
+              </sc-if>
+            </sc-if>
+          </div>
+        </sc-if>
         <div style="display:flex; align-items:center; gap:12px; background:linear-gradient(90deg,#FFF6DC,#FDF0E4); border:1px solid #F2E2AE; border-radius:14px; padding:11px 18px; margin-bottom:18px; flex-wrap:wrap;">
           <span style="font-size:19px;">🔥</span>
           <span style="font-size:13px; font-weight:700; color:#7A5B00;">5-day learning streak</span>
@@ -1040,6 +1058,160 @@ button { font-family:'Poppins',sans-serif; }
         </div>
       </div>
     </sc-if>
+    <sc-if value="{{ isPilot }}" hint-placeholder-val="{{ false }}">
+      <div class="k12dd" style="flex:1; overflow-y:auto; padding:4px 24px 28px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+          <div>
+            <h1 style="font-size:19px; font-weight:600; margin:0;">{{ pilotTitle }}</h1>
+            <span style="font-size:12px; color:var(--muted);">{{ pilotSub }}</span>
+          </div>
+          <sc-if value="{{ pilotShowBack }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ pilotBack }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:9px; padding:7px 14px; font-size:12.5px; font-weight:600; cursor:pointer;">&larr; All regions</button>
+          </sc-if>
+        </div>
+        <sc-if value="{{ pilotHasErr }}" hint-placeholder-val="{{ false }}">
+          <p style="background:#FDECEC; border:1px solid #F5C2C2; color:#B42318; border-radius:10px; padding:10px 14px; font-size:12.5px; line-height:1.6; margin:0 0 12px;">{{ pilotErr }}</p>
+        </sc-if>
+        <sc-if value="{{ pilotHasMsg }}" hint-placeholder-val="{{ false }}">
+          <p style="background:#E7F6EE; border:1px solid #C4E8D6; color:#1F6B43; border-radius:10px; padding:10px 14px; font-size:12.5px; line-height:1.6; margin:0 0 12px;">{{ pilotMsg }}</p>
+        </sc-if>
+        <sc-if value="{{ pilotLoading }}" hint-placeholder-val="{{ false }}">
+          <p style="font-size:13px; color:var(--muted);">Loading&hellip;</p>
+        </sc-if>
+
+        <sc-if value="{{ pilotShowOverview }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:6px 0; overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:12.5px; min-width:560px;">
+              <thead><tr style="text-align:left; color:var(--muted); font-size:11.5px;">
+                <th style="padding:10px 16px; font-weight:600;">Region</th><th style="padding:10px 8px; font-weight:600;">Schools</th><th style="padding:10px 8px; font-weight:600;">Classes</th><th style="padding:10px 8px; font-weight:600;">Teachers</th><th style="padding:10px 8px; font-weight:600;">Learners</th><th style="padding:10px 8px; font-weight:600;">Champion</th><th></th>
+              </tr></thead>
+              <tbody>
+                <sc-for list="{{ pilotRegions }}" as="r" hint-placeholder-count="14">
+                  <tr style="border-top:1px solid var(--line);">
+                    <td style="padding:10px 16px; font-weight:600;">{{ r.region }}</td>
+                    <td style="padding:10px 8px;">{{ r.schoolsLabel }}</td>
+                    <td style="padding:10px 8px;">{{ r.classes }}</td>
+                    <td style="padding:10px 8px;">{{ r.teachers }}</td>
+                    <td style="padding:10px 8px;">{{ r.learners }}</td>
+                    <td style="padding:10px 8px; color:{{ r.champColor }};">{{ r.championLabel }}</td>
+                    <td style="padding:8px 16px 8px 8px; text-align:right;"><button onClick="{{ r.open }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:6px 14px; font-size:12px; font-weight:600; cursor:pointer;">{{ r.openLabel }}</button></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <p style="font-size:11.5px; color:var(--muted); margin:10px 0 0;">Each region needs one rural and one urban school, a Grade 11 and a Grade 12 mathematics class in each, a teacher for every class and a regional champion.</p>
+        </sc-if>
+
+        <sc-if value="{{ pilotShowSetup }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-bottom:16px;">
+            <h2 style="font-size:14.5px; font-weight:600; margin:0 0 4px;">Choose the pilot schools</h2>
+            <p style="font-size:12.5px; line-height:1.6; color:var(--muted); margin:0 0 12px;">Mark one school as rural and one as urban. Each gets a Grade 11 and a Grade 12 mathematics class with its own class code.</p>
+            <input value="{{ pilotSchoolQ }}" onChange="{{ onPilotSchoolQ }}" placeholder="Search schools in this region" style="width:100%; box-sizing:border-box; border:1px solid var(--line); border-radius:8px; padding:9px 12px; font-size:13px; outline:none; margin-bottom:10px;">
+            <div style="max-height:320px; overflow-y:auto; border:1px solid var(--line); border-radius:10px;">
+              <sc-for list="{{ pilotSchoolRows }}" as="sc" hint-placeholder-count="6">
+                <div style="display:flex; align-items:center; gap:10px; padding:9px 12px; border-bottom:1px solid var(--line); flex-wrap:wrap;">
+                  <div style="flex:1 1 200px; min-width:0;"><div style="font-size:13px; font-weight:600;">{{ sc.name }}</div><div style="font-size:11.5px; color:var(--muted);">{{ sc.town }}</div></div>
+                  <button onClick="{{ sc.pickRural }}" style="{{ sc.ruralStyle }}">Rural</button>
+                  <button onClick="{{ sc.pickUrban }}" style="{{ sc.urbanStyle }}">Urban</button>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; margin-top:12px; flex-wrap:wrap;">
+              <span style="font-size:12.5px; color:var(--muted); flex:1 1 200px;">{{ pilotPickSummary }}</span>
+              <button onClick="{{ pilotDoSetup }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:10px 18px; font-size:13px; font-weight:600; cursor:pointer;">Set up region</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ pilotShowRegion }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ pilotCanAppoint }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:16px 20px; margin-bottom:16px;">
+              <h2 style="font-size:14.5px; font-weight:600; margin:0 0 4px;">Regional champion</h2>
+              <p style="font-size:12.5px; color:var(--muted); margin:0 0 10px;">{{ pilotChampionLine }}</p>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <input value="{{ pilotChampIn }}" onChange="{{ onPilotChampIn }}" placeholder="Champion's email, mobile number or k12plus ID" style="flex:1 1 180px; min-width:0; border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-size:13px; outline:none;">
+                <button onClick="{{ pilotAppoint }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:10px 18px; font-size:13px; font-weight:600; cursor:pointer;">Appoint</button>
+              </div>
+            </div>
+          </sc-if>
+          <sc-for list="{{ pilotRegionSchools }}" as="sc" hint-placeholder-count="2">
+            <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:16px 20px; margin-bottom:16px;">
+              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+                <h2 style="font-size:14.5px; font-weight:600; margin:0;">{{ sc.name }}</h2>
+                <span style="{{ sc.badgeStyle }}">{{ sc.settingLabel }}</span>
+                <span style="font-size:11.5px; color:var(--muted);">{{ sc.town }}</span>
+              </div>
+              <sc-for list="{{ sc.classes }}" as="c" hint-placeholder-count="2">
+                <div style="border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-top:10px;">
+                  <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <strong style="font-size:13px;">{{ c.name }}</strong>
+                    <span style="font-size:11.5px; color:var(--muted);">{{ c.learnersLabel }}</span>
+                    <span style="margin-left:auto; font-family:Georgia,serif; font-size:16px; font-weight:700; letter-spacing:3px; color:var(--primary);" title="Class code">{{ c.code }}</span>
+                  </div>
+                  <div style="display:flex; gap:6px; flex-wrap:wrap; margin:8px 0;">
+                    <sc-for list="{{ c.teachers }}" as="t" hint-placeholder-count="1">
+                      <span style="display:flex; align-items:center; gap:6px; background:var(--chip); border-radius:999px; padding:4px 6px 4px 11px; font-size:12px;">{{ t.name }}<button onClick="{{ t.remove }}" title="Remove teacher" style="border:none; background:none; color:var(--muted); cursor:pointer; font-size:14px; line-height:1; padding:0 4px;">&times;</button></span>
+                    </sc-for>
+                    <sc-if value="{{ c.noTeacher }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px; color:#B42318;">No teacher yet</span></sc-if>
+                  </div>
+                  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <input value="{{ c.teacherIn }}" onChange="{{ c.onTeacherIn }}" placeholder="Teacher's email, mobile number or k12plus ID" style="flex:1 1 180px; min-width:0; border:1px solid var(--line); border-radius:8px; padding:9px 12px; font-size:12.5px; outline:none;">
+                    <button onClick="{{ c.assign }}" style="border:1px solid var(--primary); background:#fff; color:var(--primary); border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">Assign teacher</button>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </sc-if>
+
+        <sc-if value="{{ pilotShowTeacher }}" hint-placeholder-val="{{ false }}">
+          <sc-for list="{{ pilotMyClasses }}" as="c" hint-placeholder-count="1">
+            <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-bottom:16px;">
+              <div style="display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+                <div style="flex:1 1 220px; min-width:0;">
+                  <h2 style="font-size:15px; font-weight:600; margin:0 0 3px;">{{ c.name }}</h2>
+                  <span style="font-size:12px; color:var(--muted);">{{ c.where }}</span>
+                </div>
+                <div style="background:var(--chip); border:1px dashed var(--primary); border-radius:10px; padding:8px 14px; text-align:center;">
+                  <div style="font-size:10.5px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:var(--muted);">Class code</div>
+                  <div style="font-family:Georgia,serif; font-size:22px; font-weight:700; letter-spacing:4px; color:var(--primary);">{{ c.code }}</div>
+                </div>
+              </div>
+              <p style="font-size:12px; line-height:1.6; color:var(--muted); margin:0 0 12px;">Learners with a smartphone log in at k12plus.app, open My dashboard and type this code under "Join your class". On a shared phone, each learner logs in with their own account first.</p>
+              <h3 style="font-size:12.5px; font-weight:600; margin:0 0 6px;">{{ c.countLabel }}</h3>
+              <div style="border:1px solid var(--line); border-radius:10px; max-height:300px; overflow-y:auto; margin-bottom:12px;">
+                <sc-for list="{{ c.learners }}" as="l" hint-placeholder-count="3">
+                  <div style="display:flex; align-items:center; gap:10px; padding:8px 12px; border-bottom:1px solid var(--line); font-size:12.5px;">
+                    <span style="flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ l.name }}</span>
+                    <span style="color:var(--muted); font-size:11.5px;">{{ l.k12id }}</span>
+                    <button onClick="{{ l.remove }}" style="border:none; background:none; color:var(--muted); cursor:pointer; font-size:11.5px; text-decoration:underline;">Remove</button>
+                  </div>
+                </sc-for>
+                <sc-if value="{{ c.empty }}" hint-placeholder-val="{{ false }}"><p style="font-size:12.5px; color:var(--muted); margin:0; padding:12px;">No learners yet.</p></sc-if>
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
+                <input value="{{ c.addIn }}" onChange="{{ c.onAddIn }}" placeholder="Learner's k12plus ID or mobile number" style="flex:1 1 180px; min-width:0; border:1px solid var(--line); border-radius:8px; padding:9px 12px; font-size:12.5px; outline:none;">
+                <button onClick="{{ c.add }}" style="border:1px solid var(--primary); background:#fff; color:var(--primary); border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">Add learner</button>
+              </div>
+              <details style="font-size:12.5px;">
+                <summary style="cursor:pointer; color:var(--primary); font-weight:600;">Learner with a basic phone and no account?</summary>
+                <p style="color:var(--muted); line-height:1.6; margin:8px 0;">Create the account with their name and mobile number. They will reach the AI Math Agent by USSD from that number.</p>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <input value="{{ c.newName }}" onChange="{{ c.onNewName }}" placeholder="Full name" style="flex:1 1 160px; min-width:0; border:1px solid var(--line); border-radius:8px; padding:9px 12px; font-size:12.5px; outline:none;">
+                  <input value="{{ c.newPhone }}" onChange="{{ c.onNewPhone }}" placeholder="Mobile number, e.g. 081 234 5678" style="flex:1 1 160px; min-width:0; border:1px solid var(--line); border-radius:8px; padding:9px 12px; font-size:12.5px; outline:none;">
+                  <button onClick="{{ c.create }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">Create account</button>
+                </div>
+              </details>
+            </div>
+          </sc-for>
+          <sc-if value="{{ pilotNoClasses }}" hint-placeholder-val="{{ false }}">
+            <p style="font-size:13px; color:var(--muted);">You have no pilot classes yet. K-12 EdTech or your regional champion will add you to a class.</p>
+          </sc-if>
+        </sc-if>
+      </div>
+    </sc-if>
+
     <sc-if value="{{ isPlans }}" hint-placeholder-val="{{ false }}">
       <div class="k12dd" style="flex:1; overflow-y:auto; padding:4px 24px 28px;">
         <h1 style="font-size:19px; font-weight:600; margin:0 0 4px;">Lesson plan studio</h1>
@@ -1747,7 +1919,7 @@ class Component extends DCLogic {
     } catch (e) {}
     try {
       const sess = JSON.parse(localStorage.getItem('k12plus-session') || 'null');
-      if (sess && sess.access_token) this.setState({ hasSession: true });
+      if (sess && sess.access_token) { this.setState({ hasSession: true }); this.loadPilotRole(); }
       if (window.k12data && window.k12data.myQuizStats) {
         window.k12data.myQuizStats().then((stats) => {
           if (stats && stats.total > 0) this.setState({ liveStats: stats });
@@ -1755,6 +1927,234 @@ class Component extends DCLogic {
       }
     } catch (e) {}
     this._timer = setInterval(() => this.setState(s => ({ countdown: Math.max(0, s.countdown - 1) })), 1000);
+  }
+
+  // ---------- 2027 pilot: regions, schools, classes, champions ----------
+  async loadPilotRole() {
+    if (!window.k12pilot) return;
+    const r = await window.k12pilot.whoami();
+    if (!r.ok || !r.data || !r.data.signed_in) return;
+    const p = r.data;
+    const goPilot = p.admin && this.state.view === 'dashboard';
+    this.setState(goPilot ? { pilot: p, view: 'pilot' } : { pilot: p }, () => {
+      if (this.state.view === 'pilot') this.loadPilot();
+    });
+  }
+
+  pilotRoleOf(p) {
+    p = p || this.state.pilot || {};
+    if (p.admin) return 'admin';
+    if (p.champion_region_id) return 'champion';
+    if (p.teaches > 0) return 'teacher';
+    return '';
+  }
+
+  openPilot() {
+    this.setState({ view: 'pilot', pilotErr: '', pilotMsg: '' }, () => this.loadPilot());
+  }
+
+  async loadPilot(keepMsg) {
+    const P = window.k12pilot;
+    const role = this.pilotRoleOf();
+    if (!P || !role) return;
+    this.setState(keepMsg ? { pilotLoading: true } : { pilotLoading: true, pilotErr: '', pilotMsg: '' });
+    let err = '';
+    if (role === 'admin' && !this.state.pilotRegionId) {
+      const r = await P.overview();
+      if (r.ok) this.setState({ pilotOverview: r.data || [] }); else err = r.error;
+    } else if (role === 'admin' || role === 'champion') {
+      const rid = role === 'admin' ? this.state.pilotRegionId : this.state.pilot.champion_region_id;
+      const r = await P.regionDetail(rid);
+      if (r.ok) {
+        this.setState({ pilotRegion: r.data });
+        if (role === 'admin' && ((r.data && r.data.schools) || []).length < 2) {
+          const sr = await P.regionSchools(rid);
+          if (sr.ok) this.setState({ pilotCandidates: sr.data || [] }); else err = sr.error;
+        }
+      } else err = r.error;
+    }
+    if (role !== 'admin' && this.state.pilot && this.state.pilot.teaches > 0) {
+      const t = await P.myClasses();
+      if (t.ok) this.setState({ pilotClasses: t.data || [] }); else err = err || t.error;
+    }
+    this.setState(err ? { pilotLoading: false, pilotErr: err } : { pilotLoading: false });
+  }
+
+  // run one pilot action, show the result, then refresh the page data
+  async pilotAct(promise, okMsg) {
+    this.setState({ pilotErr: '', pilotMsg: '' });
+    const r = await promise;
+    if (!r.ok) { this.setState({ pilotErr: r.error }); return null; }
+    this.setState({ pilotMsg: typeof okMsg === 'function' ? okMsg(r.data) : okMsg });
+    await this.loadPilot(true);
+    return r.data || true;
+  }
+
+  async joinPilotClass() {
+    const code = (this.state.joinCode || '').trim();
+    if (!code) return this.setState({ joinErr: 'Type the class code from your teacher.' });
+    this.setState({ joinBusy: true, joinErr: '' });
+    const r = await window.k12pilot.joinClass(code);
+    if (!r.ok) return this.setState({ joinBusy: false, joinErr: r.error });
+    this.setState({ joinBusy: false, joinCode: '' });
+    this.loadPilotRole();
+  }
+
+  pilotVals(s) {
+    const p = s.pilot || {};
+    const role = this.pilotRoleOf(p);
+    const P = window.k12pilot || {};
+    const inputs = s.pilotInputs || {};
+    const setIn = (key) => (e) => {
+      const v = e && e.target ? e.target.value : e;
+      this.setState((st) => ({ pilotInputs: Object.assign({}, st.pilotInputs || {}, { [key]: v }) }));
+    };
+    const need = (key, msg) => {
+      const v = String(inputs[key] || '').trim();
+      if (!v) this.setState({ pilotErr: msg, pilotMsg: '' });
+      return v;
+    };
+    const chip = (on) => 'border-radius:999px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;' +
+      (on ? 'background:var(--primary);color:#fff;border:1px solid var(--primary);' : 'background:#fff;color:var(--ink);border:1px solid var(--line);');
+    const badge = (st) => 'font-size:11px;font-weight:700;border-radius:6px;padding:2px 8px;' +
+      (st === 'rural' ? 'background:#E7F6EE;color:#1F6B43;' : 'background:#EEF0FE;color:#3D48B8;');
+    const settingName = (st) => (st === 'rural' ? 'Rural' : st === 'urban' ? 'Urban' : '');
+    const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
+
+    // administrator: all regions
+    const regions = (s.pilotOverview || []).map((r) => ({
+      region: r.region, classes: r.classes, teachers: r.teachers, learners: r.learners,
+      schoolsLabel: r.schools ? r.schools + ' (' + r.rural + ' rural, ' + r.urban + ' urban)' : 'None yet',
+      championLabel: r.champion || 'Not appointed',
+      champColor: r.champion ? 'var(--ink)' : '#B42318',
+      openLabel: r.schools ? 'Open' : 'Set up',
+      open: () => this.setState({ pilotRegionId: r.region_id, pilotRegion: null, pilotCandidates: [], pilotPick: {}, pilotSchoolQ: '', pilotErr: '', pilotMsg: '' }, () => this.loadPilot())
+    }));
+
+    // administrator: choose schools for a region
+    const q = (s.pilotSchoolQ || '').trim().toLowerCase();
+    const pick = s.pilotPick || {};
+    const setPick = (id, st) => this.setState((old) => {
+      const n = Object.assign({}, old.pilotPick || {});
+      if (n[id] === st) delete n[id]; else n[id] = st;
+      return { pilotPick: n };
+    });
+    const schoolRows = (s.pilotCandidates || [])
+      .filter((x) => pick[x.id] || !q || (x.name + ' ' + x.town).toLowerCase().includes(q))
+      .slice(0, 80)
+      .map((x) => ({
+        name: x.name, town: x.town,
+        ruralStyle: chip(pick[x.id] === 'rural'), urbanStyle: chip(pick[x.id] === 'urban'),
+        pickRural: () => setPick(x.id, 'rural'), pickUrban: () => setPick(x.id, 'urban')
+      }));
+    const picked = Object.keys(pick).map((k) => pick[k]);
+    const pickSummary = picked.length
+      ? picked.length + ' chosen: ' + picked.filter((v) => v === 'rural').length + ' rural, ' + picked.filter((v) => v === 'urban').length + ' urban'
+      : 'No schools chosen yet.';
+
+    // administrator or champion: one region
+    const reg = s.pilotRegion || {};
+    const regionView = (role === 'admin' && !!s.pilotRegionId) || role === 'champion';
+    const regionSchools = (reg.schools || []).map((sc) => ({
+      name: sc.name, town: sc.town, settingLabel: settingName(sc.setting), badgeStyle: badge(sc.setting),
+      classes: (sc.classes || []).map((c) => ({
+        name: c.name, code: c.code,
+        learnersLabel: plural(c.learners, 'learner', 'learners'),
+        noTeacher: !(c.teachers || []).length,
+        teachers: (c.teachers || []).map((t) => ({
+          name: t.name,
+          remove: () => this.pilotAct(P.removeTeacher(c.id, t.id), t.name + ' no longer teaches ' + c.name + ' at ' + sc.name + '.')
+        })),
+        teacherIn: inputs['t:' + c.id] || '', onTeacherIn: setIn('t:' + c.id),
+        assign: () => {
+          const v = need('t:' + c.id, "Type the teacher's email, mobile number or k12plus ID.");
+          if (v) this.pilotAct(P.assignTeacher(c.id, v), (d) => d.teacher + ' now teaches ' + c.name + ' at ' + sc.name + '.')
+            .then((done) => { if (done) setIn('t:' + c.id)(''); });
+        }
+      }))
+    }));
+
+    // teacher: my classes
+    const myClasses = (s.pilotClasses || []).map((c) => {
+      const ls = c.learners || [];
+      return {
+        name: c.name, code: c.code,
+        where: [c.school, c.region, settingName(c.setting)].filter(Boolean).join(' · '),
+        countLabel: plural(ls.length, 'learner', 'learners'),
+        empty: !ls.length,
+        learners: ls.map((l) => ({
+          name: l.name, k12id: l.k12id || '',
+          remove: () => this.pilotAct(P.removeLearner(c.id, l.id), l.name + ' was removed from ' + c.name + '.')
+        })),
+        addIn: inputs['a:' + c.id] || '', onAddIn: setIn('a:' + c.id),
+        add: () => {
+          const v = need('a:' + c.id, "Type the learner's k12plus ID or mobile number.");
+          if (v) this.pilotAct(P.addLearner(c.id, v), 'Learner added to ' + c.name + '.')
+            .then((done) => { if (done) setIn('a:' + c.id)(''); });
+        },
+        newName: inputs['n:' + c.id] || '', onNewName: setIn('n:' + c.id),
+        newPhone: inputs['p:' + c.id] || '', onNewPhone: setIn('p:' + c.id),
+        create: () => {
+          const name = need('n:' + c.id, "Type the learner's full name.");
+          const phone = name && need('p:' + c.id, "Type the learner's mobile number.");
+          if (name && phone) this.pilotAct(P.newLearner(c.id, name, phone),
+            (d) => d.name + ' was added to ' + c.name + '. Their k12plus ID is ' + d.learnerUid + '. Write it down for them.')
+            .then((done) => { if (done) { setIn('n:' + c.id)(''); setIn('p:' + c.id)(''); } });
+        }
+      };
+    });
+
+    const title = role === 'admin'
+      ? (s.pilotRegionId ? ((reg.region || 'Region') + ' region') : 'Pilot: all regions')
+      : role === 'champion' ? ((reg.region || p.champion_region || '') + ' region') : 'My pilot classes';
+    const sub = role === 'admin'
+      ? (s.pilotRegionId ? 'Pilot set-up · schools, classes, teachers and champion' : '2027 pilot · 14 regions · one rural and one urban school in each')
+      : role === 'champion' ? 'Regional champion · the pilot schools in your region' : '2027 pilot · Grade 11 and 12 mathematics';
+    const cls = p.class;
+
+    return {
+      isPilot: s.view === 'pilot' && !!s.loggedIn && !!role,
+      pilotTitle: title, pilotSub: sub,
+      pilotShowBack: role === 'admin' && !!s.pilotRegionId,
+      pilotBack: () => this.setState({ pilotRegionId: null, pilotRegion: null, pilotErr: '', pilotMsg: '' }, () => this.loadPilot()),
+      pilotHasErr: !!s.pilotErr, pilotErr: s.pilotErr || '',
+      pilotHasMsg: !!s.pilotMsg, pilotMsg: s.pilotMsg || '',
+      pilotLoading: !!s.pilotLoading,
+      pilotShowOverview: role === 'admin' && !s.pilotRegionId && regions.length > 0,
+      pilotRegions: regions,
+      pilotShowSetup: role === 'admin' && !!s.pilotRegionId && !!s.pilotRegion && (reg.schools || []).length < 2,
+      pilotSchoolQ: s.pilotSchoolQ || '',
+      onPilotSchoolQ: (e) => this.setState({ pilotSchoolQ: e.target.value }),
+      pilotSchoolRows: schoolRows,
+      pilotPickSummary: pickSummary,
+      pilotDoSetup: () => {
+        const list = Object.keys(pick).map((id) => ({ school_id: id, setting: pick[id] }));
+        if (!list.length) return this.setState({ pilotErr: 'Choose at least one school.', pilotMsg: '' });
+        this.pilotAct(P.setupRegion(s.pilotRegionId, list), 'Region set up. Each class now has its own class code.')
+          .then((done) => { if (done) this.setState({ pilotPick: {}, pilotSchoolQ: '' }); });
+      },
+      pilotShowRegion: regionView && !!s.pilotRegion,
+      pilotCanAppoint: role === 'admin',
+      pilotChampionLine: reg.champion ? 'Current champion: ' + reg.champion.name : 'No champion appointed yet.',
+      pilotChampIn: inputs.champ || '', onPilotChampIn: setIn('champ'),
+      pilotAppoint: () => {
+        const v = need('champ', "Type the champion's email, mobile number or k12plus ID.");
+        if (v) this.pilotAct(P.setChampion(s.pilotRegionId, v), (d) => d.champion + ' is now the champion for ' + (reg.region || 'this region') + '.')
+          .then((done) => { if (done) setIn('champ')(''); });
+      },
+      pilotRegionSchools: regionSchools,
+      pilotShowTeacher: role === 'teacher' || (role === 'champion' && p.teaches > 0),
+      pilotMyClasses: myClasses,
+      pilotNoClasses: role === 'teacher' && !s.pilotLoading && !myClasses.length,
+      showJoinCard: !!s.loggedIn && (s.role || 'Learner') === 'Learner' && !!s.pilot,
+      inPilotClass: !!cls, notInPilotClass: !cls,
+      pilotClassLine: cls ? cls.name + ' at ' + cls.school + (cls.region ? ', ' + cls.region : '') : '',
+      joinCode: s.joinCode || '',
+      onJoinCode: (e) => this.setState({ joinCode: e.target.value, joinErr: '' }),
+      joinClass: () => this.joinPilotClass(),
+      joinBtnLabel: s.joinBusy ? 'Joining…' : 'Join',
+      hasJoinErr: !!s.joinErr, joinErr: s.joinErr || ''
+    };
   }
 
   archiveCurrent() {
@@ -3039,6 +3439,9 @@ class Component extends DCLogic {
         sideItems[7]  // Calendar
       );
     }
+    if (s.loggedIn && this.pilotRoleOf()) {
+      sideItems.splice(1, 0, { label: 'Pilot', icon: fbSubjects, pick: () => this.openPilot(), hasSubs: false, subsOpen: false });
+    }
     const q = (s.searchQ || '').trim().toLowerCase();
     const pool = [];
     if (s.chatMsgs.length) pool.push({ title: (s.chatMsgs.find(m => m.role === 'user') || { text: 'Current chat' }).text.slice(0, 38), msgs: s.chatMsgs, current: true });
@@ -3107,7 +3510,7 @@ class Component extends DCLogic {
       closeProfile: () => this.setState({ profileOpen: false }),
       avatarBg: s.avatar ? 'url(' + s.avatar + ')' : 'none', hasAvatar: !!s.avatar, noAvatar: !s.avatar,
       userName: s.role === 'Educator' ? 'Ms Amukoto' : (s.role === 'Parent' ? 'Mr Shikongo' : (s.role === 'Principal & HOD' || s.role === 'Principal') ? 'Mrs Nghipondoka' : s.role === 'Ministry' ? 'Ministry of Education' : (s.userName || 'Learner')),
-      userSub: s.role === 'Educator' ? 'Educator \u00b7 Grade 12 C \u00b7 Mathematics' : s.role === 'Parent' ? 'Parent \u00b7 2 linked learners' : (s.role === 'Principal & HOD' || s.role === 'Principal') ? 'Principal' : s.role === 'Ministry' ? 'National analyst' : (s.grade ? 'Grade ' + s.grade + (s.classLetter ? ' ' + s.classLetter : '') : 'Learner'),
+      userSub: (s.pilot && s.pilot.admin) ? 'K-12 EdTech administrator' : s.role === 'Educator' ? 'Educator \u00b7 Grade 12 C \u00b7 Mathematics' : s.role === 'Parent' ? 'Parent \u00b7 2 linked learners' : (s.role === 'Principal & HOD' || s.role === 'Principal') ? 'Principal' : s.role === 'Ministry' ? 'National analyst' : (s.grade ? 'Grade ' + s.grade + (s.classLetter ? ' ' + s.classLetter : '') : 'Learner'),
       userInitial: ((s.role === 'Educator' ? 'Amukoto' : s.role === 'Parent' ? 'Shikongo' : (s.role === 'Principal & HOD' || s.role === 'Principal') ? 'Nghipondoka' : s.role === 'Ministry' ? 'Ministry' : (s.userName || 'Learner'))[0] || 'L').toUpperCase(),
       welcomeName: (s.loggedIn && String(s.userName || '').trim()) ? ', ' + String(s.userName).trim().split(/\s+/)[0] : '',
       hasGradeChip: !!(s.loggedIn && s.grade),
@@ -3191,7 +3594,7 @@ class Component extends DCLogic {
         { icon: '\uD83D\uDCAC', bg: '#E7F6EE', text: 'Ms Amukoto replied to your question about Lesson 4', when: 'Yesterday' }
       ],
       toggleSide: () => (s.isMobile ? this.setState({ mobileNav: false }) : this.setState({ sideCollapsed: !s.sideCollapsed })),
-      shellTitle: ({ dashboard: 'Dashboard', lab: 'Real-Life Lab', timetable: 'Timetable', calendar: 'Calendar', quiz: 'Assessments', syllabus: 'Syllabus', plans: 'Plan Studio', games: 'Game Arcade' })[s.view] || (s.subject ? 'Tutor \u00b7 ' + s.subject : 'Tutor'),
+      shellTitle: ({ dashboard: 'Dashboard', lab: 'Real-Life Lab', timetable: 'Timetable', calendar: 'Calendar', quiz: 'Assessments', syllabus: 'Syllabus', plans: 'Plan Studio', games: 'Game Arcade', pilot: 'Pilot' })[s.view] || (s.subject ? 'Tutor \u00b7 ' + s.subject : 'Tutor'),
       notChat: s.view !== 'chat',
       isOffline: !!s.offline,
       isGuest: !s.loggedIn, isAuthed: !!s.loggedIn,
@@ -3247,6 +3650,7 @@ class Component extends DCLogic {
       isDashParent: !lockNoun && s.view === 'dashboard' && s.role === 'Parent',
       isDashPrin: !lockNoun && s.view === 'dashboard' && (s.role === 'Principal & HOD' || s.role === 'Principal'),
       isDashMin: !lockNoun && s.view === 'dashboard' && s.role === 'Ministry',
+      ...this.pilotVals(s),
       isLab: s.view === 'lab', isTimetable: !lockNoun && s.view === 'timetable', isCalendar: !lockNoun && s.view === 'calendar', isQuiz: !lockNoun && s.view === 'quiz', isSyllabus: !lockNoun && s.view === 'syllabus',
       goDash: () => this.setState({ view: 'dashboard' }),
       goChat: () => this.setState({ view: 'chat' }),
