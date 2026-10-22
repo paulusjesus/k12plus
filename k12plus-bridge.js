@@ -271,11 +271,22 @@
         return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
       }
     },
+    // Signing out removes the account's session from this phone at once (important on
+    // shared phones) and asks Supabase to cancel it, so it cannot be used again.
     logout: function () {
+      var sess = readSession();
       try {
         localStorage.removeItem('k12plus-session');
         localStorage.removeItem('k12plus-loggedin');
       } catch (e) {}
+      if (sess && sess.access_token && navigator.onLine) {
+        try {
+          fetch(SUPA + '/auth/v1/logout?scope=local', {
+            method: 'POST', keepalive: true,
+            headers: { apikey: SUPA_KEY, Authorization: 'Bearer ' + sess.access_token },
+          }).catch(function () {});
+        } catch (e) {}
+      }
     },
   };
 

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=9"></script>
+<script src="./k12plus-bridge.js?v=10"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
 <script src="./k12plus-arcade.js?v=1"></script>
 <script src="./k12plus-scenes.js?v=1"></script>
@@ -3894,7 +3894,7 @@ class Component extends DCLogic {
       guestLimitReached: !s.loggedIn && (s.guestUsed || 0) >= 10,
       guestMeterOn: !s.loggedIn && (s.guestUsed || 0) > 0 && (s.guestUsed || 0) < 10,
       guestMeterNote: Math.max(0, 10 - (s.guestUsed || 0)) + ' of 10 free questions left \u00b7 ',
-      signOut: () => { try { localStorage.setItem('k12plus-loggedin', ''); } catch (e) {} },
+      signOut: () => { try { if (window.k12auth && window.k12auth.logout) window.k12auth.logout(); else { localStorage.removeItem('k12plus-session'); localStorage.setItem('k12plus-loggedin', ''); } } catch (e) {} },
       homeHeading: (() => {
         const firstName = s.loggedIn ? String(s.userName || '').trim().split(/\s+/)[0] : '';
         const n = firstName ? ', ' + firstName : '';
