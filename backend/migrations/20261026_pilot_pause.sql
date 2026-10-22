@@ -107,8 +107,8 @@ begin
     c_consent := pilot_active(lid);
     c_pause := not pilot_is_paused(lid);
     if not c_pause then
-      select a.paused_at, p.username into paused_at_ts, paused_by_name
-        from agent_pauses a left join profiles p on p.id = a.paused_by
+      select a.paused_at, pr.username into paused_at_ts, paused_by_name
+        from agent_pauses a left join profiles pr on pr.id = a.paused_by
        where a.learner_id = lid and a.resumed_at is null;
     end if;
     c_hours := case when dow <= 5 then t >= r.weekday_start and t <= r.weekday_end
