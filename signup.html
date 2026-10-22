@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=4"></script>
+<script src="./k12plus-bridge.js?v=5"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#7C3AED">
 </head>
@@ -1156,7 +1156,7 @@ class Component extends DCLogic {
         try { localStorage.setItem('k12plus-role', s.role); localStorage.setItem('k12plus-school', s.school || ''); localStorage.setItem('k12plus-loggedin', '1'); } catch (e) {}
         this.setState({ done: true, error: '', uid });
       } else {
-        if (!s.email.trim()) return this.setState({ error: 'Enter the email address or mobile number you signed up with.' });
+        if (!s.email.trim()) return this.setState({ error: 'Enter your email address, mobile number or k12plus ID.' });
         if (!s.password) return this.setState({ error: 'Please enter your password.' });
         if (window.k12auth) {
           const r = await window.k12auth.login(s.email.trim(), s.password);
@@ -1193,7 +1193,7 @@ class Component extends DCLogic {
       uid: s.uid,
       hasUid: s.done && !!s.uid,
       uidNote: s.role === 'Learner'
-        ? 'Write it down and share it with your parent or guardian; they need it to follow your progress.'
+        ? 'Write it down. You can log in with it (or your mobile number), and your parent or guardian needs it to follow your progress.'
         : (s.role === 'Parent' ? 'Keep it safe; you will use it to sign in and manage your ' + (s.children.length > 1 ? s.children.length + ' linked learners.' : 'linked learner.') : 'Keep it safe; your school uses it to verify your educator account.'),
       isLogin: s.mode === 'login',
       showPassword: !isReset,
@@ -1212,8 +1212,8 @@ class Component extends DCLogic {
       first: s.first, last: s.last, email: s.email, mobile: s.mobile, password: s.password,
       onFirst: set('first'), onLast: set('last'), onEmail: set('email'), onMobile: set('mobile'), onPassword: set('password'),
       emailWrapStyle: isSignup ? 'display:grid; grid-template-columns:1fr 1fr; gap:12px;' : '',
-      emailLabel: isSignup ? 'Email address (optional)' : (isReset ? 'Email address' : 'Email or mobile number'),
-      emailPlaceholder: isSignup ? 'name@email.com' : (isReset ? 'name@email.com' : 'name@email.com or +264 81 234 5678'),
+      emailLabel: isSignup ? 'Email address (optional)' : (isReset ? 'Email address' : 'Email, mobile number or k12plus ID'),
+      emailPlaceholder: isSignup ? 'name@email.com' : (isReset ? 'name@email.com' : 'name@email.com, 081 234 5678 or K12-NA-…'),
       pwType: s.showPw ? 'text' : 'password',
       togglePw: () => this.setState({ showPw: !s.showPw }),
       school: s.school, hasSchool: !!s.school, noSchool: !s.school,

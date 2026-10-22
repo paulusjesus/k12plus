@@ -86,11 +86,6 @@
   var SUPA = 'https://uwqbjjzjdnjlbicxrwnp.supabase.co';
   var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3cWJqanpqZG5qbGJpY3hyd25wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4MzIyNzMsImV4cCI6MjEwMTQwODI3M30.A-YBoeeBGi8XD9tZsm3Yllj0TzfKsl9TKsUSySlWd88';
 
-  function supaEmail(username, email) {
-    if (email && /\S+@\S+\.\S+/.test(email)) return email.trim();
-    if (username && username.indexOf('@') > -1) return username.trim();
-    return String(username || '').toLowerCase().replace(/[^a-z0-9_]/g, '') + '@learners.k12edu.io';
-  }
   function supaErr(data, fallback) {
     if (!data) return fallback;
     return data.msg || data.message || data.error_description ||
@@ -168,7 +163,16 @@
     signup: async function (opts) {
       opts = opts || {};
       try {
-        var email = supaEmail(opts.username, opts.email);
+        var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        var code = '';
+        for (var i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+        var learnerUid = 'K12-' + (opts.country === 'South Africa' ? 'ZA' : 'NA') + '-' + code;
+        // No email given: use a private internal address built from the unique
+        // k12plus ID, so learners who share a name or a family phone never clash.
+        // They log in with their mobile number or k12plus ID (auth-login function).
+        var email = (opts.email && /\S+@\S+\.\S+/.test(opts.email))
+          ? opts.email.trim()
+          : learnerUid.toLowerCase() + '@learners.k12edu.io';
         var res = await fetch(SUPA + '/auth/v1/signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY },
@@ -188,11 +192,6 @@
           var srows = await sres.json();
           if (sres.ok && Array.isArray(srows) && srows.length) schoolId = srows[0].id;
         } catch (e) {}
-
-        var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        var code = '';
-        for (var i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
-        var learnerUid = 'K12-' + (opts.country === 'South Africa' ? 'ZA' : 'NA') + '-' + code;
 
         var profile = {
           id: user.id,
@@ -223,16 +222,30 @@
         return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
       }
     },
-    login: async function (username, password) {
+    // identifier: email address, mobile number, k12plus ID, or (older accounts) full name
+    login: async function (identifier, password) {
       try {
-        var email = supaEmail(username);
-        var res = await fetch(SUPA + '/auth/v1/token?grant_type=password', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY },
-          body: JSON.stringify({ email: email, password: password }),
-        });
+        var ident = String(identifier || '').trim();
+        var res;
+        if (ident.indexOf('@') > -1) {
+          res = await fetch(SUPA + '/auth/v1/token?grant_type=password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY },
+            body: JSON.stringify({ email: ident, password: password }),
+          });
+        } else {
+          res = await fetch(SUPA + '/functions/v1/auth-login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + SUPA_KEY },
+            body: JSON.stringify({ identifier: ident, password: password }),
+          });
+        }
         var data = await res.json();
-        if (!res.ok) return { ok: false, error: supaErr(data, 'Login failed. Check your details and try again.') };
+        if (!res.ok) {
+          var msg = supaErr(data, 'Login failed. Check your details and try again.');
+          if (/invalid login credentials/i.test(msg)) msg = 'That email and password do not match. Check them and try again.';
+          return { ok: false, error: msg };
+        }
         var token = data.access_token;
         var userId = data.user && data.user.id;
         var profile = null;
@@ -248,7 +261,7 @@
           : '';
         saveSession._country = (profile && profile.country) || 'Namibia';
         saveSession(token, data.refresh_token, userId,
-          (profile && profile.username) || username,
+          (profile && profile.username) || ident,
           displayRole,
           (profile && profile.school) || '',
           profile && profile.grade,
