@@ -125,22 +125,26 @@ window.k12agentName = function (subject) {
         payload.k12feedback = { kind: String(opts.feedback.kind || 'chat'), subject: String(opts.feedback.subject || ''), topic: String(opts.feedback.topic || '') };
       }
     } catch (e) {}
+    var OFFLINE_IMAGE = 'You are offline right now, and pictures need a connection to reach the agent. Please try sending your image again once you are back online.';
+    var OFFLINE_SAVED = 'You are offline right now. Your question has been saved and the agent will answer it the moment you reconnect. Meanwhile, your saved chats, lessons and quizzes still work.';
     if (!navigator.onLine) {
-      if (hasImage) {
-        return 'You are offline right now, and pictures need a connection to reach the agent. Please try sending your image again once you are back online.';
-      }
-      try {
-        var q = JSON.parse(localStorage.getItem('k12plus-outbox') || '[]');
-        q.push({ payload: payload, at: Date.now() });
-        localStorage.setItem('k12plus-outbox', JSON.stringify(q.slice(-20)));
-      } catch (e) {}
-      return 'You are offline right now. Your question has been saved and the agent will answer it the moment you reconnect. Meanwhile, your saved chats and quizzes still work.';
+      if (hasImage) return OFFLINE_IMAGE;
+      queueQuestion(payload);
+      return OFFLINE_SAVED;
     }
-    var res = await fetch(PROXY, {
-      method: 'POST',
-      headers: proxyHeaders(),
-      body: JSON.stringify(await withPilotToken(payload)),
-    });
+    var res;
+    try {
+      res = await fetch(PROXY, {
+        method: 'POST',
+        headers: proxyHeaders(),
+        body: JSON.stringify(await withPilotToken(payload)),
+      });
+    } catch (netErr) {
+      // the signal dropped while sending: keep the question and answer it later
+      if (hasImage) return OFFLINE_IMAGE;
+      queueQuestion(payload);
+      return OFFLINE_SAVED;
+    }
     var data = null;
     try { data = await res.json(); } catch (e) {}
     if (res.status === 423 && data && data.reply) return data.reply;
@@ -157,35 +161,66 @@ window.k12agentName = function (subject) {
     return (data && data.reply) || 'Sorry, I could not answer that. Please try again.';
   };
 
-  // ---- flush offline outbox on reconnect (answers land in tutor chat storage) ----
-  window.addEventListener('online', async function () {
+  // ---- questions asked without a signal ----
+  // Kept on the phone (up to 20) and sent one at a time when the signal returns. A
+  // question leaves the queue only once the agent has answered it (or the server has
+  // refused it for good), so a dropped signal never loses one, and only one tab sends
+  // at a time, so none is sent twice. The answer is added to the saved chat and the
+  // app is told, so it appears on screen straight away.
+  var OUTBOX = 'k12plus-outbox';
+  function newRef() { return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10); }
+  function readOut() {
     var q;
-    try { q = JSON.parse(localStorage.getItem('k12plus-outbox') || '[]'); } catch (e) { q = []; }
-    if (!q.length) return;
-    localStorage.setItem('k12plus-outbox', '[]');
-    for (var i = 0; i < q.length; i++) {
-      try {
-        var res = await fetch(PROXY, {
-          method: 'POST',
-          headers: proxyHeaders(),
-          body: JSON.stringify(await withPilotToken(q[i].payload)),
-        });
-        if (res.status === 423) {
-          // a test is in progress: keep the rest of the questions for after the test
+    try { q = JSON.parse(localStorage.getItem(OUTBOX) || '[]'); } catch (e) { q = []; }
+    if (!Array.isArray(q)) q = [];
+    var fixed = false;
+    q.forEach(function (o) { if (o && !o.id) { o.id = newRef(); fixed = true; } }); // saved by an older version of the app
+    if (fixed) writeOut(q);
+    return q.filter(function (o) { return o && o.payload; });
+  }
+  function writeOut(q) { try { localStorage.setItem(OUTBOX, JSON.stringify(q.slice(-20))); } catch (e) {} }
+  function queueQuestion(payload) { var q = readOut(); q.push({ id: newRef(), payload: payload, at: Date.now() }); writeOut(q); }
+  var outFlushing = false;
+  window.k12pendingQuestions = function () { return readOut().length; };
+  window.k12flushQuestions = async function () {
+    if (outFlushing || !navigator.onLine || !readOut().length) return 0;
+    var LOCK = 'k12plus-outbox-lock';
+    try { if (Date.now() - (parseInt(localStorage.getItem(LOCK) || '0', 10) || 0) < 60000) return 0; localStorage.setItem(LOCK, String(Date.now())); } catch (e) {}
+    outFlushing = true;
+    var answered = 0;
+    try {
+      for (var guard = 0; guard < 20; guard++) {
+        var q = readOut();
+        if (!q.length) break;
+        var item = q[0];
+        var res;
+        try {
+          res = await fetch(PROXY, { method: 'POST', headers: proxyHeaders(), body: JSON.stringify(await withPilotToken(item.payload)) });
+        } catch (e) { break; } // still no connection: keep it for later
+        if (res.status === 423) break; // a test is in progress: answer after the test
+        var data = null;
+        try { data = await res.json(); } catch (e) {}
+        var gone = res.ok || (res.status >= 400 && res.status < 500 && [408, 425, 429].indexOf(res.status) === -1);
+        if (!gone) break; // the server is busy: try again later
+        writeOut(readOut().filter(function (o) { return o.id !== item.id; }));
+        if (res.ok && data && data.reply) {
+          answered++;
           try {
-            var later = JSON.parse(localStorage.getItem('k12plus-outbox') || '[]');
-            localStorage.setItem('k12plus-outbox', JSON.stringify(q.slice(i).concat(later).slice(-20)));
-          } catch (e2) {}
-          break;
+            var chat = JSON.parse(localStorage.getItem('k12plus-tutor-chat') || '[]');
+            chat.push({ role: 'assistant', text: '(Answer to your offline question) ' + data.reply });
+            localStorage.setItem('k12plus-tutor-chat', JSON.stringify(chat.slice(-40)));
+          } catch (e) {}
+          try { window.dispatchEvent(new CustomEvent('k12-chat-updated')); } catch (e) {}
         }
-        if (!res.ok) continue;
-        var data = await res.json();
-        var chat = JSON.parse(localStorage.getItem('k12plus-tutor-chat') || '[]');
-        chat.push({ role: 'assistant', text: '(Answer to your offline question) ' + (data.reply || '') });
-        localStorage.setItem('k12plus-tutor-chat', JSON.stringify(chat.slice(-40)));
-      } catch (e) {}
+      }
+    } finally {
+      outFlushing = false;
+      try { localStorage.removeItem(LOCK); } catch (e) {}
     }
-  });
+    return answered;
+  };
+  window.addEventListener('online', function () { setTimeout(function () { window.k12flushQuestions(); }, 1000); });
+  setTimeout(function () { window.k12flushQuestions(); }, 3000);
 
   // ---- Supabase auth + data ----
   var SUPA = 'https://uwqbjjzjdnjlbicxrwnp.supabase.co';
@@ -501,17 +536,47 @@ window.k12agentName = function (subject) {
     },
   };
 
+  // Quiz results are kept on the phone first and sent when there is a connection, so
+  // a quiz finished without a signal is not lost. Each result has its own reference
+  // and the server stores it once only, however often it is sent. Results wait for
+  // the learner who earned them, so a shared phone never sends them as someone else.
+  var QZ = 'k12plus-quiz-outbox';
+  function readQz() { try { var q = JSON.parse(localStorage.getItem(QZ) || '[]'); return Array.isArray(q) ? q : []; } catch (e) { return []; } }
+  function writeQz(q) { try { localStorage.setItem(QZ, JSON.stringify(q.slice(-200))); } catch (e) {} }
+  var qzFlushing = false;
   window.k12data = {
-    recordQuiz: async function (subject, score, total) {
+    recordQuiz: function (subject, score, total) {
+      var sess = readSession();
+      if (!sess || !sess.user_id) return Promise.resolve();
+      var q = readQz();
+      q.push({ client_ref: newRef(), user_id: sess.user_id, subject: String(subject || 'General').slice(0, 60),
+               score: Math.max(0, parseInt(score, 10) || 0), total: Math.max(1, parseInt(total, 10) || 1), created_at: new Date().toISOString() });
+      writeQz(q);
+      return window.k12data.flushQuiz();
+    },
+    pendingQuiz: function () { return readQz().length; },
+    flushQuiz: async function () {
+      if (qzFlushing || !navigator.onLine) return;
       var sess = await freshSession();
       if (!sess) return;
+      var mine = readQz().filter(function (r) { return r.user_id === sess.user_id; });
+      if (!mine.length) return;
+      qzFlushing = true;
       try {
-        await fetch(SUPA + '/rest/v1/quiz_attempts', {
+        var batch = mine.slice(0, 50);
+        var res = await fetch(SUPA + '/rest/v1/quiz_attempts?on_conflict=user_id,client_ref', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + sess.access_token, Prefer: 'return=minimal' },
-          body: JSON.stringify({ user_id: sess.user_id, subject: subject, score: score, total: total }),
+          headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + sess.access_token, Prefer: 'return=minimal,resolution=ignore-duplicates' },
+          body: JSON.stringify(batch),
         });
-      } catch (e) {}
+        if (res.ok) {
+          var sent = {};
+          batch.forEach(function (r) { sent[r.client_ref] = 1; });
+          writeQz(readQz().filter(function (r) { return !sent[r.client_ref]; }));
+          if (mine.length > batch.length) setTimeout(function () { window.k12data.flushQuiz(); }, 500);
+        }
+      } catch (e) {
+      } finally { qzFlushing = false; }
     },
     myQuizStats: async function () {
       var sess = await freshSession();
@@ -807,6 +872,9 @@ window.k12agentName = function (subject) {
     }
   }
 
+  window.addEventListener('online', function () { setTimeout(function () { window.k12data.flushQuiz(); }, 1200); });
+  setTimeout(function () { window.k12data.flushQuiz(); }, 3500);
+
   // ---- Learning record (2027 pilot) ----
   // Only for learners the server has confirmed take part in the pilot (enrolled, with
   // school and parent or guardian consent): the app then keeps a small queue of
@@ -827,6 +895,7 @@ window.k12agentName = function (subject) {
       } catch (e) {}
       if (yes) window.k12learn.flush();
     },
+    pending: function () { return learnOn() ? readQ().length : 0; },
     record: function (ev) {
       if (!learnOn() || !ev || !ev.kind) return;
       var q = readQ();
@@ -993,6 +1062,195 @@ window.k12agentName = function (subject) {
   };
   window.addEventListener('online', function () { setTimeout(function () { window.k12tests.sync(); }, 1500); });
   setTimeout(function () { if (readTest()) window.k12tests.sync(); }, 5000);
+
+  // ---- Offline lessons (2027 pilot, item 12) ----
+  // Lesson packs (lessons/<id>.json) hold an explanation, two worked examples and
+  // practice questions. A learner can save a pack on the phone ("Download for
+  // offline"); after that it opens and marks answers with no signal at all. Progress
+  // is kept on the phone, the next question or topic is suggested from the learner's
+  // own answers, and for pilot learners each first answer is added to the learning
+  // record, which is sent when there is a connection (stored once only).
+  // Learners see a pack only after a teacher has checked it (see pilot_check_lesson).
+  var LCACHE = 'k12plus-lessons';
+  var LSAVED = 'k12plus-lessons-saved';
+  var LPROG = 'k12plus-lesson-progress';
+  var LCHECKS = 'k12plus-lesson-checks';
+  var LINDEX = 'k12plus-lessons-index';
+  function jget(k, d) { try { var v = JSON.parse(localStorage.getItem(k) || 'null'); return v == null ? d : v; } catch (e) { return d; } }
+  function jset(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function packUrl(id) { return '/lessons/' + encodeURIComponent(id) + '.json'; }
+  // reads a typed answer as a number: 3/4, -1.25, 2,82 (decimal comma), 1 200,
+  // N$ 90, 37.5%, x = 7 and 20 m are all understood. Returns the possible values.
+  function numbersIn(raw) {
+    var t = String(raw == null ? '' : raw).trim().toLowerCase()
+      .replace(/[−–—]/g, '-').replace(/^[a-z]\s*=\s*/, '').replace(/^n\$\s*/, '')
+      .replace(/(\d)\s+(?=\d{3}\b)/g, '$1').replace(/\s*(%|°|degrees|cm²|cm2|cm|mm|km|kg|m²|m|s|n\$)\s*$/, '').trim();
+    var out = [];
+    var frac = t.match(/^(-?\d+(?:[.,]\d+)?)\s*\/\s*(-?\d+(?:[.,]\d+)?)$/);
+    if (frac) {
+      var a = parseFloat(frac[1].replace(',', '.')), b = parseFloat(frac[2].replace(',', '.'));
+      if (b !== 0 && isFinite(a) && isFinite(b)) out.push(a / b);
+      return out;
+    }
+    if (/^-?\d+([.,]\d+)?$/.test(t)) out.push(parseFloat(t.replace(',', '.')));     // 2,82 read as 2.82
+    if (/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(t)) out.push(parseFloat(t.replace(/,/g, ''))); // 1,200 read as 1200
+    return out;
+  }
+  function closeTo(a, b) { return Math.abs(a - b) <= 1e-9 * Math.max(1, Math.abs(b)); }
+  function markAnswer(item, value) {
+    if (!item) return false;
+    if (item.type === 'choice') return String(value || '').trim().toUpperCase() === item.answer;
+    var targets = [item.answer].concat(item.accept || []);
+    var got = numbersIn(value);
+    for (var i = 0; i < targets.length; i++) {
+      var want = numbersIn(targets[i]);
+      for (var j = 0; j < got.length; j++) for (var k2 = 0; k2 < want.length; k2++) if (closeTo(got[j], want[k2])) return true;
+    }
+    return false;
+  }
+  function today() { try { return new Date().toLocaleDateString('en-CA', { timeZone: 'Africa/Windhoek' }); } catch (e) { return new Date().toISOString().slice(0, 10); } }
+  window.k12lessons = {
+    mark: markAnswer,
+    numbersIn: numbersIn,
+    // the list of packs; works offline from the saved copy
+    index: async function () {
+      try {
+        var r = await fetch('/lessons/index.json', { cache: 'no-cache' });
+        if (r.ok) { var d = await r.json(); if (d && Array.isArray(d.packs)) { jset(LINDEX, d); return d; } }
+      } catch (e) {}
+      try { var hit = window.caches && await caches.match('/lessons/index.json'); if (hit) return await hit.json(); } catch (e) {}
+      return jget(LINDEX, { packs: [] });
+    },
+    // which pack versions a teacher has checked; the last known list is used offline
+    checks: async function () {
+      if (navigator.onLine) {
+        try {
+          var sess = await freshSession();
+          var res = await fetch(SUPA + '/rest/v1/rpc/pilot_lesson_checks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + (sess ? sess.access_token : SUPA_KEY) },
+            body: '{}',
+          });
+          if (res.ok) { var list = await res.json(); if (Array.isArray(list)) { jset(LCHECKS, list); return list; } }
+        } catch (e) {}
+      }
+      return jget(LCHECKS, []);
+    },
+    isChecked: function (entry, checks) {
+      return (checks || jget(LCHECKS, [])).some(function (c) { return c.pack_id === entry.id && c.version === entry.version; });
+    },
+    check: function (entry, yes, note) {
+      return pilotRpc('pilot_check_lesson', { p_pack: entry.id, p_version: entry.version, p_checked: !!yes, p_note: note || null })
+        .then(function (r) { if (r.ok && Array.isArray(r.data)) jset(LCHECKS, r.data); return r; });
+    },
+    saved: function () { return jget(LSAVED, {}); },
+    // "Download for offline": keeps the pack in the phone's storage
+    download: async function (entry) {
+      if (!navigator.onLine) return { ok: false, error: 'You are offline. Connect to the internet to download this lesson.' };
+      try {
+        var res = await fetch(packUrl(entry.id), { cache: 'no-cache' });
+        if (!res.ok) return { ok: false, error: 'This lesson could not be downloaded. Please try again.' };
+        var copy = res.clone();
+        var pack = await res.json();
+        if (!pack || pack.id !== entry.id || !Array.isArray(pack.practice)) return { ok: false, error: 'This lesson could not be downloaded. Please try again.' };
+        if (window.caches) { var c = await caches.open(LCACHE); await c.put(packUrl(entry.id), copy); }
+        jset('k12plus-lesson-' + entry.id, pack); // second copy, for phones without the storage above
+        var sv = jget(LSAVED, {}); sv[entry.id] = { version: pack.version, at: Date.now(), bytes: entry.bytes || null }; jset(LSAVED, sv);
+        return { ok: true, data: pack };
+      } catch (e) { return { ok: false, error: 'This lesson could not be downloaded. Please try again.' }; }
+    },
+    remove: async function (id) {
+      try { if (window.caches) { var c = await caches.open(LCACHE); await c.delete(packUrl(id)); } } catch (e) {}
+      try { localStorage.removeItem('k12plus-lesson-' + id); } catch (e) {}
+      var sv = jget(LSAVED, {}); delete sv[id]; jset(LSAVED, sv);
+    },
+    // opens a pack: the saved copy first (works offline), otherwise from the internet
+    pack: async function (id) {
+      try {
+        if (window.caches) { var c = await caches.open(LCACHE); var hit = await c.match(packUrl(id)); if (hit) return await hit.json(); }
+      } catch (e) {}
+      var local = jget('k12plus-lesson-' + id, null);
+      if (local) return local;
+      if (!navigator.onLine) return null;
+      try { var res = await fetch(packUrl(id)); if (res.ok) return await res.json(); } catch (e) {}
+      return null;
+    },
+    progress: function (id) { return (jget(LPROG, {})[id]) || { items: {} }; },
+    opened: function (pack) {
+      var all = jget(LPROG, {});
+      var p = all[pack.id] || { version: pack.version, items: {} };
+      if (p.version !== pack.version) p = { version: pack.version, items: {} }; // the pack changed: start again
+      var day = today();
+      if (p.openedOn !== day) {
+        p.openedOn = day;
+        try { if (window.k12learn) window.k12learn.record({ kind: 'lesson', subject: pack.subject, topic: pack.topic }); } catch (e) {}
+      }
+      all[pack.id] = p; jset(LPROG, all);
+      return p;
+    },
+    // marks an answer on the phone; the first answer to each question is what counts
+    answer: function (pack, item, value) {
+      var right = markAnswer(item, value);
+      var all = jget(LPROG, {});
+      var p = all[pack.id] || { version: pack.version, items: {} };
+      var rec = p.items[item.id] || { tries: 0 };
+      var first = rec.tries === 0;
+      rec.tries += 1; rec.last = right; rec.at = Date.now();
+      if (first) {
+        rec.firstRight = right;
+        try { if (window.k12learn) window.k12learn.record({ kind: 'practice', subject: pack.subject, topic: pack.topic, correct: right ? 1 : 0, attempted: 1 }); } catch (e) {}
+      }
+      if (right) rec.solved = true;
+      p.items[item.id] = rec; all[pack.id] = p; jset(LPROG, all);
+      return { right: right, first: first, tries: rec.tries };
+    },
+    summary: function (pack) {
+      var p = window.k12lessons.progress(pack.id);
+      var items = pack.practice || [];
+      var done = 0, firstRight = 0, solved = 0;
+      items.forEach(function (it) { var r = p.items[it.id]; if (r) { done++; if (r.firstRight) firstRight++; if (r.solved) solved++; } });
+      return { total: items.length, done: done, firstRight: firstRight, solved: solved };
+    },
+    // the next question: one not tried yet, then one not yet answered correctly
+    nextItem: function (pack, afterId) {
+      var p = window.k12lessons.progress(pack.id);
+      var items = pack.practice || [];
+      var start = 0;
+      if (afterId) { for (var i = 0; i < items.length; i++) if (items[i].id === afterId) start = i + 1; }
+      var order = items.slice(start).concat(items.slice(0, start));
+      for (var a = 0; a < order.length; a++) if (!p.items[order[a].id]) return order[a];
+      for (var b = 0; b < order.length; b++) if (!p.items[order[b].id].solved) return order[b];
+      return null;
+    },
+    // study recommendation from the learner's own answers (no AI and no signal needed)
+    recommend: function (entries) {
+      var all = jget(LPROG, {});
+      var saved = jget(LSAVED, {});
+      var list = entries || [];
+      var stat = function (e) {
+        var p = all[e.id]; var done = 0, fr = 0, solved = 0;
+        if (p && p.items) Object.keys(p.items).forEach(function (k) { done++; if (p.items[k].firstRight) fr++; if (p.items[k].solved) solved++; });
+        return { done: done, fr: fr, solved: solved, total: e.items || 0, started: !!(p && (done || p.openedOn)) };
+      };
+      var withStats = list.map(function (e) { return { e: e, s: stat(e) }; });
+      var going = withStats.filter(function (x) { return x.s.started && x.s.solved < x.s.total; })
+        .sort(function (a, b) { return (b.s.done / Math.max(1, b.s.total)) - (a.s.done / Math.max(1, a.s.total)); })[0];
+      if (going) {
+        var left = going.s.total - going.s.solved;
+        return { id: going.e.id, title: going.e.title, reason: 'Carry on: ' + left + (left === 1 ? ' question' : ' questions') + ' still to get right.' };
+      }
+      var weak = withStats.filter(function (x) { return x.s.done >= x.s.total && x.s.total && x.s.fr / x.s.total < 0.7; })
+        .sort(function (a, b) { return (a.s.fr / a.s.total) - (b.s.fr / b.s.total); })[0];
+      if (weak) return { id: weak.e.id, title: weak.e.title, reason: 'Worth another look: you got ' + weak.s.fr + ' of ' + weak.s.total + ' right first time. Read the examples again, then try the questions.' };
+      var fresh = withStats.filter(function (x) { return !x.s.started; });
+      var savedFresh = fresh.filter(function (x) { return saved[x.e.id]; })[0];
+      if (savedFresh) return { id: savedFresh.e.id, title: savedFresh.e.title, reason: 'Next topic, already saved on this phone.' };
+      if (fresh[0]) return { id: fresh[0].e.id, title: fresh[0].e.title, reason: 'Next topic to start.' };
+      return list.length ? { id: null, title: '', reason: 'Well done: you have worked through every lesson here.' } : null;
+    },
+    // starts again on a pack, for a learner who wants to practise it once more
+    reset: function (id) { var all = jget(LPROG, {}); delete all[id]; jset(LPROG, all); },
+  };
 
   // ---- PWA ----
   if ('serviceWorker' in navigator) {

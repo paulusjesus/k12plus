@@ -4,11 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=18"></script>
+<script src="./k12plus-bridge.js?v=19"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
 <script src="./k12plus-arcade.js?v=1"></script>
 <script src="./k12plus-scenes.js?v=1"></script>
 <link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <meta name="theme-color" content="#7C3AED">
 </head>
 <body>
@@ -1126,6 +1130,144 @@ button { font-family:'Poppins',sans-serif; }
                 <button onClick="{{ tvSubmit }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">{{ tvSubmitLabel }}</button>
               </div>
             </div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isLessons }}" hint-placeholder-val="{{ false }}">
+      <div class="k12dd" style="flex:1; overflow-y:auto; padding:4px 24px 28px;">
+        <div style="max-width:680px; margin:0 auto;">
+          <sc-if value="{{ lvIsList }}" hint-placeholder-val="{{ true }}">
+            <h1 style="font-size:18px; font-weight:600; margin:0 0 4px;">Offline lessons</h1>
+            <p style="font-size:13px; line-height:1.6; color:var(--muted); margin:0 0 12px;">Save a lesson on your phone and use it with no signal. Your answers are marked on the phone, and your progress is sent when you are online again.</p>
+            <div style="{{ lvSyncStyle }}">{{ lvSyncLine }}</div>
+            <sc-if value="{{ lvHasMsg }}" hint-placeholder-val="{{ false }}">
+              <p style="{{ lvMsgStyle }}">{{ lvMsg }}</p>
+            </sc-if>
+            <sc-if value="{{ lvHasRec }}" hint-placeholder-val="{{ false }}">
+              <div style="background:linear-gradient(135deg,#F1EDFD,#EAF4FF); border:1px solid #DDD4F6; border-radius:16px; padding:14px 16px; margin:0 0 14px;">
+                <div style="font-size:11.5px; font-weight:600; color:var(--primary); margin-bottom:3px;">Next for you</div>
+                <div style="font-size:15px; font-weight:600; margin-bottom:3px;">{{ lvRecTitle }}</div>
+                <div style="font-size:12.5px; line-height:1.55; color:#3A3D52; margin-bottom:8px;">{{ lvRecReason }}</div>
+                <sc-if value="{{ lvRecCanOpen }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ lvRecOpen }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:7px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">Open lesson</button>
+                </sc-if>
+              </div>
+            </sc-if>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin:0 0 12px;">
+              <sc-for list="{{ lvGrades }}" as="g" hint-placeholder-count="3"><button onClick="{{ g.pick }}" style="{{ g.style }}">{{ g.label }}</button></sc-for>
+            </div>
+            <sc-if value="{{ lvEmpty }}" hint-placeholder-val="{{ false }}">
+              <p style="background:var(--chip); border-radius:12px; padding:14px 16px; font-size:13px; line-height:1.6; color:var(--muted); margin:0;">{{ lvEmptyLine }}</p>
+            </sc-if>
+            <sc-for list="{{ lvPacks }}" as="pk" hint-placeholder-count="3">
+              <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:14px 16px; margin-bottom:10px;">
+                <div style="display:flex; gap:10px; align-items:flex-start;">
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:15px; font-weight:600; margin-bottom:2px;">{{ pk.title }}</div>
+                    <div style="font-size:12px; color:var(--muted); line-height:1.5;">{{ pk.meta }}</div>
+                    <div style="font-size:12px; line-height:1.5; margin-top:4px; {{ pk.progressStyle }}">{{ pk.progress }}</div>
+                    <sc-if value="{{ pk.showCheck }}" hint-placeholder-val="{{ false }}">
+                      <div style="{{ pk.checkStyle }}">{{ pk.checkLine }}</div>
+                    </sc-if>
+                  </div>
+                  <button onClick="{{ pk.open }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:7px 15px; font-size:12.5px; font-weight:600; cursor:pointer; flex-shrink:0;">Open</button>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:10px;">
+                  <sc-if value="{{ pk.canDownload }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ pk.download }}" style="border:1px solid var(--primary); background:#fff; color:var(--primary); border-radius:999px; padding:6px 13px; font-size:12px; font-weight:600; cursor:pointer;">{{ pk.downloadLabel }}</button>
+                  </sc-if>
+                  <sc-if value="{{ pk.isSaved }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:12px; font-weight:600; color:#1F6B43;">&#10003; Saved on this phone</span>
+                    <button onClick="{{ pk.remove }}" style="border:none; background:none; color:var(--muted); font-size:12px; text-decoration:underline; cursor:pointer; padding:4px;">Remove</button>
+                  </sc-if>
+                  <sc-if value="{{ pk.showCheckBtn }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ pk.toggleCheck }}" style="margin-left:auto; border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:6px 13px; font-size:12px; font-weight:600; cursor:pointer;">{{ pk.checkBtn }}</button>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </sc-if>
+          <sc-if value="{{ lvIsPack }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ lvBack }}" style="border:none; background:none; color:var(--primary); font-size:12.5px; font-weight:600; cursor:pointer; padding:4px 0; margin-bottom:6px;">&larr; All lessons</button>
+            <h1 style="font-size:18px; font-weight:600; margin:0 0 2px;">{{ lvTitle }}</h1>
+            <p style="font-size:12px; color:var(--muted); margin:0 0 10px;">{{ lvMeta }}</p>
+            <sc-if value="{{ lvDraft }}" hint-placeholder-val="{{ false }}">
+              <p style="background:#FFF6DC; border:1px solid #F2E2AC; color:#8A6400; border-radius:10px; padding:9px 12px; font-size:12px; line-height:1.55; margin:0 0 10px;">Draft: learners will see this lesson after a teacher has checked it.</p>
+            </sc-if>
+            <div style="display:flex; gap:6px; margin:0 0 12px;">
+              <sc-for list="{{ lvTabs }}" as="tb" hint-placeholder-count="3"><button onClick="{{ tb.pick }}" style="{{ tb.style }}">{{ tb.label }}</button></sc-for>
+            </div>
+            <sc-if value="{{ lvTabLearn }}" hint-placeholder-val="{{ true }}">
+              <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:16px 18px; margin-bottom:12px;">
+                <sc-for list="{{ lvParas }}" as="pa" hint-placeholder-count="3"><p style="font-size:14.5px; line-height:1.7; margin:0 0 10px;">{{ pa.text }}</p></sc-for>
+              </div>
+              <div style="background:#E7F6EE; border:1px solid #C4E8D6; border-radius:14px; padding:12px 16px; margin-bottom:12px;">
+                <div style="font-size:12px; font-weight:600; color:#1F6B43; margin-bottom:4px;">Remember</div>
+                <sc-for list="{{ lvKeys }}" as="kp" hint-placeholder-count="3"><div style="font-size:13px; line-height:1.6;">&bull; {{ kp.text }}</div></sc-for>
+              </div>
+              <button onClick="{{ lvGoExamples }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">See the worked examples</button>
+            </sc-if>
+            <sc-if value="{{ lvTabExamples }}" hint-placeholder-val="{{ false }}">
+              <sc-for list="{{ lvExamples }}" as="ex" hint-placeholder-count="2">
+                <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:16px 18px; margin-bottom:12px;">
+                  <div style="font-size:11.5px; font-weight:600; color:var(--primary); margin-bottom:4px;">{{ ex.label }}</div>
+                  <div style="font-size:14.5px; font-weight:600; line-height:1.6; margin-bottom:8px;">{{ ex.q }}</div>
+                  <sc-for list="{{ ex.steps }}" as="st" hint-placeholder-count="3"><div style="font-size:13.5px; line-height:1.65; margin-bottom:3px;">{{ st.n }}. {{ st.text }}</div></sc-for>
+                  <div style="font-size:13.5px; font-weight:600; color:#1F6B43; margin-top:6px;">Answer: {{ ex.answer }}</div>
+                </div>
+              </sc-for>
+              <button onClick="{{ lvGoPractise }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">Practise now</button>
+            </sc-if>
+            <sc-if value="{{ lvTabPractise }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:12px; color:var(--muted); margin:0 0 8px;">{{ lvScoreLine }}</div>
+              <sc-if value="{{ lvHasItem }}" hint-placeholder-val="{{ true }}">
+                <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-bottom:12px;">
+                  <div style="font-size:11.5px; font-weight:600; color:var(--primary); margin-bottom:6px;">{{ lvItemNum }}</div>
+                  <div style="font-size:15.5px; line-height:1.65; white-space:pre-wrap; margin-bottom:14px;">{{ lvItemQ }}</div>
+                  <sc-if value="{{ lvIsChoice }}" hint-placeholder-val="{{ false }}">
+                    <sc-for list="{{ lvOptions }}" as="o" hint-placeholder-count="4">
+                      <button onClick="{{ o.pick }}" style="{{ o.style }}"><strong style="margin-right:8px;">{{ o.letter }}</strong>{{ o.text }}</button>
+                    </sc-for>
+                  </sc-if>
+                  <sc-if value="{{ lvIsNumber }}" hint-placeholder-val="{{ false }}">
+                    <input value="{{ lvInput }}" onChange="{{ lvOnInput }}" onKeyDown="{{ lvOnKey }}" placeholder="Type your answer" inputmode="decimal" style="width:100%; box-sizing:border-box; border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-size:16px; outline:none;">
+                    <p style="font-size:11.5px; color:var(--muted); margin:6px 0 0;">Whole numbers, decimals (2.5 or 2,5) and fractions such as 3/4 are all fine. You do not need to type the units.</p>
+                  </sc-if>
+                  <sc-if value="{{ lvHasFeedback }}" hint-placeholder-val="{{ false }}">
+                    <div style="{{ lvFeedbackStyle }}">{{ lvFeedback }}</div>
+                  </sc-if>
+                  <sc-if value="{{ lvShowHint }}" hint-placeholder-val="{{ false }}">
+                    <div style="background:#FFF6DC; border-radius:10px; padding:9px 12px; font-size:13px; line-height:1.55; margin-top:10px;">Hint: {{ lvHint }}</div>
+                  </sc-if>
+                  <sc-if value="{{ lvShowSolution }}" hint-placeholder-val="{{ false }}">
+                    <div style="background:#E7F6EE; border-radius:10px; padding:9px 12px; font-size:13px; line-height:1.55; margin-top:10px;"><strong>How to do it:</strong> {{ lvSolution }}</div>
+                  </sc-if>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <sc-if value="{{ lvCanCheck }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ lvCheck }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 18px; font-size:12.5px; font-weight:600; cursor:pointer;">Check my answer</button>
+                  </sc-if>
+                  <sc-if value="{{ lvCanHint }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ lvHintBtn }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:8px 14px; font-size:12.5px; font-weight:600; cursor:pointer;">Show a hint</button>
+                  </sc-if>
+                  <sc-if value="{{ lvCanNext }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ lvNext }}" style="margin-left:auto; border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 18px; font-size:12.5px; font-weight:600; cursor:pointer;">Next question &rarr;</button>
+                  </sc-if>
+                </div>
+              </sc-if>
+              <sc-if value="{{ lvAllDone }}" hint-placeholder-val="{{ false }}">
+                <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px;">
+                  <h2 style="font-size:16px; font-weight:600; margin:0 0 6px;">Lesson complete</h2>
+                  <p style="font-size:13.5px; line-height:1.6; margin:0 0 6px;">{{ lvDoneLine }}</p>
+                  <p style="font-size:13px; line-height:1.6; color:var(--muted); margin:0 0 12px;">{{ lvDoneNext }}</p>
+                  <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button onClick="{{ lvAgain }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer;">Practise again</button>
+                    <button onClick="{{ lvBack }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">All lessons</button>
+                  </div>
+                </div>
+              </sc-if>
+            </sc-if>
           </sc-if>
         </div>
       </div>
@@ -2321,6 +2463,10 @@ class Component extends DCLogic {
         offline: !navigator.onLine
       });
       this._onNet = () => this.setState({ offline: !navigator.onLine });
+      this._onChatUpdated = () => {
+        try { const c = JSON.parse(localStorage.getItem('k12plus-tutor-chat') || '[]'); if (Array.isArray(c)) this.setState({ chatMsgs: c }); } catch (e) {}
+      };
+      window.addEventListener('k12-chat-updated', this._onChatUpdated);
       window.addEventListener('online', this._onNet);
       window.addEventListener('offline', this._onNet);
     } catch (e) {}
@@ -2873,6 +3019,172 @@ class Component extends DCLogic {
           };
         })
       };
+    });
+  }
+
+  // ---------- Offline lessons (2027 pilot, item 12) ----------
+  openLessons() {
+    this.setState({ view: 'lessons', lessonView: 'list', lessonMsg: '', mobileNav: false }, () => this.loadLessons());
+  }
+  async loadLessons() {
+    const L = window.k12lessons;
+    if (!L) return;
+    const [idx, checks] = await Promise.all([L.index(), L.checks()]);
+    this.setState({ lessons: (idx && idx.packs) || [], lessonChecks: checks || [], lessonSaved: L.saved() });
+  }
+  lessonStaff() { return !!this.pilotRoleOf() || (this.state.loggedIn && this.state.role === 'Educator'); }
+  lessonVisible() {
+    const L = window.k12lessons; const s = this.state;
+    const all = s.lessons || [];
+    return this.lessonStaff() ? all : all.filter((e) => L && L.isChecked(e, s.lessonChecks));
+  }
+  async openPack(id) {
+    const L = window.k12lessons;
+    const pack = L ? await L.pack(id) : null;
+    if (!pack) return this.setState({ lessonMsg: 'This lesson is not saved on this phone yet. Connect to the internet and tap "Download for offline" first.', lessonMsgBad: true });
+    L.opened(pack);
+    const next = L.nextItem(pack);
+    this.setState({ lessonView: 'pack', lessonPack: pack, lessonTab: 'learn', lessonItem: next ? next.id : null, lessonInput: '', lessonFb: null, lessonHint: false, lessonMsg: '' });
+    try { const el = document.querySelector('.k12dd'); if (el) el.scrollTop = 0; } catch (e) {}
+  }
+  async downloadPack(entry) {
+    const L = window.k12lessons;
+    this.setState({ lessonBusy: entry.id, lessonMsg: '' });
+    const r = await L.download(entry);
+    this.setState({ lessonBusy: '', lessonSaved: L.saved(), lessonMsg: r.ok ? '"' + entry.title + '" is saved on this phone. It now works with no signal.' : r.error, lessonMsgBad: !r.ok });
+  }
+  async removePack(entry) {
+    const L = window.k12lessons;
+    await L.remove(entry.id);
+    this.setState({ lessonSaved: L.saved(), lessonMsg: '"' + entry.title + '" was removed from this phone. Your progress is kept.', lessonMsgBad: false });
+  }
+  async toggleLessonCheck(entry, yes) {
+    const L = window.k12lessons;
+    const r = await L.check(entry, yes);
+    this.setState({ lessonChecks: r.ok ? r.data : this.state.lessonChecks, lessonMsg: r.ok ? (yes ? '"' + entry.title + '" is marked as checked. Learners can now see it.' : 'The check on "' + entry.title + '" was taken back. Learners no longer see it.') : r.error, lessonMsgBad: !r.ok });
+  }
+  lessonCheckAnswer(value) {
+    const L = window.k12lessons; const s = this.state;
+    const pack = s.lessonPack; if (!pack) return;
+    const item = (pack.practice || []).find((it) => it.id === s.lessonItem); if (!item) return;
+    const v = value != null ? value : s.lessonInput;
+    if (String(v || '').trim() === '') return this.setState({ lessonFb: { empty: true } });
+    const r = L.answer(pack, item, v);
+    this.setState({ lessonFb: { right: r.right, tries: r.tries, picked: item.type === 'choice' ? String(v) : '' }, lessonInput: item.type === 'choice' ? '' : s.lessonInput });
+  }
+  lessonNextItem() {
+    const L = window.k12lessons; const s = this.state;
+    const next = L.nextItem(s.lessonPack, s.lessonItem);
+    this.setState({ lessonItem: next ? next.id : null, lessonInput: '', lessonFb: null, lessonHint: false });
+  }
+  lessonVals(s) {
+    const L = window.k12lessons;
+    const isLessons = s.view === 'lessons';
+    if (!isLessons || !L) return { isLessons: false };
+    const staff = this.lessonStaff();
+    const saved = s.lessonSaved || {};
+    const checks = s.lessonChecks || [];
+    const visible = this.lessonVisible();
+    const myGrade = parseInt(s.grade, 10);
+    const grades = [...new Set((s.lessons || []).map((e) => e.grade))].sort();
+    const gradePick = s.lessonGrade != null ? s.lessonGrade : (grades.includes(myGrade) ? myGrade : 0);
+    const shown = visible.filter((e) => !gradePick || e.grade === gradePick);
+    const pill = (on) => 'border-radius:999px; padding:6px 13px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid ' + (on ? 'var(--primary); background:var(--primary); color:#fff;' : 'var(--line); background:#fff; color:var(--ink);');
+    const fmtDay = (iso) => { try { return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return ''; } };
+    const kb = (b) => (b ? 'about ' + Math.max(1, Math.round(b / 1024)) + ' KB' : 'a few KB');
+    const pendingN = (window.k12learn && window.k12learn.pending ? window.k12learn.pending() : 0) + (window.k12data && window.k12data.pendingQuiz ? window.k12data.pendingQuiz() : 0) + (window.k12pendingQuestions ? window.k12pendingQuestions() : 0);
+    const online = !s.offline;
+    const rec = L.recommend(visible.filter((e) => !myGrade || !grades.includes(myGrade) || e.grade === myGrade));
+    const packs = shown.map((e) => {
+      const sv = saved[e.id];
+      const sum = (() => { const p = L.progress(e.id); const n = Object.keys(p.items || {}).length; const solved = Object.values(p.items || {}).filter((r) => r.solved).length; return { n, solved }; })();
+      const chk = checks.find((c) => c.pack_id === e.id && c.version === e.version);
+      return {
+        title: e.title,
+        meta: 'Grade ' + e.grade + ' · ' + e.subject + ' ' + e.syllabus + ' · ' + e.items + ' questions · about ' + e.minutes + ' minutes',
+        progress: sum.n === 0 ? 'Not started' : sum.solved >= e.items ? 'Done: all ' + e.items + ' questions right' : sum.n + ' of ' + e.items + ' questions tried, ' + sum.solved + ' right',
+        progressStyle: 'color:' + (sum.solved >= e.items ? '#1F6B43' : 'var(--muted)') + ';',
+        showCheck: staff,
+        checkLine: chk ? 'Checked' + (chk.checked_name ? ' by ' + chk.checked_name : '') + ' on ' + fmtDay(chk.checked_at) : 'Draft: not checked yet, so learners cannot see it',
+        checkStyle: 'font-size:11.5px; font-weight:600; margin-top:4px; color:' + (chk ? '#1F6B43' : '#8A6400') + ';',
+        showCheckBtn: staff && online,
+        checkBtn: chk ? 'Take the check back' : 'Mark as checked',
+        toggleCheck: () => this.toggleLessonCheck(e, !chk),
+        isSaved: !!sv && sv.version === e.version,
+        canDownload: !sv || sv.version !== e.version,
+        downloadLabel: s.lessonBusy === e.id ? 'Downloading…' : (sv ? 'Update (' : 'Download for offline (') + kb(e.bytes) + ')',
+        download: () => this.downloadPack(e),
+        remove: () => this.removePack(e),
+        open: () => this.openPack(e.id),
+      };
+    });
+    const out = {
+      isLessons: true,
+      lvIsList: s.lessonView !== 'pack', lvIsPack: s.lessonView === 'pack' && !!s.lessonPack,
+      lvSyncLine: online
+        ? (pendingN ? 'Online. Sending ' + pendingN + ' saved ' + (pendingN === 1 ? 'item' : 'items') + '…' : 'Online. Everything is up to date.')
+        : 'No signal. Saved lessons still work, and your answers are kept on this phone' + (pendingN ? ' (' + pendingN + ' waiting to be sent)' : '') + '.',
+      lvSyncStyle: 'font-size:12px; font-weight:600; margin:0 0 12px; color:' + (online ? '#1F6B43' : '#8A6400') + ';',
+      lvHasMsg: !!s.lessonMsg, lvMsg: s.lessonMsg || '',
+      lvMsgStyle: 'border-radius:10px; padding:9px 12px; font-size:12.5px; line-height:1.55; margin:0 0 12px; ' + (s.lessonMsgBad ? 'background:#FDECEC; color:#B42318;' : 'background:#E7F6EE; color:#1F6B43;'),
+      lvHasRec: !!rec, lvRecTitle: rec ? (rec.title || 'All done') : '', lvRecReason: rec ? rec.reason : '',
+      lvRecCanOpen: !!(rec && rec.id), lvRecOpen: () => rec && rec.id && this.openPack(rec.id),
+      lvGrades: grades.length > 1 ? [{ label: 'All grades', v: 0 }].concat(grades.map((g) => ({ label: 'Grade ' + g, v: g }))).map((g) => ({ label: g.label, style: pill(gradePick === g.v), pick: () => this.setState({ lessonGrade: g.v }) })) : [],
+      lvEmpty: packs.length === 0,
+      lvEmptyLine: (s.lessons || []).length === 0 ? (online ? 'Loading lessons…' : 'Connect to the internet once to see the lessons, then save them for offline use.') : 'Your teacher is still checking these lessons. They will appear here as soon as they are ready.',
+      lvPacks: packs,
+      lvBack: () => this.setState({ lessonView: 'list', lessonPack: null, lessonMsg: '' }, () => this.loadLessons()),
+    };
+    if (!out.lvIsPack) return out;
+    const pack = s.lessonPack;
+    const entry = (s.lessons || []).find((e) => e.id === pack.id) || pack;
+    const tab = s.lessonTab || 'learn';
+    const sum = L.summary(pack);
+    const items = pack.practice || [];
+    const item = items.find((it) => it.id === s.lessonItem);
+    const fb = s.lessonFb;
+    const solvedNow = fb && fb.right;
+    const showSol = !!fb && !fb.empty && (fb.right || fb.tries >= 2);
+    const tabStyle = (on) => 'border-radius:999px; padding:7px 14px; font-size:12.5px; font-weight:600; cursor:pointer; border:1px solid ' + (on ? 'var(--primary); background:var(--primary); color:#fff;' : 'var(--line); background:#fff; color:var(--ink);');
+    return Object.assign(out, {
+      lvTitle: pack.title,
+      lvMeta: 'Grade ' + pack.grade + ' · ' + pack.subject + ' ' + pack.syllabus + ' · ' + pack.topic,
+      lvDraft: staff && !L.isChecked(entry, s.lessonChecks),
+      lvTabs: [['learn', 'Learn'], ['examples', 'Examples'], ['practise', 'Practise']].map(([k, label]) => ({ label, style: tabStyle(tab === k), pick: () => this.setState({ lessonTab: k }) })),
+      lvTabLearn: tab === 'learn', lvTabExamples: tab === 'examples', lvTabPractise: tab === 'practise',
+      lvParas: (pack.explanation || []).map((t) => ({ text: t })),
+      lvKeys: (pack.keyPoints || []).map((t) => ({ text: t })),
+      lvGoExamples: () => this.setState({ lessonTab: 'examples' }),
+      lvGoPractise: () => this.setState({ lessonTab: 'practise' }),
+      lvExamples: (pack.examples || []).map((ex, i) => ({ label: 'Worked example ' + (i + 1), q: ex.q, answer: ex.answer, steps: (ex.steps || []).map((t, j) => ({ n: j + 1, text: t })) })),
+      lvScoreLine: sum.done + ' of ' + sum.total + ' questions tried · ' + sum.firstRight + ' right first time · ' + sum.solved + ' right in the end',
+      lvHasItem: !!item, lvAllDone: !item,
+      lvItemNum: item ? 'Question ' + (items.indexOf(item) + 1) + ' of ' + items.length : '',
+      lvItemQ: item ? item.q : '',
+      lvIsChoice: !!item && item.type === 'choice', lvIsNumber: !!item && item.type !== 'choice',
+      lvOptions: item && item.type === 'choice' ? item.options.map((o, i) => {
+        const letter = 'ABCD'[i];
+        const picked = fb && fb.picked === letter;
+        const col = picked ? (fb.right ? '#E7F6EE;border-color:#3BB273;' : '#FDECEC;border-color:#F5C2C2;') : '#fff;border-color:var(--line);';
+        return { letter, text: o, style: 'display:block; width:100%; text-align:left; border:1px solid; border-radius:12px; padding:11px 14px; margin-bottom:8px; font-size:14px; cursor:pointer; background:' + col, pick: () => !solvedNow && this.lessonCheckAnswer(letter) };
+      }) : [],
+      lvInput: s.lessonInput || '',
+      lvOnInput: (e) => this.setState({ lessonInput: e.target.value }),
+      lvOnKey: (e) => { if (e.key === 'Enter') { e.preventDefault(); if (solvedNow) this.lessonNextItem(); else this.lessonCheckAnswer(); } },
+      lvHasFeedback: !!fb,
+      lvFeedback: !fb ? '' : fb.empty ? 'Type an answer first.' : fb.right ? (fb.tries === 1 ? 'Correct, well done!' : 'Correct this time. Well done for sticking with it.') : (fb.tries >= 2 ? 'Not quite. Look at how to do it below, then try the next one.' : 'Not quite. Try again, or show a hint.'),
+      lvFeedbackStyle: 'border-radius:10px; padding:9px 12px; font-size:13px; font-weight:600; margin-top:12px; ' + (fb && fb.right ? 'background:#E7F6EE; color:#1F6B43;' : 'background:#FDECEC; color:#B42318;'),
+      lvShowHint: !!s.lessonHint && !!item, lvHint: item ? item.hint : '',
+      lvShowSolution: showSol && !!item, lvSolution: item ? item.solution : '',
+      lvCanCheck: !!item && !solvedNow && !(fb && fb.tries >= 2) && item.type !== 'choice',
+      lvCanHint: !!item && !s.lessonHint && !showSol,
+      lvHintBtn: () => this.setState({ lessonHint: true }),
+      lvCanNext: !!item && (solvedNow || (fb && fb.tries >= 2)),
+      lvCheck: () => this.lessonCheckAnswer(),
+      lvNext: () => this.lessonNextItem(),
+      lvDoneLine: 'You got ' + sum.firstRight + ' of ' + sum.total + ' right first time' + (sum.firstRight === sum.total ? '. Excellent!' : ', and ' + sum.solved + ' right in the end.'),
+      lvDoneNext: (() => { const r = L.recommend(visible); return r && r.id && r.id !== pack.id ? 'Next for you: ' + r.title + '. ' + r.reason : sum.firstRight / Math.max(1, sum.total) < 0.7 ? 'Read the worked examples again, then practise once more.' : 'Ask the AI Math Agent if anything is still unclear.'; })(),
+      lvAgain: () => { L.reset(pack.id); const n = L.nextItem(pack); this.setState({ lessonItem: n ? n.id : null, lessonFb: null, lessonHint: false, lessonInput: '' }); },
     });
   }
 
@@ -4659,6 +4971,11 @@ class Component extends DCLogic {
         sideItems[7]  // Calendar
       );
     }
+    {
+      const fbOffline = glyph('#2563EB', '#3B82F6', '#60A5FA', 'k12g-offl', ['M12 3a1 1 0 011 1v8.6l2.8-2.8a1 1 0 111.4 1.4l-4.5 4.5a1 1 0 01-1.4 0l-4.5-4.5a1 1 0 111.4-1.4l2.8 2.8V4a1 1 0 011-1z', 'M5 17a1 1 0 011 1v1h12v-1a1 1 0 112 0v2a1 1 0 01-1 1H5a1 1 0 01-1-1v-2a1 1 0 011-1z'].map(gp('k12g-offl')));
+      const at = sideItems.findIndex((it) => it.label === 'Syllabus');
+      sideItems.splice(at >= 0 ? at + 1 : sideItems.length, 0, { label: 'Offline lessons', icon: fbOffline, pick: () => this.openLessons(), hasSubs: false, subsOpen: false });
+    }
     if (s.loggedIn && this.pilotRoleOf()) {
       sideItems.splice(1, 0, { label: 'Pilot', icon: fbSubjects, pick: () => this.openPilot(), hasSubs: false, subsOpen: false });
     }
@@ -4814,7 +5131,7 @@ class Component extends DCLogic {
         { icon: '\uD83D\uDCAC', bg: '#E7F6EE', text: 'Ms Amukoto replied to your question about Lesson 4', when: 'Yesterday' }
       ],
       toggleSide: () => (s.isMobile ? this.setState({ mobileNav: false }) : this.setState({ sideCollapsed: !s.sideCollapsed })),
-      shellTitle: ({ dashboard: 'Dashboard', lab: 'Real-Life Lab', timetable: 'Timetable', calendar: 'Calendar', quiz: 'Assessments', syllabus: 'Syllabus', plans: 'Plan Studio', games: 'Game Arcade', pilot: 'Pilot' })[s.view] || (s.subject && window.k12agentName ? window.k12agentName(s.subject) : 'AI Agent'),
+      shellTitle: ({ dashboard: 'Dashboard', lab: 'Real-Life Lab', timetable: 'Timetable', calendar: 'Calendar', quiz: 'Assessments', syllabus: 'Syllabus', lessons: 'Offline lessons', plans: 'Plan Studio', games: 'Game Arcade', pilot: 'Pilot' })[s.view] || (s.subject && window.k12agentName ? window.k12agentName(s.subject) : 'AI Agent'),
       notChat: s.view !== 'chat',
       isOffline: !!s.offline,
       isGuest: !s.loggedIn, isAuthed: !!s.loggedIn,
@@ -4872,6 +5189,7 @@ class Component extends DCLogic {
       isDashMin: !lockNoun && s.view === 'dashboard' && s.role === 'Ministry',
       ...this.pilotVals(s),
       ...this.testVals(s),
+      ...this.lessonVals(s),
       ...this.repVals(s),
       ...this.reviewVals(s),
       ...this.exportVals(s),

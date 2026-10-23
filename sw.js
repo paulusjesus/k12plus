@@ -1,5 +1,8 @@
 /* K12Plus service worker - offline-first PWA */
-var VERSION = 'k12plus-v21';
+var VERSION = 'k12plus-v22';
+// Lessons a learner downloads ("Download for offline") live in their own store,
+// which app updates never clear.
+var LESSONS = 'k12plus-lessons';
 // Saved on the phone at install, so the app opens without a signal. The script
 // addresses match the pages exactly (with their ?v= numbers); otherwise each file
 // would be downloaded twice. Keep them in step with app.html and index.html (the
@@ -7,10 +10,11 @@ var VERSION = 'k12plus-v21';
 // advance: learners rarely need them offline, and they are cached once visited.
 var PRECACHE = [
   '/index.html', '/signup.html', '/app.html',
-  '/support.js?v=2', '/k12plus-bridge.js?v=18',
+  '/support.js?v=2', '/k12plus-bridge.js?v=19',
   '/k12plus-syllabus.js?v=2', '/k12plus-arcade.js?v=1', '/k12plus-scenes.js?v=1',
   '/manifest.webmanifest', '/assets/k12plus-logo-128.png',
   '/icons/icon-192.png', '/icons/icon-512.png',
+  '/favicon.ico', '/icons/favicon-32.png', '/lessons/index.json',
 ];
 // React, saved too so the app can open offline after the first visit. Usually this
 // costs nothing: the browser already holds these files from the page that just loaded.
@@ -54,7 +58,7 @@ self.addEventListener('install', function (e) {
 self.addEventListener('activate', function (e) {
   e.waitUntil(
     caches.keys().then(function (keys) {
-      return Promise.all(keys.filter(function (k) { return k !== VERSION; }).map(function (k) { return caches.delete(k); }));
+      return Promise.all(keys.filter(function (k) { return k !== VERSION && k !== LESSONS; }).map(function (k) { return caches.delete(k); }));
     }).then(function () { return self.clients.claim(); })
   );
 });
