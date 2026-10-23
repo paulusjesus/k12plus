@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=17"></script>
+<script src="./k12plus-bridge.js?v=18"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
 <script src="./k12plus-arcade.js?v=1"></script>
 <script src="./k12plus-scenes.js?v=1"></script>
@@ -53,7 +53,7 @@ button { font-family:'Poppins',sans-serif; }
     <div style="display:flex; align-items:center; gap:4px; padding:4px 8px 14px;">
       <a href="index.html" title="{{ schoolName }}" style="display:flex; align-items:center; gap:10px; text-decoration:none; min-width:0;">
         <sc-if value="{{ brandIsK12 }}" hint-placeholder-val="{{ false }}">
-        <img src="assets/k12plus-logo.png" alt="K12Plus" style="height:30px; width:auto; max-width:150px; flex-shrink:0; display:block;">
+        <img src="assets/k12plus-logo-128.png" alt="K12Plus" style="height:30px; width:auto; max-width:150px; flex-shrink:0; display:block;">
         <span style="display:block; font-family:'Comfortaa',sans-serif; font-size:16.5px; font-weight:700; letter-spacing:0.9px; -webkit-text-stroke:1px currentColor; color:var(--ink); line-height:1.4; white-space:nowrap; padding-bottom:1px; transform:translateY(1px);">k12plus</span>
         </sc-if>
         <sc-if value="{{ brandIsSchool }}" hint-placeholder-val="{{ true }}">
@@ -155,7 +155,7 @@ button { font-family:'Poppins',sans-serif; }
   <aside style="width:64px; flex-shrink:0; background:#fff; border-right:1px solid var(--line); display:flex; flex-direction:column; align-items:center; gap:4px; padding:16px 0; height:100vh; position:sticky; top:0;">
     <a href="index.html" title="{{ schoolName }}" style="position:relative; width:36px; height:36px; display:flex; align-items:center; justify-content:center; margin-bottom:6px; text-decoration:none;">
       <sc-if value="{{ brandIsK12 }}" hint-placeholder-val="{{ false }}">
-      <img src="assets/k12plus-logo.png" alt="K12Plus" style="height:26px; width:auto; display:block;">
+      <img src="assets/k12plus-logo-128.png" alt="K12Plus" style="height:26px; width:auto; display:block;">
       </sc-if>
       <sc-if value="{{ brandIsSchool }}" hint-placeholder-val="{{ true }}">
       <span style="position:relative; width:36px; height:36px; display:flex; align-items:center; justify-content:center;">
@@ -2052,7 +2052,7 @@ button { font-family:'Poppins',sans-serif; }
 <sc-if value="{{ never }}" hint-placeholder-val="{{ false }}">
 <div style="min-height:100vh; display:flex; background:#F2F3F7;">
   <aside class="k12rail" style="width:104px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; padding:22px 0; gap:8px;">
-    <a href="index.html" title="k12plus"><img src="assets/k12plus-logo.png" alt="k12plus" style="height:34px; width:auto;"></a>
+    <a href="index.html" title="k12plus"><img src="assets/k12plus-logo-128.png" alt="k12plus" style="height:34px; width:auto;"></a>
     <div style="height:26px;"></div>
     <sc-for list="{{ railItems }}" as="r" hint-placeholder-count="4">
       <button onClick="{{ r.pick }}" style="{{ r.style }}" title="{{ r.label }}">

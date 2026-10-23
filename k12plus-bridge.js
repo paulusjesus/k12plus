@@ -29,6 +29,10 @@ window.k12agentName = function (subject) {
     var po = new PerformanceObserver(function (list) {
       list.getEntries().forEach(function (e) {
         if (String(e.name).indexOf('supabase.co') > -1) return; // counted from the calls below
+        // Files handed over by the service worker came from the phone or were fetched by
+        // the worker, which counts its own downloads (see sw.js); counting them here too
+        // would add the full size of files that cost no data.
+        if (e.workerStart > 0) return;
         addData(e.transferSize || 0);
       });
     });
@@ -53,6 +57,26 @@ window.k12agentName = function (subject) {
     };
   }
   window.k12dataUsed = function () { return dataBytes; };
+  // asks the service worker how much it downloaded since it was last asked
+  window.k12pullWorkerData = function () {
+    return new Promise(function (resolve) {
+      try {
+        var sw = navigator.serviceWorker && navigator.serviceWorker.controller;
+        if (!sw || !window.MessageChannel) return resolve(0);
+        var ch = new MessageChannel(), done = false;
+        ch.port1.onmessage = function (m) {
+          if (done) return; done = true;
+          var n = (m.data && m.data.bytes) || 0; addData(n); resolve(n);
+        };
+        sw.postMessage({ type: 'k12-data-used' }, [ch.port2]);
+        setTimeout(function () { if (!done) { done = true; resolve(0); } }, 2000);
+      } catch (e) { resolve(0); }
+    });
+  };
+  try {
+    if (navigator.serviceWorker) navigator.serviceWorker.addEventListener('controllerchange', function () { window.k12pullWorkerData(); });
+  } catch (e) {}
+  setInterval(function () { window.k12pullWorkerData(); }, 60000);
   window.k12takeData = function () { var n = dataBytes; dataBytes = 0; return n; };
 
   // AI proxy: Supabase Edge Function (moved from Google Cloud Run on 14 Oct 2026).
@@ -85,7 +109,10 @@ window.k12agentName = function (subject) {
     var payload = {
       action: hasImage ? 'chatimg' : 'chat',
       system: String(opts.system || ''),
-      messages: (opts.messages || []).map(function (m) {
+      // Only what the agent reads is sent: the last 16 messages of a chat, or the question
+      // that goes with a photo. Older messages were uploaded on every question and then
+      // ignored by the server (backend/index.js), so this saves data and changes no answer.
+      messages: (opts.messages || []).slice(hasImage ? -1 : -16).map(function (m) {
         return { role: m.role === 'assistant' ? 'assistant' : 'user', content: String(m.content || '') };
       }),
     };
@@ -865,9 +892,11 @@ window.k12agentName = function (subject) {
       if (Date.now() - lastInput < 60000) activeSec += 30;
       bank(300);
     }, 30000);
-    document.addEventListener('visibilitychange', function () { if (document.hidden) { bank(30); bankData(); } });
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) { bank(30); bankData(); window.k12pullWorkerData().then(function (n) { if (n > 0) bankData(); }); }
+    });
     window.addEventListener('pagehide', bankData);
-    setInterval(bankData, 300000);
+    setInterval(function () { window.k12pullWorkerData().then(bankData); }, 300000);
     window.addEventListener('online', function () { window.k12learn.flush(); });
     setTimeout(function () { window.k12learn.flush(); }, 4000);
   })();
