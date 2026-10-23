@@ -14,6 +14,19 @@
     return { 'Content-Type': 'application/json', apikey: PROXY_ANON, Authorization: 'Bearer ' + PROXY_ANON };
   }
 
+  // Pilot learners send their own sign-in token, so the agent can stay quiet
+  // while they sit a pilot test. Everyone else sends exactly what they did before.
+  async function withPilotToken(payload) {
+    var out = Object.assign({}, payload);
+    try {
+      if (localStorage.getItem('k12plus-pilot-taking-part') === '1') {
+        var sess = await freshSession();
+        if (sess && sess.access_token) out.k12token = sess.access_token;
+      }
+    } catch (e) {}
+    return out;
+  }
+
   // ---- AI bridge ----
   window.claude = window.claude || {};
   window.claude.complete = async function (opts) {
@@ -43,10 +56,11 @@
     var res = await fetch(PROXY, {
       method: 'POST',
       headers: proxyHeaders(),
-      body: JSON.stringify(payload),
+      body: JSON.stringify(await withPilotToken(payload)),
     });
     var data = null;
     try { data = await res.json(); } catch (e) {}
+    if (res.status === 423 && data && data.reply) return data.reply;
     if (!res.ok) {
       var detail = (data && (data.detail || data.error)) || '';
       if (res.status === 503 && /not configured/i.test(String(data && data.error))) {
@@ -71,8 +85,16 @@
         var res = await fetch(PROXY, {
           method: 'POST',
           headers: proxyHeaders(),
-          body: JSON.stringify(q[i].payload),
+          body: JSON.stringify(await withPilotToken(q[i].payload)),
         });
+        if (res.status === 423) {
+          // a test is in progress: keep the rest of the questions for after the test
+          try {
+            var later = JSON.parse(localStorage.getItem('k12plus-outbox') || '[]');
+            localStorage.setItem('k12plus-outbox', JSON.stringify(q.slice(i).concat(later).slice(-20)));
+          } catch (e2) {}
+          break;
+        }
         if (!res.ok) continue;
         var data = await res.json();
         var chat = JSON.parse(localStorage.getItem('k12plus-tutor-chat') || '[]');
@@ -275,6 +297,19 @@
     // shared phones) and asks Supabase to cancel it, so it cannot be used again.
     logout: function () {
       var sess = readSession();
+      // an unfinished pilot test: send what is saved on the phone, then clear it,
+      // so the next person on a shared phone cannot see it
+      try {
+        var tst = JSON.parse(localStorage.getItem('k12plus-test') || 'null');
+        if (tst && sess && sess.access_token && navigator.onLine) {
+          fetch(SUPA + '/rest/v1/rpc/' + (tst.submitPending ? 'pilot_submit_test' : 'pilot_save_answers'), {
+            method: 'POST', keepalive: true,
+            headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + sess.access_token },
+            body: JSON.stringify({ p_attempt: tst.attempt_id, p_answers: tst.answers }),
+          }).catch(function () {});
+        }
+        localStorage.removeItem('k12plus-test');
+      } catch (e) {}
       try {
         localStorage.removeItem('k12plus-session');
         localStorage.removeItem('k12plus-loggedin');
@@ -647,6 +682,99 @@
     window.addEventListener('online', function () { window.k12learn.flush(); });
     setTimeout(function () { window.k12learn.flush(); }, 4000);
   })();
+
+  // ---- Pilot tests: start of the year and end of the year tests (2027 pilot) ----
+  // A learner needs a connection to open the test. After that every answer is kept
+  // on the phone first and sent when there is a connection, so a weak signal or a
+  // flat battery does not lose work. The questions come without answers: marking
+  // happens on the server.
+  var TKEY = 'k12plus-test';
+  function readTest() { try { return JSON.parse(localStorage.getItem(TKEY) || 'null'); } catch (e) { return null; } }
+  function writeTest(t) { try { if (t) localStorage.setItem(TKEY, JSON.stringify(t)); else localStorage.removeItem(TKEY); } catch (e) {} }
+  var testTimer = null, testSyncing = false;
+  window.k12tests = {
+    mine: function () { return pilotRpc('pilot_my_tests'); },
+    current: function () { return readTest(); },
+    start: async function (testId) {
+      var r = await pilotRpc('pilot_start_test', { p_test: testId });
+      if (!r.ok) return r;
+      var d = r.data || {};
+      var old = readTest();
+      var answers = Object.assign({}, d.saved || {});
+      var dirty = {};
+      if (old && old.attempt_id === d.attempt_id) {
+        Object.keys(old.dirty || {}).forEach(function (k) { answers[k] = old.answers[k]; dirty[k] = 1; });
+      }
+      var t = { attempt_id: d.attempt_id, test_id: testId, title: d.title, purpose: d.purpose, minutes: d.minutes,
+                closes_at: d.closes_at, items: d.items || [], answers: answers, dirty: dirty, submitPending: false,
+                at: (old && old.attempt_id === d.attempt_id && old.at) || 0 };
+      writeTest(t);
+      return { ok: true, data: t };
+    },
+    answer: function (itemId, value) {
+      var t = readTest();
+      if (!t) return null;
+      t.answers[String(itemId)] = String(value == null ? '' : value).slice(0, 200);
+      t.dirty[String(itemId)] = 1;
+      writeTest(t);
+      clearTimeout(testTimer);
+      testTimer = setTimeout(function () { window.k12tests.sync(); }, 4000);
+      return t;
+    },
+    goTo: function (index) {
+      var t = readTest();
+      if (t) { t.at = index; writeTest(t); }
+    },
+    sync: async function () {
+      var t = readTest();
+      if (!t || testSyncing || !navigator.onLine) return { ok: false };
+      if (t.submitPending) return window.k12tests.submit();
+      var keys = Object.keys(t.dirty || {});
+      if (!keys.length) return { ok: true };
+      testSyncing = true;
+      try {
+        var send = {};
+        keys.forEach(function (k) { send[k] = t.answers[k]; });
+        var r = await pilotRpc('pilot_save_answers', { p_attempt: t.attempt_id, p_answers: send });
+        if (r.ok) {
+          var now = readTest();
+          if (now && now.attempt_id === t.attempt_id) {
+            keys.forEach(function (k) { if (now.answers[k] === send[k]) delete now.dirty[k]; });
+            writeTest(now);
+          }
+        } else if (/closed|already submitted|not found/i.test(r.error || '')) {
+          writeTest(null);
+        }
+        return r;
+      } finally { testSyncing = false; }
+    },
+    // submit: if there is no connection now, it is sent automatically later
+    submit: async function () {
+      var t = readTest();
+      if (!t) return { ok: true, data: { submitted: true } };
+      t.submitPending = true;
+      writeTest(t);
+      if (!navigator.onLine) return { ok: true, queued: true };
+      var r = await pilotRpc('pilot_submit_test', { p_attempt: t.attempt_id, p_answers: t.answers });
+      if (r.ok || /already submitted/i.test(r.error || '')) { writeTest(null); return { ok: true, data: { submitted: true } }; }
+      if (/closed|not found/i.test(r.error || '')) { writeTest(null); return r; }
+      return { ok: true, queued: true };
+    },
+    // teachers
+    classTests: function (classId) { return pilotRpc('pilot_class_tests', { p_class: classId }); },
+    paperVersion: function (testId) { return pilotRpc('pilot_paper_version', { p_test: testId }); },
+    enterPaper: function (testId, learnerId, answers) { return pilotRpc('pilot_enter_paper', { p_test: testId, p_learner: learnerId, p_answers: answers }); },
+    // K-12 EdTech administrators
+    all: function () { return pilotRpc('pilot_tests_admin'); },
+    preview: function (testId) { return pilotRpc('pilot_test_preview', { p_test: testId }); },
+    approve: function (testId) { return pilotRpc('pilot_approve_test', { p_test: testId }); },
+    setWindow: function (testId, schoolId, opens, closes) {
+      return pilotRpc('pilot_set_test_window', { p_test: testId, p_school: schoolId || null, p_opens: opens, p_closes: closes });
+    },
+    scores: function (testId) { return pilotRpc('pilot_test_scores', { p_test: testId }); },
+  };
+  window.addEventListener('online', function () { setTimeout(function () { window.k12tests.sync(); }, 1500); });
+  setTimeout(function () { if (readTest()) window.k12tests.sync(); }, 5000);
 
   // ---- PWA ----
   if ('serviceWorker' in navigator) {

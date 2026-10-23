@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=12"></script>
+<script src="./k12plus-bridge.js?v=13"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
 <script src="./k12plus-arcade.js?v=1"></script>
 <script src="./k12plus-scenes.js?v=1"></script>
@@ -493,6 +493,18 @@ button { font-family:'Poppins',sans-serif; }
                 <p style="font-size:12.5px; color:#B42318; margin:8px 0 0;">{{ joinErr }}</p>
               </sc-if>
             </sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showMyTests }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 18px; margin-bottom:18px;">
+            <h2 style="font-size:14px; font-weight:600; margin:0 0 4px;">Pilot tests</h2>
+            <sc-for list="{{ myTestRows }}" as="mt" hint-placeholder-count="1">
+              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:8px 0; border-top:1px solid var(--line); font-size:13px;">
+                <span style="flex:1 1 200px; min-width:0;"><strong>{{ mt.title }}</strong><br><span style="font-size:12px; color:var(--muted);">{{ mt.line }}</span></span>
+                <sc-if value="{{ mt.canOpen }}" hint-placeholder-val="{{ false }}"><button onClick="{{ mt.open }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">{{ mt.btn }}</button></sc-if>
+              </div>
+            </sc-for>
+            <sc-if value="{{ hasMyTestMsg }}" hint-placeholder-val="{{ false }}"><p style="font-size:12.5px; line-height:1.6; margin:6px 0 0; {{ myTestMsgStyle }}">{{ myTestMsg }}</p></sc-if>
           </div>
         </sc-if>
         <div style="display:flex; align-items:center; gap:12px; background:linear-gradient(90deg,#FFF6DC,#FDF0E4); border:1px solid #F2E2AE; border-radius:14px; padding:11px 18px; margin-bottom:18px; flex-wrap:wrap;">
@@ -1071,6 +1083,53 @@ button { font-family:'Poppins',sans-serif; }
         </div>
       </div>
     </sc-if>
+    <sc-if value="{{ isTestView }}" hint-placeholder-val="{{ false }}">
+      <div class="k12dd" style="flex:1; overflow-y:auto; padding:4px 24px 28px;">
+        <div style="max-width:640px; margin:0 auto;">
+          <div style="display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:6px;">
+            <h1 style="font-size:17px; font-weight:600; margin:0; flex:1 1 220px;">{{ tvTitle }}</h1>
+            <button onClick="{{ tvLeave }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer;">Save and leave</button>
+          </div>
+          <p style="font-size:12.5px; line-height:1.6; color:var(--muted); margin:0 0 10px;">{{ tvNote }}</p>
+          <div style="font-size:12px; color:var(--muted); margin-bottom:10px;">{{ tvProgress }} &middot; <span style="{{ tvSaveStyle }}">{{ tvSaveLine }}</span></div>
+          <sc-if value="{{ tvHasErr }}" hint-placeholder-val="{{ false }}">
+            <p style="background:#FDECEC; border:1px solid #F5C2C2; color:#B42318; border-radius:10px; padding:10px 14px; font-size:12.5px; line-height:1.6; margin:0 0 12px;">{{ tvErr }}</p>
+          </sc-if>
+          <sc-if value="{{ tvShowQ }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-bottom:12px;">
+              <div style="font-size:11.5px; font-weight:600; color:var(--primary); margin-bottom:6px;">{{ tvNum }} &middot; {{ tvTopic }}</div>
+              <div style="font-size:15.5px; line-height:1.65; white-space:pre-wrap; margin-bottom:14px;">{{ tvQuestion }}</div>
+              <sc-if value="{{ tvIsChoice }}" hint-placeholder-val="{{ false }}">
+                <sc-for list="{{ tvOptions }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.pick }}" style="{{ o.style }}"><strong style="margin-right:8px;">{{ o.letter }}</strong>{{ o.text }}</button>
+                </sc-for>
+              </sc-if>
+              <sc-if value="{{ tvIsShort }}" hint-placeholder-val="{{ false }}">
+                <input value="{{ tvValue }}" onChange="{{ tvOnInput }}" placeholder="Type your answer" style="width:100%; box-sizing:border-box; border:1px solid var(--line); border-radius:10px; padding:12px 14px; font-size:16px; outline:none;">
+                <p style="font-size:11.5px; color:var(--muted); margin:6px 0 0;">Whole numbers, decimals and fractions such as 3/4 are all fine. You do not need to type the units.</p>
+              </sc-if>
+            </div>
+            <div style="display:flex; gap:8px; margin-bottom:14px;">
+              <button onClick="{{ tvPrev }}" style="{{ tvPrevStyle }}">&larr; Previous</button>
+              <button onClick="{{ tvNext }}" style="margin-left:auto; border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">{{ tvNextLabel }}</button>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:5px;">
+              <sc-for list="{{ tvChips }}" as="ch" hint-placeholder-count="10"><button onClick="{{ ch.go }}" style="{{ ch.style }}">{{ ch.n }}</button></sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ tvShowReview }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px;">
+              <h2 style="font-size:15px; font-weight:600; margin:0 0 6px;">Ready to submit?</h2>
+              <p style="font-size:13px; line-height:1.6; margin:0 0 12px;">{{ tvReviewLine }}</p>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button onClick="{{ tvBackToQ }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer;">Check my answers</button>
+                <button onClick="{{ tvSubmit }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">{{ tvSubmitLabel }}</button>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
     <sc-if value="{{ isPilot }}" hint-placeholder-val="{{ false }}">
       <div class="k12dd" style="flex:1; overflow-y:auto; padding:4px 24px 28px;">
         <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
@@ -1173,6 +1232,58 @@ button { font-family:'Poppins',sans-serif; }
               </div>
             </sc-for>
             <sc-if value="{{ msgListEmpty }}" hint-placeholder-val="{{ false }}"><p style="font-size:12.5px; color:var(--muted); margin:6px 0 0;">{{ msgListEmptyText }}</p></sc-if>
+          </div>
+          <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-top:16px;">
+            <h2 style="font-size:14.5px; font-weight:600; margin:0;">Pilot tests</h2>
+            <p style="font-size:12.5px; line-height:1.6; color:var(--muted); margin:4px 0 8px;">Version A is the start of the year test and Version B the end of the year test. Each covers every topic in the syllabus. A test opens only after it is approved, and only at pilot schools, for learners with consent.</p>
+            <sc-for list="{{ admTests }}" as="at" hint-placeholder-count="0">
+              <div style="border-top:1px solid var(--line); padding:10px 0; font-size:12.5px; line-height:1.55;">
+                <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                  <span style="flex:1 1 240px; min-width:0;"><strong>{{ at.title }}</strong> <span style="{{ at.statusStyle }}">{{ at.statusLabel }}</span><br><span style="color:var(--muted);">{{ at.line }}</span></span>
+                  <button onClick="{{ at.togglePreview }}" style="border:none; background:none; color:var(--primary); cursor:pointer; font-size:12px; text-decoration:underline;">{{ at.previewLabel }}</button>
+                  <sc-if value="{{ at.canApprove }}" hint-placeholder-val="{{ false }}"><button onClick="{{ at.approve }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">Approve</button></sc-if>
+                  <sc-if value="{{ at.canOpen }}" hint-placeholder-val="{{ false }}"><button onClick="{{ at.toggleWindow }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer;">Set test dates</button></sc-if>
+                  <sc-if value="{{ at.canScores }}" hint-placeholder-val="{{ false }}"><button onClick="{{ at.toggleScores }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer;">Scores</button></sc-if>
+                </div>
+                <sc-if value="{{ at.windowOpen }}" hint-placeholder-val="{{ false }}">
+                  <div style="background:var(--chip); border-radius:10px; padding:10px 12px; margin-top:8px; display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; color:var(--muted);">
+                    <label>Opens<br><input type="datetime-local" value="{{ at.opensIn }}" onChange="{{ at.onOpens }}" style="border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;"></label>
+                    <label>Closes<br><input type="datetime-local" value="{{ at.closesIn }}" onChange="{{ at.onCloses }}" style="border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;"></label>
+                    <button onClick="{{ at.saveWindow }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">Open for all pilot schools</button>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ at.previewOpen }}" hint-placeholder-val="{{ false }}">
+                  <div style="max-height:420px; overflow-y:auto; border:1px solid var(--line); border-radius:10px; margin-top:8px;">
+                    <sc-for list="{{ at.previewItems }}" as="pv" hint-placeholder-count="3">
+                      <div style="padding:8px 12px; border-bottom:1px solid var(--line);">
+                        <div style="font-size:11px; color:var(--primary); font-weight:600;">{{ pv.n }} &middot; {{ pv.topic }}</div>
+                        <div style="white-space:pre-wrap;">{{ pv.question }}</div>
+                        <sc-if value="{{ pv.hasOpts }}" hint-placeholder-val="{{ false }}"><div style="color:var(--muted);">{{ pv.opts }}</div></sc-if>
+                        <div style="color:#1F6B43; font-weight:600;">Answer: {{ pv.answer }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ at.scoresOpen }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top:8px;">
+                    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:6px;">
+                      <span style="color:var(--muted); flex:1 1 200px;">{{ at.scoresLine }}</span>
+                      <button onClick="{{ at.downloadCsv }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer;">Download CSV</button>
+                    </div>
+                    <div style="overflow-x:auto; border:1px solid var(--line); border-radius:10px;">
+                      <table style="width:100%; border-collapse:collapse; font-size:12px; min-width:620px;">
+                        <thead><tr style="text-align:left; color:var(--muted);"><th style="padding:7px 10px;">Pilot ID</th><th style="padding:7px 6px;">Region</th><th style="padding:7px 6px;">School</th><th style="padding:7px 6px;">Class</th><th style="padding:7px 6px;">Sat on</th><th style="padding:7px 10px;">Score</th></tr></thead>
+                        <tbody>
+                          <sc-for list="{{ at.scoreRows }}" as="sr" hint-placeholder-count="2">
+                            <tr style="border-top:1px solid var(--line);"><td style="padding:7px 10px; font-family:monospace;">{{ sr.pseudo }}</td><td style="padding:7px 6px;">{{ sr.region }}</td><td style="padding:7px 6px;">{{ sr.school }}</td><td style="padding:7px 6px;">{{ sr.cls }}</td><td style="padding:7px 6px;">{{ sr.mode }}</td><td style="padding:7px 10px; font-weight:600;">{{ sr.score }}</td></tr>
+                          </sc-for>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
           </div>
         </sc-if>
 
@@ -1292,6 +1403,42 @@ button { font-family:'Poppins',sans-serif; }
                 <p style="font-size:12px; color:var(--muted); margin:0 0 12px;">Your first Monday summary arrives on the Monday after learners start, at 06:00.</p>
               </sc-if>
               <p style="font-size:12px; line-height:1.6; color:var(--muted); margin:0 0 12px;">Learners with a smartphone log in at k12plus.app, open My dashboard and type this code under "Join your class". On a shared phone, each learner logs in with their own account first.</p>
+              <sc-for list="{{ c.tests }}" as="tt" hint-placeholder-count="0">
+                <div style="border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-bottom:12px; font-size:12.5px; line-height:1.55;">
+                  <div style="display:flex; gap:8px; align-items:baseline; flex-wrap:wrap;">
+                    <strong style="flex:1 1 200px; font-size:13px;">{{ tt.title }}</strong>
+                    <button onClick="{{ tt.print }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer;">Print paper version</button>
+                  </div>
+                  <div style="color:var(--muted);">{{ tt.windowLine }}</div>
+                  <div>{{ tt.countLine }}</div>
+                  <sc-if value="{{ tt.hasTopics }}" hint-placeholder-val="{{ false }}"><div>{{ tt.topicsLine }}</div></sc-if>
+                  <details style="margin-top:6px;"><summary style="cursor:pointer; color:var(--primary); font-weight:600;">Learners, scores and paper answers</summary>
+                    <sc-for list="{{ tt.learners }}" as="tl" hint-placeholder-count="1">
+                      <div style="border-top:1px solid var(--line); padding:6px 0;">
+                        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                          <span style="flex:1 1 140px; min-width:0;">{{ tl.name }}</span>
+                          <span style="color:var(--muted);">{{ tl.status }}</span>
+                          <sc-if value="{{ tl.canPaper }}" hint-placeholder-val="{{ false }}"><button onClick="{{ tl.togglePaper }}" style="border:none; background:none; color:var(--primary); cursor:pointer; font-size:12px; text-decoration:underline;">{{ tl.paperLabel }}</button></sc-if>
+                        </div>
+                        <sc-if value="{{ tl.paperOpen }}" hint-placeholder-val="{{ false }}">
+                          <div style="background:var(--chip); border-radius:10px; padding:10px 12px; margin-top:6px;">
+                            <p style="color:var(--muted); margin:0 0 6px;">Type each answer as the learner wrote it on paper. Leave a box empty if the learner left the question blank. K12Plus marks the answers the same way as on a phone.</p>
+                            <sc-for list="{{ tl.paperItems }}" as="pi" hint-placeholder-count="3">
+                              <div style="display:flex; align-items:center; gap:6px; padding:3px 0; flex-wrap:wrap;">
+                                <span style="width:26px; font-weight:600;">{{ pi.n }}</span>
+                                <sc-if value="{{ pi.isChoice }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ pi.opts }}" as="po" hint-placeholder-count="4"><button onClick="{{ po.pick }}" style="{{ po.style }}">{{ po.letter }}</button></sc-for></sc-if>
+                                <sc-if value="{{ pi.isShort }}" hint-placeholder-val="{{ false }}"><input value="{{ pi.value }}" onChange="{{ pi.onInput }}" style="width:110px; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;"></sc-if>
+                                <span style="color:var(--muted); font-size:11.5px; flex:1 1 120px; min-width:0;">{{ pi.topic }}</span>
+                              </div>
+                            </sc-for>
+                            <button onClick="{{ tl.savePaper }}" style="margin-top:8px; border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">Save and mark</button>
+                          </div>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </details>
+                </div>
+              </sc-for>
               <h3 style="font-size:12.5px; font-weight:600; margin:0 0 6px;">{{ c.countLabel }}</h3>
               <div style="border:1px solid var(--line); border-radius:10px; max-height:300px; overflow-y:auto; margin-bottom:12px;">
                 <sc-for list="{{ c.learners }}" as="l" hint-placeholder-count="3">
@@ -2102,6 +2249,7 @@ class Component extends DCLogic {
       if (this.state.view === 'pilot') this.loadPilot();
     });
     try { if (window.k12learn) window.k12learn.setTakingPart(!!(p.class && p.class.taking_part)); } catch (e) {}
+    if (p.class && p.class.taking_part) this.loadMyTests();
     if (p.class) {
       const m = await window.k12pilot.myMessages();
       if (m.ok && (m.data || []).length) {
@@ -2138,6 +2286,10 @@ class Component extends DCLogic {
       if (ss.ok) this.setState({ summaryStatus: ss.data });
       if (ru.ok) this.setState((st) => ({ msgRules: ru.data, msgRulesIn: st.msgRulesIn || ru.data }));
       if (ms.ok) this.setState({ msgStats: ms.data });
+      if (window.k12tests) {
+        const ta = await window.k12tests.all();
+        if (ta.ok) this.setState({ testsAdmin: ta.data || [] });
+      }
     } else if (role === 'admin' || role === 'champion') {
       const rid = role === 'admin' ? this.state.pilotRegionId : this.state.pilot.champion_region_id;
       const r = await P.regionDetail(rid);
@@ -2151,7 +2303,7 @@ class Component extends DCLogic {
     }
     if (role !== 'admin' && this.state.pilot && this.state.pilot.teaches > 0) {
       const [t, sm] = await Promise.all([P.myClasses(), P.mySummaries()]);
-      if (t.ok) this.setState({ pilotClasses: t.data || [] }); else err = err || t.error;
+      if (t.ok) { this.setState({ pilotClasses: t.data || [] }); await this.loadClassTests(t.data || []); } else err = err || t.error;
       if (sm.ok) this.setState({ pilotSummaries: sm.data || [] });
     }
     this.setState(err ? { pilotLoading: false, pilotErr: err } : { pilotLoading: false });
@@ -2175,6 +2327,316 @@ class Component extends DCLogic {
     if (!r.ok) return this.setState({ joinBusy: false, joinErr: r.error });
     this.setState({ joinBusy: false, joinCode: '' });
     this.loadPilotRole();
+  }
+
+  // ---------- 2027 pilot: start of the year and end of the year tests ----------
+  async loadMyTests() {
+    if (!window.k12tests) return;
+    const r = await window.k12tests.mine();
+    if (r.ok) this.setState({ myTests: r.data || [] });
+  }
+
+  async openTest(testId) {
+    const T = window.k12tests;
+    if (!T || this.state.testBusy) return;
+    const cached = T.current();
+    if (!navigator.onLine && cached && cached.test_id === testId) {
+      return this.setState({ testCur: cached, testIdx: cached.at || 0, testReview: false, testErr: '', view: 'test' });
+    }
+    this.setState({ testBusy: true, myTestMsg: '' });
+    const r = await T.start(testId);
+    if (!r.ok) return this.setState({ testBusy: false, myTestMsg: r.error, myTestMsgBad: true });
+    const n = (r.data.items || []).length;
+    this.setState({ testBusy: false, testCur: r.data, testIdx: Math.max(0, Math.min(r.data.at || 0, n - 1)), testReview: false, testErr: '', view: 'test' });
+  }
+
+  testAnswer(itemId, value) {
+    const T = window.k12tests;
+    const t = T && T.answer(itemId, value);
+    if (!t) return this.setState({ testErr: 'This test is no longer open on this phone. Go back to My dashboard to check it.' });
+    this.setState({ testCur: t });
+    clearTimeout(this._testRefresh);
+    this._testRefresh = setTimeout(() => {
+      const now = T.current();
+      if (this.state.view === 'test') this.setState(now ? { testCur: now } : { testErr: 'This test has closed. Your saved answers were kept.' });
+    }, 7000);
+  }
+
+  testGo(i) {
+    if (window.k12tests) window.k12tests.goTo(i);
+    this.setState({ testIdx: i, testReview: false });
+  }
+
+  async testSubmit() {
+    const T = window.k12tests;
+    if (!T || this.state.testBusy) return;
+    this.setState({ testBusy: true, testErr: '' });
+    const r = await T.submit();
+    if (!r.ok) return this.setState({ testBusy: false, testErr: r.error });
+    this.setState({
+      testBusy: false, testCur: null, view: 'dashboard', myTestMsgBad: false,
+      myTestMsg: r.queued ? 'Your test is saved on this phone. It will be sent the moment you are online again.' : 'Thank you. Your test has been submitted.'
+    }, () => this.loadMyTests());
+  }
+
+  async loadClassTests(classes) {
+    if (!window.k12tests || !classes.length) return;
+    const res = await Promise.all(classes.map((c) => window.k12tests.classTests(c.id)));
+    const map = {};
+    classes.forEach((c, i) => { if (res[i].ok) map[c.id] = res[i].data || []; });
+    this.setState({ classTests: map });
+  }
+
+  async togglePaper(testId, learnerId, isOpen) {
+    if (isOpen) return this.setState({ paperOpen: null, paperAns: {} });
+    const cache = this.state.paperCache || {};
+    if (!cache[testId]) {
+      const r = await window.k12tests.paperVersion(testId);
+      if (!r.ok) return this.setState({ pilotErr: r.error, pilotMsg: '' });
+      this.setState({ paperCache: Object.assign({}, cache, { [testId]: (r.data && r.data.items) || [] }) });
+    }
+    this.setState({ paperOpen: testId + ':' + learnerId, paperAns: {} });
+  }
+
+  async savePaper(testId, learner) {
+    const ans = {};
+    Object.keys(this.state.paperAns || {}).forEach((k) => { const v = String(this.state.paperAns[k] || '').trim(); if (v) ans[k] = v; });
+    if (!Object.keys(ans).length) return this.setState({ pilotErr: 'Type at least one answer first.', pilotMsg: '' });
+    const done = await this.pilotAct(window.k12tests.enterPaper(testId, learner.id, ans),
+      (d) => 'Paper answers saved for ' + learner.name + ': ' + d.score + ' of ' + d.max + '.');
+    if (done) this.setState({ paperOpen: null, paperAns: {} });
+  }
+
+  // the paper version, for learners without a device: questions only, no answers
+  async printPaper(test, cls) {
+    const w = window.open('', '_blank');
+    const r = await window.k12tests.paperVersion(test.id);
+    if (!r.ok) { if (w) w.close(); return this.setState({ pilotErr: r.error, pilotMsg: '' }); }
+    const esc = (x) => String(x == null ? '' : x).replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+    const d = r.data || {};
+    const qs = (d.items || []).map((it) => '<div class="q"><div class="t">' + it.position + '. <span>' + esc(it.topic) + '</span></div><div>' + esc(it.question) + '</div>' +
+      (it.kind === 'choice'
+        ? '<div class="o">' + (it.options || []).map((o, k) => '<div>&#9744; ' + 'ABCDEF'[k] + '. ' + esc(o) + '</div>').join('') + '</div>'
+        : '<div class="a">Answer: ________________________</div>') + '</div>').join('');
+    const html = '<!doctype html><html><head><meta charset="utf-8"><title>' + esc(d.title) + '</title><style>' +
+      'body{font-family:Arial,sans-serif;font-size:12.5pt;line-height:1.5;margin:18mm;color:#000}h1{font-size:16pt;margin:0 0 4px}' +
+      '.m{border:1px solid #000;padding:8px 10px;margin:10px 0 14px}.q{margin:0 0 12px;page-break-inside:avoid}.t{font-weight:bold}.t span{font-weight:normal;font-size:10pt;color:#444}' +
+      '.o{margin:4px 0 0 18px}.a{margin:8px 0 0 18px}@media print{button{display:none}}</style></head><body>' +
+      '<button onclick="window.print()" style="float:right;padding:8px 16px">Print</button>' +
+      '<h1>' + esc(d.title) + '</h1><div>' + esc(cls.name) + ' &middot; ' + esc(cls.school) + ' &middot; about ' + esc(d.minutes) + ' minutes</div>' +
+      '<div class="m">Learner name: ______________________________ &nbsp; K12Plus ID: ______________<br>' +
+      'Work on your own. Answer as many questions as you can. For multiple choice questions, tick one box. It is fine to leave a question out if you do not know it yet.</div>' +
+      qs + '</body></html>';
+    if (!w) return this.setState({ pilotErr: 'Your browser blocked the new window. Allow pop-ups for k12plus.app and try again.', pilotMsg: '' });
+    w.document.open(); w.document.write(html); w.document.close();
+  }
+
+  classTestRows(s, c) {
+    const fmt = (iso) => { try { return new Date(iso).toLocaleString('en-GB', { timeZone: 'Africa/Windhoek', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (e) { return iso; } };
+    const now = new Date();
+    const pick = (on) => 'width:30px;height:28px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;' +
+      (on ? 'background:var(--primary);color:#fff;border:1px solid var(--primary);' : 'background:#fff;color:var(--ink);border:1px solid var(--line);');
+    return ((s.classTests || {})[c.id] || []).map((t) => {
+      const ls = t.learners || [];
+      const sub = ls.filter((l) => l.status === 'submitted');
+      const paper = sub.filter((l) => l.mode === 'paper').length;
+      const sitting = ls.filter((l) => l.status === 'in_progress').length;
+      const opens = new Date(t.opens_at), closes = new Date(t.closes_at);
+      const weak = (t.topics || []).filter((x) => x.answered >= 3).map((x) => Object.assign({ pct: x.correct / x.answered }, x))
+        .sort((a, b) => a.pct - b.pct).slice(0, 3).filter((x) => x.pct < 0.6);
+      return {
+        title: t.title,
+        windowLine: now < opens ? 'Opens ' + fmt(t.opens_at) + ', closes ' + fmt(t.closes_at)
+          : now < closes ? 'Open now, until ' + fmt(t.closes_at)
+          : 'Closed on ' + fmt(t.closes_at) + '. You can enter paper answers for 14 days after that.',
+        countLine: sub.length + ' of ' + ls.length + ' learners taking part have submitted' + (paper ? ' (' + paper + ' on paper)' : '') + (sitting ? ' \u00b7 ' + sitting + ' still sitting it' : ''),
+        hasTopics: weak.length > 0,
+        topicsLine: 'Topics most missed: ' + weak.map((x) => x.topic + ' (' + Math.round(x.pct * 100) + '% right)').join(', '),
+        print: () => this.printPaper(t, { name: c.name, school: c.school }),
+        learners: ls.map((l) => {
+          const key = t.id + ':' + l.id;
+          const open = s.paperOpen === key;
+          const items = open ? ((s.paperCache || {})[t.id] || []) : [];
+          const ans = s.paperAns || {};
+          const setAns = (id, v) => this.setState((st) => ({ paperAns: Object.assign({}, st.paperAns || {}, { [id]: v }) }));
+          return {
+            name: l.name,
+            status: l.status === 'submitted' ? l.score + ' of ' + l.max + (l.mode === 'paper' ? ' (paper)' : '')
+              : l.status === 'in_progress' ? 'Sitting it on a phone (' + l.answered + ' answered)' : 'Not started',
+            canPaper: l.mode !== 'phone' && now >= opens,
+            paperLabel: open ? 'Close' : l.mode === 'paper' ? 'Add or correct paper answers' : 'Enter paper answers',
+            togglePaper: () => this.togglePaper(t.id, l.id, open),
+            paperOpen: open,
+            paperItems: items.map((it) => ({
+              n: it.position, topic: it.topic,
+              isChoice: it.kind === 'choice', isShort: it.kind !== 'choice',
+              opts: (it.options || []).map((o, k) => {
+                const L = 'ABCDEF'[k];
+                return { letter: L, style: pick(ans[it.id] === L), pick: () => setAns(it.id, ans[it.id] === L ? '' : L) };
+              }),
+              value: ans[it.id] || '',
+              onInput: (e) => setAns(it.id, e.target.value)
+            })),
+            savePaper: () => this.savePaper(t.id, l)
+          };
+        })
+      };
+    });
+  }
+
+  testVals(s) {
+    const T = window.k12tests || {};
+    const fmt = (iso) => { try { return new Date(iso).toLocaleString('en-GB', { timeZone: 'Africa/Windhoek', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (e) { return iso; } };
+    const now = new Date();
+    // learner: list of tests
+    const mine = s.myTests || [];
+    const pending = T.current ? T.current() : null;
+    const myTestRows = mine.map((t) => {
+      let line, canOpen = false, btn = '';
+      if (t.status === 'submitted' || (pending && pending.test_id === t.id && pending.submitPending)) {
+        line = t.status === 'submitted' ? 'Submitted. Thank you!' : 'Saved on this phone. It will be sent when you are online.';
+      } else if (now < new Date(t.opens_at)) {
+        line = 'Opens ' + fmt(t.opens_at) + ' \u00b7 ' + t.questions + ' questions';
+      } else if (now >= new Date(t.closes_at)) {
+        line = 'This test has closed.';
+      } else {
+        canOpen = true;
+        btn = s.testBusy ? 'Opening\u2026' : t.status === 'in_progress' ? 'Continue' : 'Start';
+        line = t.questions + ' questions \u00b7 about ' + t.minutes + ' minutes \u00b7 open until ' + fmt(t.closes_at) +
+          (t.status === 'in_progress' ? ' \u00b7 ' + t.answered + ' answered so far' : '');
+      }
+      return { title: t.title, line, canOpen, btn, open: () => this.openTest(t.id) };
+    });
+    // no connection on reload: an unfinished test kept on this phone can still be continued
+    if (pending && !pending.submitPending && !mine.some((t) => t.id === pending.test_id) && s.loggedIn) {
+      myTestRows.push({ title: pending.title, line: 'Saved on this phone \u00b7 open until ' + fmt(pending.closes_at), canOpen: now < new Date(pending.closes_at), btn: 'Continue', open: () => this.openTest(pending.test_id) });
+    }
+    // learner: sitting the test
+    const tc = s.testCur;
+    const items = (tc && tc.items) || [];
+    const idx = Math.max(0, Math.min(s.testIdx || 0, items.length - 1));
+    const it = items[idx] || {};
+    const ans = (tc && tc.answers) || {};
+    const has = (i) => String(ans[i.id] == null ? '' : ans[i.id]).trim() !== '';
+    const answered = items.filter(has).length;
+    const dirty = tc ? Object.keys(tc.dirty || {}).length : 0;
+    const online = typeof navigator === 'undefined' || navigator.onLine;
+    const optStyle = (on) => 'display:block;width:100%;text-align:left;margin:0 0 8px;padding:12px 14px;border-radius:12px;font-size:14.5px;line-height:1.5;cursor:pointer;' +
+      (on ? 'background:#EEF0FE;border:2px solid var(--primary);color:var(--ink);' : 'background:#fff;border:1px solid var(--line);color:var(--ink);');
+    const chipStyle = (k, i) => 'min-width:30px;height:30px;border-radius:8px;font-size:11.5px;font-weight:600;cursor:pointer;' +
+      (k === idx ? 'border:2px solid var(--primary);' : 'border:1px solid var(--line);') +
+      (has(i) ? 'background:var(--primary);color:#fff;' : 'background:#fff;color:var(--ink);');
+    // administrators
+    const open = s.admTestOpen || {};
+    const setOpen = (id, what) => this.setState((st) => ({ admTestOpen: Object.assign({}, st.admTestOpen || {}, { [id]: (st.admTestOpen || {})[id] === what ? null : what }) }));
+    const winIn = s.admWin || {};
+    const local = (d) => { const z = new Date(d.getTime() - d.getTimezoneOffset() * 60000); return z.toISOString().slice(0, 16); };
+    // default dates in the form: tomorrow 08:00 until 17:00 two weeks later
+    const defA = new Date(); defA.setDate(defA.getDate() + 1); defA.setHours(8, 0, 0, 0);
+    const defB = new Date(defA); defB.setDate(defB.getDate() + 14); defB.setHours(17, 0, 0, 0);
+    const admTests = (s.testsAdmin || []).map((t) => {
+      const w = Object.assign({ opens: local(defA), closes: local(defB) }, winIn[t.id] || {});
+      const setW = (k) => (e) => { const v = e.target.value; this.setState((st) => ({ admWin: Object.assign({}, st.admWin || {}, { [t.id]: Object.assign({}, (st.admWin || {})[t.id] || {}, { [k]: v }) }) })); };
+      const pv = (s.admPreview || {})[t.id] || [];
+      const sc = (s.admScores || {})[t.id] || [];
+      const approved = t.status === 'approved';
+      return {
+        title: t.title + ' (Version ' + t.form + ')',
+        statusLabel: approved ? 'Approved' : 'Draft',
+        statusStyle: 'font-size:11px;font-weight:700;border-radius:6px;padding:2px 8px;' + (approved ? 'background:#E7F6EE;color:#1F6B43;' : 'background:#FFF6DC;color:#8A6400;'),
+        line: 'Grade ' + t.grade + ' \u00b7 ' + t.questions + ' questions on ' + t.topics + ' topics \u00b7 ' +
+          (t.windows ? 'dates set for ' + t.windows + (t.windows === 1 ? ' school' : ' schools') + (t.open_now ? ', open now' : '') : 'no test dates yet') +
+          ' \u00b7 ' + t.submitted + ' submitted',
+        previewLabel: open[t.id] === 'preview' ? 'Hide questions' : 'Questions and answers',
+        togglePreview: async () => {
+          if (!pv.length && open[t.id] !== 'preview') {
+            const r = await window.k12tests.preview(t.id);
+            if (!r.ok) return this.setState({ pilotErr: r.error, pilotMsg: '' });
+            this.setState((st) => ({ admPreview: Object.assign({}, st.admPreview || {}, { [t.id]: r.data || [] }) }));
+          }
+          setOpen(t.id, 'preview');
+        },
+        previewOpen: open[t.id] === 'preview',
+        previewItems: pv.map((q) => ({
+          n: q.position, topic: q.topic + (q.sub_topic ? ' \u00b7 ' + q.sub_topic : ''), question: q.question,
+          hasOpts: !!q.options, opts: (q.options || []).map((o, k) => 'ABCDEF'[k] + '. ' + o).join('   '),
+          answer: q.answer + ((q.accepted || []).length ? ' (also accepted: ' + q.accepted.join(', ') + ')' : '')
+        })),
+        canApprove: !approved,
+        approve: () => this.pilotAct(window.k12tests.approve(t.id), t.title + ' is approved. You can now set its test dates.'),
+        canOpen: approved,
+        toggleWindow: () => setOpen(t.id, 'window'),
+        windowOpen: open[t.id] === 'window',
+        opensIn: w.opens || '', closesIn: w.closes || '',
+        onOpens: setW('opens'), onCloses: setW('closes'),
+        saveWindow: () => {
+          if (!w.opens || !w.closes) return this.setState({ pilotErr: 'Choose when the test opens and when it closes.', pilotMsg: '' });
+          this.pilotAct(window.k12tests.setWindow(t.id, null, new Date(w.opens).toISOString(), new Date(w.closes).toISOString()),
+            (d) => t.title + ' will be open at ' + d.schools + (d.schools === 1 ? ' pilot school' : ' pilot schools') + ' from ' + fmt(new Date(w.opens).toISOString()) + ' to ' + fmt(new Date(w.closes).toISOString()) + '.')
+            .then((done) => { if (done) setOpen(t.id, 'window'); });
+        },
+        canScores: approved && t.submitted > 0,
+        toggleScores: async () => {
+          if (open[t.id] !== 'scores') {
+            const r = await window.k12tests.scores(t.id);
+            if (!r.ok) return this.setState({ pilotErr: r.error, pilotMsg: '' });
+            this.setState((st) => ({ admScores: Object.assign({}, st.admScores || {}, { [t.id]: r.data || [] }) }));
+          }
+          setOpen(t.id, 'scores');
+        },
+        scoresOpen: open[t.id] === 'scores',
+        scoresLine: sc.length + (sc.length === 1 ? ' learner' : ' learners') + ' \u00b7 pilot IDs only, no names or phone numbers',
+        scoreRows: sc.map((r) => ({ pseudo: r.pseudo_id, region: r.region || '', school: r.school, cls: r.class, mode: r.mode === 'paper' ? 'Paper' : 'Phone', score: r.score + ' of ' + r.max })),
+        downloadCsv: () => {
+          const topics = Array.from(new Set([].concat(...sc.map((r) => Object.keys(r.topics || {}))))).sort();
+          const q = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+          const rows = [['pilot_id', 'region', 'school', 'setting', 'class', 'sat_on', 'score', 'out_of', 'submitted_at'].concat(topics).map(q).join(',')]
+            .concat(sc.map((r) => [r.pseudo_id, r.region, r.school, r.setting, r.class, r.mode, r.score, r.max, r.submitted_at].concat(topics.map((tp) => (r.topics || {})[tp] || '')).map(q).join(',')));
+          const blob = new Blob([rows.join('\n') + '\n'], { type: 'text/csv' });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob); a.download = 'k12plus-pilot-scores-' + t.code + '.csv';
+          document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+        }
+      };
+    });
+    return {
+      showMyTests: !!s.loggedIn && (s.role || 'Learner') === 'Learner' && (myTestRows.length > 0 || !!s.myTestMsg),
+      myTestRows,
+      hasMyTestMsg: !!s.myTestMsg, myTestMsg: s.myTestMsg || '',
+      myTestMsgStyle: 'color:' + (s.myTestMsgBad ? '#B42318' : '#1F6B43') + ';',
+      isTestView: s.view === 'test' && !!tc && !!s.loggedIn,
+      tvTitle: (tc && tc.title) || '',
+      tvNote: tc && tc.purpose === 'endline'
+        ? 'This test shows how much you have learned this year. Work on your own and do your best. The AI Math Agent takes a break until you submit.'
+        : 'This test shows what you already know at the start of the year. It is completely fine not to know many answers yet: many topics are still to come. Work on your own. The AI Math Agent takes a break until you submit.',
+      tvProgress: 'Question ' + (idx + 1) + ' of ' + items.length + ' \u00b7 ' + answered + ' answered',
+      tvSaveLine: dirty === 0 ? 'All answers saved' : online ? 'Saving\u2026' : 'Saved on this phone, sent when you are online',
+      tvSaveStyle: 'color:' + (dirty === 0 ? '#1F6B43' : online ? 'var(--muted)' : '#8A6400') + ';',
+      tvHasErr: !!s.testErr, tvErr: s.testErr || '',
+      tvShowQ: !s.testReview && items.length > 0, tvShowReview: !!s.testReview,
+      tvNum: 'Question ' + (idx + 1), tvTopic: it.topic || '', tvQuestion: it.question || '',
+      tvIsChoice: it.kind === 'choice', tvIsShort: it.kind === 'short',
+      tvOptions: (it.options || []).map((o, k) => {
+        const L = 'ABCDEF'[k];
+        const on = ans[it.id] === L;
+        return { letter: L, text: o, style: optStyle(on), pick: () => this.testAnswer(it.id, on ? '' : L) };
+      }),
+      tvValue: ans[it.id] || '',
+      tvOnInput: (e) => this.testAnswer(it.id, e.target.value),
+      tvPrev: () => { if (idx > 0) this.testGo(idx - 1); },
+      tvPrevStyle: 'border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:8px 16px;font-size:12.5px;font-weight:600;cursor:pointer;' + (idx === 0 ? 'opacity:.4;' : ''),
+      tvNext: () => (idx < items.length - 1 ? this.testGo(idx + 1) : this.setState({ testReview: true })),
+      tvNextLabel: idx < items.length - 1 ? 'Next \u2192' : 'Finish',
+      tvChips: items.map((i, k) => ({ n: k + 1, go: () => this.testGo(k), style: chipStyle(k, i) })),
+      tvReviewLine: 'You answered ' + answered + ' of ' + items.length + ' questions.' +
+        (answered < items.length ? ' A question you leave blank simply counts as not answered.' : '') +
+        ' After you submit, you cannot change your answers.',
+      tvBackToQ: () => this.setState({ testReview: false }),
+      tvSubmit: () => this.testSubmit(),
+      tvSubmitLabel: s.testBusy ? 'Submitting\u2026' : 'Submit my test',
+      tvLeave: () => { try { T.sync(); } catch (e) {} this.setState({ view: 'dashboard', testCur: null, testReview: false }, () => this.loadMyTests()); },
+      admTests
+    };
   }
 
   pilotVals(s) {
@@ -2307,6 +2769,7 @@ class Component extends DCLogic {
         where: [c.school, c.region, settingName(c.setting)].filter(Boolean).join(' · '),
         countLabel: plural(ls.length, 'learner', 'learners') + ' \u00b7 ' + ls.filter((l) => l.taking_part).length + ' taking part',
         empty: !ls.length,
+        tests: this.classTestRows(s, c),
         ...(() => {
           const sum = ((s.pilotSummaries || []).find((x) => x.class_id === c.id) || {}).summaries || [];
           const wk = (x) => 'Week of ' + fmtDate(String(x.week_start).slice(0, 10));
@@ -4014,6 +4477,7 @@ class Component extends DCLogic {
       isDashPrin: !lockNoun && s.view === 'dashboard' && (s.role === 'Principal & HOD' || s.role === 'Principal'),
       isDashMin: !lockNoun && s.view === 'dashboard' && s.role === 'Ministry',
       ...this.pilotVals(s),
+      ...this.testVals(s),
       isLab: s.view === 'lab', isTimetable: !lockNoun && s.view === 'timetable', isCalendar: !lockNoun && s.view === 'calendar', isQuiz: !lockNoun && s.view === 'quiz', isSyllabus: !lockNoun && s.view === 'syllabus',
       goDash: () => this.setState({ view: 'dashboard' }),
       goChat: () => this.setState({ view: 'chat' }),

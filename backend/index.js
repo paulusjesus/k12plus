@@ -119,6 +119,27 @@ async function logAgent(entry) {
 
 const parseJson = (t) => JSON.parse(t.replace(/^```json?\s*|```\s*$/g, ''));
 
+// Pilot tests: while a learner taking part in the pilot is sitting a test on
+// their phone, the agent does not help them. The app sends the learner's own
+// sign-in token only for pilot learners; the database decides. If the check
+// cannot be made (no token, network trouble), the agent works as normal, so
+// learners outside the pilot are never affected.
+async function testLocked(token) {
+  if (!token || !process.env.SUPABASE_URL) return false;
+  const key = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_KEY;
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 3000);
+  try {
+    const r = await fetch(`${process.env.SUPABASE_URL}/rest/v1/rpc/pilot_my_test_lock`, {
+      method: 'POST', signal: ctl.signal,
+      headers: { 'Content-Type': 'application/json', apikey: key, Authorization: `Bearer ${token}` },
+      body: '{}',
+    });
+    return r.ok && (await r.json()) === true;
+  } catch { return false; } finally { clearTimeout(timer); }
+}
+const TEST_LOCK_REPLY = 'You are in the middle of a test, so the agent is taking a break until you submit it. Do your best on your own; there is no need to worry about marks. I will be right here after the test.';
+
 functions.http('aim', async (req, res) => {
   var _origins = ['https://k12plus.app','https://www.k12plus.app','https://k12edu.io','https://www.k12edu.io'];
   var _o = (req.headers.origin || '');
@@ -136,6 +157,10 @@ functions.http('aim', async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
   if (!process.env.ANTHROPIC_API_KEY) {
     return res.status(503).json({ error: 'tutor not configured', detail: 'ANTHROPIC_API_KEY is not set' });
+  }
+
+  if (req.body && req.body.k12token && await testLocked(String(req.body.k12token))) {
+    return res.status(423).json({ error: 'test_in_progress', reply: TEST_LOCK_REPLY });
   }
 
   const {

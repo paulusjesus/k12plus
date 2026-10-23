@@ -17,6 +17,9 @@ Each pilot item has tests that prove its "Done when" check from the Pilot Readin
 | `../signout.ui.test.js` | Sign out removes the session from the phone and cancels it on the server | as for `item1.ui.test.js` |
 | `item4.test.js` | Item 4: learning record (consent first, no duplicates, bad records ignored) and three Mondays of summaries with exact figures, logged without names, withdrawal | `node item4.test.js` |
 | `item4.ui.test.js` | Activity from the real chat box, offline then synced once, nothing for unconsented learners, sign-out clears the queue, the teacher's summary card | as for `item1.ui.test.js` |
+| `item3.test.js` | Item 3 tests: answers never leave the server, drafts must be approved, consent and grade first, two sittings, fair marking, a full class of 30 (20 on phones, 10 on paper), every score in one place with pilot IDs only, closing times, withdrawal. Set `K12_TEST_BANK` to the generated `seed.sql` to also check the real question bank (kept out of this public repository) | `node item3.test.js` |
+| `aim-lock.test.ts` | The agent stays quiet while a pilot learner sits a test; nobody else is affected, and an error never locks anyone out | start `aim-lock.mock.ts` (port 9994) and the `aim` function with `SUPABASE_URL=http://localhost:9994 SUPABASE_ANON_KEY=anon ANTHROPIC_API_KEY=dummy`, then `deno run -A aim-lock.test.ts` |
+| `item3.ui.test.js` | Test screens end to end: approval and dates, sitting the test on a 390 px phone with and without signal, the agent lock, printing the paper version, entering paper answers, the score list and CSV | as for `item1.ui.test.js` |
 | `item1.ui.test.js` | The pilot screens in app.html in headless Chromium, with every click running the real SQL in PGlite | serve the site on 127.0.0.1:8765, set `VENDOR_DIR` to a folder with React and Babel in `node_modules`, then `node item1.ui.test.js` |
 
 This folder is not served by the website (`tests/.htaccess`).
