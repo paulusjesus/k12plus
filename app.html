@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=15"></script>
+<script src="./k12plus-bridge.js?v=16"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
 <script src="./k12plus-arcade.js?v=1"></script>
 <script src="./k12plus-scenes.js?v=1"></script>
@@ -1310,6 +1310,16 @@ button { font-family:'Poppins',sans-serif; }
               </div>
             </sc-for>
           </div>
+          <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-top:16px;">
+            <h2 style="font-size:14.5px; font-weight:600; margin:0;">Export for the independent evaluator</h2>
+            <p style="font-size:12.5px; line-height:1.6; color:var(--muted); margin:4px 0 10px;">One zip file: learners, test scores (by question), weekly use, schools and monthly costs, with a README and a data dictionary that explains every field. Pilot IDs and school codes only: no names, phone numbers or free text, and small groups are hidden. Leave the dates empty to export everything.</p>
+            <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; font-size:12px; color:var(--muted);">
+              <label>From<br><input type="date" value="{{ exFrom }}" onChange="{{ exOnFrom }}" style="border:1px solid var(--line); border-radius:8px; padding:7px 10px; font-size:12.5px; outline:none;"></label>
+              <label>To<br><input type="date" value="{{ exTo }}" onChange="{{ exOnTo }}" style="border:1px solid var(--line); border-radius:8px; padding:7px 10px; font-size:12.5px; outline:none;"></label>
+              <button onClick="{{ exRun }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">{{ exLabel }}</button>
+              <button onClick="{{ exKey }}" style="border:none; background:none; color:var(--primary); cursor:pointer; font-size:12px; text-decoration:underline;">School code key (keep this private)</button>
+            </div>
+          </div>
         </sc-if>
 
         <sc-if value="{{ repShow }}" hint-placeholder-val="{{ false }}">
@@ -2451,6 +2461,38 @@ class Component extends DCLogic {
     if (!r.ok) return this.setState({ joinBusy: false, joinErr: r.error });
     this.setState({ joinBusy: false, joinCode: '' });
     this.loadPilotRole();
+  }
+
+  // ---------- 2027 pilot: export for the independent evaluator ----------
+  exportVals(s) {
+    const P = window.k12pilot || {};
+    const save = (blob, name) => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+    };
+    return {
+      exFrom: s.exFrom || '', exTo: s.exTo || '',
+      exOnFrom: (e) => this.setState({ exFrom: e.target.value }),
+      exOnTo: (e) => this.setState({ exTo: e.target.value }),
+      exLabel: s.exBusy ? 'Preparing the export\u2026' : 'Download the export (zip)',
+      exRun: async () => {
+        if (s.exBusy) return;
+        this.setState({ exBusy: true, pilotErr: '', pilotMsg: '' });
+        const r = await P.evaluatorExport(s.exFrom || null, s.exTo || null);
+        if (!r.ok) return this.setState({ exBusy: false, pilotErr: r.error });
+        save(r.data.blob, r.data.name);
+        this.setState({ exBusy: false, pilotMsg: 'Export ready: ' + r.data.learners + (r.data.learners === 1 ? ' learner' : ' learners') + ', ' + r.data.files.length + ' files (' + r.data.files.join(', ') + ').' });
+      },
+      exKey: async () => {
+        const r = await P.schoolKey();
+        if (!r.ok) return this.setState({ pilotErr: r.error, pilotMsg: '' });
+        const q = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+        const lines = ['school_code,school,region,setting'].concat((r.data || []).map((x) => [x.school_code, x.school, x.region, x.setting].map(q).join(',')));
+        save(new Blob(['\ufeff' + lines.join('\r\n') + '\r\n'], { type: 'text/csv' }), 'k12plus-school-code-key-PRIVATE.csv');
+        this.setState({ pilotErr: '', pilotMsg: 'School code key downloaded. Keep it with K-12 EdTech; never send it with the export.' });
+      }
+    };
   }
 
   // ---------- 2027 pilot: teachers' monthly review of the agent's answers ----------
@@ -4832,6 +4874,7 @@ class Component extends DCLogic {
       ...this.testVals(s),
       ...this.repVals(s),
       ...this.reviewVals(s),
+      ...this.exportVals(s),
       isLab: s.view === 'lab', isTimetable: !lockNoun && s.view === 'timetable', isCalendar: !lockNoun && s.view === 'calendar', isQuiz: !lockNoun && s.view === 'quiz', isSyllabus: !lockNoun && s.view === 'syllabus',
       goDash: () => this.setState({ view: 'dashboard' }),
       goChat: () => this.setState({ view: 'chat' }),

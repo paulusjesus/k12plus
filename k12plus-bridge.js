@@ -541,6 +541,99 @@
       return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
     }
   }
+  // ---- CSV and a small ZIP writer (files stored without compression) for the evaluator export ----
+  function csvCell(v) {
+    if (v === null || v === undefined) return '';
+    if (typeof v === 'number') return String(v);
+    var t = String(v);
+    return /[",\n\r]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t;
+  }
+  function toCsv(columns, rows) {
+    return '\ufeff' + [columns.map(csvCell).join(',')].concat((rows || []).map(function (r) { return r.map(csvCell).join(','); })).join('\r\n') + '\r\n';
+  }
+  var CRC_T = null;
+  function crc32(bytes) {
+    if (!CRC_T) {
+      CRC_T = [];
+      for (var n = 0; n < 256; n++) { var c = n; for (var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; CRC_T[n] = c >>> 0; }
+    }
+    var crc = 0xFFFFFFFF;
+    for (var i = 0; i < bytes.length; i++) crc = CRC_T[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
+    return (crc ^ 0xFFFFFFFF) >>> 0;
+  }
+  function makeZip(files) {
+    var enc = new TextEncoder();
+    var parts = [], central = [], offset = 0;
+    var now = new Date();
+    var dtime = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1);
+    var ddate = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+    files.forEach(function (f) {
+      var name = enc.encode(f.name), data = enc.encode(f.text), crc = crc32(data);
+      var h = new DataView(new ArrayBuffer(30));
+      h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(8, 0, true);
+      h.setUint16(10, dtime, true); h.setUint16(12, ddate, true); h.setUint32(14, crc, true);
+      h.setUint32(18, data.length, true); h.setUint32(22, data.length, true); h.setUint16(26, name.length, true); h.setUint16(28, 0, true);
+      parts.push(new Uint8Array(h.buffer), name, data);
+      var c = new DataView(new ArrayBuffer(46));
+      c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x0800, true); c.setUint16(10, 0, true);
+      c.setUint16(12, dtime, true); c.setUint16(14, ddate, true); c.setUint32(16, crc, true);
+      c.setUint32(20, data.length, true); c.setUint32(24, data.length, true); c.setUint16(28, name.length, true);
+      c.setUint16(30, 0, true); c.setUint16(32, 0, true); c.setUint16(34, 0, true); c.setUint16(36, 0, true); c.setUint32(38, 0, true); c.setUint32(42, offset, true);
+      central.push(new Uint8Array(c.buffer), name);
+      offset += 30 + name.length + data.length;
+    });
+    var csize = central.reduce(function (a, b) { return a + b.length; }, 0);
+    var e = new DataView(new ArrayBuffer(22));
+    e.setUint32(0, 0x06054b50, true); e.setUint16(4, 0, true); e.setUint16(6, 0, true);
+    e.setUint16(8, files.length, true); e.setUint16(10, files.length, true); e.setUint32(12, csize, true); e.setUint32(16, offset, true); e.setUint16(20, 0, true);
+    return new Blob(parts.concat(central, [new Uint8Array(e.buffer)]), { type: 'application/zip' });
+  }
+  function exportReadme(d) {
+    var r = d.rates || {};
+    var money = function (n) { return 'US$' + Number(n || 0).toFixed(2); };
+    return [
+      'K12Plus 2027 pilot: data export for the independent evaluator',
+      '',
+      'Exported on ' + String(d.generated_at).slice(0, 10) + ' by K-Twelve Educational Technologies (K-12 EdTech).',
+      'Period: ' + d.from + ' to ' + d.to + '. Learners included: ' + d.learners + '.',
+      '',
+      'WHAT IS IN THIS EXPORT',
+      '* learners.csv: one row for each learner taking part in the pilot.',
+      '* test_scores.csv: one row for each submitted start of the year (baseline) or end of the year (endline) test.',
+      '* test_items.csv: one row for each learner, test and question: answered or not, right or wrong.',
+      '* usage_weekly.csv: one row for each learner and week: activity, sessions, minutes, questions, practice, topics, USSD, data and text messages.',
+      '* schools.csv: one row for each pilot school, by code.',
+      '* costs_monthly.csv: data, text messages, USSD sessions and costs for each school and month, and for the whole pilot (ALL).',
+      '* data_dictionary.csv: every field in every file, with its type and meaning.',
+      '',
+      'HOW THE FILES LINK',
+      '* pilot_id links learners.csv, test_scores.csv, test_items.csv and usage_weekly.csv.',
+      '* school_code links learners.csv, schools.csv and costs_monthly.csv.',
+      '* test_code and item link test_scores.csv and test_items.csv. Question n of Version A and question n of Version B test the same topic.',
+      '',
+      'PRIVACY',
+      '* Only learners whose school and parent or guardian gave consent, and have not withdrawn it, are included. When consent is withdrawn, the learner\'s pilot data is deleted and does not appear in later exports.',
+      '* There are no names, phone numbers, email addresses, K12Plus IDs, account IDs, birth dates or free text (no questions, answers or comments).',
+      '* Schools appear as codes. K-12 EdTech keeps the key to the codes separately and does not share it.',
+      '* Where fewer than 5 learners take part in a grade at a school, their region, setting, school and class codes are left out (small_group = 1). In schools.csv and costs_monthly.csv, figures that describe between 1 and 4 learners are left blank.',
+      '* Please do not try to identify any learner, and do not join this data with other data that could identify learners.',
+      '',
+      'MEASURES (more in data_dictionary.csv)',
+      '* Times are Namibian time (UTC+2). Weeks start on Monday.',
+      '* A new session starts after 30 minutes without activity.',
+      '* Minutes count active use only: while the app is open and the learner has touched, typed or scrolled in the last minute.',
+      '* Data is measured in the app on the learner\'s phone. It covers K12Plus only and can be slightly lower than the mobile network\'s own count.',
+      '* Test questions are marked automatically, 1 mark each. Paper tests are typed in by the teacher and marked the same way.',
+      '',
+      'PRICES USED FOR COSTS (US dollars)',
+      '* Data: ' + money(r.data_usd_per_gb) + ' per GB. Text message: ' + money(r.sms_usd) + ' (or the provider\'s actual price). USSD session: ' + money(r.ussd_session_usd) + '.',
+      '* Budget: ' + money(r.budget_per_learner_usd) + ' per learner per month.',
+      '* The prices in use on the day of the export are applied to the whole period.',
+      ''
+    ].join('\r\n');
+  }
+  window.k12zip = { makeZip: makeZip, toCsv: toCsv };
+
   window.k12pilot = {
     whoami: function () { return pilotRpc('pilot_whoami'); },
     overview: function () { return pilotRpc('pilot_overview'); },
@@ -575,6 +668,21 @@
     addCostEntry: function (p) { return pilotRpc('pilot_add_cost_entry', { p: p }); },
     costEntries: function (from, to) { return pilotRpc('pilot_cost_entries', { p_from: from, p_to: to }); },
     removeCostEntry: function (id) { return pilotRpc('pilot_remove_cost_entry', { p_id: id }); },
+    // export for the independent evaluator (item 10): a zip of CSV files with a README and data dictionary
+    evaluatorExport: async function (from, to) {
+      var r = await pilotRpc('pilot_evaluator_export', { p_from: from || null, p_to: to || null });
+      if (!r.ok) return r;
+      var d = r.data;
+      var files = [{ name: 'README.txt', text: exportReadme(d) },
+                   { name: 'data_dictionary.csv', text: toCsv(['file', 'field', 'type', 'description'], d.dictionary || []) }];
+      var order = ['learners.csv', 'test_scores.csv', 'test_items.csv', 'usage_weekly.csv', 'schools.csv', 'costs_monthly.csv'];
+      order.concat(Object.keys(d.files).filter(function (n) { return order.indexOf(n) < 0; })).forEach(function (n) {
+        if (d.files[n]) files.push({ name: n, text: toCsv(d.files[n].columns, d.files[n].rows) });
+      });
+      var name = 'k12plus-pilot-export-' + d.from + '-to-' + d.to + '.zip';
+      return { ok: true, data: { blob: makeZip(files), name: name, learners: d.learners, files: files.map(function (f) { return f.name; }) } };
+    },
+    schoolKey: function () { return pilotRpc('pilot_school_key'); },
     // teachers' monthly review of the agent's replies (item 9)
     myReview: function () { return pilotRpc('pilot_my_review'); },
     startReview: function (batchId) { return pilotRpc('pilot_start_review', { p_batch: batchId }); },
