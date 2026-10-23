@@ -4,6 +4,19 @@
  * - Offline queue: questions asked offline are answered on reconnect
  * - PWA service worker registration
  */
+// The four AI agents, STEM subjects first. Users always see "agent", never "tutor".
+window.k12agents = [
+  { subject: 'Mathematics', name: 'AI Math Agent', short: 'AIM', ussd: '*141*12*1#' },
+  { subject: 'Physical Science', name: 'AI Physical Science Agent', ussd: '*141*12*2#' },
+  { subject: 'Biology', name: 'AI Biology Agent', ussd: '*141*12*3#' },
+  { subject: 'Business Studies', name: 'AI Business Studies Agent', ussd: '*141*12*4#' }
+];
+window.k12agentName = function (subject) {
+  for (var i = 0; i < window.k12agents.length; i++) {
+    if (window.k12agents[i].subject === subject) return window.k12agents[i].name;
+  }
+  return 'AI Agent';
+};
 (function () {
   // ---- Data used by the app (2027 pilot) ----
   // Counts the bytes this app downloads and sends on the phone: its own pages and
@@ -87,14 +100,14 @@
     } catch (e) {}
     if (!navigator.onLine) {
       if (hasImage) {
-        return 'You are offline right now, and pictures need a connection to reach the tutor. Please try sending your image again once you are back online.';
+        return 'You are offline right now, and pictures need a connection to reach the agent. Please try sending your image again once you are back online.';
       }
       try {
         var q = JSON.parse(localStorage.getItem('k12plus-outbox') || '[]');
         q.push({ payload: payload, at: Date.now() });
         localStorage.setItem('k12plus-outbox', JSON.stringify(q.slice(-20)));
       } catch (e) {}
-      return 'You are offline right now. Your question has been saved and the tutor will answer it the moment you reconnect. Meanwhile, your saved chats and quizzes still work.';
+      return 'You are offline right now. Your question has been saved and the agent will answer it the moment you reconnect. Meanwhile, your saved chats and quizzes still work.';
     }
     var res = await fetch(PROXY, {
       method: 'POST',
@@ -107,12 +120,12 @@
     if (!res.ok) {
       var detail = (data && (data.detail || data.error)) || '';
       if (res.status === 503 && /not configured/i.test(String(data && data.error))) {
-        return 'The tutor is getting a small upgrade and will be back very soon 🛠️ Your question is not lost, please send it again in a little while.';
+        return 'The agent is getting a small upgrade and will be back very soon 🛠️ Your question is not lost, please send it again in a little while.';
       }
       if (res.status === 429 || String(detail).indexOf('429') > -1 || /quota/i.test(String(detail))) {
-        return 'Wow, a lot of learners are studying right now and the tutor is at full capacity 😅 Please try again in a little while. Your question is not lost, just send it again later.';
+        return 'Wow, a lot of learners are studying right now and the agents are at full capacity 😅 Please try again in a little while. Your question is not lost, just send it again later.';
       }
-      throw new Error('tutor unavailable (' + res.status + ')');
+      throw new Error('agent unavailable (' + res.status + ')');
     }
     return (data && data.reply) || 'Sorry, I could not answer that. Please try again.';
   };

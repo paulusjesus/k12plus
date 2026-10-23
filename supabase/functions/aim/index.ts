@@ -192,7 +192,7 @@ functions.http('aim', async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(204).send('');
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
   if (!process.env.ANTHROPIC_API_KEY) {
-    return res.status(503).json({ error: 'tutor not configured', detail: 'ANTHROPIC_API_KEY is not set' });
+    return res.status(503).json({ error: 'agent not configured', detail: 'ANTHROPIC_API_KEY is not set' });
   }
 
   const pilot = req.body && req.body.k12token ? await pilotContext(String(req.body.k12token)) : {};
@@ -212,7 +212,7 @@ functions.http('aim', async (req, res) => {
 
   try {
     if (action === 'tutor') {
-      const sys = `You are Kai, the AI Math Tutor (AIM) for Namibian learners, built by K-Twelve Educational Technologies.
+      const sys = `You are Kai, the AI Math Agent (AIM) for Namibian learners, built by K-Twelve Educational Technologies.
 You teach strictly according to the Namibian national curriculum set by NIED.
 Current learner: Grade ${grade}, ${sylName}.
 ${topic ? `Current topic: ${topic}\nOfficial syllabus objectives (teach ONLY to this depth):\n${obj}` : ''}
@@ -287,7 +287,7 @@ Return STRICT JSON: {"headline":"","highlights":[""],"risks":[""],"recommendatio
       // K12Plus tutor chat: the frontend supplies the full system prompt
       // (subject focus, curriculum context, tone). Still logged either way.
       const sys = clip(req.body.system, 4000) ||
-        'You are the k12plus tutor for learners in Namibia and South Africa. Be a patient, warm teacher.';
+        'You are a k12plus AI agent for learners in Namibia and South Africa. Be a patient, warm teacher.';
       const out = await callClaude(sys, (messages || []).slice(-16), 4096);
       await keepForReview(pilot, fb, (messages || []).filter((m) => m.role !== 'assistant').slice(-1)[0]?.content, out.text, out.model, 'chat');
       await logAgent({
@@ -303,7 +303,7 @@ Return STRICT JSON: {"headline":"","highlights":[""],"risks":[""],"recommendatio
       // K12Plus tutor chat with a photographed exercise book page attached.
       if (!image || !image.data) return res.status(400).json({ error: 'image required' });
       const sys = clip(req.body.system, 4000) ||
-        'You are the k12plus tutor for learners in Namibia and South Africa. Be a patient, warm teacher.';
+        'You are a k12plus AI agent for learners in Namibia and South Africa. Be a patient, warm teacher.';
       const lastUserText = (messages || []).slice(-1)[0]?.content || 'Please help me with this.';
       const out = await callClaudeWithImage(sys, lastUserText, image.mime, image.data, 4096);
       await keepForReview(pilot, fb, lastUserText + ' (with a photo, not kept)', out.text, out.model, 'photo');

@@ -1,4 +1,4 @@
--- AIM (AI Math Tutor) - Supabase schema
+-- AIM (AI Math Agent) - Supabase schema
 -- Paste this entire file into Supabase Dashboard -> SQL Editor -> Run
 -- Version 1.0 - August 2026
 

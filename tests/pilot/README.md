@@ -26,6 +26,7 @@ Each pilot item has tests that prove its "Done when" check from the Pilot Readin
 | `item9.ui.test.js` | Review end to end: a chat reply kept for review, samples prepared, a teacher reviewing ten answers on a 390 px phone (timed), results by verdict, the CSV | as for `item1.ui.test.js` |
 | `item10.test.js` | Item 10: every column of every file is in the data dictionary and nothing else is; no names, phone numbers, K12Plus IDs, emails, account IDs, school names, class join codes or free text; small groups hidden (every described group has at least 5 learners); weeks not times; school codes stable and their key admin-only; figures checked; withdrawal | `node item10.test.js` |
 | `item10.ui.test.js` | The export downloaded from the Pilot page, opened with Python's zipfile (valid, eight files, README, dictionary, Excel-friendly CSV), and the private school code key | as for `item1.ui.test.js` |
+| `item15.ui.test.js` | Item 15: every public page and the app say "agent" and "learners" (what a visitor sees, plus a scan of messages shown later), the four agent names with STEM first, Grades 8-12 on the homepage and USSD screen, the reworded promises, no small uppercase titles, and the backend named AI Math Agent | as for `item1.ui.test.js` |
 | `item1.ui.test.js` | The pilot screens in app.html in headless Chromium, with every click running the real SQL in PGlite | serve the site on 127.0.0.1:8765, set `VENDOR_DIR` to a folder with React and Babel in `node_modules`, then `node item1.ui.test.js` |
 
 This folder is not served by the website (`tests/.htaccess`).

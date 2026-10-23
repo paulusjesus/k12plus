@@ -1,7 +1,7 @@
 {
-  "name": "K12Plus - AI tutor for Grades 8-12",
+  "name": "K12Plus - AI agents for Grades 8-12",
   "short_name": "K12Plus",
-  "description": "AI tutoring for Grade 8-12 learners in Namibia and Grade 11-12 learners in South Africa. Mathematics, Biology, Physical Science and Business Studies. Works offline.",
+  "description": "AI learning agents for Grade 8-12 learners in Namibia and Grade 11-12 learners in South Africa. Mathematics, Physical Science, Biology and Business Studies. Works offline.",
   "theme_color": "#7C3AED",
   "background_color": "#FCFBF8",
   "display": "standalone",

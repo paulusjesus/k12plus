@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=16"></script>
+<script src="./k12plus-bridge.js?v=17"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
 <script src="./k12plus-arcade.js?v=1"></script>
 <script src="./k12plus-scenes.js?v=1"></script>
@@ -202,7 +202,7 @@ button { font-family:'Poppins',sans-serif; }
       <sc-if value="{{ notChat }}" hint-placeholder-val="{{ false }}">
         <button onClick="{{ goChat }}" style="display:flex; align-items:center; gap:8px; border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:9px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="background:var(--chip);">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-9 8.4 8.5 8.5 0 01-3.4-.7L3 21l1.8-5.6a8.38 8.38 0 01-.8-3.9 8.5 8.5 0 018.5-8.5 8.38 8.38 0 018.5 8.5z"></path></svg>
-          <span class="k12hide-sm">Back to tutor</span>
+          <span class="k12hide-sm">Back to the agent</span>
         </button>
       </sc-if>
       <sc-if value="{{ isGuest }}" hint-placeholder-val="{{ false }}">
@@ -362,7 +362,7 @@ button { font-family:'Poppins',sans-serif; }
           </div>
         </sc-if>
         <sc-if value="{{ isGuest }}" hint-placeholder-val="{{ false }}">
-          <p style="font-size:11px; color:var(--muted); margin:22px 0 0; text-align:center;">The k12plus tutor is AI. By using it you agree to our <a href="#">Terms of Use</a> &amp; <a href="#">Privacy Policy</a>.</p>
+          <p style="font-size:11px; color:var(--muted); margin:22px 0 0; text-align:center;">The k12plus agents are AI. By using them you agree to our <a href="#">Terms of Use</a> &amp; <a href="#">Privacy Policy</a>.</p>
         </sc-if>
       </div>
     </sc-if>
@@ -2219,7 +2219,7 @@ button { font-family:'Poppins',sans-serif; }
           <span style="position:absolute; bottom:0; right:0; width:10px; height:10px; border-radius:50%; background:var(--green); border:2px solid #fff;"></span>
         </span>
         <span style="flex:1;">
-          <span style="display:block; font-size:14px; font-weight:700;">Tutor &middot; Mathematics</span>
+          <span style="display:block; font-size:14px; font-weight:700;">AI Math Agent</span>
           <span style="display:block; font-size:11.5px; color:var(--green); font-weight:500;">Online &middot; replies in seconds</span>
         </span>
         <button onClick="{{ closeChat }}" title="Close" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:9px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer;" style-hover="background:var(--chip);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
@@ -2259,14 +2259,14 @@ button { font-family:'Poppins',sans-serif; }
           <button onClick="{{ micClick }}" title="{{ micTitle }}" style="{{ micBtnStyle }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="2" width="6" height="12" rx="3"></rect><path d="M5 10v2a7 7 0 0014 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line></svg></button>
           <button onClick="{{ openPenModal }}" title="Write with a pen" style="border:none; background:none; color:var(--muted); cursor:pointer; padding:5px 2px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg></button>
           <button onClick="{{ toggleSymbols }}" title="Equations and symbols" style="{{ symBtnStyle }}" style-hover="border-color:var(--primary);">{{ symShort }}</button>
-          <textarea rows="1" value="{{ chatInput }}" onChange="{{ onChatInput }}" onKeyDown="{{ onChatKey }}" placeholder="Ask your tutor anything…" style="flex:1; border:1px solid var(--line); border-radius:11px; padding:11px 13px; font-size:13.5px; font-family:'Poppins',sans-serif; outline:none; resize:none; background:var(--chip); color:var(--ink);"></textarea>
+          <textarea rows="1" value="{{ chatInput }}" onChange="{{ onChatInput }}" onKeyDown="{{ onChatKey }}" placeholder="Ask your AI agent anything…" style="flex:1; border:1px solid var(--line); border-radius:11px; padding:11px 13px; font-size:13.5px; font-family:'Poppins',sans-serif; outline:none; resize:none; background:var(--chip); color:var(--ink);"></textarea>
           <button onClick="{{ sendChat }}" title="Send" style="width:42px; height:42px; flex-shrink:0; border-radius:11px; border:none; background:var(--primary); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;" style-hover="opacity:.85;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
         </div>
       </div>
     </div>
   </sc-if>
   <sc-if value="{{ chatClosed }}" hint-placeholder-val="{{ true }}">
-    <button onClick="{{ openChat }}" title="Chat with your tutor" style="position:fixed; right:26px; bottom:26px; z-index:90; width:58px; height:58px; border-radius:50%; border:none; background:linear-gradient(135deg,#6673E8,#7C3AED); color:#fff; cursor:pointer; box-shadow:0 12px 30px rgba(124,58,237,.4); display:flex; align-items:center; justify-content:center;" style-hover="transform:scale(1.06);">
+    <button onClick="{{ openChat }}" title="Chat with your AI agent" style="position:fixed; right:26px; bottom:26px; z-index:90; width:58px; height:58px; border-radius:50%; border:none; background:linear-gradient(135deg,#6673E8,#7C3AED); color:#fff; cursor:pointer; box-shadow:0 12px 30px rgba(124,58,237,.4); display:flex; align-items:center; justify-content:center;" style-hover="transform:scale(1.06);">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-9 8.4 8.5 8.5 0 01-3.4-.7L3 21l1.8-5.6a8.38 8.38 0 01-.8-3.9 8.5 8.5 0 018.5-8.5 8.38 8.38 0 018.5 8.5z"></path></svg>
     </button>
   </sc-if>
@@ -3599,8 +3599,8 @@ class Component extends DCLogic {
     });
     // Tour
     const tours = [
-      { icon: '\uD83D\uDCAC', title: 'Meet your tutor', body: 'Ask anything, any time - your tutor explains step by step, in your syllabus, and never gets tired of questions.' },
-      { icon: '\uD83D\uDCDA', title: 'Pick a subject', body: 'Mathematics, Biology, Physical Science and Business Studies each have their own chats, symbols keyboard and quizzes.' },
+      { icon: '\uD83D\uDCAC', title: 'Meet your AI agents', body: 'Ask anything, any time - your agent explains step by step, in your syllabus, and never gets tired of questions.' },
+      { icon: '\uD83D\uDCDA', title: 'Pick a subject', body: 'Mathematics, Physical Science, Biology and Business Studies each have their own agent, chats, symbols keyboard and quizzes.' },
       { icon: '\uD83D\uDCC8', title: 'Watch yourself grow', body: 'Your dashboard tracks progress, predicts your pass rate and suggests exactly what to learn next.' }
     ];
     const step = s.tourStep || 0;
@@ -3633,7 +3633,7 @@ class Component extends DCLogic {
       quizDone: done, quizNotDone: !done,
       quizScore: score,
       quizEmoji: done ? (score >= 4 ? '\uD83C\uDF89' : score >= 3 ? '\uD83D\uDCAA' : '\uD83D\uDCD6') : '',
-      quizVerdict: score >= 4 ? 'Excellent - you have mastered this topic!' : score >= 3 ? 'Good work - review the ones you missed below.' : 'Keep practising - the correct answers are marked in green. Ask your tutor to explain any of them.',
+      quizVerdict: score >= 4 ? 'Excellent - you have mastered this topic!' : score >= 3 ? 'Good work - review the ones you missed below.' : 'Keep practising - the correct answers are marked in green. Ask your agent to explain any of them.',
       quizBannerStyle: 'display:flex;align-items:center;gap:14px;border-radius:14px;padding:16px 20px;margin-bottom:16px;' + (score >= 3 ? 'background:#E7F6EE;color:#1F6B43;' : 'background:#FFF6DC;color:#8A6400;'),
       quizSubmit: () => {
         const hist = [{ subject: quizSubject, score, date: 'Today' }, ...(this.state.quizHistory || [])].slice(0, 10);
@@ -4256,7 +4256,7 @@ class Component extends DCLogic {
               digest = ((S[country] || {})[subj] || {})[grade] || ((S['Namibia'] || {})[subj] || {})['12'] || '';
             } catch (e) {}
             return (st.subject ? 'Focus subject for this chat: ' + st.subject + '. ' : '') +
-              'You are the k12plus tutor ' + tutorWho + ', following the official ' +
+              'You are ' + (st.subject && window.k12agentName ? 'the ' + window.k12agentName(st.subject) + ' from k12plus' : 'a k12plus AI agent') + ', ' + tutorWho + ', following the official ' +
               (country === 'South Africa' ? 'South African CAPS (NSC)' : 'Namibian NSSCO/NSSCAS (NIED)') +
               ' curriculum for Grade ' + grade + '. Teach strictly to syllabus depth. Talk like a patient, warm teacher who never shames a learner for asking. Explain step by step in simple everyday language. Keep answers under 150 words. Add one or two fitting emojis per reply (like 💡📘✅🎉🌱⚡) to keep it warm and engaging, never more than three, placed naturally, and never as a substitute for a clear explanation. Plain text only, no markdown headings, no em dashes.' +
               (digest ? '\nOfficial syllabus reference for ' + subj + ':\n' + digest : '');
@@ -4266,10 +4266,10 @@ class Component extends DCLogic {
           feedback: { kind: 'chat', subject: this.state.subject || 'Mathematics' }
         });
       } else {
-        reply = 'I could not reach the tutor right now. Try again in a moment and we will work through it together.';
+        reply = 'I could not reach the agent right now. Try again in a moment and we will work through it together.';
       }
     } catch (e) {
-      reply = 'Sorry, something went wrong reaching the tutor. Please try again.';
+      reply = 'Sorry, something went wrong reaching the agent. Please try again.';
     }
     clearInterval(this._thinkT);
     const finalMsgs = [...this.state.chatMsgs, { role: 'assistant', text: reply }];
@@ -4550,8 +4550,8 @@ class Component extends DCLogic {
     };
     const subjSubs = [
       { label: 'Mathematics', color: '#5563E0' },
-      { label: 'Biology', color: '#3BB273' },
       { label: 'Physical Science', color: '#E8A13A' },
+      { label: 'Biology', color: '#3BB273' },
       { label: 'Business Studies', color: '#B400D9' }
     ].map(sb => {
       const tint = { 'Mathematics': '#F0F2FE', 'Biology': '#EDF8F2', 'Physical Science': '#FDF6E9', 'Business Studies': '#FAEFFC' }[sb.label];
@@ -4814,7 +4814,7 @@ class Component extends DCLogic {
         { icon: '\uD83D\uDCAC', bg: '#E7F6EE', text: 'Ms Amukoto replied to your question about Lesson 4', when: 'Yesterday' }
       ],
       toggleSide: () => (s.isMobile ? this.setState({ mobileNav: false }) : this.setState({ sideCollapsed: !s.sideCollapsed })),
-      shellTitle: ({ dashboard: 'Dashboard', lab: 'Real-Life Lab', timetable: 'Timetable', calendar: 'Calendar', quiz: 'Assessments', syllabus: 'Syllabus', plans: 'Plan Studio', games: 'Game Arcade', pilot: 'Pilot' })[s.view] || (s.subject ? 'Tutor \u00b7 ' + s.subject : 'Tutor'),
+      shellTitle: ({ dashboard: 'Dashboard', lab: 'Real-Life Lab', timetable: 'Timetable', calendar: 'Calendar', quiz: 'Assessments', syllabus: 'Syllabus', plans: 'Plan Studio', games: 'Game Arcade', pilot: 'Pilot' })[s.view] || (s.subject && window.k12agentName ? window.k12agentName(s.subject) : 'AI Agent'),
       notChat: s.view !== 'chat',
       isOffline: !!s.offline,
       isGuest: !s.loggedIn, isAuthed: !!s.loggedIn,
@@ -4881,8 +4881,8 @@ class Component extends DCLogic {
       toggleNewChat: () => this.setState({ newChatOpen: !s.newChatOpen }),
       newChatOpen: !!s.newChatOpen,
       newChatOpts: [
-        { label: 'Mathematics', color: '#5563E0' }, { label: 'Biology', color: '#3BB273' },
-        { label: 'Physical Science', color: '#E8A13A' }, { label: 'Business Studies', color: '#B400D9' },
+        { label: 'Mathematics', color: '#5563E0' }, { label: 'Physical Science', color: '#E8A13A' },
+        { label: 'Biology', color: '#3BB273' }, { label: 'Business Studies', color: '#B400D9' },
         { label: 'Something else', color: '' }
       ].map(o => ({
         label: o.label,
@@ -4934,7 +4934,7 @@ class Component extends DCLogic {
           pickPerfClass: () => this.setState({ perfTab: 'class' }),
           perfSubjOpen: !!s.perfSubjOpen,
           togglePerfSubj: () => this.setState({ perfSubjOpen: !s.perfSubjOpen }),
-          perfSubjOpts: ['All Subjects', 'Mathematics', 'Biology', 'Physical Science', 'Business Studies'].map(o => ({
+          perfSubjOpts: ['All Subjects', 'Mathematics', 'Physical Science', 'Biology', 'Business Studies'].map(o => ({
             label: o,
             style: 'display:block;width:100%;text-align:left;border:none;border-radius:8px;padding:8px 11px;font-size:12.5px;font-weight:500;cursor:pointer;' + (o === subj ? 'background:var(--chip);color:var(--primary);' : 'background:none;color:var(--ink);'),
             pick: () => this.setState({ perfSubj: o, perfSubjOpen: false })
@@ -4950,8 +4950,8 @@ class Component extends DCLogic {
       ...(() => {
         const SUBJ_TINTS = [
           { name: 'Mathematics', c: '#4A56C4', bg: '#EAEDFF', bd: '#D4DAF8' },
-          { name: 'Biology', c: '#1F7A4D', bg: '#E2F6EC', bd: '#C4E8D6' },
           { name: 'Physical Science', c: '#B07508', bg: '#FFF4D6', bd: '#F2E2AC' },
+          { name: 'Biology', c: '#1F7A4D', bg: '#E2F6EC', bd: '#C4E8D6' },
           { name: 'Business Studies', c: '#9A12B5', bg: '#F9E9FD', bd: '#EECBF7' }
         ];
         const gSubj = s.gamesSubject || s.subject || 'Mathematics';
@@ -5099,8 +5099,8 @@ class Component extends DCLogic {
           plansTplTabs: [{ id: 'classic', label: 'NIED classic' }, { id: 'detailed', label: 'Detailed' }, { id: 'compact', label: 'Compact' }].map(t => ({ label: t.label, style: pchip(tpl === t.id), pick: () => this.setState({ plansTemplate: t.id }) })),
           plansSubjTabs: [
             { name: 'Mathematics', c: '#4A56C4', bg: '#EAEDFF', bd: '#D4DAF8' },
-            { name: 'Biology', c: '#1F7A4D', bg: '#E2F6EC', bd: '#C4E8D6' },
             { name: 'Physical Science', c: '#B07508', bg: '#FFF4D6', bd: '#F2E2AC' },
+            { name: 'Biology', c: '#1F7A4D', bg: '#E2F6EC', bd: '#C4E8D6' },
             { name: 'Business Studies', c: '#9A12B5', bg: '#F9E9FD', bd: '#EECBF7' }
           ].map(x => ({
             label: x.name,

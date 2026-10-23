@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=16"></script>
+<script src="./k12plus-bridge.js?v=17"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#7C3AED">
 </head>
@@ -63,7 +63,7 @@ a:hover { color:var(--magenta); }
       <span style="font-family:'Comfortaa',sans-serif; font-size:25px; font-weight:700; letter-spacing:1.2px; -webkit-text-stroke:1.6px currentColor; line-height:1.5; display:inline-block; padding-bottom:2px; transform:translateY(2px); color:var(--ink);">k12plus</span>
     </a>
     <nav style="display:flex; gap:26px; font-size:15px;">
-      <a href="app.html" style="color:var(--muted);">Tutor</a>
+      <a href="app.html" style="color:var(--muted);">AI Agents</a>
       <a href="about.html" style="color:var(--primary); font-weight:600;">About Us</a>
       <a href="pricing.html" style="color:var(--muted);">Pricing</a>
       <a href="contact.html" style="color:var(--muted);">Contact</a>
@@ -76,16 +76,14 @@ a:hover { color:var(--magenta); }
   </header>
   <main style="flex:1;">
     <section data-screen-label="About hero" style="text-align:center; padding:130px 32px 96px; max-width:900px; margin:0 auto;">
-      <p style="font-size:12.5px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--primary); margin:0 0 18px;">About k12plus</p>
       <h1 style="font-size:clamp(40px,6vw,72px); line-height:1.05; font-weight:700; letter-spacing:-2.4px; margin:0 0 22px;">AI with an eye for<br>the <span style="color:var(--primary);">real world</span></h1>
-      <p style="font-size:19px; line-height:1.7; color:var(--muted); max-width:700px; margin:0 auto 40px;">We are revolutionising maths, biology, physical science and business studies education. With a single click, learners explore real-life applications of equations and concepts across engineering, physics, medicine, finance and everyday life, through AI-generated images and videos. Learning becomes interactive, immersive and genuinely engaging.</p>
+      <p style="font-size:19px; line-height:1.7; color:var(--muted); max-width:700px; margin:0 auto 40px;">We are revolutionising mathematics, physical science, biology and business studies education for Grades 8-12, with a dedicated AI agent for each subject: the AI Math Agent (AIM), the AI Physical Science Agent, the AI Biology Agent and the AI Business Studies Agent. With a single click, the Real-Life Lab turns an equation or concept into an animated scene and a short story of where it lives in engineering, physics, medicine, finance and everyday life. Learning becomes interactive, immersive and genuinely engaging.</p>
       <div style="display:flex; justify-content:center; gap:12px;">
         <a href="signup.html" style="background:var(--primary); color:#fff; padding:15px 34px; border-radius:6px; font-weight:600; font-size:15.5px;" style-hover="background:var(--magenta); color:#fff;">Start learning free</a>
-        <a href="index.html" style="background:var(--chip); color:var(--ink); padding:15px 34px; border-radius:6px; font-weight:600; font-size:15.5px; border:1px solid var(--line);">Try the tutor</a>
+        <a href="index.html" style="background:var(--chip); color:var(--ink); padding:15px 34px; border-radius:6px; font-weight:600; font-size:15.5px; border:1px solid var(--line);">Try the agents</a>
       </div>
     </section>
     <section data-screen-label="Live demo" style="max-width:1060px; margin:0 auto; padding:0 32px 120px;">
-      <p style="font-size:12.5px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--primary); text-align:center; margin:0 0 14px;">Watch the click</p>
       <h2 style="font-size:clamp(30px,4vw,46px); line-height:1.1; font-weight:700; letter-spacing:-1.4px; text-align:center; margin:0 auto 14px; max-width:640px;">One click turns an equation into the real world</h2>
       <p style="font-size:15.5px; line-height:1.7; color:var(--muted); text-align:center; max-width:640px; margin:0 auto 28px;">Pick a subject, click the button, and see the concept at work in everyday life. No prompting skills needed.</p>
       <div style="display:flex; justify-content:center; margin-bottom:26px;">
@@ -193,7 +191,7 @@ a:hover { color:var(--magenta); }
       </div>
     </section>
     <section data-screen-label="Supported by strip" style="border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--surface); padding:40px 0 36px;">
-      <p style="text-align:center; font-size:12.5px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin:0 0 22px;">Supported by</p>
+      <h3 style="text-align:center; font-family:Poppins,sans-serif; font-size:17px; font-weight:600; color:var(--ink); margin:0 0 22px;">Supported by</h3>
       <div style="overflow:hidden; position:relative; max-width:820px; margin:0 auto; -webkit-mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);">
         <div style="display:flex; gap:14px; width:max-content; animation:k12marquee 36s linear infinite reverse;">
           <sc-for list="{{ partnersLoop }}" as="p" hint-placeholder-count="0">
@@ -206,7 +204,6 @@ a:hover { color:var(--magenta); }
       </div>
     </section>
     <section data-screen-label="One click section" style="max-width:1060px; margin:0 auto; padding:120px 32px 0;">
-      <p style="font-size:12.5px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--primary); text-align:center; margin:0 0 14px;">One click, one equation, one real scenario</p>
       <h2 style="font-size:clamp(32px,4.2vw,50px); line-height:1.1; font-weight:700; letter-spacing:-1.6px; text-align:center; margin:0 auto 18px; max-width:720px;">A textbook stops at the right answer. We start there.</h2>
       <p style="font-size:16px; line-height:1.75; color:var(--muted); text-align:center; max-width:700px; margin:0 auto 48px;">Beyond simply solving problems, learners see how equations apply to engineering, physics, finance and daily life. Theory meets practice, so learning becomes meaningful and relevant, and learners build critical thinking, problem solving and a spirit of innovation that prepares them for the future.</p>
       <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
@@ -222,10 +219,9 @@ a:hover { color:var(--magenta); }
     <section data-screen-label="Why we exist" style="max-width:1060px; margin:0 auto; padding:130px 32px 0;">
       <div style="display:grid; grid-template-columns:5fr 6fr; gap:56px; align-items:center;">
         <div>
-          <p style="font-size:12.5px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--primary); margin:0 0 14px;">Why we exist</p>
           <h2 style="font-size:clamp(26px,3.2vw,38px); line-height:1.18; font-weight:600; letter-spacing:-1px; margin:0 0 18px;">The maths crisis is not the learners' fault</h2>
           <p style="font-size:15.5px; line-height:1.75; color:var(--muted); margin:0 0 14px;">In Namibia, 84% of Grade 12 learners fail mathematics and only 15.3% qualify for university. In one exam cycle, 420 learners scored zero. These are not lazy children. They are learners without the personalised support that meaningful learning requires.</p>
-          <p style="font-size:15.5px; line-height:1.75; color:var(--muted); margin:0;">Meanwhile teachers spend 60 to 80% of their time on administration instead of teaching. k12plus exists to break that cycle: personal AI tutoring for every learner, and automation that gives teachers their time back.</p>
+          <p style="font-size:15.5px; line-height:1.75; color:var(--muted); margin:0;">Meanwhile teachers spend 60 to 80% of their time on administration instead of teaching. k12plus exists to break that cycle: a personal AI agent for every learner, and automation that gives teachers their time back.</p>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
           <sc-for list="{{ crisisStats }}" as="s" hint-placeholder-count="4">
@@ -238,7 +234,6 @@ a:hover { color:var(--magenta); }
       </div>
     </section>
     <section data-screen-label="Competitive advantage" style="max-width:1060px; margin:0 auto; padding:130px 32px 0;">
-      <p style="font-size:12.5px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--primary); text-align:center; margin:0 0 14px;">Our competitive advantage</p>
       <h2 style="font-size:clamp(32px,4.2vw,50px); line-height:1.1; font-weight:700; letter-spacing:-1.6px; text-align:center; margin:0 auto 48px; max-width:680px;">Built for classrooms the internet forgot</h2>
       <div style="display:flex; flex-direction:column; gap:14px; max-width:840px; margin:0 auto;">
         <sc-for list="{{ advantages }}" as="a" hint-placeholder-count="5">
@@ -254,7 +249,6 @@ a:hover { color:var(--magenta); }
     </section>
     <section data-screen-label="Impact band" style="margin:130px 0 0; background:linear-gradient(135deg, #1F2033 0%, #2A2350 55%, #3B2266 100%); color:#F2F1FA; padding:100px 32px 92px;">
       <div style="max-width:1060px; margin:0 auto;">
-        <p style="font-size:12.5px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--gold); text-align:center; margin:0 0 14px;">Impact we are building towards</p>
         <h2 style="font-size:clamp(26px,3.4vw,40px); line-height:1.15; font-weight:600; letter-spacing:-1.2px; text-align:center; margin:0 auto 48px; max-width:640px;">Numbers that change what a report card can say</h2>
         <div ref="{{ impactRef }}" style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px;">
           <sc-for list="{{ impact }}" as="s" hint-placeholder-count="4">
@@ -278,20 +272,19 @@ a:hover { color:var(--magenta); }
           <div style="width:46px; height:46px; border-radius:12px; background:#fff; border:1px solid #DDD4F6; display:flex; align-items:center; justify-content:center; margin-bottom:16px;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4.5"></circle><circle cx="12" cy="12" r="1" fill="#7C3AED"></circle></svg>
           </div>
-          <p style="font-size:12.5px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:#7C3AED; margin:0 0 12px;">Our mission</p>
+          <h3 style="font-family:Poppins,sans-serif; font-size:20px; font-weight:600; color:#7C3AED; margin:0 0 10px;">Our mission</h3>
           <p style="font-size:16.5px; line-height:1.75; margin:0; color:#1F2033;">Free, equitable access to high-quality education, so every child can learn without barriers of cost, location or technology. AI-powered personalisation makes learning engaging, accessible and adaptive to each learner's needs.</p>
         </div>
         <div style="background:#E4F5EC; border:1px solid #C4E8D6; border-radius:15px; padding:40px 40px;">
           <div style="width:46px; height:46px; border-radius:12px; background:#fff; border:1px solid #C4E8D6; display:flex; align-items:center; justify-content:center; margin-bottom:16px;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F7A4D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5.5 4.8 12 4.8 22.5 12 22.5 12 18.5 19.2 12 19.2 1.5 12 1.5 12z"></path><circle cx="12" cy="12" r="3.2"></circle></svg>
           </div>
-          <p style="font-size:12.5px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:#1F7A4D; margin:0 0 12px;">Our vision</p>
+          <h3 style="font-family:Poppins,sans-serif; font-size:20px; font-weight:600; color:#1F7A4D; margin:0 0 10px;">Our vision</h3>
           <p style="font-size:16.5px; line-height:1.75; margin:0; color:#1F2033;">A global K-12 network providing free, equitable access to high-quality educational resources, empowering learners and communities in Namibia, South Africa and beyond to thrive in a dynamic world.</p>
         </div>
       </div>
     </section>
     <section data-screen-label="Team" style="max-width:1060px; margin:0 auto; padding:130px 32px 0;">
-      <p style="font-size:12.5px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; color:var(--primary); text-align:center; margin:0 0 14px;">The team</p>
       <h2 style="font-size:clamp(32px,4.2vw,50px); line-height:1.1; font-weight:700; letter-spacing:-1.6px; text-align:center; margin:0 0 12px;">A teacher and a technologist</h2>
       <p style="font-size:15.5px; color:var(--muted); text-align:center; margin:0 auto 44px; max-width:560px;">Both from families of educators. Both convinced that talent is everywhere, and opportunity is not. Yet.</p>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:900px; margin:0 auto;">
@@ -311,7 +304,6 @@ a:hover { color:var(--magenta); }
     </section>
     <section data-screen-label="About CTA" style="max-width:1060px; margin:130px auto 130px; padding:0 32px;">
       <div style="background:linear-gradient(135deg, var(--primary), var(--magenta)); border-radius:15px; padding:88px 48px; text-align:center; color:#fff;">
-        <p style="font-size:12.5px; font-weight:600; letter-spacing:2.4px; text-transform:uppercase; opacity:.85; margin:0 0 14px;">Get started with k12plus</p>
         <h2 style="font-size:clamp(28px,3.8vw,44px); line-height:1.12; font-weight:600; letter-spacing:-1.2px; margin:0 0 14px;">Your first question is one click away</h2>
         <p style="font-size:16px; opacity:.9; margin:0 0 30px;">Or one USSD dial. Or one school subscription. You pick.</p>
         <div style="display:flex; justify-content:center; gap:12px;">
@@ -333,7 +325,7 @@ a:hover { color:var(--magenta); }
       </div>
       <div style="display:flex; flex-direction:column; gap:10px;">
         <span style="font-size:13px; font-weight:600; margin-bottom:4px;">Product</span>
-        <a href="index.html" style="font-size:13.5px; color:var(--muted);">Try the tutor</a>
+        <a href="index.html" style="font-size:13.5px; color:var(--muted);">Try the agents</a>
         <a href="pricing.html" style="font-size:13.5px; color:var(--muted);">Pricing</a>
         <a href="signup.html" style="font-size:13.5px; color:var(--muted);">Create an account</a>
         <span style="font-size:13.5px; color:var(--muted);">USSD: dial *141*12#</span>
@@ -385,8 +377,8 @@ class Component extends DCLogic {
   renderVals() {
     const demoData = {
       'Mathematics': { meta: 'Grade 12 · Quadratic functions', eq: 'y = −4.9t² + 20t', size: 30, note: 'Maximum height solved: 20.4 m at t = 2.0 s. The same curve is in every netball shot after school.', caption: 'Projectile motion · a netball shot' },
-      'Biology': { meta: 'Grade 11 · Photosynthesis', eq: '6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂', size: 21, note: 'The reaction running in every green leaf at midday. Watch a maize plant turn sunlight into food and oxygen.', caption: 'Photosynthesis · a maize field at midday' },
       'Physical Science': { meta: 'Grade 12 · Electricity', eq: 'V = IR', size: 30, note: 'Ohm\'s law gives 0.5 A through the lamp. See it light a solar-powered homework desk after dark.', caption: 'Ohm\'s law · a solar kit lighting a desk' },
+      'Biology': { meta: 'Grade 11 · Photosynthesis', eq: '6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂', size: 21, note: 'The reaction running in every green leaf at midday. Watch a maize plant turn sunlight into food and oxygen.', caption: 'Photosynthesis · a maize field at midday' },
       'Business Studies': { meta: 'Grade 12 · Compound interest', eq: 'A = P(1 + r)ᵗ', size: 30, note: 'N$500 saved at 8% a year grows to N$734 in five years. Watch a market stall\'s savings climb, year by year.', caption: 'Compound interest · a stall\'s savings' }
     };
     const ds = this.state.demoSubject;
@@ -444,10 +436,10 @@ class Component extends DCLogic {
         return p.concat(p);
       })(),
       features: [
-        { icon: '🎬', tint: '#EAEDFF', title: 'Equations become experiences', body: 'One click turns any equation into AI-generated images and videos of where it lives in the real world: a bridge span, a loan repayment, a chemical reaction. Learners solve problems as if they were standing inside the scenario.' },
-        { icon: '🧠', tint: '#F3E8FF', title: 'A tutor that adapts to you', body: 'Adaptive AI lessons adjust in real time to each learner\u2019s progress. Ask by text, voice or handwriting, in the words you would use with a patient teacher.' },
-        { icon: '📟', tint: '#FFF4D6', title: 'USSD on any phone', body: 'AI-powered USSD codes deliver lessons, quizzes and feedback on basic mobile phones, reaching 80% of underserved communities with no smartphone and no data.' },
-        { icon: '📡', tint: '#E2F6EC', title: 'Offline with Edge AI', body: 'Pre-cached lessons and AI study recommendations keep learning going when connectivity does not. School networks sync when the signal returns.' },
+        { icon: '🎬', tint: '#EAEDFF', title: 'Equations become experiences', body: 'One click turns an equation into an animated real-world scene and a short story of where it is used: a bridge span, a loan repayment, a chemical reaction. Learners solve problems as if they were standing inside the scenario.' },
+        { icon: '🧠', tint: '#F3E8FF', title: 'An agent that adapts to you', body: 'Adaptive AI lessons adjust in real time to each learner\u2019s progress. Ask by text, voice or handwriting, in the words you would use with a patient teacher.' },
+        { icon: '📟', tint: '#FFF4D6', title: 'USSD on any phone', body: 'Dial *141*12# on a basic phone. Each agent has its own code, from *141*12*1# for Mathematics to *141*12*4# for Business Studies. USSD is being connected to the mobile networks for the pilot.' },
+        { icon: '📡', tint: '#E2F6EC', title: 'Offline-first', body: 'Pre-cached lessons, practice and study recommendations keep working without a signal, and progress syncs when the signal returns.' },
         { icon: '🏅', tint: '#FFECFB', title: 'Gamified, curriculum-aligned', body: 'Coins, badges and curriculum-aligned games follow the NIED and CAPS syllabi for Grades 8 to 12 in Namibia and Grades 11 to 12 in South Africa, with past-exam practice built in.' },
         { icon: '📊', tint: '#EAEDFF', title: 'Dashboards for teachers and parents', body: 'AI-graded assignments, performance insights and real-time alerts. Automation cuts teachers\u2019 administrative work by 60 to 80%.' }
       ],
@@ -458,8 +450,8 @@ class Component extends DCLogic {
         { value: '60-80%', color: '#E89B00', label: 'of teacher time lost to administration' }
       ],
       advantages: [
-        { num: '01', tint: '#F1EDFD', line: '#DDD4F6', num2: '#7C3AED', title: 'We work where the internet does not', body: 'Edge AI and USSD make k12plus the only tutoring platform in the region designed to run offline and on basic phones. Competing apps assume a smartphone and a data bundle. We assume neither.' },
-        { num: '02', tint: '#E4F5EC', line: '#C4E8D6', num2: '#1F7A4D', title: 'Real-life application, not rote drilling', body: 'Learners see every equation applied to engineering, physics, finance and everyday life through AI-generated images and videos. Understanding replaces memorisation, and independent learning replaces fear.' },
+        { num: '01', tint: '#F1EDFD', line: '#DDD4F6', num2: '#7C3AED', title: 'We work where the internet does not', body: 'Offline-first design and USSD make k12plus the only AI learning platform in the region designed to work offline and on basic phones. Competing apps assume a smartphone and a data bundle. We assume neither.' },
+        { num: '02', tint: '#E4F5EC', line: '#C4E8D6', num2: '#1F7A4D', title: 'Real-life application, not rote drilling', body: 'Learners see every equation applied to engineering, physics, finance and everyday life through animated scenes and short stories. Understanding replaces memorisation, and independent learning replaces fear.' },
         { num: '03', tint: '#FFF4D6', line: '#F2E2AC', num2: '#8A6D00', title: 'Made for the Namibian and South African curriculum', body: 'Every lesson is aligned to the national syllabus, with authentic past-exam practice. Global platforms localise later, if ever. We started local.' },
         { num: '04', tint: '#EAF1FF', line: '#D4DAF8', num2: '#4A56C4', title: 'Teachers gain, they do not compete', body: 'Automated marking, quizzes and rubrics free up to 80% of teachers\u2019 administrative time. k12plus positions the teacher as the hero of the classroom, with better tools.' },
         { num: '05', tint: '#FDEDF6', line: '#F4CFE4', num2: '#B4488A', title: 'Priced for our families', body: 'Free to start, N$15 a month for individuals, N$299 for a whole school, and micro top-ups from 80 cents for community features. Affordability is a design decision, not a promotion.' }
@@ -475,12 +467,12 @@ class Component extends DCLogic {
       impact: [
         { icon: '📈', value: this.state.counts[0] + '%', color: '#FFC324', title: 'Better outcomes', label: 'projected improvement in learning outcomes within 24 to 36 months' },
         { icon: '📟', value: this.state.counts[1] + '%', color: '#8FD8B4', title: 'True inclusivity', label: 'of underserved communities reached through USSD on basic phones' },
-        { icon: '🌙', value: this.state.counts[2] + '/7', color: '#AAB4F2', title: 'Always available', label: 'tutoring that keeps working online, offline and after the lights go out' },
+        { icon: '🌙', value: this.state.counts[2] + '/7', color: '#AAB4F2', title: 'Always available', label: 'learning support that keeps working online, offline and after the lights go out' },
         { icon: '🌍', value: this.state.counts[3] + 'M', color: '#E8A0F0', title: 'Regional reach', label: 'learners reachable across Namibia, South Africa and Southern Africa' }
       ],
       team: [
         { photo: 'assets/team/loide.png', pos: 'center 20%', zoom: 'cover', name: 'Loide Dawid', role: 'Co-founder and CEO', bio: 'A former teacher who saw first-hand what learners are up against. Loide holds a Bachelor\u2019s Honours in Financial Management and a Postgraduate Diploma in Education. The digital shift during the pandemic convinced her that technology could close gaps she had watched widen for years.' },
-        { photo: 'assets/team/paulus.png', pos: 'center 18%', zoom: '160%', name: 'Paulus Indongo', role: 'Co-founder and CTO', bio: 'More than a decade in AI and machine learning architecture, including Namibia\u2019s Integrated Mobile Voter Registration System at the Electoral Commission. Paulus leads the AI tutoring engine at the heart of k12plus, from handwriting recognition to Edge AI.' }
+        { photo: 'assets/team/paulus.png', pos: 'center 18%', zoom: '160%', name: 'Paulus Indongo', role: 'Co-founder and CTO', bio: 'More than a decade in AI and machine learning architecture, including Namibia\u2019s Integrated Mobile Voter Registration System at the Electoral Commission. Paulus leads the AI agent engine at the heart of k12plus, from handwriting recognition to offline-first learning.' }
       ],
       quotes: [
         { text: 'The learners who never raise their hands are the ones using it most. It answers without judging, and that changes who participates.', initials: 'MN', name: 'Ms N.', who: 'Mathematics teacher, Windhoek', tint: '#7C3AED' },
