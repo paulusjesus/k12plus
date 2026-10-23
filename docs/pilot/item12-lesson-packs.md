@@ -2,6 +2,8 @@
 
 Six starter packs for the 2027 pilot, matched to topics in the pilot tests. Every answer was computed and checked in code when the packs were built. Learners see a pack only after a pilot teacher, a champion or an administrator taps **Mark as checked** in Offline lessons. Practice questions do not repeat any pilot test question.
 
+On basic phones (USSD) learners can only type digits, so questions whose answer is negative, a decimal or a fraction are shown there as four numbered choices. These choices are listed below as "On a basic phone" and are part of the check.
+
 ## Grade 11: Solving equations (syllabus 6131, version 1)
 
 *Topic: Algebra / Equations and inequalities. About 25 minutes, 12 practice questions.*
@@ -62,6 +64,7 @@ How to do it: 3x − 4 = 17, so 3x = 21 and x = 7.
 **3.** Solve 4 − 3x = 19.
 
 Answer: **-5**  
+On a basic phone: 1. 5; 2. -6; 3. -5; 4. -4 (answer 3)  
 Hint: Take 4 from both sides. Watch the negative sign when you divide.  
 How to do it: 4 − 3x = 19, so −3x = 15 and x = 15 ÷ (−3) = −5.
 
@@ -185,6 +188,7 @@ How to do it: 35 ÷ 50 × 100 = 70%.
 **3.** Write 3/8 as a percentage.
 
 Answer: **37.5**  
+On a basic phone: 1. 375; 2. 3.75; 3. 37.5; 4. 38.5 (answer 3)  
 Hint: Divide 3 by 8, then multiply by 100.  
 How to do it: 3 ÷ 8 = 0.375, and 0.375 × 100 = 37.5%.
 
@@ -456,6 +460,7 @@ How to do it: Half of 6 is 3, so p = 3.
 **2.** x² + 6x + 2 is written in the form (x + p)² + q. Find q.
 
 Answer: **-7**  
+On a basic phone: 1. 7; 2. -7; 3. -8; 4. -6 (answer 2)  
 Hint: (x + 3)² = x² + 6x + 9. How much must you add to 9 to get 2?  
 How to do it: x² + 6x + 2 = (x + 3)² − 9 + 2 = (x + 3)² − 7, so q = −7.
 
@@ -468,12 +473,14 @@ How to do it: x² − 10x + 30 = (x − 5)² + 5. A square is never negative, so
 **4.** Find the x-coordinate of the turning point of y = x² + 4x − 1.
 
 Answer: **-2**  
+On a basic phone: 1. 2; 2. -3; 3. -1; 4. -2 (answer 4)  
 Hint: Write it as (x + 2)² + q. The turning point is where the bracket is 0.  
 How to do it: x² + 4x − 1 = (x + 2)² − 5, so the turning point is at x = −2.
 
 **5.** 2x² + 12x + 7 is written in the form 2(x + 3)² + q. Find q.
 
 Answer: **-11**  
+On a basic phone: 1. -11; 2. 11; 3. -12; 4. -10 (answer 1)  
 Hint: Expand 2(x + 3)² and compare the numbers.  
 How to do it: 2(x + 3)² = 2x² + 12x + 18. Since 18 + q = 7, q = −11.
 
@@ -512,6 +519,7 @@ How to do it: k² − 4(1)(16) = 0, so k² = 64 and k = 8 (or −8).
 **10.** The line y = 3x + k is a tangent to the curve y = x² + 1. Find k.
 
 Answer: **-1.25** (also accepted: -5/4)  
+On a basic phone: 1. 1.25; 2. -1.25; 3. -2.25; 4. -0.25 (answer 2)  
 Hint: Set x² + 1 = 3x + k, write it as a quadratic = 0, and use b² − 4ac = 0.  
 How to do it: x² − 3x + (1 − k) = 0. For a tangent, 9 − 4(1 − k) = 0, so 4k = −5 and k = −1.25.
 
@@ -605,24 +613,28 @@ How to do it: y = 6x^(1/2), so dy/dx = 3x^(−1/2) = 3/√x = 3/3 = 1.
 **4.** y = 8/x². Find dy/dx when x = 2.
 
 Answer: **-2**  
+On a basic phone: 1. 2; 2. -3; 3. -1; 4. -2 (answer 4)  
 Hint: Write 8/x² as 8x⁻².  
 How to do it: dy/dx = −16x⁻³ = −16/8 = −2.
 
 **5.** Find the gradient of the curve y = x³ − 4x at the point (1, −3).
 
 Answer: **-1**  
+On a basic phone: 1. -1; 2. 1; 3. -2; 4. 0 (answer 1)  
 Hint: The gradient is the value of dy/dx at that point.  
 How to do it: dy/dx = 3x² − 4 = 3 − 4 = −1.
 
 **6.** The tangent to y = x² + 3x at x = 1 has equation y = 5x + c. Find c.
 
 Answer: **-1**  
+On a basic phone: 1. 1; 2. -1; 3. -2; 4. 0 (answer 2)  
 Hint: At x = 1, y = 4. The tangent passes through (1, 4).  
 How to do it: y = 4 when x = 1, and 4 = 5(1) + c, so c = −1.
 
 **7.** Find the gradient of the normal to y = x² at x = 2.
 
 Answer: **-0.25** (also accepted: -1/4)  
+On a basic phone: 1. 0.25; 2. -1.25; 3. -0.25; 4. 0.75 (answer 3)  
 Hint: The normal is at right angles to the tangent: gradient = −1 ÷ (gradient of tangent).  
 How to do it: Tangent gradient = 2x = 4, so normal gradient = −1/4.
 
@@ -663,6 +675,7 @@ How to do it: dh/dt = 20 − 10t = 0 when t = 2. Then h = 40 − 20 = 20 m.
 **13.** The radius of a circle grows at 0.5 cm per second. How fast is the area A = πr² growing when r = 4 cm? Give your answer in cm² per second, correct to 3 significant figures.
 
 Answer: **12.6** (also accepted: 12.57, 12.566)  
+On a basic phone: 1. 12.6; 2. 126; 3. 1.26; 4. 13.6 (answer 1)  
 Hint: dA/dt = dA/dr × dr/dt.  
 How to do it: dA/dr = 2πr = 8π. dA/dt = 8π × 0.5 = 4π ≈ 12.6 cm² per second.
 
@@ -717,6 +730,7 @@ How to do it: 2⁵ = 32, so log₂ 32 = 5.
 **2.** Find log₁₀ 0.01.
 
 Answer: **-2**  
+On a basic phone: 1. 2; 2. -2; 3. -3; 4. -1 (answer 2)  
 Hint: 0.01 = 1/100. Write it as a power of 10.  
 How to do it: 0.01 = 10⁻², so log₁₀ 0.01 = −2.
 
@@ -741,30 +755,35 @@ How to do it: 3 lg 2 + lg 5 = lg 8 + lg 5 = lg 40, so k = 40.
 **6.** Solve 4ˣ = 50. Give x correct to 3 significant figures.
 
 Answer: **2.82** (also accepted: 2.822)  
+On a basic phone: 1. 28.2; 2. 2.82; 3. 0.282; 4. 3.82 (answer 2)  
 Hint: Take lg of both sides: x lg 4 = lg 50.  
 How to do it: x = lg 50 ÷ lg 4 = 2.82 (3 s.f.).
 
 **7.** Solve 7ˣ = 100. Give x correct to 3 significant figures.
 
 Answer: **2.37** (also accepted: 2.367)  
+On a basic phone: 1. 23.7; 2. 0.237; 3. 2.37; 4. 3.37 (answer 3)  
 Hint: Take lg of both sides: x lg 7 = lg 100 = 2.  
 How to do it: x = 2 ÷ lg 7 = 2.37 (3 s.f.).
 
 **8.** Solve eˣ = 12. Give x correct to 3 significant figures.
 
 Answer: **2.48** (also accepted: 2.485)  
+On a basic phone: 1. 24.8; 2. 0.248; 3. 3.48; 4. 2.48 (answer 4)  
 Hint: Take ln of both sides.  
 How to do it: x = ln 12 = 2.48 (3 s.f.).
 
 **9.** Solve ln x = 1.5. Give x correct to 3 significant figures.
 
 Answer: **4.48** (also accepted: 4.482)  
+On a basic phone: 1. 4.48; 2. 44.8; 3. 0.448; 4. 5.48 (answer 1)  
 Hint: ln x = 1.5 means x = e^1.5.  
 How to do it: x = e^1.5 = 4.48 (3 s.f.).
 
 **10.** Solve 2ˣ⁺¹ = 40. Give x correct to 3 significant figures.
 
 Answer: **4.32** (also accepted: 4.322)  
+On a basic phone: 1. 43.2; 2. 4.32; 3. 0.432; 4. 5.32 (answer 2)  
 Hint: Take lg of both sides: (x + 1) lg 2 = lg 40.  
 How to do it: x + 1 = lg 40 ÷ lg 2 = 5.322, so x = 4.32 (3 s.f.).
 

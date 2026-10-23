@@ -366,6 +366,41 @@ packs.append({
 })
 assert sig(L(15, 2)) == '3.91' and 3**4 == 81
 
+# ---------------------------------------------------------------- answers on a basic phone (USSD)
+# On a USSD screen a basic phone can only send digits (and * and #), so a learner
+# cannot type a minus sign, a decimal point or a fraction. Questions whose answer is
+# a whole number of 0 or more are typed as usual. For the others the build adds four
+# choices: the answer and three likely mistakes (the sign wrong, a place-value slip,
+# one more or one less). The answer's position changes from question to question.
+def ussd_choices(answer, n):
+    v = float(F(answer)) if '/' in answer else float(answer)
+    dec = len(answer.split('.')[1]) if '.' in answer and '/' not in answer else (2 if '/' in answer else 0)
+    def fmt(t):  # one more decimal place than the answer, without trailing zeros: 375, 3.75, 28.2, 0.282
+        txt = f'{t:.{dec + 1}f}'.rstrip('0').rstrip('.')
+        return '0' if txt in ('-0', '') else txt
+    shown = answer if '/' not in answer else fmt(v)
+    if v < 0:
+        cands = [-v, v - 1, v + 1, 2 * v, v / 2]
+    else:
+        cands = [v * 10, v / 10, v + 1, v - 1, 2 * v]
+    wrong = []
+    for c in cands:
+        t = fmt(c)
+        if t != shown and t not in wrong and float(t) != v:
+            wrong.append(t)
+        if len(wrong) == 3:
+            break
+    assert len(wrong) == 3, (answer, wrong)
+    pos = n % 4
+    opts = wrong[:pos] + [shown] + wrong[pos:]
+    assert abs(float(opts[pos]) - v) < 1e-9
+    return {'options': opts, 'answer': 'ABCD'[pos]}
+
+
+def typeable(answer):
+    return '/' not in answer and '.' not in answer and not answer.startswith('-')
+
+
 # ---------------------------------------------------------------- write
 os.makedirs(OUT, exist_ok=True)
 index = []
@@ -375,6 +410,8 @@ for p in packs:
         it['id'] = f"{p['id']}-{i + 1:02d}"
         if it['type'] == 'number':
             float(F(it['answer'])) if '/' in it['answer'] else float(it['answer'])
+            if not typeable(it['answer']):
+                it['ussd'] = ussd_choices(it['answer'], i)
     p['status_note'] = 'Draft for checking by a teacher. Learners see it only after it is marked as checked.'
     body = json.dumps(p, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
     with open(os.path.join(OUT, p['id'] + '.json'), 'wb') as fh:

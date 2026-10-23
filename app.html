@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=19"></script>
+<script src="./k12plus-bridge.js?v=20"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
 <script src="./k12plus-arcade.js?v=1"></script>
 <script src="./k12plus-scenes.js?v=1"></script>
@@ -1462,6 +1462,28 @@ button { font-family:'Poppins',sans-serif; }
               <button onClick="{{ exKey }}" style="border:none; background:none; color:var(--primary); cursor:pointer; font-size:12px; text-decoration:underline;">School code key (keep this private)</button>
             </div>
           </div>
+          <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-top:16px;">
+            <h2 style="font-size:14.5px; font-weight:600; margin:0;">USSD simulator</h2>
+            <p style="font-size:12.5px; line-height:1.6; color:var(--muted); margin:4px 0 10px;">Dial *141*12# exactly as a learner would on a basic phone, with the real menus, lessons and agent. Nothing is recorded for the learner. The service goes live when the gateway agreement is signed.</p>
+            <div style="font-size:12px; color:var(--muted); margin:0 0 10px;">{{ usStatsLine }}</div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:flex-end; font-size:12px; color:var(--muted); margin-bottom:10px;">
+              <label>Phone number of the learner<br><input value="{{ usPhone }}" onChange="{{ usOnPhone }}" placeholder="081 234 5678" inputmode="tel" style="border:1px solid var(--line); border-radius:8px; padding:7px 10px; font-size:12.5px; outline:none; width:150px;"></label>
+              <sc-for list="{{ usCodes }}" as="cd" hint-placeholder-count="5"><button onClick="{{ cd.dial }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:7px 12px; font-size:12px; font-weight:600; cursor:pointer; font-family:'Courier New',monospace;">{{ cd.code }}</button></sc-for>
+            </div>
+            <sc-if value="{{ usHasScreen }}" hint-placeholder-val="{{ false }}">
+              <div style="max-width:300px; background:#111; border-radius:18px; padding:14px;">
+                <div style="background:#C9D7B5; color:#1B2414; border-radius:8px; padding:12px; font-family:'Courier New',monospace; font-size:13px; line-height:1.45; white-space:pre-wrap; min-height:120px;">{{ usScreen }}</div>
+                <div style="font-size:11px; color:#9AA; margin:6px 2px 8px;">{{ usMeta }}</div>
+                <sc-if value="{{ usCanReply }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex; gap:6px;">
+                    <input value="{{ usInput }}" onChange="{{ usOnInput }}" onKeyDown="{{ usOnKey }}" placeholder="Reply" style="flex:1; min-width:0; border:none; border-radius:8px; padding:8px 10px; font-size:13px; outline:none;">
+                    <button onClick="{{ usSend }}" style="border:none; background:#2EBD59; color:#fff; border-radius:8px; padding:8px 12px; font-size:12.5px; font-weight:600; cursor:pointer;">Send</button>
+                    <button onClick="{{ usEnd }}" style="border:none; background:#E5484D; color:#fff; border-radius:8px; padding:8px 10px; font-size:12.5px; font-weight:600; cursor:pointer;">End</button>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
         </sc-if>
 
         <sc-if value="{{ repShow }}" hint-placeholder-val="{{ false }}">
@@ -2560,6 +2582,7 @@ class Component extends DCLogic {
       if (ss.ok) this.setState({ summaryStatus: ss.data });
       if (ru.ok) this.setState((st) => ({ msgRules: ru.data, msgRulesIn: st.msgRulesIn || ru.data }));
       if (ms.ok) this.setState({ msgStats: ms.data });
+      if (P.ussdStats) P.ussdStats().then((us) => { if (us.ok) this.setState({ usStats: us.data }); });
       if (window.k12tests) {
         const ta = await window.k12tests.all();
         if (ta.ok) this.setState({ testsAdmin: ta.data || [] });
@@ -2610,6 +2633,36 @@ class Component extends DCLogic {
   }
 
   // ---------- 2027 pilot: export for the independent evaluator ----------
+  ussdVals(s) {
+    const P = window.k12pilot || {};
+    const st = s.usStats;
+    const send = async (text, fresh) => {
+      if (s.usBusy) return;
+      const phone = (s.usPhone || '').trim();
+      if ((phone.replace(/\D/g, '')).length < 9) return this.setState({ pilotErr: 'Type the learner\u2019s phone number first, for example 081 234 5678.', pilotMsg: '' });
+      const sid = fresh ? 'sim' + Date.now().toString(36) : s.usSession;
+      const code = fresh || s.usCode;
+      this.setState({ usBusy: true, pilotErr: '' });
+      const r = await P.ussd(phone, sid, code, text);
+      if (!r.ok) return this.setState({ usBusy: false, pilotErr: r.error });
+      this.setState({ usBusy: false, usSession: sid, usCode: code, usText: text, usScreen: r.data.screen, usEnded: r.data.end, usInput: '' });
+      if (r.data.end) P.ussdStats().then((x) => x.ok && this.setState({ usStats: x.data }));
+    };
+    return {
+      usStatsLine: st ? 'Last 30 days: ' + st.sessions + (st.sessions === 1 ? ' session' : ' sessions') + ' from ' + st.phones + (st.phones === 1 ? ' phone' : ' phones') + ' (' + st.registered + ' by registered learners), ' + st.ai_questions + ' questions to the agent. Simulator sessions: ' + st.simulated + '.' : '',
+      usPhone: s.usPhone || '', usOnPhone: (e) => this.setState({ usPhone: e.target.value }),
+      usCodes: ['*141*12#', '*141*12*1#', '*141*12*2#', '*141*12*3#', '*141*12*4#'].map((code) => ({ code, dial: () => send('', code) })),
+      usHasScreen: !!s.usScreen,
+      usScreen: s.usBusy ? 'USSD code running\u2026' : (s.usScreen || ''),
+      usMeta: (s.usCode || '') + (s.usEnded ? ' \u00b7 session ended' : '') + ' \u00b7 ' + (s.usScreen || '').length + ' characters',
+      usCanReply: !!s.usScreen && !s.usEnded,
+      usInput: s.usInput || '', usOnInput: (e) => this.setState({ usInput: e.target.value }),
+      usOnKey: (e) => { if (e.key === 'Enter') { e.preventDefault(); const v = (s.usInput || '').trim(); if (v) send(s.usText ? s.usText + '*' + v : v); } },
+      usSend: () => { const v = (s.usInput || '').trim(); if (v) send(s.usText ? s.usText + '*' + v : v); },
+      usEnd: () => this.setState({ usEnded: true, usScreen: 'Session ended.' }),
+    };
+  }
+
   exportVals(s) {
     const P = window.k12pilot || {};
     const save = (blob, name) => {
@@ -5193,6 +5246,7 @@ class Component extends DCLogic {
       ...this.repVals(s),
       ...this.reviewVals(s),
       ...this.exportVals(s),
+      ...this.ussdVals(s),
       isLab: s.view === 'lab', isTimetable: !lockNoun && s.view === 'timetable', isCalendar: !lockNoun && s.view === 'calendar', isQuiz: !lockNoun && s.view === 'quiz', isSyllabus: !lockNoun && s.view === 'syllabus',
       goDash: () => this.setState({ view: 'dashboard' }),
       goChat: () => this.setState({ view: 'chat' }),

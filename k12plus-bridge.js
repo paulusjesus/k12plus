@@ -788,6 +788,24 @@ window.k12agentName = function (subject) {
       return { ok: true, data: { blob: makeZip(files), name: name, learners: d.learners, files: files.map(function (f) { return f.name; }) } };
     },
     schoolKey: function () { return pilotRpc('pilot_school_key'); },
+    // USSD simulator (administrators): the real *141*12# menus, recording nothing for the learner
+    ussd: async function (phone, sessionId, serviceCode, text) {
+      if (!navigator.onLine) return { ok: false, error: 'You are offline. The simulator needs a connection.' };
+      var sess = await freshSession();
+      if (!sess) return { ok: false, error: 'Please log in again.' };
+      try {
+        var res = await fetch(SUPA + '/functions/v1/ussd', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + sess.access_token },
+          body: JSON.stringify({ simulate: true, phoneNumber: phone, sessionId: sessionId, serviceCode: serviceCode, text: text }),
+        });
+        var t = await res.text();
+        return { ok: true, data: { end: /^END /.test(t), screen: t.replace(/^(CON|END) /, ''), status: res.status } };
+      } catch (e) {
+        return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
+      }
+    },
+    ussdStats: function () { return pilotRpc('pilot_ussd_stats'); },
     // teachers' monthly review of the agent's replies (item 9)
     myReview: function () { return pilotRpc('pilot_my_review'); },
     startReview: function (batchId) { return pilotRpc('pilot_start_review', { p_batch: batchId }); },

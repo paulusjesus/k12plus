@@ -1,5 +1,5 @@
 /* K12Plus service worker - offline-first PWA */
-var VERSION = 'k12plus-v22';
+var VERSION = 'k12plus-v23';
 // Lessons a learner downloads ("Download for offline") live in their own store,
 // which app updates never clear.
 var LESSONS = 'k12plus-lessons';
@@ -10,7 +10,7 @@ var LESSONS = 'k12plus-lessons';
 // advance: learners rarely need them offline, and they are cached once visited.
 var PRECACHE = [
   '/index.html', '/signup.html', '/app.html',
-  '/support.js?v=2', '/k12plus-bridge.js?v=19',
+  '/support.js?v=2', '/k12plus-bridge.js?v=20',
   '/k12plus-syllabus.js?v=2', '/k12plus-arcade.js?v=1', '/k12plus-scenes.js?v=1',
   '/manifest.webmanifest', '/assets/k12plus-logo-128.png',
   '/icons/icon-192.png', '/icons/icon-512.png',
