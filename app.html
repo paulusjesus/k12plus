@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=13"></script>
+<script src="./k12plus-bridge.js?v=14"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
 <script src="./k12plus-arcade.js?v=1"></script>
 <script src="./k12plus-scenes.js?v=1"></script>
@@ -1287,6 +1287,71 @@ button { font-family:'Poppins',sans-serif; }
           </div>
         </sc-if>
 
+        <sc-if value="{{ repShow }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin:16px 0;">
+            <h2 style="font-size:14.5px; font-weight:600; margin:0;">{{ repTitle }}</h2>
+            <p style="font-size:12.5px; line-height:1.6; color:var(--muted); margin:4px 0 10px;">Use, data and costs for learners taking part (with consent), by school, region and setting. Pilot IDs only, no names. Budget: {{ repBudgetLine }}.</p>
+            <sc-if value="{{ repHasAlerts }}" hint-placeholder-val="{{ false }}">
+              <div style="background:#FDECEC; border:1px solid #F5C2C2; border-radius:12px; padding:10px 14px; margin-bottom:12px; font-size:12.5px; line-height:1.55;">
+                <strong style="color:#B42318;">Spending ahead of budget</strong>
+                <sc-for list="{{ repAlerts }}" as="al" hint-placeholder-count="1">
+                  <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; border-top:1px solid #F5C2C2; padding:5px 0; margin-top:4px;">
+                    <span style="flex:1 1 220px; min-width:0;">{{ al.text }}</span>
+                    <button onClick="{{ al.dismiss }}" style="border:none; background:none; color:var(--primary); cursor:pointer; font-size:12px; text-decoration:underline;">Mark as seen</button>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
+              <sc-for list="{{ repPeriods }}" as="rp" hint-placeholder-count="4"><button onClick="{{ rp.pick }}" style="{{ rp.style }}">{{ rp.label }}</button></sc-for>
+              <sc-if value="{{ repHasData }}" hint-placeholder-val="{{ false }}"><button onClick="{{ repCsv }}" style="margin-left:auto; border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer;">Download CSV</button></sc-if>
+            </div>
+            <sc-if value="{{ repBusy }}" hint-placeholder-val="{{ false }}"><p style="font-size:12.5px; color:var(--muted); margin:0;">Preparing the report&hellip;</p></sc-if>
+            <sc-if value="{{ repHasData }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:12.5px; line-height:1.65; margin-bottom:10px;">
+                <div><strong>{{ repPeriodLine }}</strong></div>
+                <sc-for list="{{ repSummary }}" as="sm" hint-placeholder-count="3"><div style="{{ sm.style }}">{{ sm.text }}</div></sc-for>
+              </div>
+              <div style="overflow-x:auto; border:1px solid var(--line); border-radius:10px;">
+                <table style="width:100%; border-collapse:collapse; font-size:12px; min-width:820px;">
+                  <thead><tr style="text-align:left; color:var(--muted);"><th style="padding:8px 10px; font-weight:600;">School</th><th style="padding:8px 6px; font-weight:600;">Region</th><th style="padding:8px 6px; font-weight:600;">Setting</th><th style="padding:8px 6px; font-weight:600;">Active / taking part</th><th style="padding:8px 6px; font-weight:600;">Sessions</th><th style="padding:8px 6px; font-weight:600;">Minutes</th><th style="padding:8px 6px; font-weight:600;">Topics</th><th style="padding:8px 6px; font-weight:600;">USSD</th><th style="padding:8px 6px; font-weight:600;">Data</th><th style="padding:8px 6px; font-weight:600;">Texts</th><th style="padding:8px 10px; font-weight:600;">Cost per learner</th></tr></thead>
+                  <tbody>
+                    <sc-for list="{{ repSchools }}" as="rs" hint-placeholder-count="2">
+                      <tr style="border-top:1px solid var(--line);"><td style="padding:7px 10px; font-weight:600;">{{ rs.school }}</td><td style="padding:7px 6px;">{{ rs.region }}</td><td style="padding:7px 6px;">{{ rs.setting }}</td><td style="padding:7px 6px;">{{ rs.activeLine }}</td><td style="padding:7px 6px;">{{ rs.sessions }}</td><td style="padding:7px 6px;">{{ rs.minutes }}</td><td style="padding:7px 6px;">{{ rs.topics }}</td><td style="padding:7px 6px;">{{ rs.ussd }}</td><td style="padding:7px 6px;">{{ rs.data }}</td><td style="padding:7px 6px;">{{ rs.sms }}</td><td style="{{ rs.costStyle }}">{{ rs.cost }}</td></tr>
+                    </sc-for>
+                  </tbody>
+                </table>
+              </div>
+              <details style="margin-top:10px; font-size:12.5px;"><summary style="cursor:pointer; color:var(--primary); font-weight:600;">By region</summary>
+                <sc-for list="{{ repRegions }}" as="rr" hint-placeholder-count="2"><div style="display:flex; gap:8px; flex-wrap:wrap; padding:5px 0; border-top:1px solid var(--line);"><strong style="flex:0 0 130px;">{{ rr.region }}</strong><span style="flex:1 1 300px; color:var(--muted);">{{ rr.line }}</span><span style="{{ rr.costStyle }}">{{ rr.cost }}</span></div></sc-for>
+              </details>
+            </sc-if>
+            <sc-if value="{{ repIsAdmin }}" hint-placeholder-val="{{ false }}">
+              <details style="margin-top:10px; font-size:12.5px;"><summary style="cursor:pointer; color:var(--primary); font-weight:600;">Prices and costs typed in</summary>
+                <p style="color:var(--muted); line-height:1.6; margin:8px 0;">Data use is measured on each learner's phone. Costs are worked out with these prices. Update them when you have the operators' quotes.</p>
+                <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; color:var(--muted);">
+                  <label>Data, US$ per GB<br><input value="{{ costIn.data_usd_per_gb }}" onChange="{{ costOn.data_usd_per_gb }}" style="width:90px; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;"></label>
+                  <label>Text message, US$<br><input value="{{ costIn.sms_usd }}" onChange="{{ costOn.sms_usd }}" style="width:90px; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;"></label>
+                  <label>USSD session, US$<br><input value="{{ costIn.ussd_session_usd }}" onChange="{{ costOn.ussd_session_usd }}" style="width:90px; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;"></label>
+                  <label>Budget per learner a month, US$<br><input value="{{ costIn.budget_per_learner_usd }}" onChange="{{ costOn.budget_per_learner_usd }}" style="width:90px; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;"></label>
+                  <button onClick="{{ costSave }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;">Save prices</button>
+                </div>
+                <div style="margin-top:12px; color:var(--muted);">Add a cost, such as data bundles bought for a school:</div>
+                <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:6px;">
+                  <select value="{{ entryIn.school_id }}" onChange="{{ entryOn.school_id }}" style="border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none; max-width:220px;">
+                    <option value="">The whole pilot</option>
+                    <sc-for list="{{ entrySchools }}" as="es" hint-placeholder-count="2"><option value="{{ es.id }}">{{ es.name }}</option></sc-for>
+                  </select>
+                  <input type="month" value="{{ entryIn.month }}" onChange="{{ entryOn.month }}" style="border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;">
+                  <input value="{{ entryIn.amount_usd }}" onChange="{{ entryOn.amount_usd }}" placeholder="Amount, US$" style="width:110px; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;">
+                  <input value="{{ entryIn.note }}" onChange="{{ entryOn.note }}" placeholder="Note, e.g. data bundles" style="flex:1 1 160px; min-width:0; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; outline:none;">
+                  <button onClick="{{ entryAdd }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:7px 14px; font-size:12px; font-weight:600; cursor:pointer;">Add cost</button>
+                </div>
+                <sc-for list="{{ entryList }}" as="en" hint-placeholder-count="0"><div style="display:flex; gap:8px; align-items:center; padding:5px 0; border-top:1px solid var(--line); margin-top:4px;"><span style="flex:1 1 220px;">{{ en.text }}</span><button onClick="{{ en.remove }}" style="border:none; background:none; color:var(--primary); cursor:pointer; font-size:12px; text-decoration:underline;">Remove</button></div></sc-for>
+              </details>
+            </sc-if>
+          </div>
+        </sc-if>
         <sc-if value="{{ pilotShowSetup }}" hint-placeholder-val="{{ false }}">
           <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-bottom:16px;">
             <h2 style="font-size:14.5px; font-weight:600; margin:0 0 4px;">Choose the pilot schools</h2>
@@ -2290,6 +2355,9 @@ class Component extends DCLogic {
         const ta = await window.k12tests.all();
         if (ta.ok) this.setState({ testsAdmin: ta.data || [] });
       }
+      const [al, cs] = await Promise.all([P.spendingAlerts(), P.costSettings()]);
+      if (al.ok) this.setState({ spendAlerts: al.data || [] });
+      if (cs.ok) this.setState((st) => ({ costSettings: cs.data, costIn: st.costIn || cs.data }));
     } else if (role === 'admin' || role === 'champion') {
       const rid = role === 'admin' ? this.state.pilotRegionId : this.state.pilot.champion_region_id;
       const r = await P.regionDetail(rid);
@@ -2327,6 +2395,123 @@ class Component extends DCLogic {
     if (!r.ok) return this.setState({ joinBusy: false, joinErr: r.error });
     this.setState({ joinBusy: false, joinCode: '' });
     this.loadPilotRole();
+  }
+
+  // ---------- 2027 pilot: usage and data-cost reports ----------
+  repRange(key) {
+    const d = new Date();
+    const y = d.getFullYear(), m = d.getMonth();
+    const ymd = (x) => x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0');
+    const mon = new Date(y, m, d.getDate() - ((d.getDay() + 6) % 7));
+    const add = (x, n) => new Date(x.getFullYear(), x.getMonth(), x.getDate() + n);
+    const r = key === 'last_month' ? [new Date(y, m - 1, 1), new Date(y, m, 0)]
+      : key === 'this_week' ? [mon, add(mon, 6)]
+      : key === 'last_week' ? [add(mon, -7), add(mon, -1)]
+      : [new Date(y, m, 1), new Date(y, m + 1, 0)];
+    return r.map(ymd);
+  }
+
+  async loadReport(key, keepMsg) {
+    const P = window.k12pilot;
+    const [from, to] = this.repRange(key);
+    this.setState(keepMsg ? { repKey: key, repBusy: true } : { repKey: key, repBusy: true, pilotErr: '', pilotMsg: '' });
+    const r = await P.usageReport(from, to);
+    this.setState(r.ok ? { repBusy: false, rep: r.data } : { repBusy: false, rep: null, pilotErr: r.error });
+    if (r.ok && this.pilotRoleOf() === 'admin') {
+      const e = await P.costEntries(from, to);
+      if (e.ok) this.setState({ costEntryList: e.data || [] });
+    }
+  }
+
+  repVals(s) {
+    const P = window.k12pilot || {};
+    const role = this.pilotRoleOf();
+    const isAdmin = role === 'admin';
+    const money = (n) => (n == null ? '\u2013' : 'US$' + Number(n).toFixed(2));
+    const num = (n) => Number(n || 0).toLocaleString('en-GB');
+    const pl = (n, one, many) => num(n) + ' ' + (Number(n) === 1 ? one : many);
+    const fmtD = (d) => { try { return new Date(d + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); } catch (e) { return d; } };
+    const rep = s.rep;
+    const rows = (rep && rep.rows) || [];
+    const red = (on) => 'padding:7px 10px;font-weight:600;' + (on ? 'color:#B42318;' : '');
+    const useLine = (x) => pl(x.learners, 'learner', 'learners') + ' taking part \u00b7 ' + num(x.active) + ' active \u00b7 ' + pl(x.sessions, 'session', 'sessions') + ' \u00b7 ' +
+      pl(x.minutes, 'minute', 'minutes') + ' \u00b7 ' + pl(x.questions, 'question', 'questions') + ' \u00b7 ' + pl(x.practice, 'practice answer', 'practice answers') + ' \u00b7 ' + pl(x.topics, 'topic', 'topics') + ' \u00b7 ' +
+      pl(x.ussd, 'USSD session', 'USSD sessions') + ' \u00b7 ' + x.data_mb + ' MB of data \u00b7 ' + pl(x.sms, 'text', 'texts');
+    const costLine = (x) => 'Cost ' + money(x.cost_total) + ' (data ' + money(x.cost_data) + ', texts ' + money(x.cost_sms) + ', USSD ' + money(x.cost_ussd) + ', other ' + money(x.cost_other) + ') \u00b7 ' +
+      (x.cost_per_learner == null ? 'no learners yet' : money(x.cost_per_learner) + ' per learner') + (x.ahead ? ', ahead of the budget' : '');
+    const tot = rows.find((x) => x.level === 'total');
+    const settingName = (st) => (st === 'rural' ? 'Rural' : st === 'urban' ? 'Urban' : '');
+    const periods = [['this_month', 'This month'], ['last_month', 'Last month'], ['this_week', 'This week'], ['last_week', 'Last week']];
+    const chip = (on) => 'border-radius:999px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;' +
+      (on ? 'background:var(--primary);color:#fff;border:1px solid var(--primary);' : 'background:#fff;color:var(--ink);border:1px solid var(--line);');
+    const budgetMonth = (s.costSettings && s.costSettings.budget_per_learner_usd) || (rep && rep.budget_per_learner_month) || 2.5;
+    const costIn = s.costIn || {};
+    const entryIn = s.entryIn || {};
+    const setCost = (k) => (e) => { const v = e.target.value; this.setState((st) => ({ costIn: Object.assign({}, st.costIn || {}, { [k]: v }) })); };
+    const setEntry = (k) => (e) => { const v = e.target.value; this.setState((st) => ({ entryIn: Object.assign({}, st.entryIn || {}, { [k]: v }) })); };
+    const thisMonth = new Date().toISOString().slice(0, 7);
+    return {
+      repShow: s.view === 'pilot' && !!s.loggedIn && ((isAdmin && !s.pilotRegionId) || role === 'champion'),
+      repTitle: isAdmin ? 'Pilot reports' : 'Region report',
+      repIsAdmin: isAdmin,
+      repBudgetLine: money(budgetMonth) + ' per learner a month',
+      repHasAlerts: isAdmin && (s.spendAlerts || []).length > 0,
+      repAlerts: (s.spendAlerts || []).map((a) => ({
+        text: (a.scope === 'pilot' ? 'The whole pilot' : a.scope === 'school' ? a.label : 'Learner ' + a.label + (a.school ? ' at ' + a.school : '')) +
+          ', ' + new Date(a.month + 'T00:00:00').toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }) + ': ' +
+          money(a.per_learner_usd) + (a.scope === 'learner' ? '' : ' per learner') + ', above the ' + money(a.allowed_usd) + ' the budget allows so far.',
+        dismiss: () => this.pilotAct(P.dismissAlert(a.id), 'Alert marked as seen.')
+      })),
+      repPeriods: periods.map(([k, label]) => ({ label: s.repBusy && s.repKey === k ? 'Preparing\u2026' : label, style: chip(s.repKey === k), pick: () => this.loadReport(k) })),
+      repBusy: !!s.repBusy,
+      repHasData: !!rep && !s.repBusy,
+      repPeriodLine: rep ? fmtD(rep.from) + ' to ' + fmtD(rep.to) + ' \u00b7 budget for this period ' + money(rep.budget_per_learner) + ' per learner' : '',
+      repSummary: !tot ? [] : [
+        { text: 'All: ' + useLine(tot), style: '' },
+        { text: costLine(tot), style: tot.ahead ? 'color:#B42318;font-weight:600;' : 'color:#1F6B43;' }
+      ].concat(rows.filter((x) => x.level === 'setting' && x.setting).map((x) => ({
+        text: settingName(x.setting) + ' schools: ' + num(x.active) + ' of ' + num(x.learners) + ' active \u00b7 ' + pl(x.sessions, 'session', 'sessions') + ' \u00b7 ' + pl(x.minutes, 'minute', 'minutes') + ' \u00b7 ' + x.data_mb + ' MB' + (x.cost_per_learner == null ? '' : ' \u00b7 ' + money(x.cost_per_learner) + ' per learner'),
+        style: 'color:var(--muted);'
+      }))),
+      repSchools: rows.filter((x) => x.level === 'school').map((x) => ({
+        school: x.school, region: x.region || '', setting: settingName(x.setting),
+        activeLine: num(x.active) + ' / ' + num(x.learners), sessions: num(x.sessions), minutes: num(x.minutes), topics: num(x.topics), ussd: num(x.ussd),
+        data: x.data_mb + ' MB', sms: num(x.sms), cost: x.cost_per_learner == null ? 'no learners yet' : money(x.cost_per_learner), costStyle: red(x.ahead)
+      })),
+      repRegions: rows.filter((x) => x.level === 'region').map((x) => ({
+        region: x.region || 'No region', line: num(x.active) + ' of ' + num(x.learners) + ' active \u00b7 ' + pl(x.sessions, 'session', 'sessions') + ' \u00b7 ' + pl(x.minutes, 'minute', 'minutes') + ' \u00b7 ' + pl(x.topics, 'topic', 'topics') + ' \u00b7 ' + num(x.ussd) + ' USSD \u00b7 ' + x.data_mb + ' MB',
+        cost: x.cost_per_learner == null ? '' : money(x.cost_per_learner) + ' per learner', costStyle: 'font-weight:600;' + (x.ahead ? 'color:#B42318;' : '')
+      })),
+      repCsv: () => {
+        if (!rep) return;
+        const q = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+        const cols = ['level', 'region', 'school', 'setting', 'class', 'learners', 'active', 'sessions', 'minutes', 'questions', 'practice', 'topics', 'ussd', 'data_mb', 'sms', 'cost_data', 'cost_sms', 'cost_ussd', 'cost_other', 'cost_total', 'cost_per_learner', 'ahead'];
+        const lcols = ['pseudo_id', 'region', 'school', 'setting', 'class', 'active', 'sessions', 'minutes', 'questions', 'practice', 'topics', 'ussd', 'data_mb', 'sms', 'cost', 'ahead'];
+        const lines = ['# K12Plus pilot report, ' + rep.from + ' to ' + rep.to + ', costs in US$, budget per learner for the period ' + rep.budget_per_learner,
+          cols.map(q).join(',')].concat(rows.map((x) => cols.map((c) => q(x[c])).join(',')))
+          .concat(['', '# Learners (pilot IDs only)', lcols.map(q).join(',')]).concat((rep.learners || []).map((x) => lcols.map((c) => q(x[c])).join(',')));
+        const blob = new Blob([lines.join('\n') + '\n'], { type: 'text/csv' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob); a.download = 'k12plus-pilot-report-' + rep.from + '-to-' + rep.to + '.csv';
+        document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+      },
+      costIn: { data_usd_per_gb: costIn.data_usd_per_gb == null ? '' : String(costIn.data_usd_per_gb), sms_usd: costIn.sms_usd == null ? '' : String(costIn.sms_usd),
+        ussd_session_usd: costIn.ussd_session_usd == null ? '' : String(costIn.ussd_session_usd), budget_per_learner_usd: costIn.budget_per_learner_usd == null ? '' : String(costIn.budget_per_learner_usd) },
+      costOn: { data_usd_per_gb: setCost('data_usd_per_gb'), sms_usd: setCost('sms_usd'), ussd_session_usd: setCost('ussd_session_usd'), budget_per_learner_usd: setCost('budget_per_learner_usd') },
+      costSave: () => this.pilotAct(P.setCostSettings(costIn), 'Prices saved. Reports and alerts now use them.').then((d) => { if (d) { this.setState({ costSettings: d, costIn: d }); if (s.repKey) this.loadReport(s.repKey, true); } }),
+      entryIn: { school_id: entryIn.school_id || '', month: entryIn.month || thisMonth, amount_usd: entryIn.amount_usd || '', note: entryIn.note || '' },
+      entryOn: { school_id: setEntry('school_id'), month: setEntry('month'), amount_usd: setEntry('amount_usd'), note: setEntry('note') },
+      entrySchools: (s.pilotOverviewSchools || rows.filter((x) => x.level === 'school').map((x) => ({ id: x.school_id, name: x.school }))),
+      entryAdd: () => {
+        const e = { school_id: entryIn.school_id || '', month: (entryIn.month || thisMonth) + '-01', amount_usd: entryIn.amount_usd || '', note: entryIn.note || '', kind: 'data_bundles' };
+        if (!String(e.amount_usd).trim()) return this.setState({ pilotErr: 'Type the amount in US dollars, such as 40.00.', pilotMsg: '' });
+        this.pilotAct(P.addCostEntry(e), 'Cost added.').then((d) => { if (d) { this.setState({ entryIn: { month: entryIn.month || thisMonth } }); if (s.repKey) this.loadReport(s.repKey, true); } });
+      },
+      entryList: (s.costEntryList || []).map((e) => ({
+        text: e.school + ' \u00b7 ' + new Date(e.month + 'T00:00:00').toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }) + ' \u00b7 ' + money(e.amount_usd) + (e.note ? ' \u00b7 ' + e.note : ''),
+        remove: () => this.pilotAct(P.removeCostEntry(e.id), 'Cost removed.').then((d) => { if (d && s.repKey) this.loadReport(s.repKey, true); })
+      }))
+    };
   }
 
   // ---------- 2027 pilot: start of the year and end of the year tests ----------
@@ -4478,6 +4663,7 @@ class Component extends DCLogic {
       isDashMin: !lockNoun && s.view === 'dashboard' && s.role === 'Ministry',
       ...this.pilotVals(s),
       ...this.testVals(s),
+      ...this.repVals(s),
       isLab: s.view === 'lab', isTimetable: !lockNoun && s.view === 'timetable', isCalendar: !lockNoun && s.view === 'calendar', isQuiz: !lockNoun && s.view === 'quiz', isSyllabus: !lockNoun && s.view === 'syllabus',
       goDash: () => this.setState({ view: 'dashboard' }),
       goChat: () => this.setState({ view: 'chat' }),

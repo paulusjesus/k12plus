@@ -5,6 +5,43 @@
  * - PWA service worker registration
  */
 (function () {
+  // ---- Data used by the app (2027 pilot) ----
+  // Counts the bytes this app downloads and sends on the phone: its own pages and
+  // files (as the browser reports them) and every call to the K12Plus server. The
+  // total is kept only for learners taking part in the pilot and sent in small
+  // records (see k12learn below); for everyone else it is thrown away.
+  var dataBytes = 0;
+  function addData(n) { if (n > 0) dataBytes += n; }
+  try {
+    var po = new PerformanceObserver(function (list) {
+      list.getEntries().forEach(function (e) {
+        if (String(e.name).indexOf('supabase.co') > -1) return; // counted from the calls below
+        addData(e.transferSize || 0);
+      });
+    });
+    po.observe({ type: 'navigation', buffered: true });
+    po.observe({ type: 'resource', buffered: true });
+  } catch (e) {}
+  if (window.fetch) {
+    var realFetch = window.fetch;
+    window.fetch = function (input, init) {
+      var url = typeof input === 'string' ? input : (input && input.url) || '';
+      var p = realFetch.apply(this, arguments);
+      if (String(url).indexOf('supabase.co') < 0) return p;
+      var up = 500 + ((init && typeof init.body === 'string') ? init.body.length : 0); // request with its headers
+      return p.then(function (res) {
+        try {
+          var len = parseInt(res.headers.get('content-length') || '', 10);
+          if (len >= 0) addData(up + len + 300);
+          else res.clone().arrayBuffer().then(function (b) { addData(up + b.byteLength + 300); }, function () { addData(up); });
+        } catch (e) { addData(up); }
+        return res;
+      }, function (err) { addData(up); throw err; });
+    };
+  }
+  window.k12dataUsed = function () { return dataBytes; };
+  window.k12takeData = function () { var n = dataBytes; dataBytes = 0; return n; };
+
   // AI proxy: Supabase Edge Function (moved from Google Cloud Run on 14 Oct 2026).
   // The public anon key below is the same one used for auth; it lets the
   // Supabase gateway accept the call. The Claude key lives only on the server.
@@ -523,6 +560,15 @@
     pendingRemovals: function () { return pilotRpc('pilot_pending_removals'); },
     mySummaries: function () { return pilotRpc('pilot_my_summaries'); },
     summaryStatus: function () { return pilotRpc('pilot_summary_status'); },
+    // reports (item 8): administrators see every pilot school, a champion their region
+    usageReport: function (from, to) { return pilotRpc('pilot_usage_report', { p_from: from, p_to: to }); },
+    spendingAlerts: function () { return pilotRpc('pilot_spending_alerts'); },
+    dismissAlert: function (id) { return pilotRpc('pilot_dismiss_alert', { p_id: id }); },
+    costSettings: function () { return pilotRpc('pilot_cost_settings'); },
+    setCostSettings: function (p) { return pilotRpc('pilot_set_cost_settings', { p: p }); },
+    addCostEntry: function (p) { return pilotRpc('pilot_add_cost_entry', { p: p }); },
+    costEntries: function (from, to) { return pilotRpc('pilot_cost_entries', { p_from: from, p_to: to }); },
+    removeCostEntry: function (id) { return pilotRpc('pilot_remove_cost_entry', { p_id: id }); },
     pauseLearner: function (learnerId, reason) { return pilotRpc('pilot_pause_learner', { p_learner: learnerId, p_reason: reason || '' }); },
     resumeLearner: function (learnerId) { return pilotRpc('pilot_resume_learner', { p_learner: learnerId }); },
     messagingRules: function () { return pilotRpc('pilot_messaging_rules'); },
@@ -630,6 +676,7 @@
         kind: ev.kind, subject: ev.subject || null, topic: ev.topic || null,
         correct: ev.correct == null ? null : ev.correct, attempted: ev.attempted == null ? null : ev.attempted,
         duration_seconds: ev.duration_seconds == null ? null : ev.duration_seconds,
+        bytes: ev.bytes == null ? null : ev.bytes,
       });
       writeQ(q);
       clearTimeout(flushTimer);
@@ -670,6 +717,13 @@
     ['click', 'keydown', 'touchstart', 'scroll'].forEach(function (t) {
       window.addEventListener(t, function () { lastInput = Date.now(); }, { passive: true, capture: true });
     });
+    // data used: one small record about every 5 minutes, or when the app is put away
+    function bankData() {
+      var n = window.k12takeData();
+      if (!learnOn() || n < 1) return;
+      while (n > 0) { var part = Math.min(n, 50000000); window.k12learn.record({ kind: 'data', bytes: part }); n -= part; }
+    }
+    window.k12learn.bankData = bankData;
     function bank(min) {
       if (activeSec >= min) { window.k12learn.record({ kind: 'active', duration_seconds: activeSec }); activeSec = 0; }
     }
@@ -678,7 +732,9 @@
       if (Date.now() - lastInput < 60000) activeSec += 30;
       bank(300);
     }, 30000);
-    document.addEventListener('visibilitychange', function () { if (document.hidden) bank(30); });
+    document.addEventListener('visibilitychange', function () { if (document.hidden) { bank(30); bankData(); } });
+    window.addEventListener('pagehide', bankData);
+    setInterval(bankData, 300000);
     window.addEventListener('online', function () { window.k12learn.flush(); });
     setTimeout(function () { window.k12learn.flush(); }, 4000);
   })();
