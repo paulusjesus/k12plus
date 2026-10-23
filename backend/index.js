@@ -19,7 +19,7 @@ const functions = require('@google-cloud/functions-framework');
 // and adaptive thinking is on by default and counts toward max_tokens, so we
 // keep effort low for speed and leave generous max_tokens headroom.
 const CLAUDE_MODELS = ['claude-sonnet-5-5', 'claude-haiku-5-5'];
-const CLAUDE_URL = 'https://api.anthropic.com/v1/messages';
+const CLAUDE_URL = process.env.ANTHROPIC_URL || 'https://api.anthropic.com/v1/messages'; // ANTHROPIC_URL only in tests
 const CLAUDE_VERSION = '2023-06-01';
 // statuses where trying the next model may help (400/404: model-specific rejection)
 const RETRYABLE = [400, 404, 408, 429, 500, 502, 503, 504, 529];
@@ -119,24 +119,41 @@ async function logAgent(entry) {
 
 const parseJson = (t) => JSON.parse(t.replace(/^```json?\s*|```\s*$/g, ''));
 
-// Pilot tests: while a learner taking part in the pilot is sitting a test on
-// their phone, the agent does not help them. The app sends the learner's own
-// sign-in token only for pilot learners; the database decides. If the check
-// cannot be made (no token, network trouble), the agent works as normal, so
+// Pilot (2027): the app sends a pilot learner's own sign-in token. One call, made
+// as that learner, tells the agent whether they are sitting a test (then it does
+// not help) and whether they take part with consent (then the question and the
+// reply are kept for the teachers' monthly review). If the check cannot be made
+// (no token, network trouble), the agent works as normal and keeps nothing, so
 // learners outside the pilot are never affected.
-async function testLocked(token) {
-  if (!token || !process.env.SUPABASE_URL) return false;
+async function pilotContext(token) {
+  if (!token || !process.env.SUPABASE_URL) return {};
   const key = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_KEY;
   const ctl = new AbortController();
   const timer = setTimeout(() => ctl.abort(), 3000);
   try {
-    const r = await fetch(`${process.env.SUPABASE_URL}/rest/v1/rpc/pilot_my_test_lock`, {
+    const r = await fetch(`${process.env.SUPABASE_URL}/rest/v1/rpc/pilot_agent_context`, {
       method: 'POST', signal: ctl.signal,
       headers: { 'Content-Type': 'application/json', apikey: key, Authorization: `Bearer ${token}` },
       body: '{}',
     });
-    return r.ok && (await r.json()) === true;
-  } catch { return false; } finally { clearTimeout(timer); }
+    return r.ok ? ((await r.json()) || {}) : {};
+  } catch { return {}; } finally { clearTimeout(timer); }
+}
+
+// keeps a pilot learner's question and the agent's reply for the monthly review
+async function keepForReview(ctx, fb, question, reply, model, kind) {
+  if (!ctx || !ctx.taking_part || !ctx.learner_id || !fb || !process.env.SUPABASE_URL) return;
+  if (fb.kind === 'real_life') question = `Real-Life Lab story about ${clip(fb.topic, 120)} (${clip(fb.subject, 60)})`;
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 3000);
+  try {
+    await fetch(`${process.env.SUPABASE_URL}/rest/v1/rpc/pilot_save_exchange`, {
+      method: 'POST', signal: ctl.signal,
+      headers: { 'Content-Type': 'application/json', apikey: process.env.SUPABASE_SERVICE_KEY, Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}` },
+      body: JSON.stringify({ p: { learner_id: ctx.learner_id, kind: kind === 'photo' ? 'photo' : (fb.kind || kind), subject: clip(fb.subject, 60), topic: clip(fb.topic, 120),
+                                  question: clip(question, 1000), reply: clip(reply, 4000), model } }),
+    });
+  } catch (e) { console.error('review keep failed', e.message); } finally { clearTimeout(timer); }
 }
 const TEST_LOCK_REPLY = 'You are in the middle of a test, so the agent is taking a break until you submit it. Do your best on your own; there is no need to worry about marks. I will be right here after the test.';
 
@@ -159,9 +176,11 @@ functions.http('aim', async (req, res) => {
     return res.status(503).json({ error: 'tutor not configured', detail: 'ANTHROPIC_API_KEY is not set' });
   }
 
-  if (req.body && req.body.k12token && await testLocked(String(req.body.k12token))) {
+  const pilot = req.body && req.body.k12token ? await pilotContext(String(req.body.k12token)) : {};
+  if (pilot.locked === true) {
     return res.status(423).json({ error: 'test_in_progress', reply: TEST_LOCK_REPLY });
   }
+  const fb = req.body && req.body.k12feedback && typeof req.body.k12feedback === 'object' ? req.body.k12feedback : null;
 
   const {
     action, grade = 12, syllabus = '8227', topic = null,
@@ -251,6 +270,7 @@ Return STRICT JSON: {"headline":"","highlights":[""],"risks":[""],"recommendatio
       const sys = clip(req.body.system, 4000) ||
         'You are the k12plus tutor for learners in Namibia and South Africa. Be a patient, warm teacher.';
       const out = await callClaude(sys, (messages || []).slice(-16), 4096);
+      await keepForReview(pilot, fb, (messages || []).filter((m) => m.role !== 'assistant').slice(-1)[0]?.content, out.text, out.model, 'chat');
       await logAgent({
         agent: 'tutor', action: 'k12plus chat',
         input_summary: clip(messages.at(-1)?.content, 200),
@@ -267,6 +287,7 @@ Return STRICT JSON: {"headline":"","highlights":[""],"risks":[""],"recommendatio
         'You are the k12plus tutor for learners in Namibia and South Africa. Be a patient, warm teacher.';
       const lastUserText = (messages || []).slice(-1)[0]?.content || 'Please help me with this.';
       const out = await callClaudeWithImage(sys, lastUserText, image.mime, image.data, 4096);
+      await keepForReview(pilot, fb, lastUserText + ' (with a photo, not kept)', out.text, out.model, 'photo');
       await logAgent({
         agent: 'tutor', action: 'k12plus chat with image',
         input_summary: clip(lastUserText, 200),

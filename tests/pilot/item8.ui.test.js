@@ -144,7 +144,7 @@ const inLastMonth = (day, hour) => new Date(lmFrom.getFullYear(), lmFrom.getMont
   await ap.locator('input[placeholder="Amount, US$"]').fill('40');
   await ap.locator('input[placeholder="Note, e.g. data bundles"]').fill('Data bundles for Karibib');
   await ap.locator('select').selectOption({ label: 'Karibib Secondary School' });
-  await ap.locator('input[type="month"]').fill(ymd(lmFrom).slice(0, 7));
+  await ap.locator('details input[type="month"]').fill(ymd(lmFrom).slice(0, 7));
   await ap.click('button:has-text("Add cost")'); await ap.waitForTimeout(1800);
   t = await text(ap);
   ok(/Cost added/.test(t) && /Karibib Secondary School Erongo Rural 1 \/ 1 2 0 1 1 0 MB 0 US\$40\.03/.test(t) && /Karibib Secondary School · .* · US\$40\.00 · Data bundles for Karibib/.test(t), 'a cost typed in for a school is added to that school', t.match(/Karibib Secondary School Erongo[^U]*US\$[\d.]+/));

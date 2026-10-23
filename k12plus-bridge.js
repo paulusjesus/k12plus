@@ -79,6 +79,12 @@
     if (hasImage) {
       payload.image = { mime: String(opts.image.mime || 'image/png'), data: String(opts.image.data) };
     }
+    // pilot learners: mark agent replies a teacher may review (chat, photo questions, Real-Life Lab)
+    try {
+      if (opts.feedback && localStorage.getItem('k12plus-pilot-taking-part') === '1') {
+        payload.k12feedback = { kind: String(opts.feedback.kind || 'chat'), subject: String(opts.feedback.subject || ''), topic: String(opts.feedback.topic || '') };
+      }
+    } catch (e) {}
     if (!navigator.onLine) {
       if (hasImage) {
         return 'You are offline right now, and pictures need a connection to reach the tutor. Please try sending your image again once you are back online.';
@@ -569,6 +575,12 @@
     addCostEntry: function (p) { return pilotRpc('pilot_add_cost_entry', { p: p }); },
     costEntries: function (from, to) { return pilotRpc('pilot_cost_entries', { p_from: from, p_to: to }); },
     removeCostEntry: function (id) { return pilotRpc('pilot_remove_cost_entry', { p_id: id }); },
+    // teachers' monthly review of the agent's replies (item 9)
+    myReview: function () { return pilotRpc('pilot_my_review'); },
+    startReview: function (batchId) { return pilotRpc('pilot_start_review', { p_batch: batchId }); },
+    reviewItem: function (itemId, verdict, comment) { return pilotRpc('pilot_review_item', { p_item: itemId, p_verdict: verdict, p_comment: comment || '' }); },
+    reviewResults: function (month) { return pilotRpc('pilot_review_results', { p_month: month }); },
+    prepareReviews: function (month) { return pilotRpc('pilot_prepare_reviews_now', { p_month: month }); },
     pauseLearner: function (learnerId, reason) { return pilotRpc('pilot_pause_learner', { p_learner: learnerId, p_reason: reason || '' }); },
     resumeLearner: function (learnerId) { return pilotRpc('pilot_resume_learner', { p_learner: learnerId }); },
     messagingRules: function () { return pilotRpc('pilot_messaging_rules'); },
