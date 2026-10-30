@@ -92,7 +92,7 @@ const inOrder = (t, list) => list.every((x, i) => t.indexOf(x) >= 0 && (i === 0 
   console.log('\nPricing and contact');
   const pr = pages['pricing.html'];
   ok(/Common questions/.test(pr.text) && !/\bFAQ\b/.test(pr.text) && !/Compare plans Free/.test(pr.text), 'the FAQ and Compare plans labels are gone and the headings stay');
-  ok(/Unlimited agent conversations/.test(pr.text) && /AI agent questions/.test(pr.text) && /Offline lessons and practice/.test(pr.text) && /Real-Life Lab/.test(pr.text) && !/Edge AI|images and videos/.test(pr.text), 'plan features use the agent wording and the reworded promises');
+  ok(/Up to 20 questions a day with the agents/.test(pr.text) && /Up to 5 questions a day to the AI agents/.test(pr.text) && /6\/learner a month/.test(pr.text) && !/Unlimited|0\.80/.test(pr.text) && /AI agent questions/.test(pr.text) && /Offline lessons and practice/.test(pr.text) && /Real-Life Lab/.test(pr.text) && !/Edge AI|images and videos/.test(pr.text), 'plan features use the agent wording and the reworded promises');
   await shot(pr.page, 'item15-pricing.png');
   await shot(pages['contact.html'].page, 'item15-contact.png', false);
 

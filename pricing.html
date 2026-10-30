@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=20"></script>
+<script src="./k12plus-bridge.js?v=21"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
@@ -76,7 +76,7 @@ a:hover { color:var(--magenta); }
         <div style="font-size:40px; font-weight:700; letter-spacing:-1.8px; margin-bottom:2px;">{{ cur }}0</div>
         <p style="font-size:13px; color:var(--muted); margin:0 0 24px;">no card, no catch</p>
         <div style="display:flex; flex-direction:column; gap:12px; font-size:14px; color:var(--muted); flex:1;">
-          <span>✓ Daily questions to the AI agents</span>
+          <span>✓ Up to 5 questions a day to the AI agents</span>
           <span>✓ USSD access on basic phones</span>
           <span>✓ Past-exam practice questions</span>
           <span>✓ All four subjects</span>
@@ -85,14 +85,14 @@ a:hover { color:var(--magenta); }
         <a href="signup.html" style="margin-top:26px; text-align:center; background:var(--chip); color:var(--ink); border:1px solid var(--line); padding:13px 0; border-radius:6px; font-weight:600; font-size:14.5px;">Start for free</a>
       </div>
       <div style="background:var(--surface); border:2px solid var(--primary); border-radius:15px; padding:40px 36px; display:flex; flex-direction:column; position:relative; box-shadow:var(--shadow);">
-        <span style="position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--primary); color:#fff; font-size:11.5px; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:4px 14px; border-radius:20px;">Most popular</span>
+        <span style="position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:var(--primary); color:#fff; font-size:12.5px; font-weight:600; padding:4px 14px; border-radius:20px;">Most popular</span>
         <h3 style="font-size:17px; font-weight:600; margin:0 0 6px;">Individual</h3>
         <p style="font-size:13.5px; color:var(--muted); margin:0 0 20px;">For learners and parents</p>
         <div style="font-size:40px; font-weight:700; letter-spacing:-1.8px; margin-bottom:2px;">{{ cur }}15<span style="font-size:16px; font-weight:500; color:var(--muted); letter-spacing:0;">/month</span></div>
         <p style="font-size:13px; color:var(--muted); margin:0 0 24px;">less than a loaf of bread a week</p>
         <div style="display:flex; flex-direction:column; gap:12px; font-size:14px; flex:1;">
           <span>✓ Everything in Free</span>
-          <span>✓ Unlimited agent conversations</span>
+          <span>✓ Up to 20 questions a day with the agents</span>
           <span>✓ Real-Life Lab animated scenes and stories</span>
           <span>✓ Offline lessons and practice</span>
           <span>✓ Progress reports for parents</span>
@@ -104,8 +104,8 @@ a:hover { color:var(--magenta); }
       <div style="background:var(--surface); border:1px solid var(--line); border-radius:15px; padding:40px 36px; display:flex; flex-direction:column;">
         <h3 style="font-size:17px; font-weight:600; margin:0 0 6px;">School</h3>
         <p style="font-size:13.5px; color:var(--muted); margin:0 0 20px;">For whole classrooms</p>
-        <div style="font-size:40px; font-weight:700; letter-spacing:-1.8px; margin-bottom:2px;">{{ cur }}299<span style="font-size:16px; font-weight:500; color:var(--muted); letter-spacing:0;">/month</span></div>
-        <p style="font-size:13px; color:var(--muted); margin:0 0 24px;">learners join free once the school subscribes</p>
+        <div style="font-size:40px; font-weight:700; letter-spacing:-1.8px; margin-bottom:2px;">{{ cur }}6<span style="font-size:16px; font-weight:500; color:var(--muted); letter-spacing:0;">/learner a month</span></div>
+        <p style="font-size:13px; color:var(--muted); margin:0 0 24px;">from {{ cur }}299 a month for a school; learners join free</p>
         <div style="display:flex; flex-direction:column; gap:12px; font-size:14px; color:var(--muted); flex:1;">
           <span>✓ Everything in Individual, for every learner</span>
           <span>✓ Teacher dashboards and AI marking</span>
@@ -121,8 +121,8 @@ a:hover { color:var(--magenta); }
       <div style="background:var(--goldbg); border:1px solid var(--line); border-radius:15px; padding:32px 38px; display:flex; align-items:center; gap:24px; flex-wrap:wrap;">
         <span style="font-size:28px;">🪙</span>
         <div style="flex:1; min-width:280px;">
-          <h3 style="font-size:16px; font-weight:600; margin:0 0 4px;">Community top-ups from {{ cur }}0.80</h3>
-          <p style="font-size:14px; line-height:1.65; color:var(--muted); margin:0;">No subscription? Unlock single features with micro-payments: one revision plan, one week of unlimited questions, one set of practice exams. Pay with airtime or mobile money.</p>
+          <h3 style="font-size:16px; font-weight:600; margin:0 0 4px;">Community top-ups from {{ cur }}2</h3>
+          <p style="font-size:14px; line-height:1.65; color:var(--muted); margin:0;">No subscription? Buy only what you need: 20 more questions, one revision plan, or one set of practice examinations. Pay with airtime or mobile money.</p>
         </div>
         <a href="contact.html" style="font-size:14px; font-weight:600; white-space:nowrap;">Learn more →</a>
       </div>
@@ -242,7 +242,7 @@ class Component extends DCLogic {
         ? (currency === 'R' ? 'We detected you are in South Africa. Prices are shown in Rand.' : 'We detected you are in Namibia. Prices are shown in Namibia Dollars.')
         : 'Prices are identical in both currencies. N$ and R are pegged one to one.',
       compareRows: [
-        { label: 'AI agent questions', free: 'Daily limit', ind: 'Unlimited', school: 'Unlimited' },
+        { label: 'AI agent questions', free: '5 a day', ind: '20 a day', school: '20 a day' },
         { label: 'USSD on basic phones', free: '✓', ind: '✓', school: '✓' },
         { label: 'Past-exam practice', free: '✓', ind: '✓', school: '✓' },
         { label: 'Real-Life Lab scenes and stories', free: '·', ind: '✓', school: '✓' },
@@ -255,9 +255,10 @@ class Component extends DCLogic {
       ],
       faqs: [
         { q: 'Why are the prices identical in N$ and R?', a: 'The Namibia Dollar is pegged one to one to the South African Rand, so N$15 and R15 are the same value. We simply show the currency you actually use.' },
-        { q: 'What stays free forever?', a: 'Asking the agents questions, USSD access on basic phones and past-exam practice. No learner is ever turned away for money.' },
-        { q: 'How does the school plan work?', a: 'One subscription covers the whole school. Every learner then gets full Individual features at no cost to their family, and teachers get dashboards, AI marking and training.' },
-        { q: 'What are community top-ups?', a: 'Micro-payments from 80 cents that unlock single features without a subscription: a revision plan, a week of unlimited questions, or a set of practice exams. They can be paid with airtime or mobile money.' },
+        { q: 'What stays free forever?', a: 'Up to five questions a day to the agents, USSD access on basic phones and past-exam practice. No learner is ever turned away for money.' },
+        { q: 'What happens when I have used my questions for the day?', a: 'They come back the next morning. Past-exam practice and your saved lessons keep working, and the Individual plan gives you up to 20 questions a day.' },
+        { q: 'How does the school plan work?', a: `The school pays ${currency}6 for each enrolled learner a month, with a minimum of ${currency}299 a month. Every learner then gets full Individual features at no cost to their family, and teachers get dashboards, AI marking and training.` },
+        { q: 'What are community top-ups?', a: `Small payments from ${currency}2 for families who do not want a subscription: 20 more questions, a revision plan, or a set of practice exams. They can be paid with airtime or mobile money.` },
         { q: 'Can I pay without a bank card?', a: 'Yes. We support mobile money and airtime billing, because most of our families do not use cards online.' },
         { q: 'Can I cancel anytime?', a: 'Yes. Plans are month to month with no contracts. If you cancel, you simply move back to the free plan and your progress is never deleted.' }
       ]

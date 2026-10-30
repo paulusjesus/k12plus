@@ -224,7 +224,7 @@ const MIGS = ['20261023_pilot_structure.sql', '20261024_pilot_consent.sql', '202
   t = await text(l2);
   ok(!/Pilot tests/.test(t), 'a learner without consent sees no test');
   await l2.evaluate(() => window.claude.complete({ system: 'x', messages: [{ role: 'user', content: 'hi' }] }));
-  ok(aimCalls.at(-1).token === false, 'and the app sends the agent nothing extra for them');
+  ok(aimCalls.at(-1).token === true, 'she sends her sign-in so her daily questions are counted (pricing, 30 October 2026); the agent still keeps nothing for the pilot');
 
   console.log('\nThe teacher: paper answers, paper version and class results');
   const tp = await newPage('t1', 'Educator');

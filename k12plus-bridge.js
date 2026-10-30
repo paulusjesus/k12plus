@@ -88,12 +88,26 @@ window.k12agentName = function (subject) {
     return { 'Content-Type': 'application/json', apikey: PROXY_ANON, Authorization: 'Bearer ' + PROXY_ANON };
   }
 
-  // Pilot learners send their own sign-in token, so the agent can stay quiet
-  // while they sit a pilot test. Everyone else sends exactly what they did before.
+  // Signed-in learners send their own sign-in token: the agent counts the day's
+  // questions on their plan, and stays quiet while a pilot learner sits a test.
+  // Every phone also sends a random ID (no name, no number), so visitors who are not
+  // signed in get their free questions each day.
+  function deviceId() {
+    try {
+      var d = localStorage.getItem('k12plus-device');
+      if (!d || !/^[A-Za-z0-9-]{8,64}$/.test(d)) {
+        d = 'd-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 12);
+        localStorage.setItem('k12plus-device', d);
+      }
+      return d;
+    } catch (e) { return ''; }
+  }
   async function withPilotToken(payload) {
     var out = Object.assign({}, payload);
     try {
-      if (localStorage.getItem('k12plus-pilot-taking-part') === '1') {
+      var dev = deviceId();
+      if (dev) out.k12device = dev;
+      if (localStorage.getItem('k12plus-loggedin') === '1') {
         var sess = await freshSession();
         if (sess && sess.access_token) out.k12token = sess.access_token;
       }
@@ -148,6 +162,7 @@ window.k12agentName = function (subject) {
     var data = null;
     try { data = await res.json(); } catch (e) {}
     if (res.status === 423 && data && data.reply) return data.reply;
+    if (res.status === 402 && data && data.reply) return data.reply; // the day's questions are used up
     if (!res.ok) {
       var detail = (data && (data.detail || data.error)) || '';
       if (res.status === 503 && /not configured/i.test(String(data && data.error))) {
@@ -198,6 +213,7 @@ window.k12agentName = function (subject) {
           res = await fetch(PROXY, { method: 'POST', headers: proxyHeaders(), body: JSON.stringify(await withPilotToken(item.payload)) });
         } catch (e) { break; } // still no connection: keep it for later
         if (res.status === 423) break; // a test is in progress: answer after the test
+        if (res.status === 402) break; // the day's questions are used up: answer it tomorrow
         var data = null;
         try { data = await res.json(); } catch (e) {}
         var gone = res.ok || (res.status >= 400 && res.status < 500 && [408, 425, 429].indexOf(res.status) === -1);

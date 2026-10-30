@@ -13,12 +13,23 @@
 
 const functions = require('@google-cloud/functions-framework');
 
-// Primary model favours answer quality (this is a tutor, quality matters most);
-// the fallback is used if the primary errors, is rate-limited or overloaded.
+// Which model answers (pricing approved 30 October 2026):
+// - everyday questions from learners go to Haiku, which is fast and costs about a
+//   twentieth of Sonnet; Sonnet takes over if Haiku cannot answer;
+// - Sonnet answers first when a learner says she is still stuck, for photos of her
+//   working, and for teacher tools (lesson plans, question sets, briefs).
 // Note: current Claude models reject non-default temperature/top_p/top_k (400),
 // and adaptive thinking is on by default and counts toward max_tokens, so we
 // keep effort low for speed and leave generous max_tokens headroom.
-const CLAUDE_MODELS = ['claude-sonnet-5-5', 'claude-haiku-5-5'];
+const SONNET_FIRST = ['claude-sonnet-5-5', 'claude-haiku-5-5'];
+const HAIKU_FIRST = ['claude-haiku-5-5', 'claude-sonnet-5-5'];
+const CLAUDE_MODELS = SONNET_FIRST;
+// a learner who says she is still stuck gets the stronger model
+const STUCK = /(do ?n[o']?t|did ?n[o']?t|still ?(do ?n[o']?t|not)?|can ?n[o']?t|cannot)\s+(get|understand|follow|see)|confus|i(?:'| a)?m lost|no idea|not sure|idk|i give up|makes no sense|explain (it )?again|still wrong|wrong again|try again|\?\s*\?/i;
+function isStuck(messages) {
+  const last = (messages || []).filter((m) => m && m.role !== 'assistant').slice(-1)[0];
+  return !!(last && STUCK.test(String(last.content || '')));
+}
 const CLAUDE_URL = process.env.ANTHROPIC_URL || 'https://api.anthropic.com/v1/messages'; // ANTHROPIC_URL only in tests
 const CLAUDE_VERSION = '2023-06-01';
 // statuses where trying the next model may help (400/404: model-specific rejection)
@@ -50,9 +61,9 @@ function claudeHeaders() {
 }
 
 // Single entry point for every Claude call. Returns text, token usage and the model used.
-async function claudeRequest(systemText, claudeMessages, { maxTokens = 4096, effort = 'low' } = {}) {
+async function claudeRequest(systemText, claudeMessages, { maxTokens = 4096, effort = 'low', models = CLAUDE_MODELS } = {}) {
   let lastErr = null;
-  for (const model of CLAUDE_MODELS) {
+  for (const model of models) {
     let res;
     try {
       res = await fetch(CLAUDE_URL, {
@@ -87,8 +98,8 @@ async function claudeRequest(systemText, claudeMessages, { maxTokens = 4096, eff
   throw new Error(lastErr || 'Claude unavailable');
 }
 
-function callClaude(systemText, messages, maxTokens = 4096, effort = 'low') {
-  return claudeRequest(systemText, toClaudeMessages(messages), { maxTokens, effort });
+function callClaude(systemText, messages, maxTokens = 4096, effort = 'low', models = CLAUDE_MODELS) {
+  return claudeRequest(systemText, toClaudeMessages(messages), { maxTokens, effort, models });
 }
 
 // For image questions: a single-turn call with the learner's photo attached.
@@ -155,6 +166,47 @@ async function keepForReview(ctx, fb, question, reply, model, kind) {
     });
   } catch (e) { console.error('review keep failed', e.message); } finally { clearTimeout(timer); }
 }
+// Daily questions by plan (pricing approved 30 October 2026). The database decides the
+// learner's plan and counts the day's questions (aim_allowance). Signed-in learners are
+// counted by account; visitors by a random ID the app keeps on the phone, or else by
+// network address. If the count cannot be made, the agent answers as normal, so nobody
+// is ever locked out by an error.
+async function whoIs(token) {
+  if (!token || !process.env.SUPABASE_URL) return null;
+  const key = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_KEY;
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 3000);
+  try {
+    const r = await fetch(`${process.env.SUPABASE_URL}/auth/v1/user`, { signal: ctl.signal, headers: { apikey: key, Authorization: `Bearer ${token}` } });
+    if (!r.ok) return null;
+    const u = await r.json();
+    return u && typeof u.id === 'string' && /^[0-9a-f-]{36}$/i.test(u.id) ? u.id : null;
+  } catch { return null; } finally { clearTimeout(timer); }
+}
+async function takeQuestion(userId, key) {
+  if (!process.env.SUPABASE_URL) return { allowed: true };
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 3000);
+  try {
+    const r = await fetch(`${process.env.SUPABASE_URL}/rest/v1/rpc/aim_allowance`, {
+      method: 'POST', signal: ctl.signal,
+      headers: { 'Content-Type': 'application/json', apikey: process.env.SUPABASE_SERVICE_KEY, Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}` },
+      body: JSON.stringify({ p_user: userId || null, p_key: key, p_take: true }),
+    });
+    if (!r.ok) { console.error('allowance', r.status); return { allowed: true }; }
+    const a = await r.json();
+    return a && typeof a.allowed === 'boolean' ? a : { allowed: true };
+  } catch (e) { console.error('allowance', e.message); return { allowed: true }; } finally { clearTimeout(timer); }
+}
+function limitReply(a) {
+  if (a.plan === 'visitor' || a.plan === 'free') {
+    return `You have used today's ${a.limit} free questions. Well done for practising! They come back tomorrow. ` +
+      'For up to 20 questions a day, the Individual plan is N$15 a month, or ask your school about the School plan. Meanwhile, past examination practice and your saved lessons still work.';
+  }
+  return `You have asked ${a.limit} questions today. Well done for working so hard! Your questions come back tomorrow. ` +
+    'Meanwhile, try a practice question or one of your saved lessons.';
+}
+
 const TEST_LOCK_REPLY = 'You are in the middle of a test, so the agent is taking a break until you submit it. Do your best on your own; there is no need to worry about marks. I will be right here after the test.';
 
 functions.http('aim', async (req, res) => {
@@ -176,9 +228,21 @@ functions.http('aim', async (req, res) => {
     return res.status(503).json({ error: 'agent not configured', detail: 'ANTHROPIC_API_KEY is not set' });
   }
 
-  const pilot = req.body && req.body.k12token ? await pilotContext(String(req.body.k12token)) : {};
+  const token = req.body && req.body.k12token ? String(req.body.k12token) : '';
+  const asks = ['chat', 'chatimg', 'tutor'].includes(req.body && req.body.action);
+  const [pilot, userId] = await Promise.all([
+    token ? pilotContext(token) : {},
+    token && asks ? whoIs(token) : null,
+  ]);
   if (pilot.locked === true) {
     return res.status(423).json({ error: 'test_in_progress', reply: TEST_LOCK_REPLY });
+  }
+  if (asks) {
+    const dev = req.body && typeof req.body.k12device === 'string' && /^[A-Za-z0-9-]{8,64}$/.test(req.body.k12device) ? req.body.k12device : '';
+    const a = await takeQuestion(userId, userId ? '' : (dev ? `dev:${dev}` : `ip:${clip(_ip, 80)}`));
+    if (a.allowed === false) {
+      return res.status(402).json({ error: 'daily_limit', plan: a.plan, limit: a.limit, reply: limitReply(a) });
+    }
   }
   const fb = req.body && req.body.k12feedback && typeof req.body.k12feedback === 'object' ? req.body.k12feedback : null;
 
@@ -204,7 +268,7 @@ Rules:
 - Keep responses concise and mobile-friendly.
 - If asked beyond syllabus depth, answer briefly and steer back to syllabus level.
 - If the learner is stuck three times, break the problem into the smallest possible step.`;
-      const out = await callClaude(sys, messages.slice(-12), 4096);
+      const out = await callClaude(sys, messages.slice(-12), 4096, 'low', isStuck(messages) ? SONNET_FIRST : HAIKU_FIRST);
       await logAgent({
         agent: 'tutor', action: `answer grade ${grade} ${topic || 'general'}`,
         input_summary: clip(messages.at(-1)?.content, 200),
@@ -269,7 +333,7 @@ Return STRICT JSON: {"headline":"","highlights":[""],"risks":[""],"recommendatio
       // (subject focus, curriculum context, tone). Still logged either way.
       const sys = clip(req.body.system, 4000) ||
         'You are a k12plus AI agent for learners in Namibia and South Africa. Be a patient, warm teacher.';
-      const out = await callClaude(sys, (messages || []).slice(-16), 4096);
+      const out = await callClaude(sys, (messages || []).slice(-16), 4096, 'low', isStuck(messages) ? SONNET_FIRST : HAIKU_FIRST);
       await keepForReview(pilot, fb, (messages || []).filter((m) => m.role !== 'assistant').slice(-1)[0]?.content, out.text, out.model, 'chat');
       await logAgent({
         agent: 'tutor', action: 'k12plus chat',
