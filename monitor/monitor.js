@@ -489,13 +489,16 @@
         facts = describe(kind, d) + '\n' + (kind === 'region' ? 'Schools' : 'Regions') + ' by share of learners needing attention:\n' +
           a.map(function (x) { return x.name + (x.setting ? ' (' + x.setting + ')' : '') + ': ' + (x.too_few ? 'fewer than five learners' : x.count + ' of ' + x.learners + ' (' + x.share + '%)'); }).join('\n');
       }
+      // with no learner figures there is nothing to advise on, so the agent is not asked
+      var noFigures = !d || d.too_few || !d.learners;
       box.innerHTML = '<section class="card wide"><h2>Who needs attention</h2>' + html +
-        '<div class="advice-row"><button class="btn primary" id="advise">Suggest what to do</button><span class="note">The suggestion uses the figures on this page. No names are sent.</span></div>' +
-        '<div id="advice"></div></section>';
+        (noFigures ? '<p class="note">Suggestions start once at least five learners with consent are taking part here.</p>'
+          : '<div class="advice-row"><button class="btn primary" id="advise">Suggest what to do</button><span class="note">The suggestion uses the figures on this page. No names are sent.</span></div>' +
+            '<div id="advice"></div>') + '</section>';
       if ($('#c-att-topics')) C.bars($('#c-att-topics'), { rows: (a.topics || []).map(function (t) { return { label: t.topic, value: t.learners, cls: 's2' }; }), unit: '', empty: 'No topic stands out yet.' });
       if ($('#c-att-areas')) C.bars($('#c-att-areas'), { max: 100, unit: '%', empty: 'No learners are taking part yet.',
         rows: a.map(function (x) { return { label: x.name, note: x.too_few ? '' : x.count + ' of ' + x.learners + ' learners', value: x.share || 0, hidden: x.too_few ? 'fewer than five' : null, href: '#' + label + '/' + x.id, cls: (x.share || 0) >= 30 ? 'warn' : 's1' }; }) });
-      on('#advise', 'click', function () { askAdvice(kind, facts, key); });
+      if ($('#advise')) on('#advise', 'click', function () { askAdvice(kind, facts, key); });
     }).catch(function (e) { if ($('#att')) box.innerHTML = card('Who needs attention', '<p class="note">' + esc(e.message) + '</p>'); });
   }
 
