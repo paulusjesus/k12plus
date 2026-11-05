@@ -1129,6 +1129,8 @@ window.k12agentName = function (subject) {
       if (!t) return { ok: true, data: { submitted: true } };
       t.submitPending = true;
       writeTest(t);
+      // finishing a test earns 50 coins for the Game Center, once for each test, whatever the score
+      try { if (window.k12coins) window.k12coins.earn(50, 'test', 'test:' + (t.test_id || t.attempt_id)); } catch (e) {}
       if (!navigator.onLine) return { ok: true, queued: true };
       var r = await pilotRpc('pilot_submit_test', { p_attempt: t.attempt_id, p_answers: t.answers });
       if (r.ok || /already submitted/i.test(r.error || '')) { writeTest(null); return { ok: true, data: { submitted: true } }; }

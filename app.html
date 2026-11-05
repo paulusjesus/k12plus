@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=22"></script>
+<script src="./k12plus-bridge.js?v=23"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
 <script src="./k12plus-arcade.js?v=1"></script>
+<script src="./k12plus-coins.js?v=1"></script>
 <script src="./k12plus-scenes.js?v=1"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -390,12 +391,13 @@ button { font-family:'Poppins',sans-serif; }
             <div style="display:flex; gap:8px; flex-wrap:wrap; padding:2px 0 4px;">
               <button onClick="{{ chatGameGo }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="border-color:var(--primary); color:var(--primary);">{{ chatGameLabel }}</button>
               <button onClick="{{ chatRwGo }}" style="border:1px solid var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="border-color:var(--primary); color:var(--primary);">{{ chatRwLabel }}</button>
+              <button onClick="{{ chatMyLifeGo }}" data-my-life="1" style="border:1px solid #F5CFE0; background:#FDEEF5; color:#9B1F5E; border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; cursor:pointer;" style-hover="border-color:#C2337A;">💡 Make me understand this, in my life</button>
             </div>
           </sc-if>
           <sc-if value="{{ surpriseOn }}" hint-placeholder-val="{{ false }}">
             <div style="background:linear-gradient(135deg,#FFF6DC,#FDF0E4); border:1px solid #F2E2AE; border-radius:16px; padding:16px 19px; max-width:560px; animation:k12pop .18s ease;">
               <div style="display:flex; align-items:center; gap:8px; margin-bottom:2px;">
-                <span style="font-size:12px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; color:#B4256E;">⚡ Surprise challenge · double points</span>
+                <span style="font-size:12px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; color:#B4256E;">⚡ Surprise challenge · double coins</span>
                 <span style="flex:1;"></span>
                 <button onClick="{{ dismissSurprise }}" title="Skip" style="border:none; background:none; color:#8A6400; cursor:pointer; padding:2px; font-size:13px; line-height:1;">&#10005;</button>
               </div>
@@ -403,7 +405,7 @@ button { font-family:'Poppins',sans-serif; }
               <p style="font-size:14px; font-weight:500; line-height:1.65; margin:0 0 12px; white-space:pre-wrap;">{{ surpriseQText }}</p>
               <sc-if value="{{ showSurpriseInput }}" hint-placeholder-val="{{ true }}">
                 <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                  <input value="{{ surpriseAnswer }}" onChange="{{ onSurpriseAnswer }}" onKeyDown="{{ onSurpriseKey }}" placeholder="Your answer for double points…" style="flex:1; min-width:160px; border:1px solid #F2E2AE; border-radius:999px; padding:9px 16px; font-size:13px; font-family:'Poppins',sans-serif; outline:none; background:#fff; color:var(--ink);">
+                  <input value="{{ surpriseAnswer }}" onChange="{{ onSurpriseAnswer }}" onKeyDown="{{ onSurpriseKey }}" placeholder="Your answer for double coins…" style="flex:1; min-width:160px; border:1px solid #F2E2AE; border-radius:999px; padding:9px 16px; font-size:13px; font-family:'Poppins',sans-serif; outline:none; background:#fff; color:var(--ink);">
                   <button onClick="{{ checkSurpriseNow }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:9px 20px; font-size:12.5px; font-weight:700; cursor:pointer;" style-hover="opacity:.9;">Score! ⚡</button>
                 </div>
               </sc-if>
@@ -822,6 +824,7 @@ button { font-family:'Poppins',sans-serif; }
               <span>
                 <span style="display:block; font-size:16px; font-weight:700;">You scored {{ quizScore }} of 5</span>
                 <span style="display:block; font-size:12.5px; opacity:.85;">{{ quizVerdict }}</span>
+                <span style="display:block; font-size:12.5px; font-weight:700; margin-top:3px;">{{ quizCoinsLine }}</span>
                 <sc-if value="{{ quizSealed }}" hint-placeholder-val="{{ false }}">
                   <span style="display:block; font-size:11px; opacity:.7; margin-top:3px;">Result recorded and sealed in the K12Plus trust chain.</span>
                 </sc-if>
@@ -1979,7 +1982,7 @@ button { font-family:'Poppins',sans-serif; }
             <span style="display:inline-flex; align-items:center; background:#FDE7EE; border:1px solid #F5C6D8; color:#B4256E; border-radius:999px; padding:7px 14px; font-size:12px; font-weight:700;">{{ gameStreakLabel }}</span>
           </sc-if>
         </div>
-        <p style="font-size:12px; color:var(--muted); margin:0 0 16px;">Every syllabus topic is a game and a real-world story. Play, earn points, and learn for real instead of memorising.</p>
+        <p style="font-size:12px; color:var(--muted); margin:0 0 16px;">Every syllabus topic is a game and a real-world story. Play, earn coins, and learn for real instead of memorising. Spend your coins in the Game Center.</p>
         <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
           <sc-for list="{{ gamesSubjTabs }}" as="gs" hint-placeholder-count="4"><button onClick="{{ gs.pick }}" style="{{ gs.style }}">{{ gs.icon }}{{ gs.label }}</button></sc-for>
         </div>
@@ -2439,6 +2442,11 @@ button { font-family:'Poppins',sans-serif; }
 
 </sc-if></x-dc>
 <script type="text/x-dc" data-dc-script>
+// "Make me understand this, in my life": the button, the home chip, and any learner who
+// types or says something like it get an answer that explains the equation step by step
+// and then shows where it turns up in their own day.
+const K12_MY_LIFE_ASK = 'Make me understand this equation step by step, and show me how I can apply it in real life, in my own life.';
+const K12_MY_LIFE_RULE = 'When the learner asks you to make them understand an equation or formula, or how to apply it in real life or in their own life (in any words, typed or spoken), answer in four short parts: what the equation means in plain words; what each part or letter does, step by step; two or three places it turns up in a Namibian teenager\'s own day (home, school, a taxi fare, the shop, phone data, sport, the garden or farm), each with a tiny worked example using real numbers in N$, metres or minutes; and one short question so they can try it themselves. For this kind of request you may use up to 230 words.';
 class Component extends DCLogic {
   state = { view: 'chat', chatOpen: false, chatInput: '', chatMsgs: [], recents: [], chatBusy: false, countdown: 27 * 3600 + 45 * 60 + 40, loggedIn: (() => { try { return localStorage.getItem('k12plus-loggedin') === '1'; } catch (e) { return false; } })() };
 
@@ -2561,6 +2569,20 @@ class Component extends DCLogic {
     if (p.champion_region_id) return 'champion';
     if (p.teaches > 0) return 'teacher';
     return '';
+  }
+
+  // The Game Center opens over the app; its "ways to earn" buttons bring the learner back here.
+  openGameCenter() {
+    if (!window.k12gameCenter) return;
+    window.k12gameCenter.open({
+      quiz: () => this.setState({ view: 'quiz', quizAnswers: {}, quizDone: false, quizCoins: 0 }),
+      practice: () => this.setState({ view: 'games', gamesMode: 'pick' }),
+      ask: () => this.setState({ view: 'chat' }),
+      test: (() => {
+        const t = (this.state.myTests || []).filter((x) => x.open && x.status !== 'submitted')[0];
+        return t ? () => this.openTest(t.id) : null;
+      })()
+    });
   }
 
   openPilot() {
@@ -4005,9 +4027,13 @@ class Component extends DCLogic {
         try { localStorage.setItem('k12plus-quiz-history', JSON.stringify(hist)); } catch (e) {}
         if (window.k12data) window.k12data.recordQuiz(quizSubject, score, 5);
         try { if (window.k12learn) window.k12learn.record({ kind: 'quiz', subject: quizSubject, correct: score, attempted: 5 }); } catch (e) {}
-        this.setState({ quizDone: true, quizHistory: hist });
+        // coins: 5 a correct answer and 10 for finishing, once a day for each subject
+        let quizCoins = 0;
+        try { if (window.k12coins) quizCoins = window.k12coins.earn(5 * score + 10, 'quiz', 'quiz:' + quizSubject + ':' + new Date(Date.now() + 7200e3).toISOString().slice(0, 10)); } catch (e) {}
+        this.setState({ quizDone: true, quizHistory: hist, quizCoins });
       },
-      quizRetry: () => this.setState({ quizAnswers: {}, quizDone: false }),
+      quizRetry: () => this.setState({ quizAnswers: {}, quizDone: false, quizCoins: 0 }),
+      quizCoinsLine: s.quizCoins ? '🪙 +' + s.quizCoins + ' coins for the Game Center' : (done ? 'You have already earned today\'s coins for this quiz. Try another subject for more.' : ''),
       hasQuizHistory: history.length > 0,
       quizHistory: history.map(hh => ({ subject: hh.subject, date: hh.date, score: hh.score, dotStyle: dot(hh.score >= 3 ? '#3BB273' : '#E8A13A'), scoreStyle: pill(hh.score >= 3 ? '#E7F6EE' : '#FFF6DC', hh.score >= 3 ? '#1F6B43' : '#8A6400') })),
       edStats, edTodos, parentKids, parentFeed, prinStats, prinTeachers, prinAlerts,
@@ -4176,8 +4202,8 @@ class Component extends DCLogic {
     const ok = [sp.a].concat(sp.f || []).map(norm).indexOf(norm(st.surpriseAnswer)) > -1;
     const ptsMap = { easy: 10, medium: 20, hard: 30 };
     const gain = ok ? 2 * (ptsMap[sp.d] || 20) : 0;
-    const total = (parseInt(localStorage.getItem('k12plus-points') || '0', 10) || 0) + gain;
-    try { localStorage.setItem('k12plus-points', String(total)); } catch (e) {}
+    const got = window.k12coins ? window.k12coins.earn(gain, 'practice') : gain;
+    const total = window.k12coins ? window.k12coins.balance() : gain;
     try { if (window.k12data && window.k12data.recordQuiz) window.k12data.recordQuiz(st.subject || 'Games', ok ? 1 : 0, 1); } catch (e) {}
     try { if (window.k12learn) window.k12learn.record({ kind: 'practice', subject: st.subject || 'Mathematics', topic: (sp && (sp.topic || sp.t)) || null, correct: ok ? 1 : 0, attempted: 1 }); } catch (e) {}
     if (!ok) {
@@ -4190,7 +4216,7 @@ class Component extends DCLogic {
     this.setState({
       surpriseResult: ok ? 'right' : 'wrong',
       gamePoints: total,
-      surpriseAwarded: ok ? '+' + gain + ' points, double scored! ⚡🎉' : 'The answer was: ' + sp.a
+      surpriseAwarded: ok ? (got ? '+' + got + ' coins, double scored! ⚡🎉' : 'Right! You have earned all your practice coins for today, so this one is just for the glory. ⚡') : 'The answer was: ' + sp.a
     });
   }
 
@@ -4203,8 +4229,8 @@ class Component extends DCLogic {
     const right = accepted.indexOf(norm(st.gameAnswer)) > -1;
     const ptsMap = { easy: 10, medium: 20, hard: 30 };
     const gain = right ? (ptsMap[q.difficulty] || 20) : 0;
-    const total = (parseInt(localStorage.getItem('k12plus-points') || '0', 10) || 0) + gain;
-    try { localStorage.setItem('k12plus-points', String(total)); } catch (e) {}
+    const got = window.k12coins ? window.k12coins.earn(gain, 'practice') : gain;
+    const total = window.k12coins ? window.k12coins.balance() : gain;
     if (!right) {
       try {
         const stuck = JSON.parse(localStorage.getItem('k12plus-stuck') || '[]');
@@ -4218,7 +4244,7 @@ class Component extends DCLogic {
       gameResult: right ? 'right' : 'wrong',
       gamePoints: total,
       gameStreak: right ? (st.gameStreak || 0) + 1 : 0,
-      gameAwarded: right ? '+' + gain + ' points! 🎉' : '',
+      gameAwarded: right ? (got ? '+' + got + ' coins! 🎉' : 'Right! Today\'s practice coins are all earned, so keep going for the learning. 🎉') : '',
       gameOutcomeAt: performance.now()
     });
   }
@@ -4623,7 +4649,7 @@ class Component extends DCLogic {
             return (st.subject ? 'Focus subject for this chat: ' + st.subject + '. ' : '') +
               'You are ' + (st.subject && window.k12agentName ? 'the ' + window.k12agentName(st.subject) + ' from k12plus' : 'a k12plus AI agent') + ', ' + tutorWho + ', following the official ' +
               (country === 'South Africa' ? 'South African CAPS (NSC)' : 'Namibian NSSCO/NSSCAS (NIED)') +
-              ' curriculum for Grade ' + grade + '. Teach strictly to syllabus depth. Talk like a patient, warm teacher who never shames a learner for asking. Explain step by step in simple everyday language. Keep answers under 150 words. Add one or two fitting emojis per reply (like 💡📘✅🎉🌱⚡) to keep it warm and engaging, never more than three, placed naturally, and never as a substitute for a clear explanation. Plain text only, no markdown headings, no em dashes.' +
+              ' curriculum for Grade ' + grade + '. Teach strictly to syllabus depth. Talk like a patient, warm teacher who never shames a learner for asking. Explain step by step in simple everyday language. Keep answers under 150 words. ' + K12_MY_LIFE_RULE + ' Add one or two fitting emojis per reply (like 💡📘✅🎉🌱⚡) to keep it warm and engaging, never more than three, placed naturally, and never as a substitute for a clear explanation. Plain text only, no markdown headings, no em dashes.' +
               (digest ? '\nOfficial syllabus reference for ' + subj + ':\n' + digest : '');
           })(this.state),
           messages: msgs.map(m => ({ role: m.role, content: m.text })),
@@ -4990,6 +5016,7 @@ class Component extends DCLogic {
       { label: 'Syllabus', icon: fbSyllabus, pick: () => this.setState({ view: 'syllabus' }), hasSubs: false, subsOpen: false },
       { label: 'Real-Life Lab', icon: fbLab, pick: () => this.setState({ view: 'lab' }), hasSubs: false, subsOpen: false },
       { label: 'Games', icon: fbGames, pick: () => this.setState({ view: 'games' }), hasSubs: false, subsOpen: false },
+      { label: 'Game Center', icon: fbGames, pick: () => this.openGameCenter(), hasSubs: false, subsOpen: false },
       { label: 'Timetable', icon: fbTimetable, pick: () => this.setState({ view: 'timetable' }), hasSubs: false, subsOpen: false },
       { label: 'Calendar', icon: fbCalendar, pick: () => this.setState({ view: 'calendar' }), hasSubs: false, subsOpen: false },
     ];
@@ -5020,8 +5047,8 @@ class Component extends DCLogic {
         ] },
         sideItems[3], // Syllabus
         sideItems[4], // Real-Life Lab
-        sideItems[6], // Timetable
-        sideItems[7]  // Calendar
+        sideItems[7], // Timetable
+        sideItems[8]  // Calendar
       );
     }
     {
@@ -5068,7 +5095,8 @@ class Component extends DCLogic {
     const homeChips = [
       { label: 'Past exam questions', bg: '#FFF6DC', bd: '#F2E2AE', fg: '#7A5B00', icon: chipIco(['M6 2h9l5 5v15H6z', 'M9 12h6M9 16h6'], '#B8860B'), q: 'Give me past exam questions on ' + subjName + ' to practise' },
       { label: 'Homework help', bg: '#EEF0FE', bd: '#D4D9F8', fg: '#3D48B8', icon: chipIco(['M4 19.5A2.5 2.5 0 016.5 17H20V2H6.5A2.5 2.5 0 004 4.5z'], '#5563E0'), q: 'Help me with my ' + subjName + ' homework: ' },
-      { label: 'Exam prep', bg: '#E7F6EE', bd: '#C4E8D6', fg: '#1F6B43', icon: chipIco(['M12 2a7 7 0 017 7c0 2.4-1.2 4.5-3 5.7V17H8v-2.3C6.2 13.5 5 11.4 5 9a7 7 0 017-7z', 'M9 21h6'], '#22B573'), q: 'Build me a revision plan for my ' + subjName + ' Term 3 exam' }
+      { label: 'Exam prep', bg: '#E7F6EE', bd: '#C4E8D6', fg: '#1F6B43', icon: chipIco(['M12 2a7 7 0 017 7c0 2.4-1.2 4.5-3 5.7V17H8v-2.3C6.2 13.5 5 11.4 5 9a7 7 0 017-7z', 'M9 21h6'], '#22B573'), q: 'Build me a revision plan for my ' + subjName + ' Term 3 exam' },
+      { label: 'Use it in my life', bg: '#FDEEF5', bd: '#F5CFE0', fg: '#9B1F5E', icon: chipIco(['M12 21s-7-4.5-7-10a7 7 0 0114 0c0 5.5-7 10-7 10z', 'M12 8v3l2 2'], '#C2337A'), q: 'Make me understand this equation, and show me how I can apply it in real life, in my life: ' }
     ].map(c => ({
       label: c.label,
       icon: c.icon,
@@ -5334,7 +5362,7 @@ class Component extends DCLogic {
         const gTint = SUBJ_TINTS.filter(x => x.name === gSubj)[0] || SUBJ_TINTS[0];
         return {
           isGames: s.view === 'games',
-          gamePointsLabel: gPoints + ' pts',
+          gamePointsLabel: (window.k12coins ? window.k12coins.balance() : gPoints) + ' coins',
           gameStreakLabel: (s.gameStreak || 0) > 1 ? s.gameStreak + ' in a row 🔥' : '',
           hasGameStreak: (s.gameStreak || 0) > 1,
           gamesSubjTabs: SUBJ_TINTS.map(x => ({
@@ -5382,7 +5410,7 @@ class Component extends DCLogic {
             if (!gq) return '';
             const pts = ({ easy: 10, medium: 20, hard: 30 })[gq.difficulty] || 20;
             const streakBit = (s.gameStreak || 0) >= 2 ? ' · keep the ' + s.gameStreak + '-streak alive 🔥' : '';
-            return '🏆 ' + pts + ' points on the line' + streakBit;
+            return '🪙 ' + pts + ' coins on the line' + streakBit;
           })(),
           nextGameLabel: ((s.gameIdx || 0) >= (s.gameQs || []).length - 1) ? 'New round 🎮' : 'Next challenge',
           backToTopics: () => this.setState({ gamesMode: 'pick', gameQs: [], gameResult: null, gameAnswer: '', rwText: '', gamesErr: '', gameOutcomeAt: 0 }),
@@ -5392,6 +5420,7 @@ class Component extends DCLogic {
           chatFollowOn: s.view === 'chat' && !s.chatBusy && s.chatMsgs.length > 0 && s.chatMsgs[s.chatMsgs.length - 1].role === 'assistant',
           chatGameLabel: s.chatTopic ? '🎮 Play: ' + s.chatTopic : '🎮 Turn this into a game',
           chatRwLabel: s.chatTopic ? '🌍 ' + s.chatTopic + ' in real life' : '🌍 See it in real life',
+          chatMyLifeGo: () => this.sendChat(K12_MY_LIFE_ASK),
           chatGameGo: () => {
             if (s.chatTopic) return this.startGame(s.subject || 'Mathematics', s.chatTopic);
             const lastQ = s.chatMsgs.slice().reverse().filter(m => m.role === 'user')[0];
