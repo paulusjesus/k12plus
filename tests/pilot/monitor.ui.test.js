@@ -21,10 +21,11 @@ const ROOT = path.join(__dirname, '../..');
 const MIGS = ['20261023_pilot_structure.sql', '20261024_pilot_consent.sql', '20261025_pilot_messaging.sql', '20261026_pilot_pause.sql',
   '20261027_pilot_learning_and_summaries.sql', '20261028_pilot_tests.sql', '20261029_pilot_reports.sql', '20261030_pilot_feedback_review.sql',
   '20261031_pilot_evaluator_export.sql', '20261101_pilot_offline_lessons.sql', '20261102_pilot_ussd.sql', '20261103_plan_allowance.sql',
-  '20261105_monitoring.sql', '20261106_monitor_accounts.sql'];
+  '20261105_monitoring.sql', '20261106_monitor_accounts.sql', '20261107_funders_attention.sql'];
 const TYPES = { p_learner: 'uuid', p_class: 'uuid', p_school: 'uuid', p_region: 'smallint', p_grain: 'text', p_identifier: 'text', p_title: 'text', p_user: 'uuid',
   p_scope: 'text', p_id: 'text', p_search: 'text', p_role: 'text', p_page: 'int', p: 'jsonb', p_right: 'bigint', p_can_grant: 'boolean', p_action: 'text', p_target: 'uuid',
-  p_audit: 'bigint', p_ok: 'boolean', p_result: 'jsonb' };
+  p_audit: 'bigint', p_ok: 'boolean', p_result: 'jsonb', p_grant: 'uuid' };
+const TYPES_FOR = { monitor_attention_for: { p_id: 'uuid' } };
 const SVC = 'service-key', ANON = 'anon-key', FAKE = 9990, SITE = 8766, APP = 8767;
 let pass = 0, fail = 0;
 const ok = (c, n, x) => { if (c) { pass++; console.log('  PASS', n); } else { fail++; console.log('  FAIL', n, x === undefined ? '' : JSON.stringify(x).slice(0, 600)); } };
@@ -106,6 +107,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     return [200, { access_token: tokenFor(u.id), refresh_token: 'r-' + u.id, user: await userJson(u.id) }];
   };
   const logos = {};
+  const advice = [];
   const fake = http.createServer(async (req, res) => {
     const url = new URL(req.url, 'http://x');
     const chunks = []; for await (const c of req) chunks.push(c);
@@ -120,7 +122,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       let m;
       if ((m = url.pathname.match(/^\/rest\/v1\/rpc\/([a-z_]+)$/))) {
         const keys = Object.keys(body);
-        const q = `select ${m[1]}(${keys.map((k, i) => `${k} => $${i + 1}::${TYPES[k] || 'text'}`).join(', ')}) as v`;
+        const q = `select ${m[1]}(${keys.map((k, i) => `${k} => $${i + 1}::${(TYPES_FOR[m[1]] || {})[k] || TYPES[k] || 'text'}`).join(', ')}) as v`;
         const claims = who === 'service' ? { role: 'service_role' } : who === 'anon' || !who ? { role: 'anon' } : { sub: who, role: 'authenticated' };
         try {
           const rows = await asUser(claims, (tx) => tx.query(q, keys.map((k) => (body[k] !== null && typeof body[k] === 'object' ? JSON.stringify(body[k]) : body[k]))));
@@ -163,6 +165,11 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       }
       if ((m = url.pathname.match(/^\/storage\/v1\/object\/public\/school-logos\/(.+)$/))) {
         const f = logos[m[1]]; return f ? send(200, f.data, f.type) : send(404, { msg: 'not found' });
+      }
+      if (url.pathname === '/functions/v1/aim') {
+        advice.push(body);
+        if (body.action !== 'advice' || !body.k12token) return send(400, { error: 'unexpected' });
+        return send(200, { advice: '1. Meet Learner 1 this week.\n2. Reteach Trigonometry with a short practical activity.' });
       }
       if (url.pathname === '/functions/v1/account-admin') {
         const r = await fetch('http://127.0.0.1:8000/', { method: 'POST', headers: { 'Content-Type': 'application/json', authorization: req.headers.authorization || '', origin: 'https://monitor.k12plus.app' }, body: raw });
@@ -348,7 +355,54 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const res = await loginP;
   ok(res.ok === true && (await db.query("select pw from auth.users u join profiles p on p.id = u.id where p.learner_uid = 'K12-NA-000002'")).rows[0].pw === 'SelmaOwn2026', 'and finishes signing in once the new password is saved', res);
 
-  console.log('\n9. Phones, words and errors');
+  console.log('\n9. Who needs attention, and suggestions');
+  const pt2 = await newPage();
+  await signIn(pt2, 'teacher@school.na', PW.teacher);
+  t = await text(pt2);
+  ok(/Needs attention/.test(t) && /Who needs attention/.test(t), 'the teacher\'s class page has a "Who needs attention" section');
+  const attNames = await pt2.locator('ul.attention li b').allInnerTexts();
+  ok(attNames.length >= 1 && attNames.every((x) => names.includes(x)), 'learners who need attention are listed by name, with reasons', attNames);
+  ok(/struggling with Trigonometry|practice accuracy|not active/.test(await pt2.locator('ul.attention').innerText()), 'each with where they struggle');
+  await pt2.click('#advise'); await pt2.waitForTimeout(1000);
+  t = await text(pt2);
+  const sent = advice.at(-1);
+  ok(/Suggested next steps/.test(t) && /Reteach Trigonometry/.test(t) && /Learner 1 is /.test(t), 'the suggestion appears, with a key from labels to names kept on the screen');
+  ok(sent && sent.scope === 'class' && /Learner 1:/.test(sent.facts) && !names.some((x) => sent.facts.includes(x)), 'no learner names are sent to the agent', sent && sent.facts.slice(0, 300));
+  await shot(pt2, 'monitor3-attention.png');
+  await go(pn, '#country');
+  t = await text(pn);
+  ok(/Who needs attention/.test(t) && (await pn.locator('#c-att-areas .kc-bar').count()) >= 1 && noNames(t), 'the national view ranks regions by learners needing attention, without names');
+  await pn.click('#advise'); await pn.waitForTimeout(800);
+  ok(advice.at(-1).scope === 'country' && !names.some((x) => advice.at(-1).facts.includes(x)), 'the national suggestion is asked with figures only');
+
+  console.log('\n10. Funders and funds');
+  await mk('funder', 'educator', { name: 'Ms Funder' });
+  const pad = await newPage();
+  await signIn(pad, 'admin@school.na', PW.admin);
+  await go(pad, '#funds');
+  ok(/No grants recorded yet/.test(await text(pad)), 'the administrator starts with no grants');
+  await pad.click('#f-funder'); await pad.fill('#fn', 'Namibia Education Trust'); await pad.click('dialog button[type=submit]'); await pad.waitForTimeout(800);
+  await pad.click('[data-addp]'); await pad.fill('#pi', 'funder@school.na'); await pad.click('dialog button[type=submit]'); await pad.waitForTimeout(800);
+  ok(/Namibia Education Trust Ms Funder/.test(await text(pad)), 'a funder is added and given a person');
+  await pad.click('#f-grant'); await pad.fill('#gt', 'Pilot 2027'); await pad.fill('#ga', '500 000');
+  const sd = new Date(Date.now() - 90 * 86400e3).toISOString().slice(0, 10), ed = new Date(Date.now() + 270 * 86400e3).toISOString().slice(0, 10);
+  await pad.fill('#gs', sd); await pad.fill('#ge', ed); await pad.check('#gx'); await pad.click('dialog button[type=submit]'); await pad.waitForTimeout(900);
+  await pad.click('[data-line]'); await pad.fill('#lc', 'Teacher training'); await pad.fill('#lp', '120000'); await pad.click('dialog button[type=submit]'); await pad.waitForTimeout(900);
+  await pad.click('[data-exp]'); await pad.fill('#ew', 'Training workshop, Oshakati'); await pad.fill('#ea', '30000'); await pad.selectOption('#el2', { label: 'Teacher training' }); await pad.fill('#er', 'INV-101');
+  await pad.click('dialog button[type=submit]'); await pad.waitForTimeout(900);
+  t = await text(pad);
+  ok(/Pilot 2027/.test(t) && /Training workshop, Oshakati/.test(t) && /INV-101/.test(t), 'a grant, a budget line and an expense are recorded', t.slice(0, 600));
+  const pf = await newPage();
+  await signIn(pf, 'funder@school.na', PW.funder);
+  t = await text(pf);
+  ok(/Namibia/.test(t) && /Funds/.test(t) && /Namibia Education Trust/.test(t) && noNames(t), 'the funder sees the whole pilot under the funder\'s name, with no learner names');
+  await pf.click('.chip:has-text("Funds")'); await pf.waitForTimeout(1000);
+  t = await text(pf);
+  ok(/How Namibia Education Trust's funding is being used/.test(t) && /Grant N\$500,000/.test(t) && /Spent N\$30,[0-9]/.test(t) && /Teacher training/.test(t) && /Training workshop, Oshakati/.test(t), 'the Funds page: grant, spent, budget lines and expenses', t.slice(0, 700));
+  ok(await pf.locator('#f-line-0 svg path.kc-line').count() === 1 && await pf.locator('#f-meter-0 .kc-meter').count() === 1 && !(await pf.locator('#f-grant').count()), 'with charts, and no editing buttons for the funder');
+  await shot(pf, 'monitor3-funds.png');
+
+  console.log('\n11. Phones, words and errors');
   const pp = await newPage(390); await signIn(pp, 'national@school.na', PW.national);
   ok(await pp.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), 'the country page fits a 390 px phone');
   await shot(pp, 'monitor2-country-390.png');

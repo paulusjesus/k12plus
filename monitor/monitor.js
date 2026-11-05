@@ -190,7 +190,8 @@
   }
 
   function header() {
-    whoEl.innerHTML = '<span class="nm">' + esc(me.name) + (me.title ? ' · ' + esc(me.title) : '') + '</span><button class="btn small" id="so">Sign out</button>';
+    var flogo = me.funder && me.funder.logo ? '<img class="funder-logo" src="' + esc(me.funder.logo) + '" alt="' + esc(me.funder.name) + '">' : '';
+    whoEl.innerHTML = flogo + '<span class="nm">' + esc(me.name) + (me.title ? ' · ' + esc(me.title) : '') + '</span><button class="btn small" id="so">Sign out</button>';
     on('#so', 'click', signOut);
   }
 
@@ -204,6 +205,7 @@
       return '<button class="chip' + (h === active ? ' on' : '') + '" data-h="' + esc(h) + '">' + esc(label) + '</button>';
     });
     if ((me.manage || []).length) chips.push('<button class="chip acc' + (active.indexOf('#accounts') === 0 ? ' on' : '') + '" data-h="#accounts">Accounts</button>');
+    if (me.funds) chips.push('<button class="chip acc' + (active === '#funds' ? ' on' : '') + '" data-h="#funds">Funds</button>');
     if (me.admin) chips.push('<button class="chip acc' + (active === '#officials' ? ' on' : '') + '" data-h="#officials">Officials</button>');
     return chips.length > 1 ? '<nav class="views" aria-label="Views">' + chips.join('') + '</nav>' : '';
   }
@@ -372,10 +374,11 @@
       var schools = (d.children || []).reduce(function (a, r) { return a + (r.schools || 0); }, 0);
       last = { title: 'Namibia', d: d, rows: d.children, reg: d.registrations };
       app.innerHTML = pageHead({ active: '#country', title: 'Namibia', sub: schools + ' pilot schools · all 14 regions' }) +
-        registrationsBlock(d.registrations, 'country', 'per region') + learningBlock(d, 'country') + settingsBlock(d) + learningTable(d.children, 'region', false);
+        registrationsBlock(d.registrations, 'country', 'per region') + learningBlock(d, 'country') + attentionSlot() + settingsBlock(d) + learningTable(d.children, 'region', false);
       drawRegistrations(d.registrations, regRows(d.children, 'region'));
       drawLearning(d, 'country'); drawSettings(d);
       finishPage('Namibia');
+      loadAttention('country', null, d);
     });
   }
   function showRegion(id) {
@@ -384,11 +387,12 @@
       last = { title: title, d: d, rows: d.children, reg: d.registrations };
       app.innerHTML = pageHead({ active: '#region/' + id, title: title, sub: (d.children || []).filter(function (s) { return s.in_pilot; }).length + ' pilot schools, ' + (d.children || []).length + ' schools with accounts',
                                  crumbs: canSee('country') ? [{ t: 'Namibia', h: '#country' }, { t: d.name }] : [] }) +
-        registrationsBlock(d.registrations, 'region', 'per school') + learningBlock(d, 'region') + settingsBlock(d) +
+        registrationsBlock(d.registrations, 'region', 'per school') + learningBlock(d, 'region') + attentionSlot() + settingsBlock(d) +
         learningTable((d.children || []).filter(function (s) { return s.in_pilot; }), 'school', false);
       drawRegistrations(d.registrations, regRows(d.children, 'school'));
       drawLearning(d, 'region'); drawSettings(d);
       finishPage(title);
+      loadAttention('region', id, d);
     });
   }
   function showSchool(id) {
@@ -399,13 +403,14 @@
       cr.push({ t: d.name });
       last = { title: d.name, d: d, rows: d.children, reg: d.registrations, regClasses: d.reg_classes };
       app.innerHTML = pageHead({ active: '#school/' + id, title: d.name, sub: (d.region ? d.region + ' Region' : '') + (d.setting ? ' · ' + d.setting : ''), logo: d.logo, crumbs: cr }) +
-        registrationsBlock(d.registrations, 'school', 'learners per class') + learningBlock(d, 'school') + learningTable(d.children, 'class', d.named);
+        registrationsBlock(d.registrations, 'school', 'learners per class') + learningBlock(d, 'school') + attentionSlot() + learningTable(d.children, 'class', d.named);
       var classRows = (d.reg_classes || []).map(function (c) {
         return { label: (c.grade ? 'Grade ' + c.grade : 'Grade not given') + (c.letter ? ' ' + c.letter : ''), value: c.learners || 0, hidden: c.too_few ? 'fewer than five' : null };
       });
       drawRegistrations(d.registrations, classRows);
       drawLearning(d, 'school');
       finishPage(d.name);
+      loadAttention('school', id, d);
     });
   }
   function showClass(id) {
@@ -420,10 +425,11 @@
       var regHtml = reg.too_few ? card('Who has joined', '<p class="note">Fewer than five learners have joined, so the numbers are hidden.</p>')
         : card('Who has joined', slot('c-joined') + '<p class="note">' + num(reg.joined) + ' learners joined this class; ' + num(reg.with_consent) + ' of them have parent or guardian and school consent, so their learning is counted.</p>');
       app.innerHTML = pageHead({ active: '#class/' + id, title: d.name, sub: d.school + ' · Grade ' + d.grade, logo: d.logo, crumbs: cr }) +
-        '<h2 class="section">Registrations</h2>' + regHtml + learningBlock(d, 'class') + (d.named ? learningTable(d.learner_rows, 'learner', true) : '');
+        '<h2 class="section">Registrations</h2>' + regHtml + learningBlock(d, 'class') + attentionSlot() + (d.named ? learningTable(d.learner_rows, 'learner', true) : '');
       if ($('#c-joined')) C.meter($('#c-joined'), { value: reg.with_consent || 0, max: reg.joined || 0, label: 'Joined learners with consent', note: num(reg.with_consent) + ' of ' + num(reg.joined) + ' learners' });
       drawLearning(d, 'class');
       finishPage(d.name);
+      loadAttention('class', id, d);
     });
   }
   function showLearner(id) {
@@ -443,6 +449,193 @@
         (tr ? card('Tests', '<div class="tbl-wrap"><table><thead><tr><th>Test</th><th>When</th><th class="num">Score</th><th class="num">Percent</th><th>Date</th></tr></thead><tbody>' + tr + '</tbody></table></div>', 'wide') : '');
       drawLearning(d, 'learner');
       finishPage(self ? 'My progress' : d.name);
+    });
+  }
+
+  // ---------- who needs attention, and what to do about it ----------
+  function attentionSlot() { return '<h2 class="section">Needs attention</h2><div id="att"><div class="card"><p class="note">Looking for learners who need attention…</p></div></div>'; }
+
+  var REASON_ORDER = ['not active', 'practice accuracy', 'start of year', 'struggling with'];
+  function loadAttention(kind, id, d) {
+    var box = $('#att');
+    if (!box) return;
+    var call = kind === 'class' || kind === 'school' ? rpc('monitor_attention_for', { p_scope: kind, p_id: id, p_grain: grain })
+      : rpc('monitor_attention_areas', { p_region: kind === 'region' ? Number(id) : null, p_grain: grain });
+    call.then(function (a) {
+      if (!$('#att')) return;
+      var facts, html, key = [];
+      if (kind === 'class' || kind === 'school') {
+        if (a.too_few) { box.innerHTML = card('Who needs attention', '<p class="note">Fewer than five learners are taking part here, so this is hidden.</p>'); return; }
+        if (a.named) {
+          var rows = a.rows || [];
+          html = rows.length ? '<p class="note" style="margin-top:0">' + count(a.count, 'learner needs', 'learners need') + ' attention, out of ' + num(a.learners) + '. The reasons come from their practice, activity and the start of year test.</p>' +
+            '<ul class="plain attention">' + rows.map(function (r, i) {
+              key.push('Learner ' + (i + 1) + ' is ' + r.name);
+              return '<li><a href="#learner/' + esc(r.id) + '"><b>' + esc(r.name) + '</b></a>' + (kind === 'school' && r['class'] ? ' <span class="note">' + esc(r['class']) + '</span>' : '') +
+                '<div>' + r.reasons.map(function (x) { return '<span class="pill warn">' + esc(x) + '</span>'; }).join(' ') + '</div></li>';
+            }).join('') + '</ul>'
+            : '<p class="note">Nobody needs extra attention right now: every learner has been active this week and is practising at 40% or better.</p>';
+          facts = describe(kind, d) + '\nLearners who need attention (' + rows.length + ' of ' + a.learners + '):\n' + rows.map(function (r, i) {
+            return 'Learner ' + (i + 1) + ': ' + r.reasons.join('; ') + (r.accuracy != null ? '; overall practice accuracy ' + r.accuracy + '%' : '');
+          }).join('\n');
+        } else {
+          html = '<p class="note" style="margin-top:0">' + count(a.count, 'learner needs', 'learners need') + ' attention, out of ' + num(a.learners) + '. Names are seen only by their teachers and school.</p>' + slot('c-att-topics');
+          facts = describe(kind, d) + '\n' + a.count + ' of ' + a.learners + ' learners need attention. Topics they struggle with: ' +
+            (a.topics || []).map(function (t) { return t.topic + ' (' + t.learners + ' learners)'; }).join(', ');
+        }
+      } else {
+        var label = kind === 'region' ? 'school' : 'region';
+        html = '<p class="note" style="margin-top:0">' + (kind === 'region' ? 'Pilot schools' : 'Regions') + ' ranked by the share of their learners who need attention: not active for a week, practising below 40%, a low start of year test or a topic they keep getting wrong.</p>' + slot('c-att-areas');
+        facts = describe(kind, d) + '\n' + (kind === 'region' ? 'Schools' : 'Regions') + ' by share of learners needing attention:\n' +
+          a.map(function (x) { return x.name + (x.setting ? ' (' + x.setting + ')' : '') + ': ' + (x.too_few ? 'fewer than five learners' : x.count + ' of ' + x.learners + ' (' + x.share + '%)'); }).join('\n');
+      }
+      box.innerHTML = '<section class="card wide"><h2>Who needs attention</h2>' + html +
+        '<div class="advice-row"><button class="btn primary" id="advise">Suggest what to do</button><span class="note">The suggestion uses the figures on this page. No names are sent.</span></div>' +
+        '<div id="advice"></div></section>';
+      if ($('#c-att-topics')) C.bars($('#c-att-topics'), { rows: (a.topics || []).map(function (t) { return { label: t.topic, value: t.learners, cls: 's2' }; }), unit: '', empty: 'No topic stands out yet.' });
+      if ($('#c-att-areas')) C.bars($('#c-att-areas'), { max: 100, unit: '%', empty: 'No learners are taking part yet.',
+        rows: a.map(function (x) { return { label: x.name, note: x.too_few ? '' : x.count + ' of ' + x.learners + ' learners', value: x.share || 0, hidden: x.too_few ? 'fewer than five' : null, href: '#' + label + '/' + x.id, cls: (x.share || 0) >= 30 ? 'warn' : 's1' }; }) });
+      on('#advise', 'click', function () { askAdvice(kind, facts, key); });
+    }).catch(function (e) { if ($('#att')) box.innerHTML = card('Who needs attention', '<p class="note">' + esc(e.message) + '</p>'); });
+  }
+
+  // a plain summary of the page for the adviser: figures only, never names
+  function describe(kind, d) {
+    var place = { class: 'One class: ' + d.name + ', Grade ' + d.grade, school: 'One school (' + (d.setting || 'setting not given') + ')', region: d.name + ' Region', country: 'Namibia, the whole pilot' }[kind];
+    var lines = [place + '. Period: ' + GRAIN_TEXT[grain] + '.'];
+    if (!d.too_few && d.learners) {
+      lines.push('Learners taking part: ' + d.learners + '; active in the last 7 days: ' + d.active_week + '; practice accuracy: ' + (d.accuracy == null ? 'no practice yet' : d.accuracy + '%') +
+        '; minutes learning: ' + d.minutes + '; questions to the agents: ' + d.questions + '.');
+      var t = d.tests || {};
+      if (t.baseline) lines.push('Start of year test average: ' + t.baseline.average + '% (' + t.baseline.sat + ' sat).');
+      if (t.endline) lines.push('End of year test average: ' + t.endline.average + '%.');
+      if ((d.topics || []).length) lines.push('Topics by accuracy, weakest first: ' + d.topics.slice(0, 6).map(function (x) { return x.topic + ' ' + x.accuracy + '%'; }).join(', ') + '.');
+      if (d.settings && d.settings.rural && !d.settings.rural.too_few && d.settings.urban && !d.settings.urban.too_few)
+        lines.push('Rural schools accuracy ' + d.settings.rural.accuracy + '%, urban ' + d.settings.urban.accuracy + '%.');
+    }
+    return lines.join('\n');
+  }
+
+  function askAdvice(kind, facts, key) {
+    var out = $('#advice'), btn = $('#advise');
+    btn.disabled = true; btn.textContent = 'Thinking…';
+    token().then(function (t) {
+      if (!t) throw signedOut();
+      return fetch(SUPA + '/functions/v1/aim', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY, Authorization: 'Bearer ' + t },
+        body: JSON.stringify({ action: 'advice', scope: kind, facts: facts, k12token: t }) });
+    }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); }).then(function (x) {
+      if (!x.ok) throw new Error(x.d.reply || x.d.error || 'The suggestion could not be made right now.');
+      out.innerHTML = '<div class="advice"><h3>Suggested next steps</h3><div class="advice-text">' + esc(x.d.advice).replace(/\n/g, '<br>') + '</div>' +
+        (key.length ? '<p class="note">' + esc(key.join('. ')) + '. This key stays on your screen and was not sent.</p>' : '') +
+        '<p class="note">Suggestions from the K12Plus agent. Please check them against what you know about your learners.</p></div>';
+    }).catch(function (e) { out.innerHTML = '<p class="err">' + esc(e.signedOut ? 'Please sign in again.' : e.message) + '</p>'; })
+      .finally(function () { btn.disabled = false; btn.textContent = 'Suggest again'; });
+  }
+
+  // ---------- funds: how each grant is used ----------
+  function money(n, cur) {
+    if (n == null) return 'none';
+    var sym = { NAD: 'N$', USD: 'US$', ZAR: 'R', EUR: '€', GBP: '£' }[cur] || cur + ' ';
+    return sym + Number(n).toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  }
+  function showFunds() {
+    return rpc('funds_overview', { p_grant: null }).then(function (d) {
+      var h = topNav('#funds') + '<div class="head"><div class="head-text"><h1>Funds</h1><div class="sub">' +
+        (me.funder ? 'How ' + esc(me.funder.name) + '\'s funding is being used in the K12Plus pilot.' : 'Every grant, its budget and what has been spent.') + '</div></div>' +
+        (d.admin ? '<div class="tools noprint"><button class="btn small" id="f-funder">Add a funder</button><button class="btn small" id="f-grant">Add a grant</button></div>' : '') + '</div>';
+      if (!d.grants.length) h += '<div class="card empty"><b>No grants recorded yet</b>' + (d.admin ? 'Add a funder, then a grant, its budget lines and expenses.' : 'K-Twelve Educational Technologies will add your grant here.') + '</div>';
+      d.grants.forEach(function (g, i) {
+        h += '<section class="grant"><div class="head grant-head">' + (g.funder_logo ? '<img class="school-logo" src="' + esc(g.funder_logo) + '" alt="' + esc(g.funder) + ' logo">' : '') +
+          '<div class="head-text"><h2 class="section" style="margin:0">' + esc(g.title) + '</h2><div class="sub">' + esc(g.funder) + ' · ' + dayLong(g.starts_on) + ' to ' + dayLong(g.ends_on) + '</div></div>' +
+          (d.admin ? '<div class="tools noprint"><button class="btn small" data-line="' + g.id + '">Add a budget line</button><button class="btn small primary" data-exp="' + g.id + '">Record an expense</button></div>' : '') + '</div>' +
+          '<div class="tiles">' +
+            tile('Grant', money(g.amount, g.currency), g.running_costs ? 'also pays the pilot\'s running costs' : '') +
+            tile('Spent', money(g.spent, g.currency), g.used_pct + '% of the grant') +
+            tile('Remaining', money(g.remaining, g.currency), 'about ' + money(g.per_month, g.currency) + ' spent a month') +
+            tile('For each learner', money(g.per_learner, g.currency), count(g.learners, 'learner', 'learners') + ' taking part with consent') + '</div>' +
+          '<div class="grid2">' + card('Spent against time', '<div id="f-meter-' + i + '"></div><div id="f-time-' + i + '" class="mt"></div><p class="note">When spending runs well ahead of time, the money may run out before the grant ends.</p>') +
+            card('Spending over time', slot('f-line-' + i) + '<p class="note">Running total, month by month, in ' + esc(g.currency) + '.</p>') + '</div>' +
+          card('Budget lines: planned and spent', slot('f-lines-' + i), 'wide') +
+          card('Expenses', g.expenses.length ? '<div class="tbl-wrap"><table><thead><tr><th>Date</th><th>What</th><th>Budget line</th><th>Reference</th><th class="num">Amount</th>' + (d.admin ? '<th class="noprint"></th>' : '') + '</tr></thead><tbody>' +
+            g.expenses.map(function (e) {
+              return '<tr><td>' + dayShort(e.on) + '</td><td>' + esc(e.description) + '</td><td>' + esc(e.category || 'not given') + '</td><td>' + esc(e.reference || '') + '</td><td class="num">' + money(e.amount, g.currency) + '</td>' +
+                (d.admin ? '<td class="noprint"><button class="link-btn" data-rmexp="' + e.id + '">remove</button></td>' : '') + '</tr>';
+            }).join('') + '</tbody></table></div>' : '<p class="note">No expenses recorded yet.</p>', 'wide') + '</section>';
+      });
+      if (d.admin) h += card('Funders and their people', (d.funders || []).map(function (f) {
+        return '<div class="funder-row"><b>' + esc(f.name) + '</b> ' + (f.people.length ? f.people.map(function (p) { return '<span class="pill right">' + esc(p.name) + ' <button class="link-btn" data-rmp="' + p.user_id + '">remove</button></span>'; }).join(' ') : '<span class="note">nobody yet</span>') +
+          ' <button class="btn small" data-addp="' + f.id + '">Give someone access</button></div>';
+      }).join('') || '<p class="note">No funders yet.</p>', 'wide');
+      app.innerHTML = h;
+      bindNav();
+      d.grants.forEach(function (g, i) {
+        C.meter($('#f-meter-' + i), { value: Math.max(0, g.spent), max: g.amount, label: 'Grant spent', note: money(g.spent, g.currency) + ' of ' + money(g.amount, g.currency) });
+        C.meter($('#f-time-' + i), { value: g.time_pct, max: 100, label: 'Grant time gone', note: dayLong(g.starts_on) + ' to ' + dayLong(g.ends_on) });
+        var m = g.monthly || [];
+        C.line($('#f-line-' + i), { labels: m.map(function (x) { return asDate(x.month).toLocaleDateString('en-GB', { month: 'short' }); }), tipLabels: m.map(function (x) { return asDate(x.month).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }); }),
+          series: [{ name: 'Spent so far', values: m.map(function (x) { return Number(x.cumulative); }) }], label: 'Spending over time' });
+        C.bars($('#f-lines-' + i), { empty: 'No budget lines yet.', rows: g.lines.map(function (l) {
+          var pctUsed = l.planned ? Math.round(100 * l.spent / l.planned) : null;
+          return { label: l.category, value: Number(l.spent), note: l.planned != null ? 'of ' + money(l.planned, g.currency) + ' planned (' + pctUsed + '%)' : 'worked out from the pilot records',
+                   cls: pctUsed != null && pctUsed > 100 ? 'warn' : 's1' };
+        }), max: Math.max.apply(null, g.lines.map(function (l) { return Math.max(Number(l.spent), Number(l.planned || 0)); }).concat([1])) });
+      });
+      if (d.admin) bindFundsAdmin(d);
+      document.title = 'Funds · K12Plus Monitor';
+    });
+  }
+
+  function bindFundsAdmin(d) {
+    var save = function (action, p) { return rpc('funds_admin', { p_action: action, p: p }).then(function () { return route(); }); };
+    var funderOptions = (d.funders || []).map(function (f) { return '<option value="' + f.id + '">' + esc(f.name) + '</option>'; }).join('');
+    on('#f-funder', 'click', function () {
+      dialog('Add a funder', '<label for="fn">Name</label><input id="fn" type="text" required maxlength="120"><label for="fw">Website (optional)</label><input id="fw" type="text">' +
+        '<label for="fl">Logo address (optional)</label><input id="fl" type="text" placeholder="https://">', 'Add funder', function (f) {
+        return save('save_funder', { name: f.querySelector('#fn').value, website: f.querySelector('#fw').value, logo_url: f.querySelector('#fl').value });
+      });
+    });
+    on('#f-grant', 'click', function () {
+      if (!funderOptions) { notice('Add a funder first', '<p>Every grant belongs to a funder.</p>'); return; }
+      dialog('Add a grant', '<label for="gf">Funder</label><select id="gf">' + funderOptions + '</select><label for="gt">Title</label><input id="gt" type="text" required placeholder="K12Plus pilot 2027">' +
+        '<div class="two"><div><label for="ga">Amount</label><input id="ga" type="text" inputmode="decimal" required></div><div><label for="gc">Currency</label><select id="gc"><option>NAD</option><option>USD</option><option>ZAR</option><option>EUR</option><option>GBP</option></select></div></div>' +
+        '<label for="gr">Units of this currency for one US dollar</label><input id="gr" type="text" value="18"><p class="note">Used to convert the pilot\'s running costs, which are counted in US dollars.</p>' +
+        '<div class="two"><div><label for="gs">Starts</label><input id="gs" type="date" required></div><div><label for="ge">Ends</label><input id="ge" type="date" required></div></div>' +
+        '<label class="check"><input type="checkbox" id="gx"> This grant pays the pilot\'s running costs (data, texts and USSD)</label>', 'Add grant', function (f) {
+        return save('save_grant', { funder_id: f.querySelector('#gf').value, title: f.querySelector('#gt').value, amount: Number(f.querySelector('#ga').value.replace(/[^\d.]/g, '')),
+          currency: f.querySelector('#gc').value, per_usd: Number(f.querySelector('#gr').value) || 1, starts_on: f.querySelector('#gs').value, ends_on: f.querySelector('#ge').value,
+          running_costs: f.querySelector('#gx').checked });
+      });
+      on('#gc', 'change', function () { $('#gr').value = $('#gc').value === 'USD' ? '1' : $('#gc').value === 'NAD' || $('#gc').value === 'ZAR' ? '18' : '0.9'; });
+    });
+    each('[data-line]', function (b) {
+      b.onclick = function () {
+        dialog('Add a budget line', '<label for="lc">Category</label><input id="lc" type="text" required placeholder="Teacher training"><label for="lp">Planned amount</label><input id="lp" type="text" inputmode="decimal" required>' +
+          '<label for="ln">Note (optional)</label><input id="ln" type="text">', 'Add budget line', function (f) {
+          return save('save_line', { grant_id: b.getAttribute('data-line'), category: f.querySelector('#lc').value, planned: Number(f.querySelector('#lp').value.replace(/[^\d.]/g, '')), note: f.querySelector('#ln').value });
+        });
+      };
+    });
+    each('[data-exp]', function (b) {
+      var g = d.grants.filter(function (x) { return x.id === b.getAttribute('data-exp'); })[0];
+      b.onclick = function () {
+        dialog('Record an expense', '<label for="ed">Date</label><input id="ed" type="date" required value="' + new Date().toISOString().slice(0, 10) + '">' +
+          '<label for="ew">What it was for</label><input id="ew" type="text" required maxlength="240"><div class="two"><div><label for="ea">Amount (' + esc(g.currency) + ')</label><input id="ea" type="text" inputmode="decimal" required></div>' +
+          '<div><label for="el2">Budget line</label><select id="el2"><option value="">Not given</option>' + g.lines.filter(function (l) { return l.id; }).map(function (l) { return '<option value="' + l.id + '">' + esc(l.category) + '</option>'; }).join('') + '</select></div></div>' +
+          '<label for="er">Invoice or receipt number (optional)</label><input id="er" type="text" maxlength="80">', 'Record expense', function (f) {
+          return save('add_expense', { grant_id: g.id, spent_on: f.querySelector('#ed').value, description: f.querySelector('#ew').value, amount: Number(f.querySelector('#ea').value.replace(/[^\d.]/g, '')),
+            budget_line_id: f.querySelector('#el2').value ? Number(f.querySelector('#el2').value) : null, reference: f.querySelector('#er').value });
+        });
+      };
+    });
+    each('[data-rmexp]', function (b) { b.onclick = function () { b.disabled = true; save('remove_expense', { id: Number(b.getAttribute('data-rmexp')) }); }; });
+    each('[data-rmp]', function (b) { b.onclick = function () { b.disabled = true; save('remove_person', { user_id: b.getAttribute('data-rmp') }); }; });
+    each('[data-addp]', function (b) {
+      b.onclick = function () {
+        dialog('Give someone access', '<p class="note">They sign up at k12plus.app first. They will see the whole pilot without learner names, and this funder\'s grants.</p>' +
+          '<label for="pi">Their email, mobile number or k12plus ID</label><input id="pi" type="text" required>', 'Give access', function (f) {
+          return save('add_person', { identifier: f.querySelector('#pi').value, funder_id: b.getAttribute('data-addp') });
+        });
+      };
     });
   }
 
@@ -807,6 +1000,7 @@
         : parts[0] === 'country' ? showCountry()
         : parts[0] === 'accounts' ? showAccounts(parts[1], parts[2])
         : parts[0] === 'officials' && me.admin ? showOfficials()
+        : parts[0] === 'funds' && me.funds ? showFunds()
         : Promise.resolve(noAccess());
       return p.catch(function (e) {
         if (e.signedOut) { showSignIn('Please sign in again.'); return; }

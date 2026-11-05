@@ -179,6 +179,17 @@ dialog.dlg h2 { margin:0 0 6px; font-size:19px; }
 .inline input { flex:1; }
 .two { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .two label { margin-top:12px; }
+ul.attention li a { color:var(--ink); text-decoration:none; }
+ul.attention li a:hover { color:var(--primary); text-decoration:underline; }
+ul.attention .pill { margin-top:4px; white-space:normal; }
+.advice-row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:14px; }
+.advice { margin-top:14px; background:var(--chip); border-radius:12px; padding:14px 16px; }
+.advice h3 { margin:0 0 8px; font-size:15px; }
+.advice-text { font-size:14px; line-height:1.6; }
+.funder-logo { height:28px; width:auto; max-width:90px; object-fit:contain; border-radius:6px; background:#fff; }
+.grant { border-top:1px solid var(--line); margin-top:18px; padding-top:6px; }
+.grant-head { margin-top:10px; }
+.funder-row { padding:8px 0; border-bottom:1px solid var(--line); display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
 footer.site { border-top:1px solid var(--line); margin-top:30px; padding:18px 0; color:var(--muted); font-size:12px; }
 footer.site .wrap { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
 footer.site img { height:22px; width:auto; }
@@ -198,7 +209,7 @@ footer.site img { height:22px; width:auto; }
 </header>
 <main class="wrap" id="app"><div class="loading">Loading…</div></main>
 <footer class="site"><div class="wrap"><img src="logo.png" alt=""><span>K12Plus Monitor by K-Twelve Educational Technologies, Windhoek. Questions: <a href="mailto:paulus@k12plus.app">paulus@k12plus.app</a></span></div></footer>
-<script src="charts.js?v=3"></script>
-<script src="monitor.js?v=3"></script>
+<script src="charts.js?v=4"></script>
+<script src="monitor.js?v=4"></script>
 </body>
 </html>

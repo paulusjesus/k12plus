@@ -210,7 +210,7 @@ function limitReply(a) {
 const TEST_LOCK_REPLY = 'You are in the middle of a test, so the agent is taking a break until you submit it. Do your best on your own; there is no need to worry about marks. I will be right here after the test.';
 
 functions.http('aim', async (req, res) => {
-  var _origins = ['https://k12plus.app','https://www.k12plus.app','https://k12edu.io','https://www.k12edu.io'];
+  var _origins = ['https://k12plus.app','https://www.k12plus.app','https://monitor.k12plus.app','https://k12edu.io','https://www.k12edu.io'];
   var _o = (req.headers.origin || '');
   res.set('Access-Control-Allow-Origin', _origins.indexOf(_o) > -1 ? _o : _origins[0]);
   globalThis._rl = globalThis._rl || {};
@@ -229,7 +229,7 @@ functions.http('aim', async (req, res) => {
   }
 
   const token = req.body && req.body.k12token ? String(req.body.k12token) : '';
-  const asks = ['chat', 'chatimg', 'tutor'].includes(req.body && req.body.action);
+  const asks = ['chat', 'chatimg', 'tutor', 'advice'].includes(req.body && req.body.action);
   const [pilot, userId] = await Promise.all([
     token ? pilotContext(token) : {},
     token && asks ? whoIs(token) : null,
@@ -326,6 +326,24 @@ Return STRICT JSON: {"headline":"","highlights":[""],"risks":[""],"recommendatio
         output_summary: clip(brief.headline, 200), tokens_in: out.tokensIn, tokens_out: out.tokensOut, model: out.model,
       });
       return res.json({ brief });
+    }
+
+    // K12Plus Monitor: "Suggest what to do" for a class, a school, a region or Namibia.
+    // The page sends figures only: learners are "Learner 1", "Learner 2" and so on, and
+    // the agent never sees a name. Only signed-in staff can ask (the daily limit applies).
+    if (action === 'advice') {
+      if (!userId) return res.status(401).json({ error: 'Please sign in to K12Plus Monitor first.' });
+      const audience = { class: 'a mathematics teacher about one class', school: 'a principal about their school',
+        region: 'a regional education office about the schools in its region', country: 'the national Ministry of Education and funders about the whole pilot' }[req.body.scope] || 'an educator';
+      const sys = `You are the K12Plus Monitor adviser. You advise ${audience} in Namibia, using the figures given and nothing else.
+Write practical next steps they can take this week and this term: who to support first and how, which topics to reteach and with what kind of activity, how to raise participation, and when to involve parents, the school or the region. Suggest how K12Plus can help (agent practice on a weak topic, Real-Life Lab stories, quizzes, the Monday summary).
+Rules: UK English. Plain text with short numbered points, at most 8, under 260 words. No markdown headings, no em or en dashes. Use "learners", never "students". Refer to learners only by the labels given (for example Learner 3). Never invent figures, names or causes that are not in the data; where the data cannot tell you why, say what to check. Be warm and specific, never blaming.`;
+      const out = await callClaude(sys, [{ role: 'user', content: clip(req.body.facts, 6000) || 'No figures were sent.' }], 4096, 'low', SONNET_FIRST);
+      await logAgent({
+        agent: 'ministry_brief', action: `monitor advice ${clip(req.body.scope, 20)}`,
+        output_summary: clip(out.text, 200), tokens_in: out.tokensIn, tokens_out: out.tokensOut, model: out.model,
+      });
+      return res.json({ advice: out.text });
     }
 
     if (action === 'chat') {
