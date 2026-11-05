@@ -408,7 +408,7 @@ window.k12agentName = function (subject) {
           school_id: schoolId,
           phone: opts.phone || null,
           learner_uid: learnerUid,
-          linked_children: opts.childUid ? [opts.childUid] : null,
+          linked_children: (opts.childUids && opts.childUids.length) ? opts.childUids.slice(0, 8) : (opts.childUid ? [opts.childUid] : null),
         };
         var pres = await fetch(SUPA + '/rest/v1/profiles', {
           method: 'POST',
@@ -716,6 +716,49 @@ window.k12agentName = function (subject) {
       return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
     }
   }
+  // ---- parents: their own children's progress (the same rules as K12Plus Monitor) ----
+  // A child shows only once the link is confirmed: by the phone number on the guardian
+  // consent, or by the child's class teacher or school in K12Plus Monitor.
+  window.k12parent = {
+    load: async function () {
+      var w = await pilotRpc('monitor_whoami');
+      if (!w.ok) return w;
+      if (!w.data || !w.data.signed_in) return { ok: false, error: 'Please log in again.' };
+      var kids = (w.data.views || []).filter(function (v) { return v.kind === 'child'; });
+      for (var i = 0; i < kids.length; i++) {
+        if (kids[i].status === 'confirmed' && kids[i].taking_part) {
+          var d = await pilotRpc('monitor_learner', { p_learner: kids[i].id, p_grain: 'week' });
+          if (d.ok) kids[i].d = d.data;
+        }
+      }
+      return { ok: true, name: w.data.name, role: w.data.role, kids: kids };
+    },
+    // adds a child's K12Plus ID to this parent's account
+    addChild: async function (uid) {
+      uid = String(uid || '').trim().toUpperCase();
+      if (!/^K12-(NA|ZA)-[A-Z0-9]{6}$/.test(uid)) return { ok: false, error: 'A K12Plus ID looks like K12-NA-AB12CD.' };
+      if (!navigator.onLine) return { ok: false, error: 'You are offline. Connect to the internet and try again.' };
+      var sess = await freshSession();
+      if (!sess) return { ok: false, error: 'Please log in again.' };
+      var h = { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + sess.access_token };
+      try {
+        var res = await fetch(SUPA + '/rest/v1/profiles?select=role,linked_children&id=eq.' + encodeURIComponent(sess.user_id), { headers: h });
+        var rows = await res.json();
+        if (!res.ok || !rows.length) return { ok: false, error: 'Your account could not be read. Please try again.' };
+        if (rows[0].role !== 'parent') return { ok: false, error: 'Only parent and guardian accounts can link a child.' };
+        var list = rows[0].linked_children || [];
+        if (list.indexOf(uid) >= 0) return { ok: true, already: true };
+        if (list.length >= 8) return { ok: false, error: 'An account can link at most eight children.' };
+        var up = await fetch(SUPA + '/rest/v1/profiles?id=eq.' + encodeURIComponent(sess.user_id), {
+          method: 'PATCH', headers: Object.assign({ Prefer: 'return=minimal' }, h), body: JSON.stringify({ linked_children: list.concat([uid]) })
+        });
+        if (!up.ok) return { ok: false, error: 'The child could not be added. Please try again.' };
+        return { ok: true };
+      } catch (e) {
+        return { ok: false, error: 'Could not reach the server. Check your connection and try again.' };
+      }
+    }
+  };
   // ---- CSV and a small ZIP writer (files stored without compression) for the evaluator export ----
   function csvCell(v) {
     if (v === null || v === undefined) return '';

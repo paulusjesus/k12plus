@@ -6,7 +6,9 @@
  * They spend coins in the Game Center on reward games. Practice itself is never locked.
  *
  * Coins are kept on the phone, one purse per account, so they work offline and on shared
- * phones each learner keeps their own. Nothing about coins is sent to the server.
+ * phones each learner keeps their own. When a learner is signed in, what happens to her coins
+ * is also sent to the server (coins_sync), which applies the same rules and keeps the true
+ * balance: she keeps her coins on a new phone, nobody can edit them, and her teacher sees them.
  *
  *   window.k12coins.balance()                 coins in this learner's purse
  *   window.k12coins.earn(amount, why, once)   add coins; "once" stops the same reward twice
@@ -42,6 +44,72 @@
     try { window.dispatchEvent(new CustomEvent('k12coins', { detail: { coins: p.coins } })); } catch (e) {}
   }
 
+  // ---------- keeping the server up to date ----------
+  var SUPA = 'https://uwqbjjzjdnjlbicxrwnp.supabase.co';
+  var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3cWJqanpqZG5qbGJpY3hyd25wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4MzIyNzMsImV4cCI6MjEwMTQwODI3M30.A-YBoeeBGi8XD9tZsm3Yllj0TzfKsl9TKsUSySlWd88';
+  function outKey() { return 'k12plus-coins-out:' + who(); }
+  function readOut() { try { return JSON.parse(localStorage.getItem(outKey()) || '[]') || []; } catch (e) { return []; } }
+  function writeOut(list) { try { localStorage.setItem(outKey(), JSON.stringify(list.slice(-500))); } catch (e) {} }
+  function rid() {
+    try { if (crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
+    return 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+  }
+  // only signed-in learners keep coins on the server
+  function queue(why, n, once) {
+    if (who() === 'guest') return;
+    var p = read();
+    if (p.server === false) return;
+    var out = readOut();
+    if (!p.started) {
+      // the first time: coins earned on this phone before the server kept them come along once
+      p.started = 1; write(p);
+      var before = p.coins - n;
+      if (before > 0) out.push({ id: rid(), why: 'start', n: before, day: today(), at: Date.now() });
+    }
+    out.push({ id: rid(), why: why, n: n, once: once || null, day: today(), at: Date.now() });
+    writeOut(out);
+    later();
+  }
+  var timer = null, syncing = false;
+  function later() { clearTimeout(timer); timer = setTimeout(sync, 1500); }
+  async function sync() {
+    if (who() === 'guest' || syncing || !navigator.onLine || typeof window.k12session !== 'function') return;
+    var p = read();
+    if (p.server === false) return;
+    var out = readOut();
+    if (!p.started) { p.started = 1; write(p); if (p.coins > 0) { out.push({ id: rid(), why: 'start', n: p.coins, day: today(), at: Date.now() }); writeOut(out); } }
+    syncing = true;
+    try {
+      var sess = await window.k12session();
+      if (!sess || sess.user_id !== who()) return;
+      var sending = out.slice(0, 200);
+      var res = await fetch(SUPA + '/rest/v1/rpc/coins_sync', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + sess.access_token },
+        body: JSON.stringify({ p_events: sending })
+      });
+      if (!res.ok) return;
+      var d = await res.json();
+      p = read();
+      if (d.balance === null || d.balance === undefined) { p.server = false; write(p); writeOut([]); return; }
+      var done = {}; (d.done || []).forEach(function (x) { done[x] = 1; });
+      var left = readOut().filter(function (e) { return !done[e.id]; });
+      writeOut(left);
+      var extra = 0, extraPractice = 0;
+      left.forEach(function (e) { if (e.why !== 'start') extra += e.n; if (e.why === 'practice' && e.day === today()) extraPractice += e.n; });
+      p.coins = Math.max(0, d.balance + extra);
+      p.practiceToday = (d.practice_today || 0) + extraPractice;
+      (d.once || []).forEach(function (k) { p.once[k] = 1; });
+      p.log = left.slice().reverse().filter(function (e) { return e.why !== 'start'; }).map(function (e) { return { at: e.at, n: e.n, why: e.why }; })
+        .concat((d.log || []).map(function (x) { return { at: Date.parse(x.at) || Date.now(), n: x.n, why: x.why }; })).slice(0, 30);
+      write(p);
+      if (left.length && left.length < out.length) later();
+    } catch (e) {
+      // offline or the server is busy: the coins stay on the phone and go next time
+    } finally {
+      syncing = false;
+    }
+  }
+
   window.k12coins = {
     balance: function () { return read().coins; },
     // returns the coins actually added (0 when already rewarded, or the daily practice limit is reached)
@@ -58,6 +126,7 @@
       p.coins += amount;
       p.log = [{ at: Date.now(), n: amount, why: why || '' }].concat(p.log || []).slice(0, 30);
       write(p);
+      queue(why || 'practice', amount, once);
       return amount;
     },
     spend: function (amount, why) {
@@ -66,11 +135,16 @@
       p.coins -= amount;
       p.log = [{ at: Date.now(), n: -amount, why: why || '' }].concat(p.log || []).slice(0, 30);
       write(p);
+      queue('game', -amount);
       return true;
     },
     practiceLeftToday: function () { var p = read(); return Math.max(0, DAILY_PRACTICE_CAP - p.practiceToday); },
-    history: function () { return read().log || []; }
+    history: function () { return read().log || []; },
+    sync: sync,
+    pending: function () { return readOut().length; }
   };
+  window.addEventListener('online', function () { later(); });
+  setTimeout(sync, 2500);
 
   // ---------- the Game Center ----------
   var GAMES = [
@@ -276,5 +350,5 @@
   }
 
   window.addEventListener('k12coins', function (e) { if (root) { var c = root.querySelector('[data-coins]'); if (c) c.textContent = '🪙 ' + e.detail.coins + ' coins'; } });
-  window.k12gameCenter = { open: function (w) { ways = w || {}; home(); }, close: close, games: GAMES };
+  window.k12gameCenter = { open: function (w) { ways = w || {}; home(); try { window.k12coins.sync(); } catch (e) {} }, close: close, games: GAMES };
 })();

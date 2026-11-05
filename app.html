@@ -930,11 +930,14 @@ button { font-family:'Poppins',sans-serif; }
     <sc-if value="{{ isDashParent }}" hint-placeholder-val="{{ false }}">
       <div class="k12dd" style="flex:1; overflow-y:auto; padding:4px 24px 28px;">
         <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
-          <h1 style="font-size:19px; font-weight:600; margin:0;">Hello, Mr Shikongo</h1>
-          <span style="font-size:12px; color:var(--muted);">2 linked learners &middot; {{ schoolName }}</span>
+          <h1 style="font-size:19px; font-weight:600; margin:0;">{{ parentHello }}</h1>
+          <span style="font-size:12px; color:var(--muted);">{{ parentKidsNote }}</span>
         </div>
+        <sc-if value="{{ parentNotice }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-bottom:16px; font-size:13px; line-height:1.65;">{{ parentNotice }}</div>
+        </sc-if>
         <div class="k12main" style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
-          <sc-for list="{{ parentKids }}" as="k" hint-placeholder-count="2">
+          <sc-for list="{{ parentCards }}" as="k" hint-placeholder-count="1">
             <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px;">
               <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
                 <span style="width:40px; height:40px; border-radius:50%; background:{{ k.avatarBg }}; color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700;">{{ k.initials }}</span>
@@ -942,32 +945,31 @@ button { font-family:'Poppins',sans-serif; }
                   <span style="display:block; font-size:14px; font-weight:600;">{{ k.name }}</span>
                   <span style="display:block; font-size:11px; color:var(--muted);">{{ k.meta }}</span>
                 </span>
-                <span style="{{ k.attendStyle }}">{{ k.attendance }} attendance</span>
+                <span style="{{ k.statusStyle }}">{{ k.statusText }}</span>
               </div>
-              <div style="display:flex; flex-direction:column; gap:9px; margin-bottom:13px;">
-                <sc-for list="{{ k.subjects }}" as="sb" hint-placeholder-count="4">
-                  <div style="display:flex; align-items:center; gap:10px;">
-                    <span style="width:112px; font-size:11.5px; color:var(--muted); flex-shrink:0;">{{ sb.name }}</span>
-                    <div style="flex:1; height:6px; border-radius:6px; background:var(--chip); overflow:hidden;"><div style="height:100%; border-radius:6px; background:{{ sb.color }}; width:{{ sb.pct }};"></div></div>
-                    <span style="font-size:11.5px; font-weight:600; width:34px; text-align:right;">{{ sb.pct }}</span>
+              <div style="{{ k.linesStyle }}">
+                <sc-for list="{{ k.lines }}" as="ln" hint-placeholder-count="4">
+                  <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:12.5px;">
+                    <span style="color:var(--muted);">{{ ln.k }}</span>
+                    <span style="font-weight:600;">{{ ln.v }}</span>
                   </div>
                 </sc-for>
               </div>
-              <div style="background:var(--chip); border-radius:10px; padding:11px 13px; font-size:12px; line-height:1.6;">💬 <strong>Class teacher:</strong> {{ k.note }}</div>
+              <div style="background:var(--chip); border-radius:10px; padding:11px 13px; font-size:12px; line-height:1.6;">{{ k.note }}</div>
+              <a href="{{ k.monitorUrl }}" target="_blank" rel="noopener" style="{{ k.linkStyle }}">See the full progress in K12Plus Monitor</a>
             </div>
           </sc-for>
         </div>
         <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px;">
-          <p style="font-size:11px; font-weight:600; letter-spacing:1.3px; text-transform:uppercase; color:var(--muted); margin:0 0 12px;">This week</p>
-          <div style="display:flex; flex-direction:column; gap:11px;">
-            <sc-for list="{{ parentFeed }}" as="f" hint-placeholder-count="4">
-              <div style="display:flex; gap:11px; align-items:flex-start;">
-                <span style="{{ f.dotStyle }}"></span>
-                <span style="flex:1; font-size:12.5px; line-height:1.6;">{{ f.text }}</span>
-                <span style="font-size:11px; color:var(--muted); flex-shrink:0;">{{ f.when }}</span>
-              </div>
-            </sc-for>
+          <h2 style="font-size:14.5px; font-weight:600; margin:0 0 4px;">Link a child</h2>
+          <p style="font-size:12.5px; line-height:1.6; color:var(--muted); margin:0 0 12px;">Type your child's K12Plus ID. You will see their progress once their class teacher or school confirms that you are their parent or guardian. If your phone number is on the consent form, this happens by itself.</p>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <input value="{{ parentUid }}" onChange="{{ onParentUid }}" placeholder="K12Plus ID, e.g. K12-NA-AB12CD" style="flex:1 1 180px; min-width:0; border:1px solid var(--line); border-radius:8px; padding:10px 12px; font-size:13.5px; text-transform:uppercase; outline:none;">
+            <button onClick="{{ addParentChild }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:10px 18px; font-size:13px; font-weight:600; cursor:pointer;">Link child</button>
           </div>
+          <sc-if value="{{ parentAddMsg }}" hint-placeholder-val="{{ false }}">
+            <p style="font-size:12.5px; line-height:1.6; margin:10px 0 0;">{{ parentAddMsg }}</p>
+          </sc-if>
         </div>
         <div style="background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px 20px; margin-top:16px;">
           <h2 style="font-size:14.5px; font-weight:600; margin:0 0 4px;">Help a learner reset their password</h2>
@@ -2532,7 +2534,7 @@ class Component extends DCLogic {
     } catch (e) {}
     try {
       const sess = JSON.parse(localStorage.getItem('k12plus-session') || 'null');
-      if (sess && sess.access_token) { this.setState({ hasSession: true }); this.loadPilotRole(); }
+      if (sess && sess.access_token) { this.setState({ hasSession: true }); this.loadPilotRole(); if (localStorage.getItem('k12plus-role') === 'Parent') this.loadParent(); }
       if (window.k12data && window.k12data.myQuizStats) {
         window.k12data.myQuizStats().then((stats) => {
           if (stats && stats.total > 0) this.setState({ liveStats: stats });
@@ -2540,6 +2542,14 @@ class Component extends DCLogic {
       }
     } catch (e) {}
     this._timer = setInterval(() => this.setState(s => ({ countdown: Math.max(0, s.countdown - 1) })), 1000);
+  }
+
+  // ---------- parents: their children's progress ----------
+  async loadParent() {
+    if (!window.k12parent) return;
+    this.setState({ parentLoading: true });
+    const r = await window.k12parent.load();
+    this.setState({ parentLoading: false, parentInfo: r.ok ? r : this.state.parentInfo, parentErr: r.ok ? '' : r.error });
   }
 
   // ---------- 2027 pilot: regions, schools, classes, champions ----------
@@ -3897,18 +3907,65 @@ class Component extends DCLogic {
       { title: 'Set next week\u2019s homework', sub: 'Suggested: Quadratic graphs worksheet, aligned to your syllabus pace', action: 'Set task', dotStyle: dot('#5563E0') },
       { title: 'Message Mr Shikongo back', sub: 'Asked about Ndapewa\u2019s progress \u00b7 yesterday', action: 'Reply', dotStyle: dot('#3BB273') }
     ];
-    const parentKids = [
-      { name: 'Ndapewa', meta: 'Grade 12 C \u00b7 K12-NA-8F3K92', initials: 'NN', avatarBg: '#7C3AED', attendance: '96%', attendStyle: pill('#E7F6EE', '#1F6B43'), note: 'Ndapewa is thriving in Maths - ask her to show you the parabola she graphed this week.', subjects: [
-        { name: 'Mathematics', pct: '83%', color: '#5563E0' }, { name: 'Biology', pct: '76%', color: '#3BB273' }, { name: 'Physical Science', pct: '71%', color: '#E8A13A' }, { name: 'Business Studies', pct: '88%', color: '#B400D9' }] },
-      { name: 'Tomas', meta: 'Grade 11 B \u00b7 K12-NA-3TW281', initials: 'TS', avatarBg: '#3BB273', attendance: '89%', attendStyle: pill('#FFF6DC', '#8A6400'), note: 'Tomas missed two Physical Science lessons - the catch-up pack is on his dashboard.', subjects: [
-        { name: 'Mathematics', pct: '64%', color: '#5563E0' }, { name: 'Biology', pct: '72%', color: '#3BB273' }, { name: 'Physical Science', pct: '55%', color: '#E8A13A' }, { name: 'Business Studies', pct: '70%', color: '#B400D9' }] }
-    ];
-    const parentFeed = [
-      { text: 'Ndapewa passed Quiz 5 (Algebraic Expressions) with 70%', when: 'Today', dotStyle: dot('#3BB273') },
-      { text: 'Tomas has Physical Science homework due Friday - he has not started yet', when: 'Yesterday', dotStyle: dot('#E8A13A') },
-      { text: 'Ms Amukoto replied to your message about Ndapewa\u2019s progress', when: 'Yesterday', dotStyle: dot('#5563E0') },
-      { text: 'Term 3 exam timetable published - exams start in 6 weeks', when: 'Mon', dotStyle: dot('#B400D9') }
-    ];
+    // parents: their own children, from the same database rules as K12Plus Monitor
+    const pinfo = s.parentInfo;
+    const isParentAcc = !!(pinfo && pinfo.role === 'parent');
+    const fmtN = (n) => Number(n || 0).toLocaleString('en-GB');
+    const parentCards = isParentAcc ? (pinfo.kids || []).map((k, i) => {
+      const d = k.d;
+      const ready = k.status === 'confirmed' && k.taking_part && d && d.taking_part;
+      const weak = ready ? (d.topics || []).filter(t => t.accuracy != null && t.accuracy < 60).sort((a, b) => a.accuracy - b.accuracy).slice(0, 2) : [];
+      const tests = ready ? (d.test_results || []) : [];
+      const lastTest = tests.length ? tests[tests.length - 1] : null;
+      const lines = ready ? [
+        { k: 'Active in the last 7 days', v: d.active_week ? 'Yes' : 'Not yet' },
+        { k: 'Practice accuracy, last 12 weeks', v: d.accuracy == null ? 'no practice yet' : d.accuracy + '%' },
+        { k: 'Minutes learning, last 12 weeks', v: fmtN(d.minutes) },
+        { k: 'Questions to the agents', v: fmtN(d.questions) },
+        { k: 'Coins for the Game Center', v: fmtN(d.coins ? d.coins.balance : 0) }
+      ].concat(lastTest ? [{ k: lastTest.title, v: lastTest.percent == null ? 'sat' : lastTest.percent + '%' }] : []) : [];
+      const note = ready
+        ? (weak.length ? 'Topics to practise: ' + weak.map(t => t.topic + ' (' + t.accuracy + '%)').join(', ') + '. A few practice questions on these this week would help.'
+                       : 'No topic stands out as difficult right now. Keep encouraging steady practice.')
+        : k.status === 'waiting'
+          ? 'Waiting for the school to confirm that you are the parent or guardian of the learner with this K12Plus ID. The class teacher can confirm it in K12Plus Monitor. If your phone number is on the consent form, this happens by itself.'
+          : !k.taking_part
+            ? k.name + '’s progress appears here once their school’s K12Plus class is set up and you and the school have given consent.'
+            : 'The progress could not be loaded just now. Please try again later.';
+      return {
+        name: k.name, initials: k.status !== 'confirmed' ? '?' : String(k.name || '?').split(/\s+/).map(w => w[0] || '').join('').slice(0, 2).toUpperCase(),
+        avatarBg: ['#7C3AED', '#3BB273', '#5563E0', '#E8A13A'][i % 4],
+        meta: ready ? d.class + ' · ' + d.school : 'K12Plus learner',
+        statusText: k.status === 'waiting' ? 'Waiting' : 'Linked',
+        statusStyle: k.status === 'waiting' ? pill('#FFF6DC', '#8A6400') : pill('#E7F6EE', '#1F6B43'),
+        lines, note,
+        linesStyle: ready ? 'display:flex; flex-direction:column; gap:8px; margin-bottom:13px;' : 'display:none;',
+        linkStyle: ready ? 'display:inline-block; margin-top:12px; font-size:12.5px; font-weight:600; color:var(--primary);' : 'display:none;',
+        monitorUrl: 'https://monitor.k12plus.app/#child/' + k.id
+      };
+    }) : [];
+    const kidsN = isParentAcc ? (pinfo.kids || []).length : 0;
+    const parentVals = {
+      parentHello: isParentAcc ? 'Hello, ' + pinfo.name : 'Your children’s progress',
+      parentKidsNote: isParentAcc ? (kidsN === 1 ? '1 linked learner' : kidsN + ' linked learners') : '',
+      parentNotice: !s.hasSession ? 'Log in with your parent or guardian account to see your child’s progress. You can link a child with their K12Plus ID when you sign up, or below once you are logged in.'
+        : (s.parentLoading && !pinfo) ? 'Loading your children’s progress…'
+        : s.parentErr ? s.parentErr
+        : (pinfo && !isParentAcc) ? 'This page is for parent and guardian accounts.'
+        : (isParentAcc && !kidsN) ? 'You have not linked a child yet. Ask your child for their K12Plus ID, which starts with K12-NA-, and add it below.' : '',
+      parentCards,
+      parentUid: s.parentUid || '',
+      onParentUid: (e) => this.setState({ parentUid: e.target.value }),
+      parentAddMsg: s.parentAddMsg || '',
+      addParentChild: async () => {
+        if (!window.k12parent) return;
+        this.setState({ parentAddMsg: 'Linking…' });
+        const r = await window.k12parent.addChild(this.state.parentUid);
+        if (!r.ok) { this.setState({ parentAddMsg: r.error }); return; }
+        this.setState({ parentUid: '', parentAddMsg: r.already ? 'This child is already linked to your account.' : 'Linked. The school will confirm that you are the parent or guardian.' });
+        this.loadParent();
+      }
+    };
     const prinStats = [
       { label: 'Pass rate (school)', value: '78.4%', delta: '\u2191 3.1% vs Term 2', deltaStyle: pill('#E7F6EE', '#1F6B43') },
       { label: 'Learners active', value: '1,214', delta: '92% weekly active', deltaStyle: pill('#EEF0FE', '#3D48B8') },
@@ -4036,7 +4093,7 @@ class Component extends DCLogic {
       quizCoinsLine: s.quizCoins ? '🪙 +' + s.quizCoins + ' coins for the Game Center' : (done ? 'You have already earned today\'s coins for this quiz. Try another subject for more.' : ''),
       hasQuizHistory: history.length > 0,
       quizHistory: history.map(hh => ({ subject: hh.subject, date: hh.date, score: hh.score, dotStyle: dot(hh.score >= 3 ? '#3BB273' : '#E8A13A'), scoreStyle: pill(hh.score >= 3 ? '#E7F6EE' : '#FFF6DC', hh.score >= 3 ? '#1F6B43' : '#8A6400') })),
-      edStats, edTodos, parentKids, parentFeed, prinStats, prinTeachers, prinAlerts,
+      edStats, edTodos, prinStats, prinTeachers, prinAlerts, ...parentVals,
       minScopeTabs, minStats, minRows, minChartTitle: rd[0],
       tourOpen: step > 0, tourIcon: t.icon, tourTitle: t.title, tourBody: t.body,
       tourDot1: tourDot(1), tourDot2: tourDot(2), tourDot3: tourDot(3),

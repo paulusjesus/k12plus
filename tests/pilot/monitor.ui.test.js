@@ -21,12 +21,13 @@ const ROOT = path.join(__dirname, '../..');
 const MIGS = ['20261023_pilot_structure.sql', '20261024_pilot_consent.sql', '20261025_pilot_messaging.sql', '20261026_pilot_pause.sql',
   '20261027_pilot_learning_and_summaries.sql', '20261028_pilot_tests.sql', '20261029_pilot_reports.sql', '20261030_pilot_feedback_review.sql',
   '20261031_pilot_evaluator_export.sql', '20261101_pilot_offline_lessons.sql', '20261102_pilot_ussd.sql', '20261103_plan_allowance.sql',
-  '20261105_monitoring.sql', '20261106_monitor_accounts.sql', '20261107_funders_attention.sql'];
+  '20261105_monitoring.sql', '20261106_monitor_accounts.sql', '20261107_funders_attention.sql', '20261108_parents_coins_reports.sql'];
 const TYPES = { p_learner: 'uuid', p_class: 'uuid', p_school: 'uuid', p_region: 'smallint', p_grain: 'text', p_identifier: 'text', p_title: 'text', p_user: 'uuid',
   p_scope: 'text', p_id: 'text', p_search: 'text', p_role: 'text', p_page: 'int', p: 'jsonb', p_right: 'bigint', p_can_grant: 'boolean', p_action: 'text', p_target: 'uuid',
-  p_audit: 'bigint', p_ok: 'boolean', p_result: 'jsonb', p_grant: 'uuid' };
-const TYPES_FOR = { monitor_attention_for: { p_id: 'uuid' } };
+  p_audit: 'bigint', p_ok: 'boolean', p_result: 'jsonb', p_grant: 'uuid', p_parent: 'uuid', p_events: 'jsonb', p_month: 'date' };
+const TYPES_FOR = { monitor_attention_for: { p_id: 'uuid' }, funds_report: { p_id: 'bigint' }, funds_report_mark: { p_id: 'bigint' } };
 const SVC = 'service-key', ANON = 'anon-key', FAKE = 9990, SITE = 8766, APP = 8767;
+const VENDOR = { 'react@18.3.1/umd/react.production.min.js': 'node_modules/react/umd/react.production.min.js', 'react-dom@18.3.1/umd/react-dom.production.min.js': 'node_modules/react-dom/umd/react-dom.production.min.js', '@babel/standalone': 'node_modules/@babel/standalone/babel.min.js' };
 let pass = 0, fail = 0;
 const ok = (c, n, x) => { if (c) { pass++; console.log('  PASS', n); } else { fail++; console.log('  FAIL', n, x === undefined ? '' : JSON.stringify(x).slice(0, 600)); } };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -108,6 +109,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   };
   const logos = {};
   const advice = [];
+  const emails = [];
   const fake = http.createServer(async (req, res) => {
     const url = new URL(req.url, 'http://x');
     const chunks = []; for await (const c of req) chunks.push(c);
@@ -130,6 +132,17 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
         } catch (e) { return send(/permission denied/.test(e.message) ? 401 : 400, { message: e.message }); }
       }
       if (url.pathname === '/rest/v1/regions') return send(200, (await db.query('select id, name from regions order by name')).rows);
+      if (url.pathname === '/rest/v1/profiles' && (who && who !== 'anon')) {
+        const id = (url.searchParams.get('id') || '').replace(/^eq\./, '');
+        const claims = who === 'service' ? { role: 'service_role' } : { sub: who, role: 'authenticated' };
+        if (req.method === 'GET') return send(200, (await asUser(claims, (tx) => tx.query('select role, linked_children from profiles where id = $1', [id]))).rows);
+        if (req.method === 'PATCH') { await asUser(claims, (tx) => tx.query('update profiles set linked_children = $2 where id = $1', [id, body.linked_children])); return send(204, null); }
+      }
+      if (url.pathname === '/resend') { emails.push(body); return send(200, { id: 'em-' + emails.length }); }
+      if (url.pathname === '/functions/v1/funder-reports') {
+        const r = await fetch('http://127.0.0.1:8000/', { method: 'POST', headers: { 'Content-Type': 'application/json', authorization: req.headers.authorization || '', origin: 'https://monitor.k12plus.app', ...(req.headers['x-k12-cron'] ? { 'x-k12-cron': req.headers['x-k12-cron'] } : {}) }, body: raw });
+        return send(r.status, Buffer.from(await r.arrayBuffer()));
+      }
       if (url.pathname === '/auth/v1/token' && url.searchParams.get('grant_type') === 'password') {
         const u = (await db.query('select * from auth.users where lower(email) = lower($1)', [body.email || ''])).rows[0];
         if (!u || u.pw !== body.password) return send(400, { error_description: 'Invalid login credentials' });
@@ -179,7 +192,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     } catch (e) { console.error(e); return send(500, { message: e.message }); }
   }).listen(FAKE);
 
-  const deno = spawn(process.env.DENO || 'deno', ['run', '--allow-net', '--allow-env', path.join(ROOT, 'supabase/functions/account-admin/index.ts')], {
+  let deno = spawn(process.env.DENO || 'deno', ['run', '--allow-net', '--allow-env', path.join(ROOT, 'supabase/functions/account-admin/index.ts')], {
     env: { ...process.env, SUPABASE_URL: 'http://127.0.0.1:' + FAKE, SUPABASE_SERVICE_ROLE_KEY: SVC, SUPABASE_ANON_KEY: ANON }, stdio: ['ignore', 'pipe', 'pipe'],
   });
   let denoLog = ''; deno.stdout.on('data', (d) => { denoLog += d; }); deno.stderr.on('data', (d) => { denoLog += d; });
@@ -203,6 +216,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     page.on('pageerror', (e) => errors.push(e.message));
     await page.route('https://fonts.googleapis.com/**', (r) => r.fulfill({ body: '', contentType: 'text/css' }));
     await page.route('https://fonts.gstatic.com/**', (r) => r.abort());
+    await page.route('https://unpkg.com/**', (r) => { const k = Object.keys(VENDOR).find((x) => r.request().url().includes(x)); return k ? r.fulfill({ path: path.join(process.env.VENDOR_DIR, VENDOR[k]), contentType: 'application/javascript' }) : r.abort(); });
     await page.route('https://uwqbjjzjdnjlbicxrwnp.supabase.co/**', async (r) => {
       const req = r.request(), u = new URL(req.url());
       const headers = { ...req.headers() };
@@ -218,6 +232,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const signIn = async (p, ident, pw) => { await p.fill('#u', ident); await p.fill('#p', pw); await p.click('form#f button[type=submit]'); await p.waitForTimeout(1200); };
   const noNames = (t) => !names.some((x) => t.includes(x));
   const go = async (p, hash) => { await p.evaluate((h) => { location.hash = h; }, hash); await p.waitForTimeout(900); };
+  const reload = async (p, hash) => { await go(p, '#none'); await go(p, hash); };
 
   console.log('\n1. The principal: registrations and learning for the school, in every period');
   let p = await newPage();
@@ -401,6 +416,79 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   ok(/How Namibia Education Trust's funding is being used/.test(t) && /Grant N\$500,000/.test(t) && /Spent N\$30,[0-9]/.test(t) && /Teacher training/.test(t) && /Training workshop, Oshakati/.test(t), 'the Funds page: grant, spent, budget lines and expenses', t.slice(0, 700));
   ok(await pf.locator('#f-line-0 svg path.kc-line').count() === 1 && await pf.locator('#f-meter-0 .kc-meter').count() === 1 && !(await pf.locator('#f-grant').count()), 'with charts, and no editing buttons for the funder');
   await shot(pf, 'monitor3-funds.png');
+
+  console.log('\n10b. Coins, parents and monthly reports');
+  const L0 = 'L0', child = names[0], others = names.filter((x) => x !== child);
+  const evs = [{ id: 'coin-000001', why: 'practice', n: 60 }, { id: 'coin-000002', why: 'practice', n: 60 }, { id: 'coin-000003', why: 'quiz', n: 35, once: 'quiz:Mathematics:x' }];
+  await sql(L0, 'select coins_sync($1::jsonb)', [JSON.stringify(evs)]);
+  await reload(pt2, '#class/' + cls[S.T + 11].id);
+  t = await text(pt2);
+  ok(/Coins/.test(t) && new RegExp(child + ' .*155').test(t), 'the class teacher sees each learner\'s coins', t.slice(t.indexOf('Learners'), t.indexOf('Learners') + 400));
+  await mk('mum', 'parent', { name: 'Mrs Shikongo', phone: '+264 81 000 0000' });
+  await db.query("update profiles set linked_children = array['K12-NA-000000'] where id = $1", [U.mum]);
+  const pm = await newPage(390); await signIn(pm, 'mum@school.na', PW.mum);
+  t = await text(pm);
+  ok(/Waiting for the school to confirm/.test(t) && /K12-NA-000000/.test(t) && !names.some((x) => t.includes(x)), 'a parent waits until the school confirms the link, and sees no name until then', t.slice(0, 300));
+  await reload(pt2, '#class/' + cls[S.T + 11].id);
+  ok(/1 parent is waiting for you to confirm them/.test(await text(pt2)), 'the class teacher is told a parent is waiting');
+  await go(pt2, '#learner/' + U[L0]);
+  t = await text(pt2);
+  ok(/Parents and guardians/.test(t) && /Mrs Shikongo/.test(t) && /waiting for you/.test(t), 'the learner\'s page shows the parent waiting', t.slice(-500));
+  await pt2.click('[data-pok]'); await pt2.waitForTimeout(1000);
+  ok(/Mrs Shikongo .*confirmed/.test(await text(pt2)), 'the teacher confirms the parent');
+  await shot(pt2, 'monitor4-parents.png');
+  const pm2 = await newPage(390); await signIn(pm2, 'mum@school.na', PW.mum);
+  t = await text(pm2);
+  ok(new RegExp(child).test(t) && /Your child/.test(t) && /Coins for the Game Center/.test(t) && /155/.test(t) && !others.some((x) => t.includes(x)), 'now the parent sees the child\'s progress and coins, and nobody else', t.slice(0, 500));
+  ok(await pm2.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), 'on a 390 px phone');
+  await shot(pm2, 'monitor4-parent-390.png');
+  await go(pm2, '#learner/' + U.L1);
+  ok(/could not be opened/.test(await text(pm2)), 'a parent cannot open another learner');
+
+  // the parent dashboard in the K12Plus app, with the same rules
+  const pap = await newPage(390, 'http://127.0.0.1:' + APP + '/tests/pilot/blank.html');
+  await pap.evaluate((tok) => {
+    localStorage.setItem('k12plus-session', JSON.stringify({ access_token: tok, refresh_token: 'r', user_id: tok.split('.')[1] && JSON.parse(atob(tok.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).sub }));
+    localStorage.setItem('k12plus-loggedin', '1'); localStorage.setItem('k12plus-role', 'Parent'); localStorage.setItem('k12plus-name', 'Mrs Shikongo'); localStorage.setItem('k12plus-tour-done', '1');
+  }, tokenFor(U.mum));
+  await pap.goto('http://127.0.0.1:' + APP + '/app.html'); await pap.waitForTimeout(3500);
+  t = await text(pap);
+  ok(/Hello, Mrs Shikongo/.test(t) && t.includes(child) && /Practice accuracy, last 12 weeks/.test(t) && /Coins for the Game Center 155/.test(t), 'the app\'s parent dashboard shows the real child', t.slice(0, 700));
+  ok(!/Mr Shikongo|Tomas|attendance/.test(t) && !others.some((x) => t.includes(x)), 'and none of the old sample data');
+  await pap.fill('input[placeholder^="K12Plus ID"]', 'k12-na-000001'); await pap.click('button:has-text("Link child")'); await pap.waitForTimeout(1500);
+  t = await text(pap);
+  ok(/Linked. The school will confirm/.test(t) && /Waiting for the school to confirm/.test(t) && /K12-NA-000001/.test(t), 'a parent links a second child, who waits for the school', t.slice(0, 900));
+  ok(!t.includes(names[1]), 'without seeing that child\'s name or figures');
+  await shot(pap, 'app-parent-390.png');
+
+  // monthly reports: the real funder-reports function in Deno, with a stand-in email service
+  deno.kill(); await sleep(500);
+  deno = spawn(process.env.DENO || 'deno', ['run', '--allow-net', '--allow-env', path.join(ROOT, 'supabase/functions/funder-reports/index.ts')], {
+    env: { ...process.env, SUPABASE_URL: 'http://127.0.0.1:' + FAKE, SUPABASE_SERVICE_ROLE_KEY: SVC, SUPABASE_ANON_KEY: ANON, RESEND_API_KEY: 'test-key', RESEND_URL: 'http://127.0.0.1:' + FAKE + '/resend' }, stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  denoLog = ''; deno.stdout.on('data', (d) => { denoLog += d; }); deno.stderr.on('data', (d) => { denoLog += d; });
+  for (let i = 0; i < 60 && !/Listening/.test(denoLog); i++) await sleep(250);
+  ok(/Listening/.test(denoLog), 'the funder-reports function starts in Deno', denoLog.slice(0, 300));
+  await go(pad, '#funds'); await pad.waitForTimeout(600);
+  ok(/Monthly reports/.test(await text(pad)) && /No reports yet/.test(await text(pad)), 'the Funds page has a Monthly reports section');
+  await pad.click('#f-build'); await pad.waitForTimeout(2500);
+  t = await text(pad);
+  ok(/1 report prepared/.test(t) && /1 email sent/.test(t) && /emailed/.test(t), 'the administrator prepares and emails last month\'s reports', t.slice(t.indexOf('Monthly reports'), t.indexOf('Monthly reports') + 400));
+  const mail = emails[0] || {};
+  ok(mail.to && mail.to.join() === 'funder@school.na' && /K12Plus pilot report for .* 20\d\d, Namibia Education Trust/.test(mail.subject), 'the email goes to the funder\'s person', mail.subject);
+  ok(/Learners taking part with consent: \d+/.test(mail.text) && /Pilot 2027: N\$500,000 granted/.test(mail.text) && /#report\/\d+/.test(mail.text), 'with the pilot, the grant and a link to the full report', mail.text);
+  ok(!names.some((x) => (String(mail.text) + String(mail.html)).includes(x)) && !/[–—]/.test(mail.text) && !/\b(don't|can't|won't|isn't|it's)\b/i.test(mail.text), 'with no names, no dashes and no contractions');
+  const res2 = await fetch('http://127.0.0.1:' + FAKE + '/functions/v1/funder-reports', { method: 'POST', headers: { 'Content-Type': 'application/json', authorization: 'Bearer ' + tokenFor(U.funder) }, body: '{"action":"send"}' });
+  ok(res2.status === 403, 'a funder cannot send reports');
+  const res3 = await fetch('http://127.0.0.1:' + FAKE + '/functions/v1/funder-reports', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-k12-cron': 'not-the-secret-not-the-secret-not-the-secret' }, body: '{"action":"send"}' });
+  ok(res3.status === 403, 'nor can anyone with a wrong job secret');
+  await reload(pf, '#funds'); await pf.waitForTimeout(800);
+  t = await text(pf);
+  ok(/Monthly reports/.test(t) && /emailed/.test(t) && !(await pf.locator('#f-build').count()), 'the funder sees the report, without the button to prepare them');
+  await pf.click('#f-reports a:has-text("Open")'); await pf.waitForTimeout(1000);
+  t = await text(pf);
+  ok(/Pilot report for/.test(t) && /Grant N\$500,000/.test(t) && /Learners taking part/.test(t) && noNames(t), 'the full report opens in Monitor, with no names', t.slice(0, 500));
+  await shot(pf, 'monitor4-report.png');
 
   console.log('\n11. Phones, words and errors');
   const pp = await newPage(390); await signIn(pp, 'national@school.na', PW.national);

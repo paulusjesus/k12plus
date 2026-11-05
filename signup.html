@@ -1200,7 +1200,8 @@ class Component extends DCLogic {
             classLetter: isParent ? '' : s.cls,
             email: s.email.trim(),
             phone: s.mobile.trim(),
-            childUid: isParent ? s.children[0].id.trim().toUpperCase() : ''
+            childUid: isParent ? s.children[0].id.trim().toUpperCase() : '',
+            childUids: isParent ? s.children.map(c => c.id.trim().toUpperCase()).filter(Boolean) : []
           });
           if (!r || !r.ok) return this.setState({ error: (r && r.error) || 'Sign up failed. Please try again.' });
           serverUid = r.learnerUid || '';

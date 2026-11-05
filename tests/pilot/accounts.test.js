@@ -16,7 +16,7 @@ const path = require('path');
 const MIGS = ['20261023_pilot_structure.sql', '20261024_pilot_consent.sql', '20261025_pilot_messaging.sql', '20261026_pilot_pause.sql',
   '20261027_pilot_learning_and_summaries.sql', '20261028_pilot_tests.sql', '20261029_pilot_reports.sql', '20261030_pilot_feedback_review.sql',
   '20261031_pilot_evaluator_export.sql', '20261101_pilot_offline_lessons.sql', '20261102_pilot_ussd.sql', '20261103_plan_allowance.sql',
-  '20261105_monitoring.sql', '20261106_monitor_accounts.sql', '20261107_funders_attention.sql'].map((f) => path.join(__dirname, '../../backend/migrations', f));
+  '20261105_monitoring.sql', '20261106_monitor_accounts.sql', '20261107_funders_attention.sql', '20261108_parents_coins_reports.sql'].map((f) => path.join(__dirname, '../../backend/migrations', f));
 let pass = 0, fail = 0;
 const ok = (c, n, x) => { if (c) { pass++; console.log('  PASS', n); } else { fail++; console.log('  FAIL', n, x === undefined ? '' : JSON.stringify(x).slice(0, 700)); } };
 
@@ -154,7 +154,7 @@ const ok = (c, n, x) => { if (c) { pass++; console.log('  PASS', n); } else { fa
   r = await v('national', "select account_list('country')");
   ok(r.v.rows.every((x) => !['learner', 'parent'].includes(x.role)) && r.v.rows.some((x) => x.name === 'Ms Karibib'), 'the national official lists staff in every region');
   r = await v('admin', "select account_list('country', null, 'no school')");
-  ok(r.v.rows.length === 2 && r.v.learners_shown, 'the administrator can find learners anywhere (for support)');
+  ok(r.v.rows.every((x) => !['learner', 'parent'].includes(x.role)) && !r.v.learners_shown, 'the administrator does not list learners: only their class and school manage them', r.v);
   r = await v('tO', "select account_list('school', $1)", [S.T]);
   ok(r.err && /do not manage/.test(r.err), 'a teacher from another school is refused', r);
   r = await v('L0', "select account_list('class', $1)", [cls[S.T + 11].id]);

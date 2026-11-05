@@ -316,7 +316,7 @@ Answers must be exact, checkable strings (numbers or simple expressions).`;
     }
 
     if (action === 'ministry_brief') {
-      const sys = `You are the AIM Ministry Brief agent. Write a weekly briefing for the Namibian Ministry of Education, Arts and Culture based on real platform statistics. Be factual, concise, actionable. Never invent numbers not present in the data.
+      const sys = `You are the AIM Ministry Brief agent. Write a weekly briefing for the Namibian Ministry of Education, Innovation, Youth, Sport, Arts and Culture based on real platform statistics. Be factual, concise, actionable. Never invent numbers not present in the data.
 Return STRICT JSON: {"headline":"","highlights":[""],"risks":[""],"recommendations":[""]}`;
       const out = await callClaude(sys, [{ role: 'user', content: clip(JSON.stringify(stats), 8000) }], 8000);
       let brief;

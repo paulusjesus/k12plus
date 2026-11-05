@@ -32,6 +32,7 @@
   function pct(n) { return n == null ? 'none yet' : n + '%'; }
   function share(a, b) { return b ? Math.round(100 * a / b) : null; }
   function count(n, one, many) { return num(n) + ' ' + (n === 1 ? one : many); }
+  function alertBox(msg) { var a = document.getElementById('app'); if (a) a.insertAdjacentHTML('afterbegin', '<div class="card notice bad" role="alert">' + esc(msg) + '</div>'); window.scrollTo && window.scrollTo(0, 0); }
   function asDate(d) { return new Date(String(d).length === 10 ? d + 'T12:00:00' : d); }
   function dayLong(d) { return d ? asDate(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'not yet'; }
   function dayShort(d) { return d ? asDate(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'not yet'; }
@@ -197,6 +198,7 @@
 
   // ---------- navigation ----------
   function viewHash(v) { return v.kind === 'learner' ? '#me' : v.kind === 'country' ? '#country' : '#' + v.kind + '/' + v.id; }
+  function childView(id) { return (me.views || []).filter(function (v) { return v.kind === 'child' && String(v.id) === String(id); })[0]; }
   function topNav(active) {
     var vs = (me.views || []).slice();
     var chips = vs.map(function (v) {
@@ -322,7 +324,7 @@
     if (!rows || !rows.length) return '';
     var h = '<div class="tbl-wrap"><table><thead><tr><th>' + label + '</th>' + (kind !== 'learner' ? '<th class="num">Learners</th>' : '') +
       '<th class="num">Active this week</th><th class="num">Accuracy</th><th class="num">Minutes' + (kind !== 'learner' ? ' each' : '') + '</th><th class="num">Questions</th><th class="num">Start of year</th><th class="num">End of year</th>' +
-      (kind === 'learner' ? '<th>Last active</th>' : '') + '</tr></thead><tbody>';
+      (kind === 'learner' ? '<th>Last active</th><th class="num">Coins</th>' : '') + '</tr></thead><tbody>';
     rows.forEach(function (r) {
       var go = kind === 'learner' ? '#learner/' + r.id : '#' + kind + '/' + r.id;
       var name = esc(r.name) + (r.setting ? ' <span class="pill">' + esc(r.setting) + '</span>' : '');
@@ -337,7 +339,7 @@
         '<td class="num"><span class="pill ' + accClass(r.accuracy) + '">' + pct(r.accuracy) + '</span></td>' +
         '<td class="num">' + num(kind === 'learner' ? r.minutes : (r.learners ? Math.round(r.minutes / r.learners) : 0)) + '</td><td class="num">' + num(r.questions) + '</td>' +
         '<td class="num">' + (t.baseline ? pct(t.baseline.average) : 'none') + '</td><td class="num">' + (t.endline ? pct(t.endline.average) : 'none') + '</td>' +
-        (kind === 'learner' ? '<td>' + (r.last_active ? dayShort(r.last_active) : 'not yet') + '</td>' : '') + '</tr>';
+        (kind === 'learner' ? '<td>' + (r.last_active ? dayShort(r.last_active) : 'not yet') + '</td><td class="num">' + num(r.coins || 0) + '</td>' : '') + '</tr>';
     });
     h += '</tbody></table></div>';
     if (!named && kind !== 'learner') h += '<p class="note">Learner names are never shown here. Groups of fewer than five learners show their number only.</p>';
@@ -425,6 +427,7 @@
       var regHtml = reg.too_few ? card('Who has joined', '<p class="note">Fewer than five learners have joined, so the numbers are hidden.</p>')
         : card('Who has joined', slot('c-joined') + '<p class="note">' + num(reg.joined) + ' learners joined this class; ' + num(reg.with_consent) + ' of them have parent or guardian and school consent, so their learning is counted.</p>');
       app.innerHTML = pageHead({ active: '#class/' + id, title: d.name, sub: d.school + ' · Grade ' + d.grade, logo: d.logo, crumbs: cr }) +
+        (d.parents_waiting ? '<div class="card notice"><b>' + count(d.parents_waiting, 'parent is', 'parents are') + ' waiting for you to confirm them.</b> Open each learner\'s page below to confirm or refuse.</div>' : '') +
         '<h2 class="section">Registrations</h2>' + regHtml + learningBlock(d, 'class') + attentionSlot() + (d.named ? learningTable(d.learner_rows, 'learner', true) : '');
       if ($('#c-joined')) C.meter($('#c-joined'), { value: reg.with_consent || 0, max: reg.joined || 0, label: 'Joined learners with consent', note: num(reg.with_consent) + ' of ' + num(reg.joined) + ' learners' });
       drawLearning(d, 'class');
@@ -432,23 +435,57 @@
       loadAttention('class', id, d);
     });
   }
-  function showLearner(id) {
+  function showLearner(id, asChild) {
+    if (asChild) {
+      var cv = childView(id);
+      if (cv && cv.status !== 'confirmed') {
+        app.innerHTML = topNav('#child/' + id) + '<div class="card empty"><b>Waiting for the school to confirm</b>' +
+          'You will see the progress of the learner with K12Plus ID ' + esc(cv.k12_id || cv.name) + ' here once their class teacher or school confirms that you are their parent or guardian. ' +
+          'If your phone number is on the consent form, this happens by itself. You can ask the school to confirm it in K12Plus Monitor.</div>';
+        bindNav(); document.title = cv.name + ' · K12Plus Monitor'; return Promise.resolve();
+      }
+    }
     return rpc('monitor_learner', { p_learner: id || null, p_grain: grain }).then(function (d) {
+      var active = asChild ? '#child/' + id : id ? '' : '#me';
       if (!d.taking_part) {
-        app.innerHTML = topNav('#me') + '<div class="card empty"><b>Your progress will appear here</b>K12Plus keeps a record of your progress once you are in your school\'s K12Plus class and your parent or guardian and your school have given consent. Ask your mathematics teacher about joining.<br><br><a class="btn" href="https://k12plus.app/app.html">Keep learning on k12plus.app</a></div>';
+        app.innerHTML = topNav(active) + (d.child
+          ? '<div class="card empty"><b>' + esc(d.name) + '\'s progress will appear here</b>K12Plus keeps a record of progress once ' + esc(d.name) + ' is in the school\'s K12Plus class and you and the school have given consent. Ask the mathematics teacher about joining.</div>'
+          : '<div class="card empty"><b>Your progress will appear here</b>K12Plus keeps a record of your progress once you are in your school\'s K12Plus class and your parent or guardian and your school have given consent. Ask your mathematics teacher about joining.<br><br><a class="btn" href="https://k12plus.app/app.html">Keep learning on k12plus.app</a></div>');
         bindNav(); return;
       }
       var self = !id;
       var tr = (d.test_results || []).map(function (t) {
         return '<tr><td>' + esc(t.title) + '</td><td>' + (t.purpose === 'baseline' ? 'Start of year' : 'End of year') + '</td><td class="num">' + t.score + ' / ' + t.max + '</td><td class="num"><span class="pill ' + accClass(t.percent) + '">' + pct(t.percent) + '</span></td><td>' + dayShort(t.on) + '</td></tr>';
       }).join('');
+      var coins = d.coins ? card('Coins for the Game Center', '<div class="tiles">' + tile('Coins now', num(d.coins.balance), 'earned in tests, quizzes and practice') +
+          tile('Earned', num(d.coins.earned), GRAIN_TEXT[grain]) + tile('Spent on games', num(d.coins.spent), GRAIN_TEXT[grain]) + '</div>') : '';
+      var parents = '';
+      if (d.parents) {
+        parents = card('Parents and guardians', d.parents.length ? '<ul class="plain parents">' + d.parents.map(function (p) {
+          var st = p.status === 'confirmed' ? '<span class="pill good">' + (p.by_phone ? 'confirmed by the consent phone number' : 'confirmed') + '</span>'
+                 : p.status === 'refused' ? '<span class="pill">refused</span>' : '<span class="pill warn">waiting for you</span>';
+          var btns = p.status === 'waiting' || (p.status === 'confirmed' && !p.by_phone) || p.status === 'refused'
+            ? ' <span class="noprint">' + (p.status !== 'confirmed' ? '<button class="btn small" data-pok="' + esc(p.id) + '">Confirm</button> ' : '') +
+              (p.status !== 'refused' ? '<button class="btn small" data-pno="' + esc(p.id) + '">Not the parent</button>' : '') + '</span>' : '';
+          return '<li><b>' + esc(p.name) + '</b>' + (p.phone ? ' <span class="note">' + esc(p.phone) + '</span>' : '') + ' ' + st + btns + '</li>';
+        }).join('') + '</ul><p class="note">A parent or guardian sees this learner\'s progress only once you confirm them. Check with the learner or the consent form first.</p>'
+          : '<p class="note">No parent or guardian has linked this learner yet. Parents link a child with the learner\'s K12Plus ID.</p>');
+      }
       last = { title: d.name, d: d };
-      app.innerHTML = pageHead({ active: self ? '#me' : '', title: self ? 'My progress' : d.name, sub: (self ? d.name + ' · ' : '') + d.class + ', ' + d.school, logo: d.logo,
-                                 crumbs: self ? [] : [{ t: d.school }, { t: d.class, h: d.class_id ? '#class/' + d.class_id : '' }, { t: d.name }] }) +
-        learningBlock(d, 'learner') +
-        (tr ? card('Tests', '<div class="tbl-wrap"><table><thead><tr><th>Test</th><th>When</th><th class="num">Score</th><th class="num">Percent</th><th>Date</th></tr></thead><tbody>' + tr + '</tbody></table></div>', 'wide') : '');
+      app.innerHTML = pageHead({ active: active, title: self ? 'My progress' : d.name,
+                                 sub: (self ? d.name + ' · ' : d.child ? 'Your child · ' : '') + d.class + ', ' + d.school, logo: d.logo,
+                                 crumbs: self || d.child ? [] : [{ t: d.school }, { t: d.class, h: d.class_id ? '#class/' + d.class_id : '' }, { t: d.name }] }) +
+        learningBlock(d, 'learner') + coins +
+        (tr ? card('Tests', '<div class="tbl-wrap"><table><thead><tr><th>Test</th><th>When</th><th class="num">Score</th><th class="num">Percent</th><th>Date</th></tr></thead><tbody>' + tr + '</tbody></table></div>', 'wide') : '') +
+        parents;
       drawLearning(d, 'learner');
       finishPage(self ? 'My progress' : d.name);
+      var decide = function (pid, ok) {
+        return rpc('parent_link_decide', { p_parent: pid, p_learner: id, p_ok: ok }).then(function () { return route(); })
+          .catch(function (e) { alertBox(e.message); });
+      };
+      each('[data-pok]', function (b) { b.onclick = function () { b.disabled = true; decide(b.getAttribute('data-pok'), true); }; });
+      each('[data-pno]', function (b) { b.onclick = function () { b.disabled = true; decide(b.getAttribute('data-pno'), false); }; });
     });
   }
 
@@ -535,6 +572,87 @@
       .finally(function () { btn.disabled = false; btn.textContent = 'Suggest again'; });
   }
 
+  // ---------- monthly reports for funders ----------
+  var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  function monthName(iso) { var p = String(iso).slice(0, 7).split('-'); return MONTHS[Number(p[1]) - 1] + ' ' + p[0]; }
+  var REPORT_STATUS = {
+    sent: function (r) { return '<span class="pill good">emailed ' + esc(dayShort(r.sent_at)) + '</span>'; },
+    waiting: function () { return '<span class="pill">ready; the email goes out the next morning</span>'; },
+    no_email_service: function () { return '<span class="pill warn">ready here; email is not connected yet</span>'; },
+    no_recipients: function () { return '<span class="pill warn">ready; nobody to email</span>'; },
+    failed: function () { return '<span class="pill warn">the email failed; it will be tried again</span>'; }
+  };
+  function loadReports(admin, note) {
+    var box = $('#f-reports');
+    if (!box) return;
+    rpc('funds_reports').then(function (list) {
+      if (!$('#f-reports')) return;
+      var rows = (list || []).map(function (r) {
+        return '<tr class="go" data-go="#report/' + r.id + '"><td><b>' + esc(monthName(r.month)) + '</b></td>' + (admin ? '<td>' + esc(r.funder) + '</td>' : '') +
+          '<td>' + (REPORT_STATUS[r.email_status] || REPORT_STATUS.waiting)(r) + '</td><td class="noprint"><a href="#report/' + r.id + '">Open</a></td></tr>';
+      }).join('');
+      box.innerHTML = card('Monthly reports', (rows ? '<div class="tbl-wrap"><table><thead><tr><th>Month</th>' + (admin ? '<th>Funder</th>' : '') + '<th>Email</th><th class="noprint"></th></tr></thead><tbody>' + rows + '</tbody></table></div>'
+          : '<p class="note">No reports yet. The first one is prepared on the 1st of next month.</p>') +
+        '<p class="note">' + (admin ? 'On the 1st of each month K12Plus prepares a report for every funder from exactly what that funder sees here, in numbers only, and emails it to their people the next morning.'
+                                    : 'On the 1st of each month K12Plus prepares a report for you from what you see here, in numbers only, and emails it to you.') + '</p>' +
+        (admin ? '<div class="advice-row noprint"><button class="btn" id="f-build">Prepare last month\'s reports and email them now</button><span class="note" id="f-build-msg">' + esc(note || '') + '</span></div>' : ''), 'wide');
+      each('#f-reports tr.go[data-go]', function (tr) { tr.onclick = function (e) { if (e.target.tagName !== 'A') location.hash = tr.getAttribute('data-go'); }; });
+      on('#f-build', 'click', function () {
+        var b = $('#f-build'), msg = $('#f-build-msg');
+        b.disabled = true; msg.textContent = 'Preparing…';
+        call(SUPA + '/functions/v1/funder-reports', { action: 'build_send' }).then(function (x) {
+          loadReports(admin, count(x.built || 0, 'report prepared', 'reports prepared') + '. ' +
+            (x.email_service ? count(x.sent, 'email sent', 'emails sent') + (x.failed ? ', ' + x.failed + ' failed' : '') + '.'
+                             : 'Email is not connected yet, so the reports are here only.'));
+        }).catch(function (e) { msg.textContent = e.message; b.disabled = false; });
+      });
+    }).catch(function (e) { if ($('#f-reports')) box.innerHTML = card('Monthly reports', '<p class="note">' + esc(e.message) + '</p>'); });
+  }
+
+  function showReport(id) {
+    return rpc('funds_report', { p_id: Number(id) }).then(function (r) {
+      var p = r.pilot || {};
+      var m = (p.series || []).filter(function (x) { return String(x.start).slice(0, 7) === String(r.month).slice(0, 7); })[0] || {};
+      var month = monthName(r.month);
+      var h = topNav('#funds') + '<div class="crumbs"><a href="#funds">Funds</a> <span aria-hidden="true">›</span> <span>' + esc(month) + ' report</span></div>' +
+        '<div class="head">' + (r.logo ? '<img class="school-logo" src="' + esc(r.logo) + '" alt="' + esc(r.funder) + ' logo">' : '') +
+        '<div class="head-text"><h1>Pilot report for ' + esc(month) + '</h1><div class="sub">' + esc(r.funder) + ' · prepared ' + esc(dayLong(r.built_at)) + '</div></div>' +
+        '<div class="tools noprint"><button class="btn small" id="pr">Print</button></div></div>' +
+        '<p class="note">Every figure is a number only, with no learner names. Any group of fewer than five learners is left out.</p>' +
+        '<h2 class="section">The pilot</h2>' +
+        (p.learners ? '<div class="tiles">' + tile('Learners taking part', num(p.learners), 'with parent or guardian and school consent') +
+            tile('Active in the last 7 days', num(p.active_week), pct(share(p.active_week, p.learners)) + ' of learners') +
+            tile('Practice accuracy', pct(m.accuracy), 'in ' + month) + tile('Minutes learning', num(m.minutes), 'in ' + month) +
+            tile('Questions to the agents', num(m.questions), 'in ' + month) + '</div>'
+          : '<div class="card empty"><b>No learners are taking part yet</b>Learning figures appear once learners with consent start using K12Plus.</div>') +
+        ((r.attention || []).length ? card('Where support is most needed', slot('r-att') + '<p class="note">Share of learners in each region who need attention: not active for a week, practising below 40%, a low start of year test or a topic they keep getting wrong.</p>', 'wide') : '') +
+        '<h2 class="section">' + ((r.grants || []).length === 1 ? 'Your grant' : 'Your grants') + '</h2>' +
+        ((r.grants || []).length ? '' : '<div class="card empty"><b>No grant recorded yet</b>K-Twelve Educational Technologies will add your grant here.</div>');
+      (r.grants || []).forEach(function (g, i) {
+        h += '<section class="grant"><h3>' + esc(g.title) + '</h3><div class="tiles">' +
+          tile('Grant', money(g.amount, g.currency), dayLong(g.starts_on) + ' to ' + dayLong(g.ends_on)) +
+          tile('Spent', money(g.spent, g.currency), g.used_pct + '% of the grant') + tile('Remaining', money(g.remaining, g.currency), '') +
+          tile('For each learner', money(g.per_learner, g.currency), count(g.learners, 'learner', 'learners')) + '</div>' +
+          '<div class="grid2">' + card('Spent against time', '<div id="r-meter-' + i + '"></div><div id="r-time-' + i + '" class="mt"></div>') +
+          card('Budget lines: planned and spent', slot('r-lines-' + i)) + '</div></section>';
+      });
+      app.innerHTML = h;
+      bindNav(); bindTools();
+      if ($('#r-att')) C.bars($('#r-att'), { max: 100, unit: '%', rows: r.attention.map(function (x) {
+        return { label: x.name, note: x.too_few ? '' : x.count + ' of ' + x.learners + ' learners', value: x.share || 0, hidden: x.too_few ? 'fewer than five' : null, cls: (x.share || 0) >= 30 ? 'warn' : 's1' };
+      }) });
+      (r.grants || []).forEach(function (g, i) {
+        C.meter($('#r-meter-' + i), { value: Math.max(0, g.spent), max: g.amount, label: 'Grant spent', note: money(g.spent, g.currency) + ' of ' + money(g.amount, g.currency) });
+        C.meter($('#r-time-' + i), { value: g.time_pct, max: 100, label: 'Grant time gone', note: g.time_pct + '% of the grant period' });
+        C.bars($('#r-lines-' + i), { empty: 'No budget lines yet.', rows: (g.lines || []).map(function (l) {
+          var used = l.planned ? Math.round(100 * l.spent / l.planned) : null;
+          return { label: l.category, value: Number(l.spent), note: l.planned != null ? 'of ' + money(l.planned, g.currency) + ' planned (' + used + '%)' : 'worked out from the pilot records', cls: used != null && used > 100 ? 'warn' : 's1' };
+        }), max: Math.max.apply(null, (g.lines || []).map(function (l) { return Math.max(Number(l.spent), Number(l.planned || 0)); }).concat([1])) });
+      });
+      document.title = month + ' report · K12Plus Monitor';
+    });
+  }
+
   // ---------- funds: how each grant is used ----------
   function money(n, cur) {
     if (n == null) return 'none';
@@ -569,8 +687,10 @@
         return '<div class="funder-row"><b>' + esc(f.name) + '</b> ' + (f.people.length ? f.people.map(function (p) { return '<span class="pill right">' + esc(p.name) + ' <button class="link-btn" data-rmp="' + p.user_id + '">remove</button></span>'; }).join(' ') : '<span class="note">nobody yet</span>') +
           ' <button class="btn small" data-addp="' + f.id + '">Give someone access</button></div>';
       }).join('') || '<p class="note">No funders yet.</p>', 'wide');
+      h += '<div id="f-reports"></div>';
       app.innerHTML = h;
       bindNav();
+      loadReports(d.admin);
       d.grants.forEach(function (g, i) {
         C.meter($('#f-meter-' + i), { value: Math.max(0, g.spent), max: g.amount, label: 'Grant spent', note: money(g.spent, g.currency) + ' of ' + money(g.amount, g.currency) });
         C.meter($('#f-time-' + i), { value: g.time_pct, max: 100, label: 'Grant time gone', note: dayLong(g.starts_on) + ' to ' + dayLong(g.ends_on) });
@@ -997,6 +1117,8 @@
       app.classList.add('busy');
       var p = parts[0] === 'me' ? showLearner(null)
         : parts[0] === 'learner' ? showLearner(parts[1])
+        : parts[0] === 'child' ? showLearner(parts[1], true)
+        : parts[0] === 'report' && me.funds ? showReport(parts[1])
         : parts[0] === 'class' ? showClass(parts[1])
         : parts[0] === 'school' ? showSchool(parts[1])
         : parts[0] === 'region' ? showRegion(parts[1])
