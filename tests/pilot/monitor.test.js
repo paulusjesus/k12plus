@@ -10,7 +10,7 @@ const path = require('path');
 const MIGS = ['20261023_pilot_structure.sql', '20261024_pilot_consent.sql', '20261025_pilot_messaging.sql', '20261026_pilot_pause.sql',
   '20261027_pilot_learning_and_summaries.sql', '20261028_pilot_tests.sql', '20261029_pilot_reports.sql', '20261030_pilot_feedback_review.sql',
   '20261031_pilot_evaluator_export.sql', '20261101_pilot_offline_lessons.sql', '20261102_pilot_ussd.sql', '20261103_plan_allowance.sql',
-  '20261105_monitoring.sql'].map((f) => path.join(__dirname, '../../backend/migrations', f));
+  '20261105_monitoring.sql', '20261106_monitor_accounts.sql'].map((f) => path.join(__dirname, '../../backend/migrations', f));
 let pass = 0, fail = 0;
 const ok = (c, n, x) => { if (c) { pass++; console.log('  PASS', n); } else { fail++; console.log('  FAIL', n, x === undefined ? '' : JSON.stringify(x).slice(0, 600)); } };
 
@@ -141,13 +141,13 @@ const ok = (c, n, x) => { if (c) { pass++; console.log('  PASS', n); } else { fa
   r = await v(me0.key, 'select monitor_learner()');
   ok(r.v.taking_part && same(r.v, [me0]), 'figures match the separate count', { got: r.v, want: expect([me0]) });
   ok(r.v.topics[0].topic === 'Geometry' && r.v.topics[0].accuracy === Math.round(100 * me0.geoCor / 10), 'the weakest topic comes first', r.v.topics);
-  ok(r.v.weekly.length === 12 && r.v.weekly.every((w) => new Date(w.week + 'T00:00:00Z').getUTCDay() === 1), 'twelve weeks, each starting on a Monday', r.v.weekly);
-  ok(r.v.weekly.reduce((a, w) => a + w.attempted, 0) === 20, 'the weekly trend adds up to the total');
+  ok(r.v.series.length === 12 && r.v.series.every((w) => new Date(w.start + 'T00:00:00Z').getUTCDay() === 1), 'twelve weeks, each starting on a Monday', r.v.series);
+  ok(r.v.series.reduce((a, w) => a + w.attempted, 0) === 20, 'the weekly trend adds up to the total');
   ok(r.v.test_results.length === 1 && r.v.test_results[0].percent === 40 && r.v.tests.baseline.average === 40, 'the baseline test result is shown', r.v.test_results);
-  r = await v(me0.key, 'select monitor_learner(null, 4)');
-  ok(r.v.weekly.length === 4, 'a shorter period can be chosen');
+  r = await v(me0.key, "select monitor_learner(null, 'day')");
+  ok(r.v.series.length === 30 && r.v.grain === 'day', 'a daily view covers the last 30 days');
   r = await v('nocon', 'select monitor_learner()');
-  ok(r.v.taking_part === false && !r.v.weekly, 'a learner without consent sees that they are not taking part, and no figures', r);
+  ok(r.v.taking_part === false && !r.v.series, 'a learner without consent sees that they are not taking part, and no figures', r);
   r = await v(me0.key, 'select monitor_learner($1::uuid)', [U[E[1].key]]);
   ok(r.err, 'a learner cannot open another learner', r);
 
@@ -207,8 +207,8 @@ const ok = (c, n, x) => { if (c) { pass++; console.log('  PASS', n); } else { fa
   }
   r = await v('national', 'select monitor_country()');
   ok(r.v.topics[0].topic === 'Geometry' && r.v.topics.every((t) => t.learners >= 1), 'the weakest topic nationally comes first', r.v.topics);
-  ok(r.v.weekly.at(-1).active === E.filter((e) => e.days < 7 && new Date(Date.now() - e.days * 86400e3) >= new Date(r.v.weekly.at(-1).week + 'T00:00:00+02:00')).length
-     || r.v.weekly.slice(-2).reduce((a, w) => a + w.active, 0) >= 1, 'recent weeks show the recent activity');
+  ok(r.v.series.at(-1).active === E.filter((e) => e.days < 7 && new Date(Date.now() - e.days * 86400e3) >= new Date(r.v.series.at(-1).start + 'T00:00:00+02:00')).length
+     || r.v.series.slice(-2).reduce((a, w) => a + w.active, 0) >= 1, 'recent weeks show the recent activity');
 
   console.log('\n8. Consent withdrawn: gone from every view at once');
   await v('admin', 'select pilot_withdraw_guardian_consent($1::uuid, $2)', [U[t11[0].key], 'Parent asked']);
@@ -223,7 +223,7 @@ const ok = (c, n, x) => { if (c) { pass++; console.log('  PASS', n); } else { fa
   ok((await v('regional', 'select monitor_region(10::smallint)')).err && (await views('regional')).length === 0, 'the removed official sees nothing');
   r = await v('national', 'select count(*) from monitor_officials');
   ok(r.err || Number(r.v) === 0, 'officials cannot read the officials table directly', r);
-  for (const f of ['monitor_stats(array[]::uuid[], 12, true)', 'monitor_me()', "monitor_ids(null, null, null)", "monitor_mask('{}'::jsonb, true)"]) {
+  for (const f of ["monitor_stats(array[]::uuid[], 'week', true)", 'monitor_me()', "monitor_ids(null, null, null)", "monitor_mask('{}'::jsonb, true)"]) {
     r = await v('national', 'select ' + f);
     ok(r.err && /permission denied/.test(r.err), 'internal helper is closed: ' + f.split('(')[0], r);
   }

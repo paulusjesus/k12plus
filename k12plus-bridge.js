@@ -315,6 +315,55 @@ window.k12agentName = function (subject) {
   freshSession();
   document.addEventListener('visibilitychange', function () { if (!document.hidden) freshSession(); });
 
+  // ---- temporary passwords ----
+  // Shown after signing in with a temporary password that a teacher, principal or
+  // other manager set. Resolves true once the new password is saved, false if closed.
+  window.k12newPassword = function (token, temporary) {
+    return new Promise(function (resolve) {
+      var wrap = document.createElement('div');
+      wrap.setAttribute('role', 'dialog');
+      wrap.setAttribute('aria-modal', 'true');
+      wrap.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(20,20,35,.55);display:flex;align-items:center;justify-content:center;padding:16px;font-family:Poppins,system-ui,sans-serif';
+      wrap.innerHTML =
+        '<form style="background:#fff;color:#1F2033;border-radius:16px;max-width:380px;width:100%;padding:22px;box-shadow:0 10px 40px rgba(0,0,0,.25)">' +
+        '<h2 style="margin:0 0 6px;font-size:20px">Choose your own password</h2>' +
+        '<p style="margin:0 0 14px;font-size:14px;color:#6B6E85">You signed in with a temporary password. Please choose a new one that only you know. Use at least 8 characters with a letter and a number.</p>' +
+        '<label style="display:block;font-size:13px;margin:8px 0 4px" for="k12np1">New password</label>' +
+        '<input id="k12np1" type="password" autocomplete="new-password" required style="width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #E9E6F2;border-radius:10px;font-size:15px">' +
+        '<label style="display:block;font-size:13px;margin:10px 0 4px" for="k12np2">Type it again</label>' +
+        '<input id="k12np2" type="password" autocomplete="new-password" required style="width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid #E9E6F2;border-radius:10px;font-size:15px">' +
+        '<div id="k12nperr" style="color:#C2410C;font-size:14px;min-height:20px;margin-top:8px"></div>' +
+        '<div style="display:flex;gap:8px;margin-top:6px"><button type="submit" style="flex:1;background:#7C3AED;color:#fff;border:0;border-radius:10px;padding:11px;font-size:15px;cursor:pointer">Save my password</button>' +
+        '<button type="button" id="k12npcancel" style="background:#fff;border:1px solid #E9E6F2;border-radius:10px;padding:11px 14px;font-size:15px;cursor:pointer">Not now</button></div></form>';
+      document.body.appendChild(wrap);
+      var form = wrap.querySelector('form'), err = wrap.querySelector('#k12nperr');
+      setTimeout(function () { try { wrap.querySelector('#k12np1').focus(); } catch (e) {} }, 50);
+      function done(v) { wrap.remove(); resolve(v); }
+      wrap.querySelector('#k12npcancel').onclick = function () { done(false); };
+      form.onsubmit = async function (ev) {
+        ev.preventDefault();
+        var a = wrap.querySelector('#k12np1').value, b = wrap.querySelector('#k12np2').value;
+        if (a !== b) { err.textContent = 'The two passwords are not the same.'; return; }
+        var btn = form.querySelector('button[type=submit]');
+        btn.disabled = true; btn.textContent = 'Saving…';
+        try {
+          var r = await fetch(SUPA + '/functions/v1/account-admin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', apikey: SUPA_KEY, Authorization: 'Bearer ' + token },
+            body: JSON.stringify({ action: 'change_own_password', new_password: a, temporary_password: temporary }),
+          });
+          var d = null;
+          try { d = await r.json(); } catch (e2) {}
+          if (r.ok) { done(true); return; }
+          err.textContent = (d && d.error) || 'Your password could not be saved. Please try again.';
+        } catch (e3) {
+          err.textContent = 'Could not reach the server. Check your connection and try again.';
+        }
+        btn.disabled = false; btn.textContent = 'Save my password';
+      };
+    });
+  };
+
   window.k12auth = {
     signup: async function (opts) {
       opts = opts || {};
@@ -404,6 +453,11 @@ window.k12agentName = function (subject) {
         }
         var token = data.access_token;
         var userId = data.user && data.user.id;
+        // A manager gave this account a temporary password: the person chooses their own before going on.
+        if (data.user && data.user.app_metadata && data.user.app_metadata.must_change_password) {
+          var changed = await window.k12newPassword(token, password);
+          if (!changed) return { ok: false, error: 'Choose your own password to finish signing in.' };
+        }
         var profile = null;
         try {
           var pres = await fetch(SUPA + '/rest/v1/profiles?id=eq.' + userId + '&select=*', {
