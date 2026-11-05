@@ -35,3 +35,5 @@ Each pilot item has tests that prove its "Done when" check from the Pilot Readin
 | `item1.ui.test.js` | The pilot screens in app.html in headless Chromium, with every click running the real SQL in PGlite | serve the site on 127.0.0.1:8765, set `VENDOR_DIR` to a folder with React and Babel in `node_modules`, then `node item1.ui.test.js` |
 
 This folder is not served by the website (`tests/.htaccess`).
+| `monitor.test.js` | Monitoring (monitor.k12plus.app) database rules: who sees what (learner, teacher, principal, champion, regional and national officials, administrator), only learners with consent counted, no names for officials, groups under five hidden, figures checked against a separate count, consent withdrawn, officials added and removed | `node monitor.test.js` |
+| `monitor.ui.test.js` | The monitoring site end to end: signing in by email and k12plus ID, a learner's progress on a 390 px phone, a teacher's class by name, the national view down to a class without names, small groups hidden, the officials page, CSV, period, signing out | as for `item1.ui.test.js` |

@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#7C3AED">
+<title>K12Plus Monitor</title>
+<link rel="icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#FCFBF8; --surface:#FFFFFF; --ink:#1F2033; --muted:#6B6E85; --line:#E9E6F2; --chip:#F5F3FB;
+  --primary:#7C3AED; --primary-soft:#EFE7FE; --blue:#6673E8; --good:#14855B; --good-soft:#E3F5EC;
+  --warn:#B45309; --warn-soft:#FDF0DC; --bad:#C2410C; --shadow:0 8px 30px rgba(31,32,51,.07);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#12121D; --surface:#1B1B2B; --ink:#F2F1FA; --muted:#9DA0B8; --line:#2B2B44; --chip:#232336;
+    --primary:#9D6BFF; --primary-soft:#2A2145; --blue:#8B95F5; --good:#4ADE9A; --good-soft:#163326;
+    --warn:#F5B055; --warn-soft:#3A2A12; --bad:#FB8C5A; --shadow:0 8px 30px rgba(0,0,0,.35);
+  }
+}
+* { box-sizing:border-box; }
+html, body { margin:0; background:var(--bg); color:var(--ink); font-family:'Poppins',system-ui,sans-serif; font-size:15px; line-height:1.5; }
+a { color:var(--primary); }
+button, input, select { font:inherit; color:inherit; }
+.wrap { max-width:1120px; margin:0 auto; padding:0 16px; }
+header.top { position:sticky; top:0; z-index:5; background:var(--bg); border-bottom:1px solid var(--line); }
+header.top .wrap { display:flex; align-items:center; gap:12px; height:60px; }
+.brand { display:flex; align-items:center; gap:8px; text-decoration:none; color:var(--ink); }
+.brand img { height:32px; width:auto; }
+.brand b { font-family:'Comfortaa',sans-serif; font-size:19px; letter-spacing:.8px; }
+.brand span { color:var(--muted); font-weight:500; font-size:14px; border-left:1px solid var(--line); padding-left:8px; }
+.who { margin-left:auto; display:flex; align-items:center; gap:10px; font-size:13px; color:var(--muted); min-width:0; }
+.who .nm { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:38vw; }
+.btn { border:1px solid var(--line); background:var(--surface); border-radius:10px; padding:8px 14px; cursor:pointer; font-weight:500; }
+.btn:hover { border-color:var(--primary); }
+.btn.primary { background:var(--primary); border-color:var(--primary); color:#fff; }
+.btn.small { padding:5px 10px; font-size:13px; }
+main { padding:20px 0 60px; }
+.card { background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:18px; box-shadow:var(--shadow); }
+.signin { max-width:420px; margin:6vh auto 0; }
+.signin h1 { font-size:22px; margin:0 0 4px; }
+.signin p { color:var(--muted); margin:0 0 18px; font-size:14px; }
+label { display:block; font-size:13px; font-weight:500; margin:12px 0 4px; }
+input[type=text], input[type=password], input[type=email], select { width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:var(--bg); }
+input:focus, select:focus { outline:2px solid var(--primary-soft); border-color:var(--primary); }
+.err { color:var(--bad); font-size:14px; margin-top:10px; min-height:1em; }
+.note { color:var(--muted); font-size:13px; }
+.views { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+.chip { border:1px solid var(--line); background:var(--surface); border-radius:999px; padding:6px 14px; cursor:pointer; font-size:14px; }
+.chip.on { background:var(--primary); border-color:var(--primary); color:#fff; }
+.crumbs { font-size:13px; color:var(--muted); margin:2px 0 6px; display:flex; flex-wrap:wrap; gap:4px; }
+.crumbs a { color:var(--muted); text-decoration:none; }
+.crumbs a:hover { color:var(--primary); text-decoration:underline; }
+.head { display:flex; align-items:flex-end; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+.head h1 { font-size:24px; margin:0; line-height:1.25; }
+.head .sub { color:var(--muted); font-size:14px; }
+.head .tools { margin-left:auto; display:flex; gap:8px; align-items:center; }
+.head select { width:auto; padding:7px 10px; }
+.tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px; margin-bottom:16px; }
+.tile { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 16px; }
+.tile .k { font-size:13px; color:var(--muted); }
+.tile .v { font-size:26px; font-weight:600; line-height:1.2; margin-top:2px; }
+.tile .s { font-size:12px; color:var(--muted); }
+.grid2 { display:grid; grid-template-columns:3fr 2fr; gap:16px; margin-bottom:16px; }
+@media (max-width:820px) { .grid2 { grid-template-columns:1fr; } }
+h2 { font-size:17px; margin:0 0 10px; }
+.chart svg { width:100%; height:auto; display:block; }
+.legend { display:flex; gap:14px; font-size:12px; color:var(--muted); margin-top:6px; flex-wrap:wrap; }
+.legend i { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; vertical-align:-1px; }
+.topic { display:grid; grid-template-columns:minmax(0,1fr) 52px; gap:8px; align-items:center; padding:7px 0; border-bottom:1px solid var(--line); font-size:14px; }
+.topic:last-child { border-bottom:0; }
+.topic .bar { height:6px; background:var(--chip); border-radius:3px; margin-top:4px; overflow:hidden; }
+.topic .bar b { display:block; height:100%; border-radius:3px; }
+.topic .pc { text-align:right; font-weight:600; }
+.tbl-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+th, td { text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); white-space:nowrap; }
+th { font-weight:500; color:var(--muted); font-size:13px; }
+td.num, th.num { text-align:right; }
+tr.go { cursor:pointer; }
+tr.go:hover td { background:var(--chip); }
+td .name { font-weight:500; color:var(--ink); }
+.pill { display:inline-block; font-size:12px; padding:2px 8px; border-radius:999px; background:var(--chip); color:var(--muted); }
+.pill.good { background:var(--good-soft); color:var(--good); }
+.pill.warn { background:var(--warn-soft); color:var(--warn); }
+.empty { text-align:center; padding:36px 16px; color:var(--muted); }
+.empty b { display:block; color:var(--ink); font-size:16px; margin-bottom:6px; }
+.split { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.split .tile .v { font-size:20px; }
+.row-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+.form-row { display:grid; grid-template-columns:2fr 1fr 2fr auto; gap:10px; align-items:end; }
+@media (max-width:820px) { .form-row { grid-template-columns:1fr; } }
+.loading { color:var(--muted); padding:30px 0; text-align:center; }
+.foot { color:var(--muted); font-size:12px; margin-top:24px; }
+@media (max-width:520px) { .brand span { display:none; } .head h1 { font-size:20px; } .tile .v { font-size:22px; } }
+@media print { header.top, .views, .tools, .row-actions, .noprint { display:none !important; } .card, .tile { box-shadow:none; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#"><img src="logo.png" alt=""><b>k12plus</b><span>Monitor</span></a>
+    <div class="who" id="who"></div>
+  </div>
+</header>
+<main class="wrap" id="app"><div class="loading">Loading…</div></main>
+
+<script>
+(function () {
+  'use strict';
+  var SUPA = 'https://uwqbjjzjdnjlbicxrwnp.supabase.co';
+  var KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3cWJqanpqZG5qbGJpY3hyd25wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4MzIyNzMsImV4cCI6MjEwMTQwODI3M30.A-YBoeeBGi8XD9tZsm3Yllj0TzfKsl9TKsUSySlWd88';
+  var SKEY = 'k12monitor-session';
+  var app = document.getElementById('app');
+  var whoEl = document.getElementById('who');
+  var me = null;          // monitor_whoami()
+  var weeks = 12;
+  try { weeks = Number(localStorage.getItem('k12monitor-weeks')) || 12; } catch (e) {}
+  var last = null;        // the data on screen, for the CSV
+
+  // ---------- small helpers ----------
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function num(n) { return n == null ? '–' : Number(n).toLocaleString('en-GB'); }
+  function pct(n) { return n == null ? '–' : n + '%'; }
+  function share(a, b) { return b ? Math.round(100 * a / b) : null; }
+  function day(d) { if (!d) return '–'; var x = new Date(d.length === 10 ? d + 'T12:00:00' : d); return x.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }); }
+  function dayLong(d) { if (!d) return 'not yet'; var x = new Date(d); return x.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); }
+  function accClass(a) { return a == null ? '' : a >= 60 ? 'good' : a < 40 ? 'warn' : ''; }
+  function accColour(a) { return a == null ? 'var(--line)' : a >= 60 ? 'var(--good)' : a < 40 ? 'var(--warn)' : 'var(--blue)'; }
+
+  // ---------- session ----------
+  function readSession() { try { return JSON.parse(localStorage.getItem(SKEY) || 'null'); } catch (e) { return null; } }
+  function saveSession(s) { try { localStorage.setItem(SKEY, JSON.stringify(s)); } catch (e) {} }
+  function clearSession() { try { localStorage.removeItem(SKEY); } catch (e) {} }
+  function expiry(t) {
+    try { var p = String(t).split('.')[1].replace(/-/g, '+').replace(/_/g, '/'); while (p.length % 4) p += '='; return (JSON.parse(atob(p)).exp || 0) * 1000; } catch (e) { return 0; }
+  }
+  var refreshing = null;
+  function token() {
+    var s = readSession();
+    if (!s || !s.access_token) return Promise.resolve(null);
+    if (expiry(s.access_token) - Date.now() > 120000) return Promise.resolve(s.access_token);
+    if (!s.refresh_token) return Promise.resolve(null);
+    if (!refreshing) {
+      refreshing = fetch(SUPA + '/auth/v1/token?grant_type=refresh_token', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ refresh_token: s.refresh_token })
+      }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
+        .then(function (x) {
+          if (x.ok && x.d.access_token) { saveSession({ access_token: x.d.access_token, refresh_token: x.d.refresh_token || s.refresh_token }); return x.d.access_token; }
+          if (x.status === 400 || x.status === 401) clearSession();
+          return null;
+        }).catch(function () { return null; }).finally(function () { refreshing = null; });
+    }
+    return refreshing;
+  }
+  function rpc(name, args) {
+    return token().then(function (t) {
+      if (!t) { var e = new Error('signed_out'); e.signedOut = true; throw e; }
+      return fetch(SUPA + '/rest/v1/rpc/' + name, {
+        method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY, Authorization: 'Bearer ' + t }, body: JSON.stringify(args || {})
+      });
+    }).then(function (r) {
+      return r.text().then(function (txt) {
+        var d = null; try { d = JSON.parse(txt); } catch (e) {}
+        if (r.status === 401) { clearSession(); var e1 = new Error('signed_out'); e1.signedOut = true; throw e1; }
+        if (!r.ok) throw new Error((d && (d.message || d.error)) || 'Something went wrong. Please try again.');
+        return d;
+      });
+    });
+  }
+  function signIn(ident, password) {
+    ident = String(ident || '').trim();
+    var req = ident.indexOf('@') > -1
+      ? fetch(SUPA + '/auth/v1/token?grant_type=password', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY }, body: JSON.stringify({ email: ident, password: password }) })
+      : fetch(SUPA + '/functions/v1/auth-login', { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: KEY, Authorization: 'Bearer ' + KEY }, body: JSON.stringify({ identifier: ident, password: password }) });
+    return req.then(function (r) { return r.json().then(function (d) {
+      if (!r.ok || !d.access_token) {
+        var m = d && (d.error_description || d.msg || d.message || (typeof d.error === 'string' ? d.error : '')) || '';
+        if (/invalid login credentials/i.test(m) || !m) m = 'Those details do not match a k12plus account. Check them and try again.';
+        throw new Error(m);
+      }
+      saveSession({ access_token: d.access_token, refresh_token: d.refresh_token });
+    }); }, function () { throw new Error('Could not reach the server. Check your connection and try again.'); });
+  }
+  function signOut() {
+    var s = readSession();
+    clearSession(); me = null;
+    if (s && s.access_token) fetch(SUPA + '/auth/v1/logout', { method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + s.access_token } }).catch(function () {});
+    location.hash = '';
+    route();
+  }
+
+  // ---------- screens ----------
+  function showSignIn(msg) {
+    whoEl.innerHTML = '';
+    app.innerHTML =
+      '<div class="card signin"><h1>Sign in to K12Plus Monitor</h1>' +
+      '<p>See how learners are progressing: your own learning, your classes, your school, your region or the whole country. Use the same details as on k12plus.app.</p>' +
+      '<form id="f"><label for="u">Email, mobile number or k12plus ID</label><input id="u" type="text" autocomplete="username" required>' +
+      '<label for="p">Password</label><input id="p" type="password" autocomplete="current-password" required>' +
+      '<div class="err" id="e">' + esc(msg || '') + '</div>' +
+      '<button class="btn primary" style="width:100%;margin-top:6px" type="submit">Sign in</button></form>' +
+      '<p class="note" style="margin:14px 0 0">Forgot your password? Reset it on <a href="https://k12plus.app/app.html">k12plus.app</a>. Ministry and regional officials receive access from K-Twelve Educational Technologies after signing up at k12plus.app.</p></div>';
+    document.getElementById('f').onsubmit = function (ev) {
+      ev.preventDefault();
+      var b = ev.target.querySelector('button'); b.disabled = true; b.textContent = 'Signing in…';
+      signIn(document.getElementById('u').value, document.getElementById('p').value)
+        .then(function () { me = null; route(); })
+        .catch(function (e) { document.getElementById('e').textContent = e.message; b.disabled = false; b.textContent = 'Sign in'; });
+    };
+  }
+
+  function header() {
+    whoEl.innerHTML = '<span class="nm">' + esc(me.name) + (me.title ? ' · ' + esc(me.title) : '') + '</span><button class="btn small" id="so">Sign out</button>';
+    document.getElementById('so').onclick = signOut;
+  }
+
+  function viewHash(v) {
+    return v.kind === 'learner' ? '#me' : v.kind === 'country' ? '#country' : '#' + v.kind + '/' + v.id;
+  }
+  function viewChips(active) {
+    var vs = (me.views || []).slice();
+    if (me.admin) vs.push({ kind: 'officials', name: 'Officials' });
+    if (vs.length < 2) return '';
+    return '<div class="views">' + vs.map(function (v) {
+      var h = v.kind === 'officials' ? '#officials' : viewHash(v);
+      var label = v.kind === 'class' ? v.name + ' · ' + v.school : v.name;
+      return '<button class="chip' + (h === active ? ' on' : '') + '" data-h="' + esc(h) + '">' + esc(label) + '</button>';
+    }).join('') + '</div>';
+  }
+  function bindChips() {
+    Array.prototype.forEach.call(document.querySelectorAll('.chip[data-h]'), function (b) { b.onclick = function () { location.hash = b.getAttribute('data-h'); }; });
+  }
+
+  function periodPicker() {
+    return '<select id="wk" aria-label="Period">' + [[4, 'Last 4 weeks'], [12, 'Last 12 weeks'], [26, 'Last 6 months'], [52, 'Last 12 months']].map(function (o) {
+      return '<option value="' + o[0] + '"' + (o[0] === weeks ? ' selected' : '') + '>' + o[1] + '</option>';
+    }).join('') + '</select>';
+  }
+  function bindPeriod() {
+    var s = document.getElementById('wk');
+    if (s) s.onchange = function () { weeks = Number(s.value); try { localStorage.setItem('k12monitor-weeks', String(weeks)); } catch (e) {} route(); };
+    var p = document.getElementById('pr'); if (p) p.onclick = function () { window.print(); };
+    var c = document.getElementById('csv'); if (c) c.onclick = downloadCsv;
+  }
+
+  function tiles(d, kind) {
+    var t = d.tests || {}, b = t.baseline, e = t.endline;
+    var self = kind === 'learner';
+    var out = [];
+    if (!self) out.push(['Learners', num(d.learners), 'with consent, taking part']);
+    if (!self) out.push(['Active this week', num(d.active_week), d.learners ? pct(share(d.active_week, d.learners)) + ' of learners' : '']);
+    out.push(['Practice accuracy', pct(d.accuracy), num(d.correct) + ' of ' + num(d.attempted) + ' answers correct']);
+    out.push(['Time learning', num(d.minutes) + ' min', self ? 'in the period' : d.learners ? Math.round((d.minutes || 0) / d.learners) + ' min per learner' : '']);
+    out.push(['Questions to the agents', num(d.questions), num(d.lessons) + ' lessons opened']);
+    if (self) out.push(['Topics practised', num(d.topics_practised), 'last active ' + dayLong(d.last_active)]);
+    if (b || e) out.push(['Test average', (b ? pct(b.average) : '–') + (e ? ' → ' + pct(e.average) : ''), (b ? 'baseline' + (self ? '' : ', ' + b.sat + ' sat') : '') + (e ? ' · endline' + (self ? '' : ', ' + e.sat + ' sat') : '')]);
+    return '<div class="tiles">' + out.map(function (x) { return '<div class="tile"><div class="k">' + x[0] + '</div><div class="v">' + x[1] + '</div><div class="s">' + esc(x[2]) + '</div></div>'; }).join('') + '</div>';
+  }
+
+  function trend(d, kind) {
+    var w = d.weekly || [];
+    if (!w.length) return '';
+    var W = window.innerWidth < 600 ? 380 : 640, H = window.innerWidth < 600 ? 230 : 200, L = 34, R = 34, T = 12, B = 30, iw = W - L - R, ih = H - T - B;
+    var key = kind === 'learner' ? 'minutes' : 'active';
+    var max = Math.max.apply(null, w.map(function (x) { return x[key] || 0; }).concat([kind === 'learner' ? 10 : 1]));
+    var step = iw / w.length, bw = Math.max(4, step * 0.6);
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Weekly trend">';
+    [0, 50, 100].forEach(function (g) { var y = T + ih - ih * g / 100; s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y + '" y2="' + y + '" stroke="var(--line)"/><text x="' + (W - R + 6) + '" y="' + (y + 4) + '" font-size="11" fill="var(--muted)">' + g + '%</text>'; });
+    s += '<text x="' + (L - 6) + '" y="' + (T + 10) + '" font-size="11" fill="var(--muted)" text-anchor="end">' + max + '</text><text x="' + (L - 6) + '" y="' + (T + ih) + '" font-size="11" fill="var(--muted)" text-anchor="end">0</text>';
+    var pts = [];
+    w.forEach(function (x, i) {
+      var cx = L + step * i + step / 2, h = ih * (x[key] || 0) / max;
+      s += '<rect x="' + (cx - bw / 2) + '" y="' + (T + ih - h) + '" width="' + bw + '" height="' + Math.max(h, 0) + '" rx="3" fill="var(--primary)" opacity=".28"><title>Week of ' + day(x.week) + ': ' + (x[key] || 0) + (kind === 'learner' ? ' minutes' : ' active learners') + (x.accuracy != null ? ', accuracy ' + x.accuracy + '%' : '') + '</title></rect>';
+      if (x.accuracy != null) pts.push([cx, T + ih - ih * x.accuracy / 100, x]);
+      var every = Math.ceil(w.length / (W < 600 ? 4 : 8));
+      if (i % every === 0 || i === w.length - 1) s += '<text x="' + cx + '" y="' + (H - 10) + '" font-size="11" fill="var(--muted)" text-anchor="middle">' + day(x.week) + '</text>';
+    });
+    if (pts.length > 1) s += '<polyline fill="none" stroke="var(--good)" stroke-width="2.5" stroke-linejoin="round" points="' + pts.map(function (p) { return p[0] + ',' + p[1]; }).join(' ') + '"/>';
+    pts.forEach(function (p) { s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="3.5" fill="var(--good)"><title>Week of ' + day(p[2].week) + ': accuracy ' + p[2].accuracy + '%</title></circle>'; });
+    s += '</svg>';
+    return '<div class="card chart"><h2>Week by week</h2>' + s + '<div class="legend"><span><i style="background:var(--primary);opacity:.4"></i>' + (kind === 'learner' ? 'Minutes learning' : 'Active learners') + '</span><span><i style="background:var(--good)"></i>Practice accuracy</span></div></div>';
+  }
+
+  function topicList(d, kind) {
+    var t = d.topics || [];
+    var title = kind === 'learner' ? 'Topics, weakest first' : 'Topics that need attention';
+    if (!t.length) return '<div class="card"><h2>' + title + '</h2><p class="note">No practice recorded in this period yet.</p></div>';
+    var show = kind === 'learner' ? t : t.slice(0, 8);
+    return '<div class="card"><h2>' + title + '</h2>' + show.map(function (x) {
+      return '<div class="topic"><div><div>' + esc(x.topic) + ' <span class="note">· ' + esc(x.subject) + (kind === 'learner' ? '' : ', ' + x.learners + ' learner' + (x.learners === 1 ? '' : 's')) + '</span></div>' +
+        '<div class="bar"><b style="width:' + x.accuracy + '%;background:' + accColour(x.accuracy) + '"></b></div></div><div class="pc">' + x.accuracy + '%</div></div>';
+    }).join('') + (kind !== 'learner' && t.length > 8 ? '<p class="note" style="margin:8px 0 0">' + (t.length - 8) + ' more topics in the CSV download.</p>' : '') + '</div>';
+  }
+
+  function settings(d) {
+    if (!d.settings) return '';
+    function one(label, x) {
+      if (!x || x.too_few) return '<div class="tile"><div class="k">' + label + ' schools</div><div class="v">' + num(x && x.learners) + ' learners</div><div class="s">too few learners to show figures</div></div>';
+      return '<div class="tile"><div class="k">' + label + ' schools</div><div class="v">' + pct(x.accuracy) + ' accuracy</div><div class="s">' + num(x.learners) + ' learners, ' + pct(share(x.active_week, x.learners)) + ' active this week, ' + (x.learners ? Math.round(x.minutes / x.learners) : 0) + ' min each</div></div>';
+    }
+    return '<div class="card" style="margin-bottom:16px"><h2>Rural and urban</h2><div class="split">' + one('Rural', d.settings.rural) + one('Urban', d.settings.urban) + '</div></div>';
+  }
+
+  function childTable(rows, kind, named) {
+    var label = { region: 'Region', school: 'School', class: 'Class', learner: 'Learner' }[kind];
+    if (!rows || !rows.length) return '<div class="card"><h2>' + label + 's</h2><p class="note">None yet.</p></div>';
+    var h = '<div class="card"><h2>' + (kind === 'learner' ? 'Learners' : label + 's') + '</h2><div class="tbl-wrap"><table><thead><tr><th>' + label + '</th>' +
+      (kind !== 'learner' ? '<th class="num">Learners</th>' : '') + '<th class="num">Active this week</th><th class="num">Accuracy</th><th class="num">Minutes' + (kind !== 'learner' ? ' per learner' : '') + '</th><th class="num">Questions</th><th class="num">Baseline</th><th class="num">Endline</th>' +
+      (kind === 'learner' ? '<th>Last active</th>' : '') + '</tr></thead><tbody>';
+    rows.forEach(function (r) {
+      var go = kind === 'learner' ? '#learner/' + r.id : '#' + kind + '/' + r.id;
+      var name = kind === 'class' ? r.name : kind === 'school' ? r.name + (r.setting ? ' <span class="pill">' + esc(r.setting) + '</span>' : '') : esc(r.name);
+      if (kind === 'class') name = esc(r.name);
+      var t = r.tests || {};
+      if (r.too_few) {
+        h += '<tr class="go" data-h="' + esc(go) + '"><td><span class="name">' + (kind === 'school' ? esc(r.name) : name) + '</span></td><td class="num">' + num(r.learners) + '</td><td colspan="6" class="note">' + (r.learners ? 'fewer than five learners, so figures are hidden' : 'no learners taking part yet') + '</td></tr>';
+        return;
+      }
+      h += '<tr class="go" data-h="' + esc(go) + '"><td><span class="name">' + (kind === 'school' ? esc(r.name) + (r.setting ? ' <span class="pill">' + esc(r.setting) + '</span>' : '') : name) + '</span></td>' +
+        (kind !== 'learner' ? '<td class="num">' + num(r.learners) + '</td>' : '') +
+        '<td class="num">' + (kind === 'learner' ? (r.active_week ? '<span class="pill good">yes</span>' : '<span class="pill warn">no</span>') : num(r.active_week) + ' <span class="note">(' + pct(share(r.active_week, r.learners)) + ')</span>') + '</td>' +
+        '<td class="num"><span class="pill ' + accClass(r.accuracy) + '">' + pct(r.accuracy) + '</span></td>' +
+        '<td class="num">' + num(kind === 'learner' ? r.minutes : (r.learners ? Math.round(r.minutes / r.learners) : 0)) + '</td>' +
+        '<td class="num">' + num(r.questions) + '</td>' +
+        '<td class="num">' + (t.baseline ? pct(t.baseline.average) : '–') + '</td><td class="num">' + (t.endline ? pct(t.endline.average) : '–') + '</td>' +
+        (kind === 'learner' ? '<td>' + (r.last_active ? day(r.last_active) : 'not yet') + '</td>' : '') + '</tr>';
+    });
+    h += '</tbody></table></div>' + (!named && kind !== 'learner' ? '<p class="note" style="margin:10px 0 0">Learner names are never shown here. Groups of fewer than five learners show their number only.</p>' : '') + '</div>';
+    return h;
+  }
+  function bindRows() {
+    Array.prototype.forEach.call(document.querySelectorAll('tr.go[data-h]'), function (tr) { tr.onclick = function () { location.hash = tr.getAttribute('data-h'); }; });
+  }
+
+  function crumbs(list) {
+    if (!list.length) return '';
+    return '<div class="crumbs">' + list.map(function (c, i) {
+      return (c.h ? '<a href="' + esc(c.h) + '">' + esc(c.t) + '</a>' : '<span>' + esc(c.t) + '</span>') + (i < list.length - 1 ? ' <span>›</span>' : '');
+    }).join(' ') + '</div>';
+  }
+
+  function canSee(kind, id) {
+    return (me.views || []).some(function (v) { return v.kind === 'country' || (v.kind === kind && String(v.id) === String(id)); });
+  }
+
+  function page(opts) {
+    var d = opts.d;
+    var tools = '<div class="tools noprint">' + periodPicker() + '<button class="btn small" id="csv">CSV</button><button class="btn small" id="pr">Print</button></div>';
+    var h = viewChips(opts.active) + crumbs(opts.crumbs || []) +
+      '<div class="head"><div><h1>' + esc(opts.title) + '</h1><div class="sub">' + esc(opts.sub || '') + '</div></div>' + tools + '</div>';
+    if (d.too_few) {
+      h += '<div class="card empty"><b>' + (d.learners ? 'Fewer than five learners are taking part here' : 'No learners are taking part here yet') + '</b>Figures appear once at least five learners with parent or guardian and school consent are using K12Plus, so that nobody can be picked out.</div>';
+    } else if (!d.learners && opts.kind !== 'learner') {
+      h += '<div class="card empty"><b>No learners are taking part yet</b>Figures appear here as soon as learners with parent or guardian and school consent start using K12Plus.</div>';
+      if (opts.rows) h += '<div style="height:16px"></div>' + childTable(opts.rows, opts.rowKind, opts.named);
+    } else {
+      h += tiles(d, opts.kind);
+      h += '<div class="grid2">' + trend(d, opts.kind) + topicList(d, opts.kind) + '</div>';
+      if (opts.extra) h += opts.extra;
+      h += settings(d);
+      if (opts.rows) h += childTable(opts.rows, opts.rowKind, opts.named);
+    }
+    h += '<p class="foot">Figures cover ' + (d.weeks || weeks) + ' weeks from ' + (d.from ? dayLong(d.from) : '–') + ', in Namibian time, and only learners taking part with parent or guardian and school consent. Accuracy counts answers to practice questions, quizzes and games.</p>';
+    app.innerHTML = h;
+    last = { title: opts.title, d: d, rows: opts.rows, rowKind: opts.rowKind };
+    bindChips(); bindPeriod(); bindRows();
+    document.title = opts.title + ' · K12Plus Monitor';
+  }
+
+  function csvCell(v) { v = v == null ? '' : String(v); return /[",\n;]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+  function downloadCsv() {
+    if (!last) return;
+    var lines = [];
+    var cols = ['learners', 'active_week', 'active_period', 'accuracy', 'correct', 'attempted', 'minutes', 'questions', 'lessons', 'topics_practised'];
+    lines.push(['Group'].concat(cols, ['baseline average', 'endline average']).join(','));
+    function line(name, r) {
+      if (r.too_few) return [csvCell(name), r.learners, 'fewer than five learners'].join(',');
+      var t = r.tests || {};
+      return [csvCell(name)].concat(cols.map(function (c) { return r[c] == null ? '' : r[c]; }), [t.baseline ? t.baseline.average : '', t.endline ? t.endline.average : '']).join(',');
+    }
+    lines.push(line(last.title, last.d));
+    (last.rows || []).forEach(function (r) { lines.push(line(r.name, r)); });
+    if (last.d.topics && last.d.topics.length) {
+      lines.push(''); lines.push('Subject,Topic,Learners,Attempted,Correct,Accuracy');
+      last.d.topics.forEach(function (t) { lines.push([csvCell(t.subject), csvCell(t.topic), t.learners, t.attempted, t.correct, t.accuracy].join(',')); });
+    }
+    var blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'k12plus-' + last.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + new Date().toISOString().slice(0, 10) + '.csv';
+    document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  }
+
+  // ---------- views ----------
+  function showLearner(id) {
+    return rpc('monitor_learner', { p_learner: id || null, p_weeks: weeks }).then(function (d) {
+      if (!d.taking_part) {
+        app.innerHTML = viewChips('#me') + '<div class="card empty"><b>Your progress will appear here</b>K12Plus keeps a record of your progress once you are in your school\'s K12Plus class and your parent or guardian and your school have given consent. Ask your mathematics teacher about joining.<br><br><a class="btn" href="https://k12plus.app/app.html">Keep learning on k12plus.app</a></div>';
+        bindChips(); return;
+      }
+      var self = !id;
+      var tr = (d.test_results || []).map(function (t) { return '<tr><td>' + esc(t.title) + '</td><td>' + esc(t.purpose === 'baseline' ? 'Start of year' : 'End of year') + '</td><td class="num">' + t.score + ' / ' + t.max + '</td><td class="num"><span class="pill ' + accClass(t.percent) + '">' + pct(t.percent) + '</span></td><td>' + day(t.on) + '</td></tr>'; }).join('');
+      var extra = tr ? '<div class="card" style="margin-bottom:16px"><h2>Tests</h2><div class="tbl-wrap"><table><thead><tr><th>Test</th><th>When</th><th class="num">Score</th><th class="num">Percent</th><th>Date</th></tr></thead><tbody>' + tr + '</tbody></table></div></div>' : '';
+      var cr = self ? [] : [{ t: d.school }, { t: d.class, h: d.class_id ? '#class/' + d.class_id : '' }, { t: d.name }];
+      page({ d: d, kind: 'learner', active: self ? '#me' : '', title: self ? 'My progress' : d.name, sub: (self ? d.name + ' · ' : '') + d.class + ', ' + d.school, crumbs: cr, extra: extra });
+    });
+  }
+  function showClass(id) {
+    return rpc('monitor_class', { p_class: id, p_weeks: weeks }).then(function (d) {
+      var cr = [];
+      if (canSee('country')) cr.push({ t: 'Namibia', h: '#country' });
+      if (d.region_id && (canSee('region', d.region_id))) cr.push({ t: d.region, h: '#region/' + d.region_id });
+      if (canSee('school', d.school_id) || canSee('region', d.region_id)) cr.push({ t: d.school, h: '#school/' + d.school_id });
+      cr.push({ t: d.name });
+      page({ d: d, kind: 'class', active: '#class/' + id, title: d.name, sub: d.school + ' · Grade ' + d.grade, crumbs: cr.length > 1 ? cr : [], rows: d.named ? d.learner_rows : null, rowKind: 'learner', named: d.named });
+    });
+  }
+  function showSchool(id) {
+    return rpc('monitor_school', { p_school: id, p_weeks: weeks }).then(function (d) {
+      var cr = [];
+      if (canSee('country')) cr.push({ t: 'Namibia', h: '#country' });
+      if (canSee('region', d.region_id)) cr.push({ t: d.region, h: '#region/' + d.region_id });
+      if (cr.length) cr.push({ t: d.name });
+      page({ d: d, kind: 'school', active: '#school/' + id, title: d.name, sub: (d.region || '') + (d.setting ? ' · ' + d.setting : ''), crumbs: cr, rows: d.children, rowKind: 'class', named: d.named });
+    });
+  }
+  function showRegion(id) {
+    return rpc('monitor_region', { p_region: Number(id), p_weeks: weeks }).then(function (d) {
+      var cr = canSee('country') ? [{ t: 'Namibia', h: '#country' }, { t: d.name }] : [];
+      page({ d: d, kind: 'region', active: '#region/' + id, title: d.name + ' Region', sub: (d.children || []).length + ' pilot schools', crumbs: cr, rows: d.children, rowKind: 'school', named: false });
+    });
+  }
+  function showCountry() {
+    return rpc('monitor_country', { p_weeks: weeks }).then(function (d) {
+      var schools = (d.children || []).reduce(function (a, r) { return a + (r.schools || 0); }, 0);
+      page({ d: d, kind: 'country', active: '#country', title: 'Namibia', sub: schools + ' pilot schools in ' + (d.children || []).filter(function (r) { return r.schools; }).length + ' regions', rows: d.children, rowKind: 'region', named: false });
+    });
+  }
+  function showOfficials() {
+    return Promise.all([rpc('monitor_officials_list'), fetch(SUPA + '/rest/v1/regions?select=id,name&order=name', { headers: { apikey: KEY } }).then(function (r) { return r.json(); })]).then(function (x) {
+      var list = x[0] || [], regions = x[1] || [];
+      var h = viewChips('#officials') + '<div class="head"><div><h1>Officials</h1><div class="sub">Ministry and regional officials who can open K12Plus Monitor. They see figures for schools and classes, never learner names.</div></div></div>';
+      h += '<div class="card" style="margin-bottom:16px"><h2>Give access</h2><p class="note" style="margin:0 0 6px">The person signs up at k12plus.app first, as a teacher or with any role other than learner.</p><form id="af" class="form-row">' +
+        '<div><label for="ai">Their email, mobile number or k12plus ID</label><input id="ai" type="text" required></div>' +
+        '<div><label for="ar">Access</label><select id="ar"><option value="">National</option>' + regions.map(function (r) { return '<option value="' + r.id + '">' + esc(r.name) + ' Region</option>'; }).join('') + '</select></div>' +
+        '<div><label for="at">Title (optional)</label><input id="at" type="text" maxlength="120" placeholder="Regional Director of Education"></div>' +
+        '<div><button class="btn primary" type="submit">Give access</button></div></form><div class="err" id="ae"></div></div>';
+      h += '<div class="card"><h2>People with access</h2>' + (list.length ? '<div class="tbl-wrap"><table><thead><tr><th>Name</th><th>Title</th><th>Access</th><th>Since</th><th></th></tr></thead><tbody>' + list.map(function (o) {
+        return '<tr><td>' + esc(o.name) + '</td><td>' + esc(o.title || '') + '</td><td>' + esc(o.region) + '</td><td>' + day(o.added_at) + '</td><td><button class="btn small" data-rm="' + esc(o.user_id) + '">Remove</button></td></tr>';
+      }).join('') + '</tbody></table></div>' : '<p class="note">Nobody yet.</p>') + '</div>';
+      app.innerHTML = h; bindChips();
+      document.getElementById('af').onsubmit = function (ev) {
+        ev.preventDefault();
+        var reg = document.getElementById('ar').value;
+        rpc('monitor_add_official', { p_identifier: document.getElementById('ai').value, p_region: reg ? Number(reg) : null, p_title: document.getElementById('at').value })
+          .then(function () { route(); }).catch(function (e) { document.getElementById('ae').textContent = e.message; });
+      };
+      Array.prototype.forEach.call(document.querySelectorAll('[data-rm]'), function (b) {
+        b.onclick = function () { b.disabled = true; rpc('monitor_remove_official', { p_user: b.getAttribute('data-rm') }).then(function () { route(); }); };
+      });
+      document.title = 'Officials · K12Plus Monitor';
+    });
+  }
+
+  function noAccess() {
+    app.innerHTML = '<div class="card empty"><b>There is nothing to show for this account yet</b>Learners see their own progress, teachers see the K12Plus classes they teach, principals see their school, and ministry and regional officials see their region or the country once K-Twelve Educational Technologies has given them access. If you think you should see something, contact <a href="mailto:paulus@k12plus.app">paulus@k12plus.app</a>.</div>';
+  }
+
+  function route() {
+    if (!readSession()) { showSignIn(); return; }
+    var go = function () {
+      header();
+      var h = location.hash.replace(/^#/, ''), parts = h.split('/');
+      var views = me.views || [];
+      if (!h) {
+        if (!views.length) { if (me.admin) { location.hash = '#officials'; return; } noAccess(); return; }
+        location.replace(viewHash(views.length > 1 ? (views.filter(function (v) { return v.kind !== 'learner'; })[0] || views[0]) : views[0])); return;
+      }
+      app.innerHTML = viewChips('#' + h) + '<div class="loading">Loading…</div>';
+      bindChips();
+      var p = parts[0] === 'me' ? showLearner(null)
+        : parts[0] === 'learner' ? showLearner(parts[1])
+        : parts[0] === 'class' ? showClass(parts[1])
+        : parts[0] === 'school' ? showSchool(parts[1])
+        : parts[0] === 'region' ? showRegion(parts[1])
+        : parts[0] === 'country' ? showCountry()
+        : parts[0] === 'officials' && me.admin ? showOfficials()
+        : Promise.resolve(noAccess());
+      p.catch(function (e) {
+        if (e.signedOut) { showSignIn('Please sign in again.'); return; }
+        app.innerHTML = viewChips('') + '<div class="card empty"><b>This could not be opened</b>' + esc(navigator.onLine ? e.message : 'You are offline. Connect to the internet and try again.') + '<br><br><a class="btn" href="#">Back to the start</a></div>';
+        bindChips();
+      });
+    };
+    if (me) { go(); return; }
+    rpc('monitor_whoami').then(function (w) {
+      if (!w || !w.signed_in) { clearSession(); showSignIn(); return; }
+      me = w; go();
+    }).catch(function (e) {
+      if (e.signedOut) { showSignIn(); return; }
+      app.innerHTML = '<div class="card empty"><b>K12Plus Monitor could not load</b>' + esc(navigator.onLine ? e.message : 'You are offline. Connect to the internet and try again.') + '</div>';
+    });
+  }
+
+  window.addEventListener('hashchange', route);
+  route();
+})();
+</script>
+</body>
+</html>

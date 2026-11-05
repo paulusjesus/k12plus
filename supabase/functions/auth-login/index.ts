@@ -14,7 +14,7 @@
 const URL_ = Deno.env.get('SUPABASE_URL')!;
 const SERVICE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const ANON = Deno.env.get('SUPABASE_ANON_KEY')!;
-const ORIGINS = ['https://k12plus.app', 'https://www.k12plus.app', 'https://k12edu.io', 'https://www.k12edu.io'];
+const ORIGINS = ['https://k12plus.app', 'https://www.k12plus.app', 'https://monitor.k12plus.app', 'https://k12edu.io', 'https://www.k12edu.io'];
 const MAX_CANDIDATES = 6; // a family phone may be shared by several learners
 const GENERIC = 'Those details do not match a k12plus account. Check your number or ID and password.';
 
