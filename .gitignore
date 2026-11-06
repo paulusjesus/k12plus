@@ -1,0 +1,4 @@
+
+# screenshots and exports written by test runs (tests/pilot); keep the repository to code
+tests/pilot/*.png
+tests/pilot/*.zip
