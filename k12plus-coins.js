@@ -111,7 +111,11 @@
     '.k12gc-bar{height:8px;background:#F5F3FB;border-radius:4px;overflow:hidden;margin:6px 0 4px}.k12gc-bar i{display:block;height:100%;background:#7C3AED}' +
     '@media (max-width:480px){.k12gc-cards{grid-template-columns:repeat(3,1fr)}}';
 
-  function close() { if (root) { root.remove(); root = null; } document.removeEventListener('keydown', onKey); }
+  function close() {
+    if (root) { root.remove(); root = null; }
+    document.removeEventListener('keydown', onKey);
+    try { window.dispatchEvent(new CustomEvent('k12gamecenter', { detail: { closed: true } })); } catch (e) {}
+  }
   function onKey(e) { if (e.key === 'Escape') close(); }
 
   function shell(title, bodyHtml, back) {
@@ -127,7 +131,7 @@
       '<h2>' + esc(title) + '</h2><span class="k12gc-coins" data-coins>🪙 ' + window.k12coins.balance() + ' coins</span>' +
       '<button class="k12gc-x" data-close aria-label="Close">✕</button></div><div class="k12gc-body">' + bodyHtml + '</div></div>';
     root.querySelector('[data-close]').onclick = close;
-    if (back) root.querySelector('[data-back]').onclick = home;
+    if (back) root.querySelector('[data-back]').onclick = inline ? close : home;
     return root.querySelector('.k12gc-body');
   }
 
@@ -150,7 +154,7 @@
 
   function home() {
     var body = shell('Game Center',
-      '<p class="k12gc-note" style="margin:0 0 12px">Earn coins by learning, then spend them here. Your practice games in the Game Arcade are always free.</p>' +
+      '<p class="k12gc-note" style="margin:0 0 12px">Earn coins by learning, then spend them here. The practice games in the Game Center are always free.</p>' +
       '<div class="k12gc-grid">' + GAMES.map(function (g) {
         var b = best(g.id);
         return '<div class="k12gc-card"><div style="font-size:30px">' + g.icon + '</div><b>' + esc(g.name) + '</b><p>' + esc(g.about) + '</p>' +
@@ -180,9 +184,9 @@
     setBest(g.id, score);
     var body = shell(g.name, '<div style="text-align:center;padding:16px 0"><div style="font-size:44px">' + (score > was ? '🏆' : '🎉') + '</div>' +
       '<h3 style="margin:8px 0">' + esc(line) + '</h3>' + (score > was ? '<p class="k12gc-note">A new personal best!</p>' : '<p class="k12gc-note">Your best is ' + Math.max(was, score) + '.</p>') +
-      '<div style="display:flex;gap:8px;justify-content:center;margin-top:14px"><button class="k12gc-btn" data-again>Play again (' + g.cost + ' coins)</button><button class="k12gc-btn light" data-home>All games</button></div></div>', true);
+      '<div style="display:flex;gap:8px;justify-content:center;margin-top:14px"><button class="k12gc-btn" data-again>Play again (' + g.cost + ' coins)</button><button class="k12gc-btn light" data-home>' + (inline ? 'Back to the Game Center' : 'All games') + '</button></div></div>', true);
     body.querySelector('[data-again]').onclick = function () { tryPlay(g.id); };
-    body.querySelector('[data-home]').onclick = home;
+    body.querySelector('[data-home]').onclick = inline ? close : home;
   }
 
   function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
@@ -276,5 +280,12 @@
   }
 
   window.addEventListener('k12coins', function (e) { if (root) { var c = root.querySelector('[data-coins]'); if (c) c.textContent = '🪙 ' + e.detail.coins + ' coins'; } });
-  window.k12gameCenter = { open: function (w) { ways = w || {}; home(); }, close: close, games: GAMES };
+  // inline: the game list lives on the app's Game Center page, so the pop-up is only for playing
+  var inline = false;
+  window.k12gameCenter = {
+    open: function (w) { inline = false; ways = w || {}; home(); },
+    play: function (id, w) { inline = true; ways = w || {}; tryPlay(id); },
+    best: function (id) { return best(id); },
+    close: close, games: GAMES
+  };
 })();
