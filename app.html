@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js?v=2"></script>
-<script src="./k12plus-bridge.js?v=23"></script>
+<script src="./k12plus-bridge.js?v=24"></script>
 <script src="./k12plus-syllabus.js?v=2"></script>
 <script src="./k12plus-arcade.js?v=1"></script>
-<script src="./k12plus-coins.js?v=1"></script>
+<script src="./k12plus-coins.js?v=3"></script>
 <script src="./k12plus-scenes.js?v=1"></script>
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -1978,13 +1978,28 @@ button { font-family:'Poppins',sans-serif; }
     <sc-if value="{{ isGames }}" hint-placeholder-val="{{ false }}">
       <div class="k12dd" style="flex:1; overflow-y:auto; padding:4px 24px 28px;">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:4px;">
-          <h1 style="font-size:19px; font-weight:600; margin:0;">Game Arcade</h1>
+          <h1 style="font-size:19px; font-weight:600; margin:0;">Game Center</h1>
           <span style="margin-left:auto; display:inline-flex; align-items:center; gap:7px; background:#FFF6DC; border:1px solid #F2E2AE; color:#7A5B00; border-radius:999px; padding:7px 16px; font-size:12.5px; font-weight:700;">🏆 {{ gamePointsLabel }}</span>
           <sc-if value="{{ hasGameStreak }}" hint-placeholder-val="{{ false }}">
             <span style="display:inline-flex; align-items:center; background:#FDE7EE; border:1px solid #F5C6D8; color:#B4256E; border-radius:999px; padding:7px 14px; font-size:12px; font-weight:700;">{{ gameStreakLabel }}</span>
           </sc-if>
         </div>
-        <p style="font-size:12px; color:var(--muted); margin:0 0 16px;">Every syllabus topic is a game and a real-world story. Play, earn coins, and learn for real instead of memorising. Spend your coins in the Game Center.</p>
+        <p style="font-size:12px; color:var(--muted); margin:0 0 16px;">Earn coins with the free practice games, quizzes and tests, then spend them on the coin games. Every syllabus topic is a game and a real-world story, and the practice games are always free.</p>
+        <sc-if value="{{ gamesPicking }}" hint-placeholder-val="{{ true }}">
+          <h2 style="font-size:14.5px; font-weight:600; margin:0 0 10px;">Coin games</h2>
+          <div class="k12cards" style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;">
+            <sc-for list="{{ coinGames }}" as="cg" hint-placeholder-count="3">
+              <div style="background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 16px; display:flex; flex-direction:column; gap:6px;">
+                <span style="font-size:24px;">{{ cg.icon }}</span>
+                <span style="font-size:13.5px; font-weight:600;">{{ cg.name }}</span>
+                <span style="font-size:12px; line-height:1.55; color:var(--muted); flex:1;">{{ cg.about }}</span>
+                <span style="font-size:11.5px; color:var(--muted);">{{ cg.bestLine }}</span>
+                <button onClick="{{ cg.play }}" style="border:none; background:var(--primary); color:#fff; border-radius:999px; padding:8px 16px; font-size:12px; font-weight:600; cursor:pointer; margin-top:4px;" style-hover="opacity:.9;">{{ cg.label }}</button>
+              </div>
+            </sc-for>
+          </div>
+          <h2 style="font-size:14.5px; font-weight:600; margin:0 0 10px;">Free practice games</h2>
+        </sc-if>
         <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
           <sc-for list="{{ gamesSubjTabs }}" as="gs" hint-placeholder-count="4"><button onClick="{{ gs.pick }}" style="{{ gs.style }}">{{ gs.icon }}{{ gs.label }}</button></sc-for>
         </div>
@@ -2461,6 +2476,10 @@ class Component extends DCLogic {
     return super.setState(update, cb);
   }
   componentDidMount() {
+    // the Game Center page shows the coin balance and best scores: refresh them when they change
+    const coinTick = () => this.setState({ coinTick: Date.now() });
+    window.addEventListener('k12coins', coinTick);
+    window.addEventListener('k12gamecenter', coinTick);
     // Phones: the side menu becomes a drawer
     try {
       const mq = window.matchMedia('(max-width: 760px)');
@@ -2581,10 +2600,16 @@ class Component extends DCLogic {
     return '';
   }
 
-  // The Game Center opens over the app; its "ways to earn" buttons bring the learner back here.
+  // One Game Center: free practice games and coin games on the same page. A coin game opens
+  // over the page while it is played; "ways to earn" buttons bring the learner back here.
   openGameCenter() {
+    this.setState({ view: 'games', gamesMode: 'pick' });
+    try { if (window.k12coins && window.k12coins.sync) window.k12coins.sync(); } catch (e) {}
+  }
+
+  playCoinGame(id) {
     if (!window.k12gameCenter) return;
-    window.k12gameCenter.open({
+    window.k12gameCenter.play(id, {
       quiz: () => this.setState({ view: 'quiz', quizAnswers: {}, quizDone: false, quizCoins: 0 }),
       practice: () => this.setState({ view: 'games', gamesMode: 'pick' }),
       ask: () => this.setState({ view: 'chat' }),
@@ -5072,7 +5097,6 @@ class Component extends DCLogic {
       })) },
       { label: 'Syllabus', icon: fbSyllabus, pick: () => this.setState({ view: 'syllabus' }), hasSubs: false, subsOpen: false },
       { label: 'Real-Life Lab', icon: fbLab, pick: () => this.setState({ view: 'lab' }), hasSubs: false, subsOpen: false },
-      { label: 'Games', icon: fbGames, pick: () => this.setState({ view: 'games' }), hasSubs: false, subsOpen: false },
       { label: 'Game Center', icon: fbGames, pick: () => this.openGameCenter(), hasSubs: false, subsOpen: false },
       { label: 'Timetable', icon: fbTimetable, pick: () => this.setState({ view: 'timetable' }), hasSubs: false, subsOpen: false },
       { label: 'Calendar', icon: fbCalendar, pick: () => this.setState({ view: 'calendar' }), hasSubs: false, subsOpen: false },
@@ -5104,8 +5128,8 @@ class Component extends DCLogic {
         ] },
         sideItems[3], // Syllabus
         sideItems[4], // Real-Life Lab
-        sideItems[7], // Timetable
-        sideItems[8]  // Calendar
+        sideItems[6], // Timetable
+        sideItems[7]  // Calendar
       );
     }
     {
@@ -5269,7 +5293,7 @@ class Component extends DCLogic {
         { icon: '\uD83D\uDCAC', bg: '#E7F6EE', text: 'Ms Amukoto replied to your question about Lesson 4', when: 'Yesterday' }
       ],
       toggleSide: () => (s.isMobile ? this.setState({ mobileNav: false }) : this.setState({ sideCollapsed: !s.sideCollapsed })),
-      shellTitle: ({ dashboard: 'Dashboard', lab: 'Real-Life Lab', timetable: 'Timetable', calendar: 'Calendar', quiz: 'Assessments', syllabus: 'Syllabus', lessons: 'Offline lessons', plans: 'Plan Studio', games: 'Game Arcade', pilot: 'Pilot' })[s.view] || (s.subject && window.k12agentName ? window.k12agentName(s.subject) : 'AI Agent'),
+      shellTitle: ({ dashboard: 'Dashboard', lab: 'Real-Life Lab', timetable: 'Timetable', calendar: 'Calendar', quiz: 'Assessments', syllabus: 'Syllabus', lessons: 'Offline lessons', plans: 'Plan Studio', games: 'Game Center', pilot: 'Pilot' })[s.view] || (s.subject && window.k12agentName ? window.k12agentName(s.subject) : 'AI Agent'),
       notChat: s.view !== 'chat',
       isOffline: !!s.offline,
       isGuest: !s.loggedIn, isAuthed: !!s.loggedIn,
@@ -5420,6 +5444,11 @@ class Component extends DCLogic {
         return {
           isGames: s.view === 'games',
           gamePointsLabel: (window.k12coins ? window.k12coins.balance() : gPoints) + ' coins',
+          coinGames: (window.k12gameCenter ? window.k12gameCenter.games : []).map(g => {
+            const b = window.k12gameCenter.best ? window.k12gameCenter.best(g.id) : 0;
+            return { icon: g.icon, name: g.name, about: g.about, bestLine: b ? 'Your best: ' + b : 'Not played yet',
+                     label: 'Play for ' + g.cost + ' coins', play: () => this.playCoinGame(g.id) };
+          }),
           gameStreakLabel: (s.gameStreak || 0) > 1 ? s.gameStreak + ' in a row 🔥' : '',
           hasGameStreak: (s.gameStreak || 0) > 1,
           gamesSubjTabs: SUBJ_TINTS.map(x => ({
